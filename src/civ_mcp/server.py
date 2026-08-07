@@ -12,37 +12,17 @@ import re
 import sys
 import time
 from contextlib import asynccontextmanager
-from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from dataclasses import dataclass
 from typing import Any, AsyncIterator, Awaitable, Callable, Optional
 
-import uvicorn
 from mcp.server.fastmcp import Context, FastMCP
 
-from civ_mcp import game_launcher, heartbeat
-from civ_mcp.game_over_watchdog import GameOverWatchdog
+from civ_mcp import game_launcher
 from civ_mcp import narrate as nr
 from civ_mcp.connection import GameConnection, LuaError
-from civ_mcp.diary import (
-    diary_path as _diary_path,
-    format_diary_entry as _format_diary_entry,
-    merge_agent_reflections as _merge_agent_reflections,
-    read_diary_entries as _read_diary_entries,
-)
 from civ_mcp.game_state import GameState
 from civ_mcp.logger import GameLogger
-from civ_mcp.map_capture import MapCapture
-from civ_mcp.spatial import SpatialTracker
 from civ_mcp.spectator import CameraController, PopupWatcher
-from civ_mcp.telemetry import (
-    EVENT_CITY_ROW,
-    EVENT_DIARY_ROW,
-    AlertSink,
-    CloudSink,
-    LocalSink,
-    TelemetryEmitter,
-)
-from civ_mcp.web_api import create_app
 
 log = logging.getLogger(__name__)
 
@@ -53,9 +33,6 @@ class AppContext:
     logger: GameLogger
     camera: CameraController
     popup_watcher: PopupWatcher
-    spatial: SpatialTracker
-    map_capture: MapCapture
-    watchdog: GameOverWatchdog
 
 
 async def _auto_boot(conn: GameConnection, save_name: str) -> None:
@@ -91,7 +68,6 @@ async def _auto_boot(conn: GameConnection, save_name: str) -> None:
     # The step-5 verification below catches wrong-save scenarios as a
     # safety net (the Lua load path fails when mid-session, not from
     # main menu).
-    heartbeat.write("launching")
     log.info("Auto-boot: launching game...")
     result = await asyncio.to_thread(game_launcher._launch_game_sync)
     log.info("Auto-boot: launch result: %s", result)
@@ -101,7 +77,6 @@ async def _auto_boot(conn: GameConnection, save_name: str) -> None:
         try:
             await conn.connect()
             log.info("Auto-boot: connected to FireTuner")
-            heartbeat.write("connecting")
             break
         except ConnectionError:
             if attempt % 10 == 0:
@@ -109,7 +84,6 @@ async def _auto_boot(conn: GameConnection, save_name: str) -> None:
             await asyncio.sleep(1)
     else:
         log.error("Auto-boot: could not connect to FireTuner after 90s")
-        heartbeat.write("error")
         return
 
     # 2b. Verify Lua states exist (port can open before game initialises).
@@ -134,7 +108,6 @@ async def _auto_boot(conn: GameConnection, save_name: str) -> None:
                 pass
         else:
             log.error("Auto-boot: GameCore never appeared — killing hung game")
-            heartbeat.write("error")
             await asyncio.to_thread(game_launcher._kill_game_sync)
             await asyncio.sleep(5)
             result = await asyncio.to_thread(game_launcher._launch_game_sync)
@@ -150,14 +123,12 @@ async def _auto_boot(conn: GameConnection, save_name: str) -> None:
                 await asyncio.sleep(1)
             if conn.gamecore_index is None:
                 log.error("Auto-boot: relaunch also failed — giving up")
-                heartbeat.write("error")
                 return
 
     # 3. Load save (Lua on Windows/macOS, OCR menu nav on Linux)
     log.info("Auto-boot: loading save '%s'...", save_name)
     result = await load_game_save(conn, save_name)
     log.info("Auto-boot: load result: %s", result)
-    heartbeat.write("loading")
 
     # 4. Wait for save to load, click through leader intro, then reconnect.
     # The CONTINUE GAME button on the leader screen has low-contrast
@@ -185,21 +156,18 @@ async def _auto_boot(conn: GameConnection, save_name: str) -> None:
             await conn.reconnect()
             if conn.gamecore_index is not None:
                 log.info("Auto-boot: game ready (GameCore=%s)", conn.gamecore_index)
-                heartbeat.write("playing")  # turn unknown until first end_turn
                 game_ready = True
                 break
         except ConnectionError:
             pass
         # Retry positional click every 10s in case the first click missed
         if attempt > 0 and attempt % 10 == 0:
-            heartbeat.write("loading")  # keep heartbeat fresh during retry
             if not clicked:
                 log.info("Auto-boot: retrying positional click (attempt %d)", attempt)
                 await asyncio.to_thread(game_launcher._click_continue_positional)
         await asyncio.sleep(1)
     if not game_ready:
         log.warning("Auto-boot: save may not have loaded — GameCore not found")
-        heartbeat.write("error")
         return
 
     # 5. Verify correct save loaded. If the wrong save loaded (e.g.
@@ -274,12 +242,10 @@ async def _auto_boot(conn: GameConnection, save_name: str) -> None:
                                     log.warning("Auto-boot: all fallbacks failed")
                                     return
                                 log.info("Auto-boot: Lua reload verified at T%d", t2)
-                                heartbeat.write("playing", turn=t2)
                     except Exception:
                         log.debug("Auto-boot: post-reload verify failed", exc_info=True)
                     return
                 log.info("Auto-boot: verified save at T%d", turn)
-                heartbeat.write("playing", turn=turn)
     except Exception:
         log.debug("Auto-boot: save verification failed", exc_info=True)
 
@@ -288,34 +254,9 @@ async def _auto_boot(conn: GameConnection, save_name: str) -> None:
 async def lifespan(server: FastMCP) -> AsyncIterator[AppContext]:
     conn = GameConnection()
 
-    # Telemetry emitter — routes events to local JSONL + optional cloud sink
-    emitter = TelemetryEmitter()
-    emitter.add_sink(LocalSink())
-    cloud_bucket = os.environ.get("CIV_MCP_TELEMETRY_BUCKET")
-    if cloud_bucket:
-        emitter.add_sink(CloudSink(cloud_bucket))
-    alert_webhook = os.environ.get("CIV_MCP_ALERT_WEBHOOK")
-    if alert_webhook:
-        emitter.add_sink(AlertSink(alert_webhook))
-    emitter.start()
-    heartbeat.init(emitter.run_id)
-    # Bind eval identity so the orchestrator can match running games to jobs
-    eval_model = os.environ.get("CIV_MCP_AGENT_MODEL", "")
-    eval_metadata = os.environ.get("CIV_MCP_METADATA", "")
-    eval_scenario = ""
-    if eval_metadata:
-        try:
-            eval_scenario = json.loads(eval_metadata).get("scenario_id", "")
-        except Exception:
-            pass
-    heartbeat.bind_eval(eval_model, eval_scenario)
-    heartbeat.write("starting")
-
-    logger = GameLogger(emitter)
-    spatial = SpatialTracker(emitter)
-    map_capture = MapCapture(emitter)
+    logger = GameLogger()
     gs = GameState(conn)
-    log.info("Game logger session: %s", logger.session_id)
+    log.info("Tool-call log: %s", logger._path)
 
     # Auto-boot: launch game + load save when running as eval
     save_file = os.environ.get("CIV_MCP_SAVE_FILE")
@@ -325,17 +266,8 @@ async def lifespan(server: FastMCP) -> AsyncIterator[AppContext]:
     # Spectator-mode background services (camera tracking + popup auto-dismiss)
     camera = CameraController(conn)
     popup_watcher = PopupWatcher(conn)
-    watchdog = GameOverWatchdog(gs, logger)
     camera.start()
     popup_watcher.start()
-    watchdog.start()
-
-    # Start the web dashboard API as a background task (port 8000)
-    web_app = create_app(gs)
-    uvi_config = uvicorn.Config(web_app, host="0.0.0.0", port=8000, log_level="info")
-    uvi_server = uvicorn.Server(uvi_config)
-    api_task = asyncio.create_task(uvi_server.serve())
-    log.info("Web API starting on http://0.0.0.0:8000")
 
     try:
         yield AppContext(
@@ -343,17 +275,10 @@ async def lifespan(server: FastMCP) -> AsyncIterator[AppContext]:
             logger=logger,
             camera=camera,
             popup_watcher=popup_watcher,
-            spatial=spatial,
-            map_capture=map_capture,
-            watchdog=watchdog,
         )
     finally:
-        await emitter.close()
-        await watchdog.stop()
         await camera.stop()
         await popup_watcher.stop()
-        uvi_server.should_exit = True
-        await api_task
         await conn.disconnect()
 
 
@@ -374,18 +299,6 @@ def _get_logger(ctx: Context) -> GameLogger:
 
 def _get_camera(ctx: Context) -> CameraController:
     return ctx.request_context.lifespan_context.camera
-
-
-def _get_spatial(ctx: Context) -> SpatialTracker:
-    return ctx.request_context.lifespan_context.spatial
-
-
-def _get_map_capture(ctx: Context) -> MapCapture:
-    return ctx.request_context.lifespan_context.map_capture
-
-
-def _get_watchdog(ctx: Context) -> GameOverWatchdog:
-    return ctx.request_context.lifespan_context.watchdog
 
 
 def _param_summary(params: dict[str, Any]) -> str:
@@ -412,8 +325,6 @@ async def _logged(
     tool_name: str,
     params: dict[str, Any],
     fn: Callable[[], Awaitable[str]],
-    *,
-    tiles: set[tuple[int, int]] | None = None,
 ) -> str:
     """Run a tool function with timing, error handling, and logging."""
     logger = _get_logger(ctx)
@@ -482,9 +393,8 @@ async def _logged(
                 log.error("CONNECTION RECOVERY: restart failed", exc_info=True)
 
         return result
-    # Success — reset connection error counter + refresh heartbeat
+    # Success — reset connection error counter
     _logged._conn_errors = 0
-    heartbeat.write("playing", turn=turn or 0)
     ms = int((time.monotonic() - start) * 1000)
     log.info(
         "[T%s] %s(%s) OK %dms: %s",
@@ -495,10 +405,6 @@ async def _logged(
         _result_summary(result),
     )
     await logger.log_tool_call(tool_name, params, result, ms)
-    try:
-        await _get_spatial(ctx).record(tool_name, params, result, ms, tiles=tiles)
-    except Exception:
-        pass
     return result
 
 
@@ -521,29 +427,11 @@ async def get_game_overview(ctx: Context) -> str:
         ov = await gs.get_game_overview()
         logger = _get_logger(ctx)
         logger.set_turn(ov.turn)
-        spatial = _get_spatial(ctx)
-        spatial.set_turn(ov.turn)
         try:
             civ, seed = await gs.get_game_identity()
             logger.bind_game(civ, seed)
-            spatial.bind_game(civ, seed)
-            heartbeat.bind_game(civ, seed)
-            gs.spatial = spatial
         except Exception:
             pass
-        # Seed revealed tiles for visibility diff (once per session)
-        if not spatial._revealed_seeded:
-            try:
-                seed_lines = await gs.conn.execute_read(
-                    lq.build_revealed_tiles_seed_query()
-                )
-                seed_tiles = lq.parse_revealed_tiles_seed(seed_lines)
-                spatial.seed_revealed(seed_tiles)
-                log.info(
-                    "Seeded spatial tracker with %d revealed tiles", len(seed_tiles)
-                )
-            except Exception:
-                log.debug("Failed to seed revealed tiles", exc_info=True)
         text = nr.narrate_overview(ov)
         # Check for game-over state
         gameover = await gs.check_game_over()
@@ -582,11 +470,9 @@ async def get_units(ctx: Context) -> str:
     Consumed units (e.g. settlers that founded cities) are excluded.
     """
     gs = _get_game(ctx)
-    unit_tiles: set[tuple[int, int]] = set()
 
     async def _run():
         units = await gs.get_units()
-        unit_tiles.update((u.x, u.y) for u in units if u.x >= 0)
         try:
             threats = await gs.get_threat_scan()
         except Exception:
@@ -598,7 +484,7 @@ async def get_units(ctx: Context) -> str:
             pass
         return nr.narrate_units(units, threats, trade_status)
 
-    return await _logged(ctx, "get_units", {}, _run, tiles=unit_tiles)
+    return await _logged(ctx, "get_units", {}, _run)
 
 
 @mcp.tool(annotations={"readOnlyHint": True})
@@ -718,11 +604,9 @@ async def get_map_area(
     """
     radius = min(radius, 4)
     gs = _get_game(ctx)
-    tile_coords: set[tuple[int, int]] = set()
 
     async def _run():
         tiles = await gs.get_map_area(center_x, center_y, radius)
-        tile_coords.update((t.x, t.y) for t in tiles)
         return nr.narrate_map(tiles)
 
     result = await _logged(
@@ -730,7 +614,6 @@ async def get_map_area(
         "get_map_area",
         {"center_x": center_x, "center_y": center_y, "radius": radius},
         _run,
-        tiles=tile_coords,
     )
     _get_camera(ctx).push(center_x, center_y, f"map_area ({center_x},{center_y})")
     return result
@@ -1775,165 +1658,29 @@ async def set_research(ctx: Context, tech_or_civic: str, category: str = "tech")
 @mcp.tool(annotations={"destructiveHint": True})
 async def end_turn(
     ctx: Context,
-    tactical: str = "",
-    strategic: str = "",
-    tooling: str = "",
-    planning: str = "",
-    hypothesis: str = "",
 ) -> str:
     """End the current turn.
 
     Make sure you've moved all units, set production, and chosen research
     before ending the turn.
 
-    All 5 reflection parameters are required and must be non-empty.
-    These form the per-turn diary — your persistent memory across sessions:
-        tactical: What happened this turn — combat, movements, improvements.
-        strategic: Current standing vs rivals — yields, city count, victory path.
-        tooling: Tool issues or observations. Write "No issues" if none.
-        planning: Concrete actions for the next 5-10 turns.
-        hypothesis: Predictions — enemy behavior, resource needs, timelines.
-
-    IMPORTANT: Reflections are recorded BEFORE the AI processes its turn.
-    Anything that surfaces after end_turn (diplomacy proposals, AI movements,
-    events reported in the turn result) belongs in the NEXT turn's diary.
-    If end_turn is blocked and you call it again after resolving the blocker,
-    the diary entry from the first call is kept — do not repeat reflections.
+    Returns the turn result along with empire warnings and victory-proximity
+    alerts. If a blocker is reported (unmoved units, empty production queue,
+    pending research or policy choice), resolve it and call end_turn again.
     """
     gs = _get_game(ctx)
 
-    reflections = {
-        "tactical": tactical,
-        "strategic": strategic,
-        "tooling": tooling,
-        "planning": planning,
-        "hypothesis": hypothesis,
-    }
-    missing = [k for k, v in reflections.items() if not v.strip()]
-    if missing:
-        return (
-            f"Empty reflections: {', '.join(missing)}. "
-            "Provide non-empty entries for all 5 fields: "
-            "tactical, strategic, tooling, planning, hypothesis."
-        )
-
-    # Model ID comes from CIV_MCP_AGENT_MODEL env var (set by eval runner)
-    env_model = os.environ.get("CIV_MCP_AGENT_MODEL", "")
-    if env_model:
-        _get_logger(ctx).set_agent_model(env_model)
-
-    # Capture diary state and write BEFORE advancing the turn.
-    # This ensures the entry is saved even if the session is interrupted
-    # during AI turn processing.
-    #
-    # If the last end_turn hit a blocker (diplomacy, WC), the turn may have
-    # advanced during processing. On retry, we merge reflections into the
-    # previous entry rather than writing a duplicate with terse reflections.
-    _diary_turn = 0
-    _diary_player_id = -1
-    _diary_civ_type = None
-    _diary_seed = None
-    _diary_run_id = _get_logger(ctx).session_id
-    _diary_snapshot = None
-    _is_retry = getattr(gs, "_end_turn_blocked", False)
+    # Keep the logger's turn counter fresh before advancing. Connection-loss
+    # recovery in _logged() reads it to pick the autosave to restart from,
+    # and the agent may not call get_game_overview every turn. The turn
+    # number also feeds the World Congress blocker safety net below.
+    current_turn = 0
     try:
         ov = await gs.get_game_overview()
-        _diary_player_id = ov.player_id
-        _diary_turn = ov.turn
-        # Keep logger/spatial turn in sync (agent may not call get_game_overview every turn)
+        current_turn = ov.turn
         _get_logger(ctx).set_turn(ov.turn)
-        _get_spatial(ctx).set_turn(ov.turn)
     except Exception:
-        log.warning("Diary: failed to capture overview", exc_info=True)
-    try:
-        _diary_civ_type, _diary_seed = await gs.get_game_identity()
-    except Exception:
-        log.warning("Diary: failed to get game identity", exc_info=True)
-
-    if _is_retry and _diary_civ_type is not None:
-        # Merge reflections into the most recent agent row (from the
-        # previous end_turn call that wrote before hitting a blocker).
-        # Merges into whichever turn that row belongs to — handles both
-        # same-turn retries and turn-advanced-during-blocker cases.
-        try:
-            path = _diary_path(_diary_civ_type, _diary_seed, _diary_run_id)
-            merged_row = _merge_agent_reflections(
-                path, gs._diary_written_turn, reflections
-            )
-            if merged_row:
-                log.info(
-                    "Diary: merged retry reflections into turn %s",
-                    gs._diary_written_turn,
-                )
-                # Re-emit merged row so CloudSink gets the updated reflections
-                await _get_logger(ctx)._emitter.emit(EVENT_DIARY_ROW, merged_row)
-        except Exception:
-            log.warning("Diary: failed to merge reflections", exc_info=True)
-    elif (
-        _diary_civ_type is not None
-        and _diary_turn > 0
-        and gs._diary_written_turn != _diary_turn
-    ):
-        try:
-            _diary_snapshot = await gs.get_diary_snapshot()
-        except Exception:
-            log.warning("Diary: failed to capture snapshot", exc_info=True)
-        if _diary_snapshot:
-            game_id = f"{_diary_civ_type}_{_diary_seed}"
-            ts = datetime.now(timezone.utc).isoformat()
-            # MCP client metadata (from handshake)
-            agent_client = ""
-            agent_client_ver = ""
-            try:
-                ci = ctx.session.client_params.clientInfo
-                agent_client = ci.name or ""
-                agent_client_ver = ci.version or ""
-            except Exception:
-                pass
-            try:
-                _emitter = _get_logger(ctx)._emitter
-                # Write one row per player (emitter routes to sinks)
-                for pr in _diary_snapshot.players:
-                    row = asdict(pr)
-                    row["v"] = 1
-                    row["turn"] = _diary_turn
-                    row["game"] = game_id
-                    row["timestamp"] = ts
-                    if pr.pid == _diary_player_id:
-                        row["is_agent"] = True
-                        # Merge agent extras
-                        ag = _diary_snapshot.agent
-                        row["diplo_states"] = ag.diplo_states
-                        row["suzerainties"] = ag.suzerainties
-                        row["envoys_available"] = ag.envoys_available
-                        row["envoys_sent"] = ag.envoys_sent
-                        row["gp_points"] = ag.gp_points
-                        row["governors"] = ag.governors
-                        row["trade_routes"] = {
-                            "capacity": ag.trade_capacity,
-                            "active": ag.trade_active,
-                            "domestic": ag.trade_domestic,
-                            "international": ag.trade_international,
-                        }
-                        row["reflections"] = reflections
-                        row["agent_client"] = agent_client
-                        row["agent_client_ver"] = agent_client_ver
-                        row["agent_model"] = env_model
-                        # Eval metadata from emitter (only non-empty)
-                        for _mk, _mv in _emitter.metadata.items():
-                            if _mv:
-                                row[_mk] = _mv
-                    await _emitter.emit(EVENT_DIARY_ROW, row)
-                # Write one row per city
-                for cr in _diary_snapshot.cities:
-                    row = asdict(cr)
-                    row["v"] = 1
-                    row["turn"] = _diary_turn
-                    row["game"] = game_id
-                    await _emitter.emit(EVENT_CITY_ROW, row)
-                gs._diary_written_turn = _diary_turn
-            except Exception:
-                log.warning("Diary: failed to write entry", exc_info=True)
+        log.warning("end_turn: failed to sync turn counter", exc_info=True)
 
     # Advance the turn
     result = await _logged(ctx, "end_turn", {}, gs.end_turn)
@@ -2047,7 +1794,6 @@ async def end_turn(
                     # Step 3: Reset state flags
                     gs._pending_end_turn = False
                     gs._pending_end_turn_from = None
-                    gs._end_turn_blocked = False
 
                     # Step 4: Extra wait to give AI more processing time
                     if extra_wait > 0:
@@ -2104,31 +1850,17 @@ async def end_turn(
     )
     if turn_advanced:
         _get_camera(ctx).clear()
-        gs._end_turn_blocked = False
-        # Update logger/spatial turn from result ("Turn X -> Y")
+        # Update logger turn from result ("Turn X -> Y")
         m = re.search(r"Turn \d+ -> (\d+)", result)
         if m:
-            new_turn = int(m.group(1))
-            _get_logger(ctx).set_turn(new_turn)
-            _get_spatial(ctx).set_turn(new_turn)
-            heartbeat.write("playing", turn=new_turn)
-        # Map capture — record terrain (first turn) + ownership delta
-        if _diary_civ_type and _diary_seed:
-            try:
-                mc = _get_map_capture(ctx)
-                mc.bind_game(_diary_civ_type, _diary_seed)
-                capture_turn = new_turn if m else _diary_turn
-                await mc.capture(gs.conn, capture_turn)
-            except Exception:
-                log.debug("Map capture failed", exc_info=True)
+            _get_logger(ctx).set_turn(int(m.group(1)))
     elif "Turn paused" in result or "World Congress fires" in result:
-        gs._end_turn_blocked = True
         # Safety net: if WC blocker fires repeatedly on the same turn,
         # auto-submit to break infinite loops (agent used wrong voting tool)
         if "World Congress fires" in result:
             wc_turn = getattr(gs, "_wc_blocker_turn", -1)
             wc_count = getattr(gs, "_wc_blocker_count", 0)
-            current = _diary_turn or 0
+            current = current_turn or 0
             if wc_turn == current:
                 gs._wc_blocker_count = wc_count + 1
                 if gs._wc_blocker_count >= 3:
@@ -2174,7 +1906,6 @@ async def end_turn(
             log.debug("HANG game-over recheck failed", exc_info=True)
 
     if "GAME OVER" in result:
-        heartbeat.write("finished", turn=_diary_turn or 0)
         try:
             gameover = gs._last_game_over
             if gameover is None:
@@ -2201,76 +1932,7 @@ async def end_turn(
         except Exception:
             log.warning("Failed to log game-over entry", exc_info=True)
 
-    # Arm the watchdog after first successful end_turn so it starts
-    # polling for game-over independently of future tool calls.
-    if "GAME OVER" not in result:
-        _get_watchdog(ctx).arm()
-
     return result
-
-
-# ---------------------------------------------------------------------------
-# Diary
-# ---------------------------------------------------------------------------
-
-
-@mcp.tool(annotations={"readOnlyHint": True})
-async def get_diary(
-    ctx: Context,
-    last_n: int = 5,
-    turn: Optional[int] = None,
-    from_turn: Optional[int] = None,
-    to_turn: Optional[int] = None,
-) -> str:
-    """Read diary entries for game memory.
-
-    Args:
-        last_n: Number of most recent entries to return (default 5, max 50).
-                Used when turn/from_turn/to_turn are not specified.
-        turn: Return the single entry for this turn number.
-        from_turn: Return entries from this turn onward (inclusive).
-        to_turn: Return entries up to this turn (inclusive).
-
-    Auto-detects the current game from the live connection. Each game has
-    its own diary file (keyed by civ + random seed).
-
-    Call this at the start of a session or after context compaction to
-    restore strategic memory from previous turns.
-    """
-    gs = _get_game(ctx)
-    try:
-        civ_type, seed = await gs.get_game_identity()
-    except Exception:
-        return "Could not detect current game. Is the game running?"
-
-    run_id = _get_logger(ctx).session_id
-    path = _diary_path(civ_type, seed, run_id)
-    if not path.exists():
-        return f"No diary entries yet for this game ({civ_type}, seed {seed})."
-
-    entries = _read_diary_entries(path)
-    if not entries:
-        return f"No diary entries yet for this game ({civ_type}, seed {seed})."
-
-    # New format (v2) has N rows per turn — filter to agent rows only.
-    # Old format entries (no "v" key) pass through unchanged.
-    entries = [e for e in entries if "v" not in e or e.get("is_agent")]
-
-    # Filter by query mode
-    if turn is not None:
-        entries = [e for e in entries if e.get("turn") == turn]
-    elif from_turn is not None or to_turn is not None:
-        lo = from_turn if from_turn is not None else 0
-        hi = to_turn if to_turn is not None else 999999
-        entries = [e for e in entries if lo <= e.get("turn", 0) <= hi]
-    else:
-        last_n = min(max(last_n, 1), 50)
-        entries = entries[-last_n:]
-
-    if not entries:
-        return "No diary entries match the query."
-
-    return "\n\n".join(_format_diary_entry(e) for e in entries)
 
 
 # ---------------------------------------------------------------------------

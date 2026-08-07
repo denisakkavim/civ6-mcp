@@ -3,12 +3,10 @@
 ## For Users
 
 - [Getting Started](../README.md#quick-start) — Setup and first game
-- [Tool Reference](https://civbench.vercel.app/docs/tools) — All 76 MCP tools (web)
 
 ## For Developers
 
 - [Architecture](architecture-diagrams.md) — Full stack from tool call to game engine, wire protocol, Lua contexts
-- [Observability](observability.md) — Diary, tool logging, and spatial attention tracking
 - [Save File Format](save-file-format.md) — Reverse-engineered .Civ6Save structure
 - [Bypassing the Aspyr Launcher](research/bypassing_aspyr_launcher.md) — macOS launch automation
 

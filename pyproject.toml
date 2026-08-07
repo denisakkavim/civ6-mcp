@@ -18,8 +18,6 @@ classifiers = [
 ]
 dependencies = [
     "mcp>=1.20",
-    # TODO(stage 0b): drop once web_api.py and the uvicorn block in lifespan() are removed.
-    "fastapi[standard]>=0.128",
 ]
 
 [project.optional-dependencies]
