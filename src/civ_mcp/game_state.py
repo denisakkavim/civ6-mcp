@@ -16,6 +16,7 @@ from civ_mcp import lua as lq
 from civ_mcp.connection import GameConnection
 from civ_mcp.narrate import (
     narrate_combat_estimate,
+    narrate_move_discoveries,
     narrate_settle_candidates,
     narrate_test_trade,
 )
@@ -30,6 +31,10 @@ class GameState:
         self.conn = connection
         self._last_snapshot: lq.TurnSnapshot | None = None
         self._game_identity: tuple[str, int] | None = None  # (civ_type, seed)
+        # Tiles the player has already revealed, for post-move discovery
+        # feedback. None until seeded lazily on the first move; reset on
+        # game change and on save load (an older save has revealed less).
+        self._revealed: set[tuple[int, int]] | None = None
         self._pending_end_turn: bool = False  # ACTION_ENDTURN already in flight
         self._pending_end_turn_from: int | None = (
             None  # turn number when ACTION_ENDTURN was sent
@@ -75,6 +80,7 @@ class GameState:
                 if self._game_identity is not None and new_id != self._game_identity:
                     log.info("Game changed: %s → %s", self._game_identity, new_id)
                     self._last_snapshot = None
+                    self._revealed = None
                     self._last_game_over = None
                     self._save_load_history = []
                     self._run_aborted = False
@@ -203,12 +209,31 @@ class GameState:
     # Action methods (run in InGame context for UnitManager access)
     # ------------------------------------------------------------------
 
+    async def _seed_revealed_tiles(self) -> None:
+        """Populate the revealed-tile set. No-op once seeded.
+
+        Called before the first move rather than at session start so that
+        the very first move still reports what it uncovers.
+        """
+        if self._revealed is not None:
+            return
+        lines = await self.conn.execute_read(lq.build_revealed_tiles_seed_query())
+        self._revealed = lq.parse_revealed_tiles_seed(lines)
+        log.info("Seeded revealed-tile set with %d tiles", len(self._revealed))
+
     async def move_unit(self, unit_index: int, target_x: int, target_y: int) -> str:
         # Pre-dismiss any blocking popups that would silently eat the move
         try:
             await self.dismiss_popup()
         except Exception:
             pass
+        # Seed before moving so the first move of a session reports
+        # discoveries. Warn loudly on failure — a silent failure here once
+        # disabled this feature for months.
+        try:
+            await self._seed_revealed_tiles()
+        except Exception:
+            log.warning("Failed to seed revealed tiles", exc_info=True)
         lua = lq.build_move_unit(unit_index, target_x, target_y)
         lines = await self.conn.execute_write(lua)
         result = _action_result(lines)
@@ -253,6 +278,32 @@ class GameState:
                         break
             except Exception:
                 pass
+        # Post-move: diff visibility against the revealed set for discovery
+        # feedback. Skipped when the unit did not actually move.
+        if "|BLOCKED" not in result and self._revealed is not None:
+            try:
+                now_match = re.search(r"now_at:(\d+),(\d+)", result)
+                if now_match:
+                    vis_x, vis_y = int(now_match.group(1)), int(now_match.group(2))
+                    vis_lines = await self.conn.execute_read(
+                        lq.build_post_move_visibility_query(vis_x, vis_y)
+                    )
+                    vis_tiles = lq.parse_post_move_visibility(vis_lines)
+                    newly_revealed = {(x, y) for x, y, _ in vis_tiles} - self._revealed
+                    if newly_revealed:
+                        self._revealed |= newly_revealed
+                        new_tile_data = [
+                            (x, y, m)
+                            for x, y, m in vis_tiles
+                            if (x, y) in newly_revealed
+                        ]
+                        discovery_text = narrate_move_discoveries(
+                            new_tile_data, len(newly_revealed)
+                        )
+                        if discovery_text:
+                            result += "\n" + discovery_text
+            except Exception:
+                log.warning("Post-move visibility diff failed", exc_info=True)
         return result
 
     async def attack_unit(self, unit_index: int, target_x: int, target_y: int) -> str:
@@ -1649,6 +1700,9 @@ class GameState:
         """Record a successful save load for scumming detection."""
         import time
 
+        # An older save has revealed fewer tiles than the set we carry, so
+        # re-seed on the next move rather than under-reporting discoveries.
+        self._revealed = None
         ts = time.time()
         turn = self._high_water_turn
         self._save_load_history.append((ts, turn, save_name))

@@ -2065,7 +2065,8 @@ def narrate_move_discoveries(
     for x, y, m in newly_revealed:
         parts: list[str] = []
         terrain = m.get("terrain", "").replace("TERRAIN_", "").replace("_", " ").title()
-        if m.get("hills"):
+        # Hill terrains (TERRAIN_PLAINS_HILLS) already say so — don't repeat it.
+        if m.get("hills") and not terrain.endswith("Hills"):
             terrain += " Hills"
         parts.append(terrain)
         if m.get("feature"):
