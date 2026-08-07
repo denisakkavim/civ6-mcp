@@ -8,103 +8,97 @@ the hard limit.
 
 import types
 
+import pytest
 
-def _make_gs():
-    """Build a GameState-like object with just the advisor budget fields."""
-    # Import the real class so we pick up the ADVISOR_BUDGET_* constants and
-    # the _advisor_budget_check() method logic.
-    from civ_mcp.game_state import GameState
-
-    gs = types.SimpleNamespace()
-    gs._advisor_calls_this_turn = 0
-    gs._advisor_budget_warning = None
-    # Bind the real method so threshold logic is exercised
-    gs.ADVISOR_BUDGET_SOFT = GameState.ADVISOR_BUDGET_SOFT
-    gs.ADVISOR_BUDGET_HARD = GameState.ADVISOR_BUDGET_HARD
-    gs._advisor_budget_check = types.MethodType(GameState._advisor_budget_check, gs)
-    return gs
+from civ_mcp.game_state import GameState
 
 
-class TestAdvisorBudget:
-    def test_first_call_is_clean(self):
-        gs = _make_gs()
+@pytest.fixture
+def gs():
+    """A stand-in carrying just the fields the budget check reads.
+
+    The real `_advisor_budget_check` is bound to it so the threshold logic
+    under test is the shipped one.
+    """
+    stub = types.SimpleNamespace()
+    stub._advisor_calls_this_turn = 0
+    stub._advisor_budget_warning = None
+    stub.ADVISOR_BUDGET_SOFT = GameState.ADVISOR_BUDGET_SOFT
+    stub.ADVISOR_BUDGET_HARD = GameState.ADVISOR_BUDGET_HARD
+    stub._advisor_budget_check = types.MethodType(GameState._advisor_budget_check, stub)
+    return stub
+
+
+def test_first_call_is_clean(gs):
+    hard, soft = gs._advisor_budget_check()
+    assert hard is None
+    assert soft is None
+    assert gs._advisor_calls_this_turn == 1
+
+
+def test_under_soft_limit_gives_no_warning(gs):
+    for call in range(1, 10):  # soft limit is 10
         hard, soft = gs._advisor_budget_check()
-        assert hard is None
-        assert soft is None
-        assert gs._advisor_calls_this_turn == 1
+        assert hard is None, f"call {call} should not be capped"
+        assert soft is None, f"call {call} should not warn"
 
-    def test_under_soft_limit_no_warning(self):
-        gs = _make_gs()
-        for _ in range(9):  # soft limit is 10
-            hard, soft = gs._advisor_budget_check()
-            assert hard is None
-            assert soft is None
 
-    def test_soft_warning_at_limit(self):
-        gs = _make_gs()
-        # First 9 calls: no warning
-        for _ in range(9):
-            gs._advisor_budget_check()
-        # 10th call: soft warning
-        hard, soft = gs._advisor_budget_check()
-        assert hard is None
-        assert soft is not None
-        assert "ADVISOR BUDGET WARNING" in soft
-        assert "10/20" in soft
+def test_soft_warning_fires_at_the_limit(gs):
+    for _ in range(9):
+        gs._advisor_budget_check()
+    hard, soft = gs._advisor_budget_check()  # 10th call
+    assert hard is None
+    assert soft is not None
+    assert "ADVISOR BUDGET WARNING" in soft
+    assert "10/20" in soft
 
-    def test_soft_warning_continues_in_warning_zone(self):
-        gs = _make_gs()
-        # Jump to call 15 — still in warning zone, not yet hard-capped
-        for _ in range(15):
-            hard, soft = gs._advisor_budget_check()
-        assert hard is None
-        assert soft is not None
-        assert "15/20" in soft
 
-    def test_hard_cap_at_21(self):
-        gs = _make_gs()
-        # Calls 1-20 are allowed (with soft warnings from 10+)
-        for i in range(20):
-            hard, soft = gs._advisor_budget_check()
-            assert hard is None, f"call {i + 1} should not be hard-capped"
-        # Call 21: HARD STOP
-        hard, soft = gs._advisor_budget_check()
-        assert hard is not None
-        assert "ADVISOR_BUDGET_EXCEEDED" in hard
-        assert "21" in hard
+def test_soft_warning_continues_in_the_warning_zone(gs):
+    for _ in range(14):
+        gs._advisor_budget_check()
+    hard, soft = gs._advisor_budget_check()  # 15th call, still under the cap
+    assert hard is None
+    assert soft is not None
+    assert "15/20" in soft
 
-    def test_budget_persists_until_reset(self):
-        gs = _make_gs()
-        # Exceed budget
-        for _ in range(25):
-            gs._advisor_budget_check()
-        # Still over budget
+
+def test_hard_cap_fires_on_the_twenty_first_call(gs):
+    for i in range(20):
         hard, _ = gs._advisor_budget_check()
-        assert hard is not None
+        assert hard is None, f"call {i + 1} should not be hard-capped"
+    hard, _ = gs._advisor_budget_check()
+    assert hard is not None
+    assert "ADVISOR_BUDGET_EXCEEDED" in hard
+    assert "21" in hard
 
-    def test_manual_reset_clears_budget(self):
-        gs = _make_gs()
-        # Exceed budget
-        for _ in range(25):
-            gs._advisor_budget_check()
-        # Reset (as end_turn would do)
-        gs._advisor_calls_this_turn = 0
-        # Fresh budget
-        hard, soft = gs._advisor_budget_check()
-        assert hard is None
-        assert soft is None
 
-    def test_hard_error_format_is_actionable(self):
-        gs = _make_gs()
-        for _ in range(21):
-            hard, _ = gs._advisor_budget_check()
-        # The last one returned hard; check its contents
-        assert "rank placements" in hard
-        assert "resets next turn" in hard
-        assert "ERR:" in hard
+def test_budget_persists_until_reset(gs):
+    for _ in range(25):
+        gs._advisor_budget_check()
+    hard, _ = gs._advisor_budget_check()
+    assert hard is not None
 
-    def test_soft_warning_format_is_informative(self):
-        gs = _make_gs()
-        for _ in range(10):
-            hard, soft = gs._advisor_budget_check()
-        assert "Consolidate your queries" in soft
+
+def test_reset_clears_the_budget(gs):
+    for _ in range(25):
+        gs._advisor_budget_check()
+    gs._advisor_calls_this_turn = 0  # as end_turn does
+    hard, soft = gs._advisor_budget_check()
+    assert hard is None
+    assert soft is None
+
+
+def test_hard_error_is_actionable(gs):
+    for _ in range(20):
+        gs._advisor_budget_check()
+    hard, _ = gs._advisor_budget_check()  # 21st call trips the cap
+    assert "rank placements" in hard
+    assert "resets next turn" in hard
+    assert "ERR:" in hard
+
+
+def test_soft_warning_is_informative(gs):
+    for _ in range(9):
+        gs._advisor_budget_check()
+    _, soft = gs._advisor_budget_check()  # 10th call trips the warning
+    assert "Consolidate your queries" in soft

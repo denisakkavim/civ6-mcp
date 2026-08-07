@@ -23,34 +23,17 @@ def tile(x, y, terrain="TERRAIN_GRASS", resource="none"):
     return f"TILE|{x},{y}|{terrain}|none|{resource}|0|0|none|none"
 
 
-class StubConnection:
-    """Serves queued write/read responses and counts the reads issued."""
-
-    def __init__(self, write_lines, read_lines):
-        self._write = list(write_lines)
-        self._read = list(read_lines)
-        self.reads_issued = 0
-
-    async def execute_write(self, lua):
-        return self._write.pop(0)
-
-    async def execute_read(self, lua):
-        self.reads_issued += 1
-        return self._read.pop(0)
-
-
 @pytest.fixture
-def make_gs(monkeypatch):
-    """Build a GameState whose connection replays canned responses."""
+def make_gs(make_game_state, monkeypatch):
+    """A GameState ready to move a unit, with no revealed tiles seeded yet."""
 
     async def _no_popup(self):
         return None
 
     monkeypatch.setattr(GameState, "dismiss_popup", _no_popup)
 
-    def _factory(write_lines, read_lines, conn=None):
-        gs = GameState.__new__(GameState)
-        gs.conn = conn or StubConnection(write_lines, read_lines)
+    def _factory(write_lines=None, read_lines=None, conn=None):
+        gs = make_game_state(write_lines, read_lines, conn)
         gs._revealed = None
         return gs
 
