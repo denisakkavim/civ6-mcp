@@ -11,14 +11,16 @@ import os
 import re
 import sys
 import time
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, contextmanager
 from dataclasses import dataclass
-from typing import Any, AsyncIterator, Awaitable, Callable, Optional
+from pathlib import Path
+from typing import Any, AsyncIterator, Awaitable, Callable, Generator, Optional
 
 from mcp.server.fastmcp import Context, FastMCP
 
 from civ_mcp import game_launcher
 from civ_mcp import narrate as nr
+from civ_mcp import recording
 from civ_mcp.connection import GameConnection, LuaError
 from civ_mcp.game_state import GameState
 from civ_mcp.logger import GameLogger
@@ -250,13 +252,53 @@ async def _auto_boot(conn: GameConnection, save_name: str) -> None:
         log.debug("Auto-boot: save verification failed", exc_info=True)
 
 
+# ---------------------------------------------------------------------------
+# Testability seam
+# ---------------------------------------------------------------------------
+# `lifespan` constructs its own dependencies, which puts the whole tool layer
+# out of reach of a test unless a real game is listening on a socket. These
+# hooks are the only supported way to substitute them. Production never touches
+# them; `tests/conftest.py` drives them through `testing_overrides()`.
+#
+# Background services are opt-out because both poll the connection on a timer.
+# Left running against a stubbed connection they interleave unrequested traffic
+# with the tool's own, which makes recorded and replayed call sequences
+# non-deterministic.
+
+_connection_factory: Callable[[], GameConnection] = GameConnection
+_background_services_enabled: bool = True
+_log_dir: Path | None = None
+
+
+@contextmanager
+def testing_overrides(
+    *,
+    connection_factory: Callable[[], GameConnection],
+    background_services: bool = False,
+    log_dir: Path | None = None,
+) -> Generator[None, None, None]:
+    """Substitute lifespan dependencies for the duration of the block."""
+    global _connection_factory, _background_services_enabled, _log_dir
+    previous = (_connection_factory, _background_services_enabled, _log_dir)
+    _connection_factory = connection_factory
+    _background_services_enabled = background_services
+    _log_dir = log_dir
+    try:
+        yield
+    finally:
+        _connection_factory, _background_services_enabled, _log_dir = previous
+
+
 @asynccontextmanager
 async def lifespan(server: FastMCP) -> AsyncIterator[AppContext]:
-    conn = GameConnection()
+    conn = _connection_factory()
 
-    logger = GameLogger()
+    logger = GameLogger(log_dir=_log_dir)
     gs = GameState(conn)
     log.info("Tool-call log: %s", logger._path)
+
+    # Cassette recording, off unless CIV_MCP_RECORD names a directory.
+    recording.configure_from_env()
 
     # Auto-boot: launch game + load save when running as eval
     save_file = os.environ.get("CIV_MCP_SAVE_FILE")
@@ -266,8 +308,9 @@ async def lifespan(server: FastMCP) -> AsyncIterator[AppContext]:
     # Spectator-mode background services (camera tracking + popup auto-dismiss)
     camera = CameraController(conn)
     popup_watcher = PopupWatcher(conn)
-    camera.start()
-    popup_watcher.start()
+    if _background_services_enabled:
+        camera.start()
+        popup_watcher.start()
 
     try:
         yield AppContext(
@@ -330,6 +373,9 @@ async def _logged(
     logger = _get_logger(ctx)
     turn = logger._turn or "?"
     start = time.monotonic()
+    # Cassette recording brackets the call so every Lua round trip the tool
+    # issues is attributed to it. No-op unless CIV_MCP_RECORD is set.
+    recording.begin(tool_name, params)
     try:
         result = await fn()
     except (LuaError, ValueError) as e:
@@ -344,6 +390,7 @@ async def _logged(
             _result_summary(result),
         )
         await logger.log_error(tool_name, result)
+        recording.finish(result)
         return result
     except ConnectionError as e:
         result = str(e)
@@ -392,6 +439,7 @@ async def _logged(
             except Exception:
                 log.error("CONNECTION RECOVERY: restart failed", exc_info=True)
 
+        recording.finish(result)
         return result
     # Success — reset connection error counter
     _logged._conn_errors = 0
@@ -405,6 +453,7 @@ async def _logged(
         _result_summary(result),
     )
     await logger.log_tool_call(tool_name, params, result, ms)
+    recording.finish(result)
     return result
 
 

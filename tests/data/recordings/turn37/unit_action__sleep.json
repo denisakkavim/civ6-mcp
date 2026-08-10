@@ -1,0 +1,20 @@
+{
+  "tool": "unit_action",
+  "arguments": {
+    "unit_id": 720898,
+    "action": "sleep"
+  },
+  "scenario": "turn37",
+  "recorded_at": "2026-08-10T21:01:17+00:00",
+  "notes": null,
+  "result": "SLEEPING|45,12",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local unit = UnitManager.GetUnit(me, 2) if unit == nil then print(\"ERR:UNIT_NOT_FOUND\"); print(\"---END---\"); return end\nlocal sleepHash = GameInfo.UnitOperations[\"UNITOPERATION_SLEEP\"].Hash\nif UnitManager.CanStartOperation(unit, sleepHash, nil, nil) then\n    UnitManager.RequestOperation(unit, sleepHash, {})\n    print(\"OK:SLEEPING|\" .. unit:GetX() .. \",\" .. unit:GetY())\nelse\n    print(\"ERR:CANNOT_SLEEP|Unit cannot sleep\"); print(\"---END---\"); return\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:SLEEPING|45,12"
+      ]
+    }
+  ]
+}

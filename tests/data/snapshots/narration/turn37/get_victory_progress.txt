@@ -1,0 +1,45 @@
+=== VICTORY PROGRESS ===
+
+Enabled: Science, Domination, Culture, Religious, Diplomatic
+
+SCIENCE VICTORY (launch 4 space projects = 50 VP)
+  Inca: 0/25 VP | 5 techs | 0 spaceport(s) [0/25] <--
+
+  YOUR SPACE PROJECT CHAIN:
+    [LOCKED] Launch Earth Satellite -- requires Rocketry (NEED)
+    [LOCKED] Launch Moon Landing -- requires Satellites (NEED)
+    [LOCKED] Launch Exoplanet Expedition -- requires Offworld Mission (NEED)
+
+DOMINATION (own all original capitals)
+  Inca: holds own capital | military 97 <--
+
+CULTURE (your tourists > every civ's domestic tourists)
+  Our domestic tourists: 0
+
+RELIGION (your religion majority in all civs — slots: 0/3)
+  Inca: majority=none | 0 cities converted <--
+
+DIPLOMATIC (20 VP from World Congress)
+  Inca: 0/20 VP <--
+
+SCORE (highest at turn 500)
+  Inca: 60 <--
+
+RIVAL INTELLIGENCE (met civilizations)
+  Inca: 3 cities | Sci 5 Cul 5 Gold +7 | Mil 97 <--
+
+DEMOGRAPHICS (all civilizations)
+  Population   Rank 4 | Ours: 6 | Best: 12 | Avg: 8.5 | Worst: 6
+  Soldiers     Rank 4 | Ours: 97 | Best: 148 | Avg: 121.0 | Worst: 97
+  Crop Yield   Rank 4 | Ours: 17 | Best: 34 | Avg: 25.0 | Worst: 17
+  GNP          Rank 2 | Ours: 7 | Best: 25 | Avg: 9.9 | Worst: 2
+  Land         Rank 2 | Ours: 25 | Best: 31 | Avg: 24.8 | Worst: 20
+  Goods        Rank 4 | Ours: 18 | Best: 27 | Avg: 21.2 | Worst: 18
+
+VICTORY ASSESSMENT
+  Science      [######----] 60% — Near tech lead (0 behind best known: Inca (5)) ** RECOMMENDED **
+  Score        [##--------] 25% — Rank #4 by population (proxy for score)
+  Culture      [##--------] 20% — No tourism data
+  Diplomatic   [##--------] 20% — 0/20 VP — slow accumulation
+  Domination   [#---------] 15% — Military too weak (97 vs best 148)
+  Religion     [----------] 0% — No founded religion — path closed

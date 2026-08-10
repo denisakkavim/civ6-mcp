@@ -1,0 +1,2 @@
+MOVING_TO|42,13|from:43,14|now_at:42,13|(moved dx:-1 dy:-1)
+Revealed 2 new tiles (no notable features)

@@ -1,0 +1,10 @@
+Units:
+  UNIT_SETTLER (cost 80, 6 turns, buy: 280g)
+  UNIT_BUILDER (cost 50, 2 turns, buy: 115g)
+  UNIT_TRADER (cost 40, 2 turns, buy: 90g)
+  UNIT_SCOUT (cost 30, 1 turns, buy: 60g)
+  UNIT_WARRIOR (cost 40, 1 turns, buy: 80g)
+  UNIT_SLINGER (cost 35, 1 turns, buy: 65g)
+  UNIT_SPEARMAN (cost 65, 2 turns, buy: 125g)
+Districts:
+  DISTRICT_ENCAMPMENT (cost 54, 3 turns)

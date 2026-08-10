@@ -56,4 +56,21 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
     "pytest>=8.0",
+    # scripts/ CLIs
+    "typer>=0.12",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Lets test modules do `from support import recordings` from any subfolder.
+pythonpath = ["tests"]
+# `live` needs a running Civ 6 with FireTuner. CI runs `-m "not live"`; run
+# `uv run pytest -m live` locally with a game up.
+markers = [
+    "live: requires a running Civ 6 with FireTuner",
+    "destructive: kills/relaunches the game; run on its own",
+]
+# xfail(strict=True) marks refactor stages that have not landed yet: when the
+# work lands the test XPASSes and the suite goes red, which is the prompt to
+# delete the marker. See tests/README.md.
+xfail_strict = true

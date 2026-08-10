@@ -1,0 +1,5 @@
+DISTRICT_ENCAMPMENT placement options (4 tiles):
+  #1 (45,10) Adj: +0 (no adjacency) — Plains
+  #2 (44,10) Adj: +0 (no adjacency) — Plains Woods
+  #3 (46,10) Adj: +0 (no adjacency) — Plains
+  #4 (43,11) Adj: +0 (no adjacency) — Plains (Hills) Hills

@@ -1,0 +1,23 @@
+16 trade route destinations:
+
+Domestic (food + production to destination):
+  Qusqu at (45,12) | Food:1 Prod:1
+  Wanuku at (44,8) | Food:1 Prod:1
+  Antawaylla at (47,9) | Food:1 Prod:1
+
+International (gold to origin):
+  Tbilisi (Georgia) at (52,21) | Gold:3
+  Kutaisi (Georgia) at (55,19) | Gold:3
+  Ulundi (Zulu) at (19,20) | Prod:1 Gold:5
+  Kwadukuza (Zulu) at (17,25) | Gold:3
+  Aachen (Germany) at (7,26) | Gold:3 Sci:1
+  Cologne (Germany) at (9,30) | Gold:3 Faith:1
+  Heidelberg (Germany) at (4,28) | Gold:3
+  Wolin (Wolin) at (53,12) | Gold:3
+  La Venta (La Venta) at (46,23) | Gold:3 Faith:1
+  Preslav (Preslav) at (11,21) | Gold:3
+  Mohenjo-Daro (Mohenjo-Daro) at (14,30) | Gold:3
+  Zanzibar (Zanzibar) at (15,14) | Gold:3
+  Vilnius (Vilnius) at (24,23) | Gold:3
+
+Use unit_action with action='trade_route', target_x=X, target_y=Y

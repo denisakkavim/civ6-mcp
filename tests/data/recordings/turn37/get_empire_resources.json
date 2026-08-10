@@ -1,0 +1,39 @@
+{
+  "tool": "get_empire_resources",
+  "arguments": {},
+  "scenario": "turn37",
+  "recorded_at": "2026-08-10T21:01:04+00:00",
+  "notes": null,
+  "result": "Empire Resources:\n\nStrategic Stockpiles:\n  HORSES: 25/25 (+2/turn) [income 2]\n  IRON: 0/25 (+0/turn)\n\nLuxury Resources:\n  SALT: 1\n\nStrategic Tiles:\n  HORSES \u2014 improved at (44,13)\n\nLuxury Tiles:\n  SALT \u2014 improved at (45,11)\n  !! INCENSE \u2014 UNIMPROVED at (46,9) \u2014 needs builder!\n\nBonus Tiles:\n  WHEAT \u2014 UNIMPROVED at (44,8)\n  WHEAT \u2014 improved at (44,9)\n  DEER \u2014 UNIMPROVED at (48,8)\n\nNearby Unclaimed:\n  [L] INCENSE at (45,7) \u2014 5 tiles from Qusqu\n  [L] SPICES at (49,7) \u2014 7 tiles from Qusqu\n  [B] CATTLE at (42,8) \u2014 5 tiles from Qusqu\n  [S] HORSES at (49,9) \u2014 6 tiles from Qusqu\n  [B] WHEAT at (43,10) \u2014 3 tiles from Qusqu\n  [S] HORSES at (49,10) \u2014 5 tiles from Qusqu\n  [B] SHEEP at (47,11) \u2014 3 tiles from Qusqu\n  [B] COPPER at (41,14) \u2014 5 tiles from Qusqu\n  [B] WHEAT at (43,14) \u2014 3 tiles from Qusqu\n  [B] BANANAS at (43,16) \u2014 4 tiles from Qusqu\n  [B] FISH at (42,4) \u2014 4 tiles from Wanuku\n  [B] CRABS at (44,4) \u2014 4 tiles from Wanuku\n  [B] DEER at (42,6) \u2014 3 tiles from Wanuku\n  [L] SALT at (44,6) \u2014 2 tiles from Wanuku",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal vis = PlayersVisibility[me]\nlocal pRes = Players[me]:GetResources()\nlocal classMap = {RESOURCECLASS_STRATEGIC=\"strategic\", RESOURCECLASS_LUXURY=\"luxury\", RESOURCECLASS_BONUS=\"bonus\"}\n-- Stockpile info for strategic and luxury resources\nfor row in GameInfo.Resources() do\n    if pRes:IsResourceVisible(row.Index) then\n        local cls = classMap[row.ResourceClassType]\n        if cls == \"strategic\" then\n            local amt = pRes:GetResourceAmount(row.Index)\n            local cap = pRes:GetResourceStockpileCap(row.Index)\n            local accum = pRes:GetResourceAccumulationPerTurn(row.Index)\n            local demand = pRes:GetUnitResourceDemandPerTurn(row.Index)\n            local imported = pRes:GetResourceImportPerTurn(row.Index)\n            local rName = row.ResourceType:gsub(\"RESOURCE_\", \"\")\n            print(\"STOCKPILE|\" .. rName .. \"|\" .. amt .. \"|\" .. cap .. \"|\" .. accum .. \"|\" .. demand .. \"|\" .. imported)\n        elseif cls == \"luxury\" then\n            local amt = pRes:GetResourceAmount(row.Index)\n            if amt > 0 then\n                local rName = row.ResourceType:gsub(\"RESOURCE_\", \"\")\n                print(\"LUXURY_OWNED|\" .. rName .. \"|\" .. amt)\n            end\n        end\n    end\nend\nlocal myCities = {}\nlocal seen = {}\nfor _, c in Players[me]:GetCities():Members() do\n    table.insert(myCities, {name=Locale.Lookup(c:GetName()), x=c:GetX(), y=c:GetY()})\nend\n-- Scan all owned tiles\nlocal mapW, mapH = Map.GetGridSize()\nfor x = 0, mapW - 1 do\n    for y = 0, mapH - 1 do\n        local plot = Map.GetPlot(x, y)\n        if plot and plot:GetOwner() == me then\n            local rIdx = plot:GetResourceType()\n            if rIdx >= 0 and pRes:IsResourceVisible(rIdx) then\n                local resEntry = GameInfo.Resources[rIdx]\n                local rName = resEntry.ResourceType:gsub(\"RESOURCE_\", \"\")\n                local rClass = classMap[resEntry.ResourceClassType] or \"bonus\"\n                local impIdx = plot:GetImprovementType()\n                local improved = \"0\"\n                if impIdx >= 0 then improved = \"1\" end\n                print(\"OWNED|\" .. rName .. \"|\" .. rClass .. \"|\" .. improved .. \"|\" .. x .. \",\" .. y)\n                seen[x .. \",\" .. y] = true\n            end\n        end\n    end\nend\n-- Scan radius 5 around each city for unowned visible resources\nfor _, city in ipairs(myCities) do\n    for dy = -5, 5 do\n        for dx = -5, 5 do\n            local tx, ty = city.x + dx, city.y + dy\n            local key = tx .. \",\" .. ty\n            if not seen[key] then\n                local tPlot = Map.GetPlot(tx, ty)\n                if tPlot and vis:IsRevealed(tPlot:GetIndex()) and tPlot:GetOwner() ~= me then\n                    local rIdx = tPlot:GetResourceType()\n                    if rIdx >= 0 and pRes:IsResourceVisible(rIdx) then\n                        local resEntry = GameInfo.Resources[rIdx]\n                        local rName = resEntry.ResourceType:gsub(\"RESOURCE_\", \"\")\n                        local rClass = classMap[resEntry.ResourceClassType] or \"bonus\"\n                        local dist = Map.GetPlotDistance(city.x, city.y, tx, ty)\n                        print(\"NEARBY|\" .. rName .. \"|\" .. rClass .. \"|\" .. tx .. \",\" .. ty .. \"|\" .. city.name .. \"|\" .. dist)\n                        seen[key] = true\n                    end\n                end\n            end\n        end\n    end\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "LUXURY_OWNED|SALT|1",
+        "STOCKPILE|HORSES|25|25|2|0|0",
+        "STOCKPILE|IRON|0|25|0|0|0",
+        "OWNED|WHEAT|bonus|0|44,8",
+        "OWNED|WHEAT|bonus|1|44,9",
+        "OWNED|HORSES|strategic|1|44,13",
+        "OWNED|SALT|luxury|1|45,11",
+        "OWNED|INCENSE|luxury|0|46,9",
+        "OWNED|DEER|bonus|0|48,8",
+        "NEARBY|INCENSE|luxury|45,7|Qusqu|5",
+        "NEARBY|SPICES|luxury|49,7|Qusqu|7",
+        "NEARBY|CATTLE|bonus|42,8|Qusqu|5",
+        "NEARBY|HORSES|strategic|49,9|Qusqu|6",
+        "NEARBY|WHEAT|bonus|43,10|Qusqu|3",
+        "NEARBY|HORSES|strategic|49,10|Qusqu|5",
+        "NEARBY|SHEEP|bonus|47,11|Qusqu|3",
+        "NEARBY|COPPER|bonus|41,14|Qusqu|5",
+        "NEARBY|WHEAT|bonus|43,14|Qusqu|3",
+        "NEARBY|BANANAS|bonus|43,16|Qusqu|4",
+        "NEARBY|FISH|bonus|42,4|Wanuku|4",
+        "NEARBY|CRABS|bonus|44,4|Wanuku|4",
+        "NEARBY|DEER|bonus|42,6|Wanuku|3",
+        "NEARBY|SALT|luxury|44,6|Wanuku|2"
+      ]
+    }
+  ]
+}

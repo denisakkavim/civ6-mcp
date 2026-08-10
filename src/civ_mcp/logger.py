@@ -22,11 +22,11 @@ LOG_DIR = Path.home() / ".civ6-mcp" / "logs"
 class GameLogger:
     """Appends one JSONL row per tool call to a local per-session file."""
 
-    def __init__(self) -> None:
+    def __init__(self, log_dir: Path | None = None) -> None:
         self.session_id = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
         self._turn: int | None = None
         self._game: str | None = None
-        self._path = LOG_DIR / f"{self.session_id}.jsonl"
+        self._path = (log_dir or LOG_DIR) / f"{self.session_id}.jsonl"
 
     def set_turn(self, turn: int) -> None:
         self._turn = turn

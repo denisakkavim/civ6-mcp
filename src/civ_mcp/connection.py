@@ -13,7 +13,7 @@ from __future__ import annotations
 import asyncio
 import logging
 
-from civ_mcp import tuner_client
+from civ_mcp import recording, tuner_client
 from civ_mcp.lua._helpers import SENTINEL
 
 log = logging.getLogger(__name__)
@@ -120,12 +120,18 @@ class GameConnection:
     async def execute_read(self, lua_code: str, timeout: float = 5.0) -> list[str]:
         """Execute Lua in GameCore context (read state). Returns parsed output lines."""
         await self._ensure_game_states()
-        return await self._execute_and_collect(self.gamecore_index, lua_code, timeout)
+        lines = await self._execute_and_collect(
+            self.gamecore_index, lua_code, timeout
+        )
+        recording.record(recording.READ, lua_code, lines)
+        return lines
 
     async def execute_write(self, lua_code: str, timeout: float = 5.0) -> list[str]:
         """Execute Lua in InGame context (issue commands). Returns parsed output lines."""
         await self._ensure_game_states()
-        return await self._execute_and_collect(self.ingame_index, lua_code, timeout)
+        lines = await self._execute_and_collect(self.ingame_index, lua_code, timeout)
+        recording.record(recording.WRITE, lua_code, lines)
+        return lines
 
     async def execute_in_state(
         self, state_index: int, lua_code: str, timeout: float = 5.0

@@ -1,0 +1,19 @@
+Government: Chiefdom (GOVERNMENT_CHIEFDOM)
+
+2 policy slots:
+  Slot 0 (Military): Discipline (POLICY_DISCIPLINE)
+  Slot 1 (Economic): God King (POLICY_GOD_KING)
+
+Available policies:
+  Military:
+    Survey (POLICY_SURVEY): Double experience for recon units.
+    Agoge (POLICY_AGOGE): +50% [ICON_Production] Production toward Ancient and Classical era melee, anti-cavalry, and ranged units.
+    Maritime Industries (POLICY_MARITIME_INDUSTRIES): +100% [ICON_Production] Production toward Ancient and Classical era naval units.
+    Maneuver (POLICY_MANEUVER): +50% [ICON_Production] Production toward Ancient and Classical era heavy and light cavalry units.
+  Economic:
+    Urban Planning (POLICY_URBAN_PLANNING): +1 [ICON_Production] Production in all cities.
+    Ilkum (POLICY_ILKUM): +30% [ICON_Production] Production toward Builders.
+    Caravansaries (POLICY_CARAVANSARIES): +2 [ICON_Gold] Gold from all [ICON_TradeRoute] Trade Routes.
+
+Use set_policies with slot assignments, e.g. '0=POLICY_AGOGE,1=POLICY_URBAN_PLANNING'
+Wildcard slots can accept any policy type.

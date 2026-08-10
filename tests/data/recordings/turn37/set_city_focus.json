@@ -1,0 +1,20 @@
+{
+  "tool": "set_city_focus",
+  "arguments": {
+    "city_id": 65536,
+    "focus": "production"
+  },
+  "scenario": "turn37",
+  "recorded_at": "2026-08-10T21:01:19+00:00",
+  "notes": null,
+  "result": "FOCUS_SET|YIELD_PRODUCTION|favored",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local pCity = CityManager.GetCity(me, 65536 % 65536) if pCity == nil then print(\"ERR:CITY_NOT_FOUND\"); print(\"---END---\"); return end\nlocal yRow = GameInfo.Yields[\"YIELD_PRODUCTION\"]\nif yRow == nil then print(\"ERR:YIELD_NOT_FOUND|YIELD_PRODUCTION\"); print(\"---END---\"); return end\nlocal citz = pCity:GetCitizens()\n-- Clear existing favored focus first\nfor yr in GameInfo.Yields() do\n    if citz:IsFavoredYield(yr.Index) then\n        local tp = {}\n        tp[CityCommandTypes.PARAM_YIELD_TYPE] = yr.Index\n        tp[CityCommandTypes.PARAM_FLAGS] = 1\n        CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, tp)\n    end\nend\n-- Set new focus\nlocal tParams = {}\ntParams[CityCommandTypes.PARAM_YIELD_TYPE] = yRow.Index\ntParams[CityCommandTypes.PARAM_FLAGS] = 1\nCityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, tParams)\nprint(\"OK:FOCUS_SET|YIELD_PRODUCTION|favored\")\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:FOCUS_SET|YIELD_PRODUCTION|favored"
+      ]
+    }
+  ]
+}

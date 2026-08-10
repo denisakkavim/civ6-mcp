@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    name: Python — tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --dev
+      # The "not live" marker excludes the conformance suite. That suite needs
+      # a running Civ 6 with FireTuner. A hosted runner cannot provide one.
+      - run: uv run pytest tests/ -m "not live" -q
+      # If you update a snapshot and do not commit it, the suite passes on your
+      # machine and the surface change is invisible in review.
+      - name: Snapshots are committed
+        run: git diff --exit-code tests/data/snapshots/
