@@ -45,3 +45,6 @@ scripts/mission_control.sh
 docs/agent-essays/
 mission-control/
 docs/analysis/
+
+# Local working documents for the tool-surface refactor — never committed
+tool-surface-*.md
