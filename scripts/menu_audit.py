@@ -16,6 +16,8 @@ from __future__ import annotations
 import json
 import os
 import sys
+
+import typer
 import time
 from pathlib import Path
 
@@ -142,15 +144,17 @@ def capture_and_ocr(stage: str) -> dict:
     return result
 
 
-def main():
-    import argparse
+app = typer.Typer(add_completion=False, help="Menu navigation audit.")
 
-    parser = argparse.ArgumentParser(description="Menu navigation audit")
-    parser.add_argument("--save", default="0A_GROUND_CONTROL", help="Save to load")
-    parser.add_argument(
-        "--skip-launch", action="store_true", help="Skip game launch (already running)"
-    )
-    args = parser.parse_args()
+
+@app.command()
+def main(
+    save: str = typer.Option("0T_TURN37_INCA", help="Save to load."),
+    skip_launch: bool = typer.Option(
+        False, "--skip-launch", help="Skip launching; the game is already running."
+    ),
+) -> None:
+    """Walk the load-game menus, screenshotting each step for inspection."""
 
     AUDIT_DIR.mkdir(parents=True, exist_ok=True)
     print(f"Audit output: {AUDIT_DIR}")
@@ -158,7 +162,7 @@ def main():
     print()
 
     # Step 0: Launch game if needed
-    if not args.skip_launch:
+    if not skip_launch:
         print("Step 0: Launching Civ VI...")
         if not game_launcher._is_tuner_port_open():
             result = game_launcher._launch_game_sync()
@@ -191,8 +195,8 @@ def main():
     print()
 
     # Step 4: Find and click the save
-    print(f"Step 4: Find save '{args.save}'")
-    clicked = game_launcher._click_text(args.save, timeout=15, post_delay=1)
+    print(f"Step 4: Find save '{save}'")
+    clicked = game_launcher._click_text(save, timeout=15, post_delay=1)
     print(f"  Clicked: {clicked is not None}")
     if clicked:
         save_selected = capture_and_ocr("04_save_selected")
@@ -253,4 +257,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    app()

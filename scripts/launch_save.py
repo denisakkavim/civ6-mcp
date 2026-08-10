@@ -12,11 +12,12 @@ Note: FireTuner only allows ONE connection at a time. This script does NOT
 poll the port — use MCP tools after the script finishes.
 """
 
-import argparse
 import glob
 import os
 import subprocess
 import sys
+
+import typer
 import time
 
 import Quartz
@@ -244,30 +245,33 @@ def navigate_to_save(save_name):
 # ---------------------------------------------------------------------------
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Launch Civ 6 and load a save")
-    parser.add_argument(
-        "save", nargs="?", help="Save name (default: most recent autosave)"
-    )
-    parser.add_argument(
-        "--kill-first", action="store_true", help="Kill existing game first"
-    )
-    parser.add_argument(
-        "--no-launch", action="store_true", help="Don't launch, just navigate"
-    )
-    args = parser.parse_args()
+app = typer.Typer(add_completion=False, help="Launch Civ 6 and load a save.")
 
-    save_name = args.save or get_latest_autosave()
+
+@app.command()
+def main(
+    save: str | None = typer.Argument(
+        None, help="Save name. Defaults to the most recent autosave."
+    ),
+    kill_first: bool = typer.Option(
+        False, "--kill-first", help="Kill any running game first."
+    ),
+    no_launch: bool = typer.Option(
+        False, "--no-launch", help="Do not launch; just navigate the menus."
+    ),
+) -> None:
+    """Launch the game (unless already running) and load a save by name."""
+    save_name = save or get_latest_autosave()
     if not save_name:
-        print("No autosaves found!")
-        sys.exit(1)
+        typer.secho("No autosaves found.", fg=typer.colors.RED)
+        raise typer.Exit(1)
     print(f"Target save: {save_name}")
 
-    if args.kill_first:
+    if kill_first:
         print("Killing existing game...")
         kill_game()
 
-    if not args.no_launch and not is_running():
+    if not no_launch and not is_running():
         print("Launching Civ 6 via Steam...")
         launch_game()
         for _ in range(30):
@@ -286,4 +290,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    app()

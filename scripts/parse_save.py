@@ -12,11 +12,12 @@ Usage:
 
 from __future__ import annotations
 
-import argparse
 import csv
 import json
 import struct
 import sys
+
+import typer
 import zlib
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
@@ -539,42 +540,40 @@ def parse_save(path: Path) -> tuple[SaveMetadata, list[PlayerTimelines]]:
     return meta, players
 
 
-def main():
-    parser = argparse.ArgumentParser(
-        description="Extract Civ 6 save file timelines to JSONL"
-    )
-    parser.add_argument("save_file", type=Path, help="Path to .Civ6Save file")
-    parser.add_argument(
-        "-o", "--output", type=Path, help="Output file (default: stdout)"
-    )
-    parser.add_argument(
-        "--csv", action="store_true", help="Output CSV instead of JSONL"
-    )
-    parser.add_argument(
-        "--player", type=int, default=None, help="Extract only this player (0-based)"
-    )
-    parser.add_argument(
-        "--raw",
-        action="store_true",
-        help="Output raw timeline names instead of diary fields",
-    )
-    args = parser.parse_args()
+app = typer.Typer(
+    add_completion=False, help="Extract Civ 6 save file timelines to JSONL."
+)
 
-    if not args.save_file.exists():
-        print(f"File not found: {args.save_file}", file=sys.stderr)
-        sys.exit(1)
 
-    meta, players = parse_save(args.save_file)
+@app.command()
+def main(
+    save_file: Path = typer.Argument(
+        ..., exists=True, dir_okay=False, help="Path to a .Civ6Save file."
+    ),
+    output: Path | None = typer.Option(
+        None, "-o", "--output", help="Output file. Defaults to stdout."
+    ),
+    csv: bool = typer.Option(False, "--csv", help="Output CSV instead of JSONL."),
+    player: int | None = typer.Option(
+        None, "--player", help="Extract only this player (0-based)."
+    ),
+    raw: bool = typer.Option(
+        False, "--raw", help="Output raw timeline names instead of derived fields."
+    ),
+) -> None:
+    """Decompress a save and dump its per-turn score timelines."""
 
-    if args.player is not None:
-        players = [p for p in players if p.player_index == args.player]
+    meta, players = parse_save(save_file)
+
+    if player is not None:
+        players = [p for p in players if p.player_index == player]
 
     rows = timelines_to_diary_rows(players, meta)
 
     # Output
-    out = open(args.output, "w") if args.output else sys.stdout
+    out = open(output, "w") if output else sys.stdout
     try:
-        if args.csv:
+        if csv:
             if not rows:
                 return
             writer = csv.DictWriter(out, fieldnames=rows[0].keys())
@@ -584,14 +583,14 @@ def main():
             for row in rows:
                 out.write(json.dumps(row, separators=(",", ":")) + "\n")
     finally:
-        if args.output:
+        if output:
             out.close()
 
     n_rows = len(rows)
     n_players = len(set(r["pid"] for r in rows))
     n_turns = len(set(r.get("turn", 0) for r in rows))
-    fmt = "CSV" if args.csv else "JSONL"
-    dest = args.output or "stdout"
+    fmt = "CSV" if csv else "JSONL"
+    dest = output or "stdout"
     print(
         f"\nWrote {n_rows} rows ({n_players} players × {n_turns} turns) as {fmt} to {dest}",
         file=sys.stderr,
@@ -602,4 +601,4 @@ if __name__ == "__main__":
     import signal
 
     signal.signal(signal.SIGPIPE, signal.SIG_DFL)
-    main()
+    app()
