@@ -1,0 +1,52 @@
+=== VICTORY PROGRESS ===
+
+Enabled: Science, Domination, Culture, Religious, Diplomatic
+
+SCIENCE VICTORY (launch 4 space projects = 50 VP)
+  Georgia: 0/25 VP | 13 techs | 0 spaceport(s) [0/25]
+  Inca: 0/25 VP | 10 techs | 0 spaceport(s) [0/25] <--
+
+  YOUR SPACE PROJECT CHAIN:
+    [LOCKED] Launch Earth Satellite -- requires TECH_ROCKETRY (NEED)
+    [LOCKED] Launch Moon Landing -- requires TECH_SATELLITES (NEED)
+    [LOCKED] Launch Exoplanet Expedition -- requires TECH_OFFWORLD_MISSION (NEED)
+
+DOMINATION (own all original capitals)
+  Inca: holds own capital | military 145 <--
+  Georgia: holds own capital | military 128
+
+CULTURE (your tourists > every civ's domestic tourists)
+  Our domestic tourists: 2
+  vs Georgia: 0/3 tourists (need 3 more)
+
+RELIGION (your religion majority in all civs — slots: 1/3)
+  Inca: majority=none | 0 cities converted <--
+  Georgia: majority=RELIGION_ORTHODOXY (FOUNDED: Eastern Orthodoxy) | 4 cities converted
+
+DIPLOMATIC (20 VP from World Congress)
+  Inca: 0/20 VP <--
+  Georgia: 0/20 VP
+
+SCORE (highest at turn 500)
+  Georgia: 162
+  Inca: 105 <--
+
+RIVAL INTELLIGENCE (met civilizations)
+  Georgia: 4 cities | Sci 13 Cul 10 Gold +6 | Mil 128
+  Inca: 3 cities | Sci 7 Cul 8 Gold +4 | Mil 145 <--
+
+DEMOGRAPHICS (all civilizations)
+  Population   Rank 4 | Ours: 10 | Best: 20 | Avg: 15.5 | Worst: 10
+  Soldiers     Rank 3 | Ours: 145 | Best: 187 | Avg: 153.5 | Worst: 128
+  Crop Yield   Rank 4 | Ours: 28 | Best: 58 | Avg: 46.8 | Worst: 28
+  GNP          Rank 4 | Ours: 4 | Best: 28 | Avg: 10.5 | Worst: 4
+  Land         Rank 4 | Ours: 31 | Best: 44 | Avg: 39.5 | Worst: 31
+  Goods        Rank 4 | Ours: 26 | Best: 43 | Avg: 37.4 | Worst: 26
+
+VICTORY ASSESSMENT
+  Culture      [#######---] 70% — Close to cultural victory (max gap: 3) ** RECOMMENDED **
+  Science      [######----] 60% — Near tech lead (3 behind best known: Georgia (13))
+  Score        [##--------] 25% — Rank #4 by population (proxy for score)
+  Diplomatic   [##--------] 20% — 0/20 VP — slow accumulation
+  Domination   [#---------] 15% — Military too weak (145 vs best 187)
+  Religion     [----------] 0% — No founded religion — path closed

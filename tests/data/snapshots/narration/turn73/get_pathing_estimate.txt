@@ -1,0 +1,1 @@
+Unreachable — no path found. Destination may be in fog, behind foreign borders, or blocked by impassable terrain.

@@ -1,0 +1,22 @@
+{
+  "tool": "unit_action",
+  "arguments": {
+    "unit_id": 851972,
+    "action": "teleport",
+    "target_x": 44,
+    "target_y": 8
+  },
+  "scenario": "turn73",
+  "recorded_at": "2026-08-11T20:25:22+00:00",
+  "notes": null,
+  "result": "TELEPORTED|to Wanuku at (44,8)",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local unit = UnitManager.GetUnit(me, 4) if unit == nil then print(\"ERR:UNIT_NOT_FOUND\"); print(\"---END---\"); return end\nlocal opInfo = GameInfo.UnitOperations[\"UNITOPERATION_TELEPORT_TO_CITY\"]\nif opInfo == nil then print(\"ERR:NO_TELEPORT_OP|TELEPORT_TO_CITY operation not found\"); print(\"---END---\"); return end\nlocal opHash = opInfo.Hash\nlocal tParams = {}\ntParams[UnitOperationTypes.PARAM_X] = 44\ntParams[UnitOperationTypes.PARAM_Y] = 8\nlocal can = UnitManager.CanStartOperation(unit, opHash, nil, tParams, true)\nif not can then print(\"ERR:CANNOT_TELEPORT|Cannot teleport trader to (44,8). Is the trader idle (not on an active route)?\"); print(\"---END---\"); return end\nUnitManager.RequestOperation(unit, opHash, tParams)\nlocal destCity = CityManager.GetCityAt(44, 8)\nlocal destName = destCity and Locale.Lookup(destCity:GetName()) or \"(44,8)\"\nprint(\"OK:TELEPORTED|to \" .. destName .. \" at (44,8)\")\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:TELEPORTED|to Wanuku at (44,8)"
+      ]
+    }
+  ]
+}

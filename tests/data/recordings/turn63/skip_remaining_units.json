@@ -1,0 +1,24 @@
+{
+  "tool": "skip_remaining_units",
+  "arguments": {},
+  "scenario": "turn63",
+  "recorded_at": "2026-08-11T19:59:57+00:00",
+  "notes": null,
+  "result": "FORTIFIED|0 fortified, 0 healing\nSKIPPED|8 units",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal fortified = 0\nlocal healed = 0\nlocal healHash = GameInfo.UnitOperations[\"UNITOPERATION_HEAL\"] and GameInfo.UnitOperations[\"UNITOPERATION_HEAL\"].Hash\nfor _, unit in Players[me]:GetUnits():Members() do\n    local x = unit:GetX()\n    if x ~= -9999 and unit:GetMovesRemaining() > 0 then\n        local info = GameInfo.Units[unit:GetType()]\n        local isCombat = info and info.Combat > 0\n        if isCombat then\n            if unit:GetDamage() > 0 and healHash then\n                local ok = pcall(function()\n                    if UnitManager.CanStartOperation(unit, healHash, nil, true) then\n                        UnitManager.RequestOperation(unit, healHash)\n                        healed = healed + 1\n                    end\n                end)\n            else\n                local ok = pcall(function()\n                    if UnitManager.CanStartOperation(unit, UnitOperationTypes.FORTIFY, nil, true) then\n                        UnitManager.RequestOperation(unit, UnitOperationTypes.FORTIFY)\n                        fortified = fortified + 1\n                    end\n                end)\n            end\n        end\n    end\nend\nprint(\"OK:FORTIFIED|\" .. fortified .. \" fortified, \" .. healed .. \" healing\")\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:FORTIFIED|0 fortified, 0 healing"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal count = 0\nfor _, unit in Players[me]:GetUnits():Members() do\n    local x = unit:GetX()\n    if x ~= -9999 and unit:GetMovesRemaining() > 0 then\n        UnitManager.FinishMoves(unit)\n        count = count + 1\n    end\nend\nprint(\"OK:SKIPPED|\" .. count .. \" units\")\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:SKIPPED|8 units"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+Envoy tokens available: 0
+
+3 known city-states:
+  Wolin (Militaristic) — 3 envoys [player 4]
+  La Venta (Religious) — 2 envoys (Suzerain: Georgia) [player 5]
+  Free Cities (Unknown) — 0 envoys [player 62]

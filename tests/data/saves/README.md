@@ -14,9 +14,51 @@ uv run python scripts/install_saves.py
 | File | Game state |
 |---|---|
 | `0T_TURN37_INCA.Civ6Save` | Inca (Pachacuti), turn 37, 3 cities, 6 units, Classical era |
+| `0T_TURN57_INCA.Civ6Save` | Inca (Pachacuti), turn 57, 3 cities, 10 units, Classical era |
+| `0T_TURN63_INCA.Civ6Save` | Inca (Pachacuti), turn 63, 3 cities, 12 units, Medieval era, Shinto founded |
+| `0T_TURN73_INCA.Civ6Save` | Inca (Pachacuti), turn 73, 4 cities, Medieval era, idle trader, builder on a buildable tile |
 
-The recordings in `tests/data/recordings/turn37/` came from this save. The
+The recordings in `tests/data/recordings/turn37/` came from the first save. A
 save is tracked because you cannot re-record a scenario without its save.
+
+Turn 57 holds units and buildings that turn 37 does not have: a settler, a
+trader, a builder with charges, city walls, and a Holy Site. It has also met
+Georgia. Each of these is the precondition for a `unit_action` verb that turn
+37 cannot record. Stage 4 of the tool-surface plan replaces every one of those
+verbs, so the recordings are the evidence that the replacements behave the
+same.
+
+Turn 63 is the first save with a religion. It is therefore the only save where
+`religion_type` holds a value. Every other save shows the fallback to the
+display name. Turn 63 also sees the cities of Georgia. Stage 3.4 needs foreign
+cities to test the composite city id.
+
+`scripts/record_game_traffic.py` skips a verb when the loaded save cannot meet
+its precondition. It prints the reason. One save therefore does not have to
+hold everything. Record each scenario from its own save. The corpus collects
+the verbs across the scenarios.
+
+These verbs still have no recording. Each one needs a unit or a tile state that
+none of the three saves holds:
+
+| Verb | What it needs |
+|---|---|
+| `repair` | a pillaged improvement |
+| `remove_feature`, `remove_improvement` | a builder on a feature or an improvement |
+| `build_route` | a Military Engineer |
+| `heal` | a damaged unit |
+| `activate` | a Great Person on its matching district |
+| `spread_religion` | a Missionary or an Apostle next to a city |
+| `trade_route` | a Trader that is not on a route |
+| `attack`, `city_action` | an enemy unit in range |
+| `spy_action` | a Spy |
+| `sacrifice_charges` | the Royal Society card |
+
+Some preconditions do not appear in the output of any tool. A Missionary must
+stand in or next to a city. A Great Person must stand on its own district.
+The recorder cannot test for these, so it makes the call and then deletes the
+recording if the game refuses it. It reports each deletion. The corpus
+therefore holds no failed call.
 
 The file was an autosave named `0_MCP_0037`. This repository's own server
 wrote it during an earlier run. The file was renamed before it was added.
@@ -64,5 +106,8 @@ a save always loads. A curated save may not load.
 2. Copy the file into this folder.
 3. Add a row to the table above. State the civ, the turn, and the number of
    cities and units.
+4. Add the scenario to `SCENARIO_SAVES` in
+   `tests/integration/test_recorded_tool_calls.py`. A test fails when a
+   scenario has recordings but no save.
 
 A test cannot make good assertions against a save whose contents nobody knows.

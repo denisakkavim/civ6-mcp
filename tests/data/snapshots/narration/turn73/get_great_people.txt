@@ -1,0 +1,33 @@
+8 Great People:
+  Great General: Timur (Medieval Era) — Unclaimed — your points: 0/60
+    Ability: Grants 1 promotion level and +25% combat experience to a military land unit.
+    Patronize: 1100g / 750f
+    (individual_id: 176)
+  Great Admiral: Artemisia (Classical Era) — Unclaimed — your points: 0/30
+    Ability: Grants 1 promotion level to a military naval unit.
+    Patronize: 650g / 450f
+    (individual_id: 0)
+  Great Engineer: Bi Sheng (Medieval Era) — Unclaimed — your points: 0/60
+    Ability: SINGLE_CITY_EXTRA_DISTRICT (amount=1), GRANT_SPECIFIC_TECH_BOOST
+    Patronize: 1100g / 750f
+    (individual_id: 38)
+  Great Merchant: Marcus Licinius Crassus (Classical Era) — Unclaimed — your points: 13/30
+    Ability: UNIT_GRANT_PLOT, +60 GOLD
+    Patronize: 455g / 320f
+    (individual_id: 76)
+  Great Scientist: Hildegard of Bingen (Medieval Era) — Unclaimed — your points: 25/60
+    Ability: DISTRICT_ADJUST_YIELD_BASED_ON_ADJACENCY_BONUS, +100 FAITH
+    Patronize: 725g / 500f
+    (individual_id: 132)
+  Great Writer: Rumi (Medieval Era) — Unclaimed — your points: 0/60
+    Ability: creates 2 Great Works
+    Patronize: 1100g / 750f
+    (individual_id: 199)
+  Great Artist: Hieronymus Bosch (Renaissance Era) — Unclaimed — your points: 0/120
+    Ability: creates 3 Great Works
+    Patronize: 2000g / 1350f
+    (individual_id: 19)
+  Great Musician: Yatsuhashi Kengyo (Industrial Era) — Unclaimed — your points: 0/210
+    Ability: creates 2 Great Works
+    Patronize: 3350g / 2250f
+    (individual_id: 100)

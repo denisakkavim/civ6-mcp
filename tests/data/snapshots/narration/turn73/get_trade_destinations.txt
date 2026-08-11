@@ -1,0 +1,29 @@
+22 trade route destinations:
+
+Domestic (food + production to destination):
+  Qusqu at (45,12) | Food:2 Prod:2 Gold:2 | Trading Post Shinto <- 0.5
+  Wanuku at (44,8) | Food:1 Prod:1 Gold:2 | Trading Post Eastern Orthodoxy <- 0.5
+  Antawaylla at (47,9) | Food:2 Prod:1 Gold:2 | Trading Post Shinto <- 0.5
+  Ollantaytambo at (41,11) | Food:1 Prod:1 Gold:2 | Eastern Orthodoxy <- 0.5
+
+International (gold to origin):
+  Tbilisi (Georgia) at (52,21) | Gold:7 Sci:1 Cul:1 Faith:1 | Eastern Orthodoxy <- 0.5
+  Kutaisi (Georgia) at (55,19) | Gold:7 Faith:1 | Eastern Orthodoxy <- 0.5
+  Rustavi (Georgia) at (56,14) | Gold:7 Sci:1 | Eastern Orthodoxy <- 0.5
+  Gori (Georgia) at (53,25) | Gold:7 | Eastern Orthodoxy <- 0.5
+  Ulundi (Zulu) at (19,20) | Prod:1 Gold:9 Sci:1 Cul:1
+  Kwadukuza (Zulu) at (17,25) | Gold:7 Sci:1
+  Nobamba (Zulu) at (15,18) | Gold:7 Sci:1
+  Ndondakusuka (Zulu) at (23,18) | Gold:7
+  Aachen (Germany) at (7,26) | Gold:7 Sci:1 | Catholicism <- 0.5
+  Cologne (Germany) at (9,30) | Gold:7 Faith:1 | Catholicism <- 0.5
+  Heidelberg (Germany) at (4,28) | Gold:7
+  Frankfurt (Germany) at (4,24) | Gold:7
+  Wolin (Wolin) at (53,12) | Prod:1 Gold:7 | Eastern Orthodoxy <- 0.5
+  La Venta (La Venta) at (46,23) | Gold:7 Faith:1 | Eastern Orthodoxy <- 0.5
+  Preslav (Preslav) at (11,21) | Gold:7
+  Mohenjo-Daro (Mohenjo-Daro) at (14,30) | Gold:7 Cul:1
+  Zanzibar (Zanzibar) at (15,14) | Gold:13
+  Vilnius (Vilnius) at (24,23) | Gold:7 Cul:1
+
+Use unit_action with action='trade_route', target_x=X, target_y=Y

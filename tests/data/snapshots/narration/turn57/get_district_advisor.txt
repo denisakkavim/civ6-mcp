@@ -1,0 +1,11 @@
+DISTRICT_HOLY_SITE placement options (10 tiles):
+  #1 (45,13) Adj: +3 (3 faith) — Plains Woods
+  #2 (46,12) Adj: +2 (2 faith) — Grassland
+  #3 (43,13) Adj: +1 (1 faith) — Plains Plains Floodplains
+  #4 (46,11) Adj: +1 (1 faith) — Grassland
+  #5 (44,10) Adj: +0 (no adjacency) — Plains Woods
+  #6 (43,11) Adj: +0 (no adjacency) — Plains (Hills) Hills
+  #7 (44,12) Adj: +0 (no adjacency) — Plains Plains Floodplains
+  #8 (44,11) Adj: +0 (no adjacency) — Plains
+  #9 (46,10) Adj: +0 (no adjacency) — Plains
+  #10 (45,10) Adj: +0 (no adjacency) — Plains

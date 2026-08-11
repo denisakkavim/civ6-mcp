@@ -1,0 +1,10 @@
+== Notifications (9) ==
+  - Wonder Completed
+  - Wonder Completed
+  - Production Salvaged [Inca] (City Center) at (45,12)
+  - Your Pledge Broken
+  - Need More Housing
+  - Command Units  -> Units have moves remaining — move them or use skip_remaining_units()
+  - Religion Founded
+  - Civic Boost
+  - City-State Quest Complete at (46,23)

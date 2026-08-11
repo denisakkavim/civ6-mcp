@@ -1,0 +1,20 @@
+{
+  "tool": "get_unit_promotions",
+  "arguments": {
+    "unit_id": 131073
+  },
+  "scenario": "turn57",
+  "recorded_at": "2026-08-11T20:02:48+00:00",
+  "notes": null,
+  "result": "No promotions available for UNIT_WARRIOR (id:1).",
+  "exchanges": [
+    {
+      "context": "read",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local unit = Players[me]:GetUnits():FindID(1) if unit == nil then print(\"ERR:UNIT_NOT_FOUND\"); print(\"---END---\"); return end\nlocal x, y = unit:GetX(), unit:GetY()\nif x == -9999 then print(\"ERR:UNIT_CONSUMED\"); print(\"---END---\"); return end\nlocal typeIdx = unit:GetType()\nif typeIdx == nil then print(\"ERR:UNIT_NO_TYPE\"); print(\"---END---\"); return end\nlocal info = GameInfo.Units[typeIdx]\nlocal ut = info and info.UnitType or \"UNKNOWN\"\nlocal promClass = info and info.PromotionClass or \"\"\nprint(\"UNIT|\" .. 1 .. \"|\" .. (unit:GetID() % 65536) .. \"|\" .. ut)\nlocal exp = unit:GetExperience()\nlocal xpPromoCount = 0\nif promClass ~= \"\" then\n    for p in GameInfo.UnitPromotions() do\n        if p.PromotionClass == promClass and exp:HasPromotion(p.Index) then\n            xpPromoCount = xpPromoCount + 1\n        end\n    end\nend\nlocal xp = exp:GetExperiencePoints()\nlocal xpNeeded = exp:GetExperienceForNextLevel()\nprint(\"XP|\" .. xp .. \"|\" .. xpNeeded .. \"|\" .. xpPromoCount)\nif xp < xpNeeded then\n    print(\"---END---\")\n    return\nend\nlocal prereqMap = {}\nfor row in GameInfo.UnitPromotionPrereqs() do\n    local pt = row.UnitPromotion\n    if not prereqMap[pt] then prereqMap[pt] = {} end\n    table.insert(prereqMap[pt], row.PrereqUnitPromotion)\nend\nfor promo in GameInfo.UnitPromotions() do\n    if promo.PromotionClass == promClass then\n        if not exp:HasPromotion(promo.Index) then\n            local prereqs = prereqMap[promo.UnitPromotionType]\n            local prereqMet = true\n            if prereqs and #prereqs > 0 then\n                prereqMet = false\n                for _, reqType in ipairs(prereqs) do\n                    local reqInfo = GameInfo.UnitPromotions[reqType]\n                    if reqInfo and exp:HasPromotion(reqInfo.Index) then\n                        prereqMet = true\n                        break\n                    end\n                end\n            end\n            if prereqMet then\n                local canPromote = false\n                pcall(function() canPromote = exp:CanPromote(promo.Index) end)\n                if canPromote then\n                    local name = Locale.Lookup(promo.Name)\n                    local desc = Locale.Lookup(promo.Description):gsub(\"|\",\"/\"):gsub(\"\\n\",\" \")\n                    print(\"PROMO|\" .. promo.UnitPromotionType .. \"|\" .. name:gsub(\"|\",\"/\") .. \"|\" .. desc)\n                end\n            end\n        end\n    end\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "UNIT|1|1|UNIT_WARRIOR",
+        "XP|15|45|2"
+      ]
+    }
+  ]
+}

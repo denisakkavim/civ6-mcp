@@ -1,0 +1,33 @@
+{
+  "tool": "set_tech",
+  "arguments": {
+    "tech_type": "TECH_IRRIGATION"
+  },
+  "scenario": "turn57",
+  "recorded_at": "2026-08-11T20:02:55+00:00",
+  "notes": null,
+  "result": "RESEARCHING_GAMECORE|TECH_IRRIGATION",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal id = Game.GetLocalPlayer()\nlocal idx = nil\nfor row in GameInfo.Technologies() do\n    if row.TechnologyType == \"TECH_IRRIGATION\" then idx = row.Index; break end\nend\nif idx == nil then print(\"ERR:TECH_NOT_FOUND|TECH_IRRIGATION\"); print(\"---END---\"); return end\nif Players[id]:GetTechs():HasTech(idx) then\n    print(\"ERR:ALREADY_COMPLETED|TECH_IRRIGATION is already researched\"); print(\"---END---\"); return\nend\nlocal params = {}\nparams[PlayerOperations.PARAM_TECH_TYPE] = idx\nUI.RequestPlayerOperation(id, PlayerOperations.RESEARCH, params)\nlocal list = NotificationManager.GetList(id)\nif list then\n    for _, nid in ipairs(list) do\n        local e = NotificationManager.Find(id, nid)\n        if e and not e:IsDismissed() then\n            local bt = e:GetEndTurnBlocking()\n            if bt and bt == EndTurnBlockingTypes.ENDTURN_BLOCKING_RESEARCH then\n                pcall(function() NotificationManager.SendActivated(id, nid) end)\n                pcall(function() NotificationManager.Dismiss(id, nid) end)\n            end\n        end\n    end\nend\nprint(\"OK:RESEARCHING|TECH_IRRIGATION\")\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:RESEARCHING|TECH_IRRIGATION"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "local me = Game.GetLocalPlayer(); local idx = nil; for row in GameInfo.Technologies() do if row.TechnologyType == \"TECH_IRRIGATION\" then idx = row.Index; break end end; local cur = Players[me]:GetTechs():GetResearchingTech(); print(cur == idx and 'MATCH' or 'MISMATCH:'..tostring(cur)..'~='..tostring(idx)); print(\"---END---\")",
+      "lines": [
+        "MISMATCH:13~=5"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "\nlocal id = Game.GetLocalPlayer()\nlocal idx = nil\nfor row in GameInfo.Technologies() do\n    if row.TechnologyType == \"TECH_IRRIGATION\" then idx = row.Index; break end\nend\nif idx == nil then print(\"ERR:TECH_NOT_FOUND|TECH_IRRIGATION\"); print(\"---END---\"); return end\nif Players[id]:GetTechs():HasTech(idx) then\n    print(\"ERR:ALREADY_COMPLETED|TECH_IRRIGATION is already researched\"); print(\"---END---\"); return\nend\nPlayers[id]:GetTechs():SetResearchingTech(idx)\nlocal now = Players[id]:GetTechs():GetResearchingTech()\nif now == idx then\n    print(\"OK:RESEARCHING_GAMECORE|TECH_IRRIGATION\")\nelse\n    print(\"ERR:RESEARCH_FAILED|GameCore also failed to set TECH_IRRIGATION\"); print(\"---END---\"); return\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:RESEARCHING_GAMECORE|TECH_IRRIGATION"
+      ]
+    }
+  ]
+}

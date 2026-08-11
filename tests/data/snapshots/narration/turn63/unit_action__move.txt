@@ -1,0 +1,1 @@
+MOVING_TO|50,8|from:51,9|now_at:50,8|(moved dx:-1 dy:-1)

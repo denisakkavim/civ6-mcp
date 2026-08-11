@@ -1,0 +1,23 @@
+=== STRATEGIC MAP ===
+
+FOG BOUNDARIES (distance to unexplored, -1 = fully explored):
+  Qusqu (45,12): N:9 NE:7 SE:9 S:12 SW:6 NW:6
+  Wanuku (44,8): N:6 NE:4 SE:12 S:12 SW:6 NW:4 <- EXPLORE NE/NW!
+  Antawaylla (47,9): N:5 NE:4 SE:11 S:5 SW:8 NW:7 <- EXPLORE N/NE/S!
+  Ollantaytambo (41,11): N:9 NE:7 SE:6 S:8 SW:3 NW:3 <- EXPLORE SW/NW!
+
+UNCLAIMED RESOURCES (revealed, unowned):
+  RESOURCE_SPICES+ at (49,7) — luxury
+  RESOURCE_SPICES+ at (51,8) — luxury
+  RESOURCE_TURTLES+ at (58,8) — luxury
+  RESOURCE_SPICES+ at (53,9) — luxury
+  RESOURCE_TOBACCO+ at (49,17) — luxury
+  RESOURCE_SPICES+ at (47,19) — luxury
+  RESOURCE_INCENSE+ at (51,24) — luxury
+  RESOURCE_SALT+ at (47,27) — luxury
+  RESOURCE_SALT+ at (57,27) — luxury
+  RESOURCE_SALT+ at (57,28) — luxury
+  RESOURCE_TOBACCO+ at (51,29) — luxury
+  RESOURCE_TOBACCO+ at (49,30) — luxury
+  RESOURCE_TURTLES+ at (56,30) — luxury
+  RESOURCE_IRON* at (55,9) — strategic

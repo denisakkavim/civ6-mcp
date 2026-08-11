@@ -1,0 +1,20 @@
+{
+  "tool": "get_wonder_advisor",
+  "arguments": {
+    "city_id": 65536,
+    "wonder_name": "BUILDING_PYRAMIDS"
+  },
+  "scenario": "turn63",
+  "recorded_at": "2026-08-11T19:59:50+00:00",
+  "notes": null,
+  "result": "BUILDING_PYRAMIDS placement options (1 tiles):\n   #1 (0,0) ocean ice \u2014 score:2\n\nRecommended: (0,0) \u2014 lowest displacement\nUse: set_city_production(city_id=<id>, item_name=\"BUILDING_PYRAMIDS\", target_x=0, target_y=0)",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local pCity = CityManager.GetCity(me, 65536 % 65536) if pCity == nil then print(\"ERR:CITY_NOT_FOUND\"); print(\"---END---\"); return end\nlocal brow = GameInfo.Buildings[\"BUILDING_PYRAMIDS\"]\nif brow == nil then print(\"ERR:WONDER_NOT_FOUND|BUILDING_PYRAMIDS\"); print(\"---END---\"); return end\nif not brow.IsWonder then print(\"ERR:NOT_A_WONDER|BUILDING_PYRAMIDS is not a wonder\"); print(\"---END---\"); return end\nlocal bq = pCity:GetBuildQueue()\nif not bq:CanProduce(brow.Hash, true) then\n  print(\"ERR:CANNOT_PRODUCE|BUILDING_PYRAMIDS cannot be produced in this city\"); print(\"---END---\"); return\nend\nlocal targets = CityManager.GetOperationTargets(pCity, CityOperationTypes.BUILD,\n  {[CityOperationTypes.PARAM_BUILDING_TYPE] = brow.Hash})\nif targets == nil then print(\"ERR:NO_TARGETS|No valid placement targets found\"); print(\"---END---\"); return end\nlocal plotIndices = {}\nfor k, v in pairs(targets) do\n  if type(v) == \"table\" then\n    for _, idx in ipairs(v) do table.insert(plotIndices, idx) end\n  end\nend\nif #plotIndices == 0 then print(\"ERR:NO_TILES|No valid placement tiles found\"); print(\"---END---\"); return end\nlocal results = {}\nfor _, pIdx in ipairs(plotIndices) do\n  local plot = Map.GetPlotByIndex(pIdx)\n  if plot then\n    local px, py = plot:GetX(), plot:GetY()\n    local terrainName = \"?\"\n    local tInfo = GameInfo.Terrains[plot:GetTerrainType()]\n    if tInfo then terrainName = tInfo.TerrainType end\n    local featName = \"none\"\n    local feat = plot:GetFeatureType()\n    if feat >= 0 then\n      local fInfo = GameInfo.Features[feat]\n      if fInfo then featName = fInfo.FeatureType end\n    end\n    local isRiver = plot:IsRiver()\n    local isCoastal = plot:IsCoastalLand()\n    local resName = \"none\"\n    local res = plot:GetResourceType()\n    if res >= 0 then\n      local rInfo = GameInfo.Resources[res]\n      if rInfo then resName = rInfo.ResourceType end\n    end\n    local impName = \"none\"\n    local imp = plot:GetImprovementType()\n    if imp >= 0 then\n      local iInfo = GameInfo.Improvements[imp]\n      if iInfo then impName = iInfo.ImprovementType end\n    end\n    local score = 0\n    if resName ~= \"none\" then score = score + 10 end\n    if impName ~= \"none\" then score = score + 5 end\n    if featName ~= \"none\" then score = score + 2 end\n    if plot:IsHills() then score = score + 1 end\n    if isRiver then score = score + 1 end\n    table.insert(results, {x=px, y=py, terrain=terrainName, feat=featName,\n      river=tostring(isRiver), coastal=tostring(isCoastal),\n      resource=resName, improvement=impName, score=score})\n  end\nend\ntable.sort(results, function(a, b) return a.score < b.score end)\nfor i = 1, math.min(#results, 15) do\n  local r = results[i]\n  print(\"WPLOT|\"..r.x..\",\"..r.y..\"|\"..r.terrain..\"|\"..r.feat..\"|\"..r.river..\"|\"..r.coastal..\"|\"..r.resource..\"|\"..r.improvement..\"|\"..r.score)\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "WPLOT|0,0|TERRAIN_OCEAN|FEATURE_ICE|false|false|none|none|2"
+      ]
+    }
+  ]
+}

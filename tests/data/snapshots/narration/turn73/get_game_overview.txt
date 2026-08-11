@@ -1,0 +1,8 @@
+Turn 73 | Inca (Pachacuti) | Score: 165 | Prince
+Gold: 93 (+10/turn) | Income: 15 | Maintenance: -5 (units: 2) | Science: 11.2 | Culture: 9.7 | Faith: 333 | Favor: 36 (+1/turn)
+Research: Apprenticeship | Civic: Defensive Tactics
+Cities: 4 | Population: 17 | Units: 14 — 3 Builder, 3 Warrior, 2 Archer, 2 Slinger, 2 Trader, 1 Missionary, 1 Scout
+Explored: 37% of land (293/790 tiles)
+Religion: Shinto (3/3 slots)
+Era: Medieval Era | Score: 37 (Dark: 40, Golden: 51) !! 3 short of avoiding Dark Age
+Rankings: Georgia 238 > Inca 165

@@ -1,0 +1,34 @@
+{
+  "tool": "get_strategic_map",
+  "arguments": {},
+  "scenario": "turn73",
+  "recorded_at": "2026-08-11T20:25:09+00:00",
+  "notes": null,
+  "result": "=== STRATEGIC MAP ===\n\nFOG BOUNDARIES (distance to unexplored, -1 = fully explored):\n  Qusqu (45,12): N:9 NE:7 SE:9 S:12 SW:6 NW:6\n  Wanuku (44,8): N:6 NE:4 SE:12 S:12 SW:6 NW:4 <- EXPLORE NE/NW!\n  Antawaylla (47,9): N:5 NE:4 SE:11 S:5 SW:8 NW:7 <- EXPLORE N/NE/S!\n  Ollantaytambo (41,11): N:9 NE:7 SE:6 S:8 SW:3 NW:3 <- EXPLORE SW/NW!\n\nUNCLAIMED RESOURCES (revealed, unowned):\n  RESOURCE_SPICES+ at (49,7) \u2014 luxury\n  RESOURCE_SPICES+ at (51,8) \u2014 luxury\n  RESOURCE_TURTLES+ at (58,8) \u2014 luxury\n  RESOURCE_SPICES+ at (53,9) \u2014 luxury\n  RESOURCE_TOBACCO+ at (49,17) \u2014 luxury\n  RESOURCE_SPICES+ at (47,19) \u2014 luxury\n  RESOURCE_INCENSE+ at (51,24) \u2014 luxury\n  RESOURCE_SALT+ at (47,27) \u2014 luxury\n  RESOURCE_SALT+ at (57,27) \u2014 luxury\n  RESOURCE_SALT+ at (57,28) \u2014 luxury\n  RESOURCE_TOBACCO+ at (51,29) \u2014 luxury\n  RESOURCE_TOBACCO+ at (49,30) \u2014 luxury\n  RESOURCE_TURTLES+ at (56,30) \u2014 luxury\n  RESOURCE_IRON* at (55,9) \u2014 strategic",
+  "exchanges": [
+    {
+      "context": "read",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal vis = PlayersVisibility[me]\nlocal pTech = Players[me]:GetTechs()\nlocal w, h = Map.GetGridSize()\n-- Hex direction offsets (NE, E, SE, SW, W, NW) for offset coords\nlocal dirs = {{0,-1},{1,0},{0,1},{-1,1},{-1,0},{0,-1}}\n-- Actually use precise ray-cast: step along each cardinal hex direction\n-- For offset coordinates, direction deltas depend on row parity\n-- Simplified: use angular sectors by scanning radius rings\nfor _, c in Players[me]:GetCities():Members() do\n    local cx, cy = c:GetX(), c:GetY()\n    local nm = Locale.Lookup(c:GetName())\n    -- For 6 directions, scan along a ray and find first unrevealed tile\n    -- Directions: N(0,-1), NE(+1,-1), SE(+1,+1), S(0,+1), SW(-1,+1), NW(-1,-1) approx\n    local dirVecs = {{0,-1},{1,-1},{1,1},{0,1},{-1,1},{-1,-1}}\n    local fogDists = {}\n    for _, dv in ipairs(dirVecs) do\n        local fogDist = -1\n        for dist = 3, 15 do\n            local tx = cx + dv[1] * dist\n            local ty = cy + dv[2] * dist\n            local plot = Map.GetPlot(tx, ty)\n            if plot then\n                if not vis:IsRevealed(plot:GetIndex()) then\n                    fogDist = dist\n                    break\n                end\n            else\n                fogDist = dist\n                break\n            end\n        end\n        table.insert(fogDists, fogDist)\n    end\n    print(\"FOG|\" .. nm .. \"|\" .. cx .. \",\" .. cy .. \"|\" .. table.concat(fogDists, \",\"))\nend\n-- Pass 2: unclaimed luxury/strategic resources on revealed land\nfor y = 0, h - 1 do\n    for x = 0, w - 1 do\n        local plot = Map.GetPlot(x, y)\n        if plot and vis:IsRevealed(plot:GetIndex()) and plot:GetOwner() == -1 then\n            local resIdx = plot:GetResourceType()\n            if resIdx >= 0 then\n                local res = GameInfo.Resources[resIdx]\n                if res and res.ResourceClassType ~= \"RESOURCECLASS_BONUS\" then\n                    -- Check tech visibility\n                    local visible = true\n                    if res.PrereqTech then\n                        local t = GameInfo.Technologies[res.PrereqTech]\n                        if t and not pTech:HasTech(t.Index) then visible = false end\n                    end\n                    if visible then\n                        print(\"UNCLAIMED|\" .. res.ResourceType .. \"|\" .. x .. \",\" .. y .. \"|\" .. res.ResourceClassType)\n                    end\n                end\n            end\n        end\n    end\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "FOG|Qusqu|45,12|9,7,9,12,6,6",
+        "FOG|Wanuku|44,8|6,4,12,12,6,4",
+        "FOG|Antawaylla|47,9|5,4,11,5,8,7",
+        "FOG|Ollantaytambo|41,11|9,7,6,8,3,3",
+        "UNCLAIMED|RESOURCE_SPICES|49,7|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_SPICES|51,8|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_TURTLES|58,8|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_SPICES|53,9|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_IRON|55,9|RESOURCECLASS_STRATEGIC",
+        "UNCLAIMED|RESOURCE_TOBACCO|49,17|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_SPICES|47,19|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_INCENSE|51,24|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_SALT|47,27|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_SALT|57,27|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_SALT|57,28|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_TOBACCO|51,29|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_TOBACCO|49,30|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_TURTLES|56,30|RESOURCECLASS_LUXURY"
+      ]
+    }
+  ]
+}

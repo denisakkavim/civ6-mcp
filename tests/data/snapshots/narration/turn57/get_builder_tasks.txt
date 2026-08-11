@@ -1,0 +1,28 @@
+=== BUILDER TASKS (18 tasks, 1 idle builders) ===
+
+URGENT:
+  (49,10): RESOURCE_HORSES* — build IMPROVEMENT_PASTURE [city: Antawaylla] — nearest builder id:720898, 5 tiles
+
+HIGH:
+  (43,10): RESOURCE_WHEAT — build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:720898, 4 tiles
+  (48,8): RESOURCE_DEER — build IMPROVEMENT_CAMP [city: Antawaylla] — nearest builder id:720898, 5 tiles
+  (44,6): RESOURCE_SALT+ — build IMPROVEMENT_MINE [city: Wanuku] — nearest builder id:720898, 7 tiles
+
+NORMAL:
+  (45,13): build IMPROVEMENT_LUMBER_MILL [city: Qusqu] — nearest builder id:720898, 0 tiles
+  (46,12): build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:720898, 1 tile
+  (44,11): build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:720898, 2 tiles
+  (46,11): build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:720898, 2 tiles
+  (44,10): build IMPROVEMENT_LUMBER_MILL [city: Qusqu] — nearest builder id:720898, 3 tiles
+  (45,10): build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:720898, 3 tiles
+  (46,10): build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:720898, 3 tiles
+  (47,10): build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:720898, 3 tiles
+  (43,11): build IMPROVEMENT_MINE [city: Qusqu] — nearest builder id:720898, 3 tiles
+  (43,9): build IMPROVEMENT_LUMBER_MILL [city: Qusqu] — nearest builder id:720898, 4 tiles
+  (48,10): build IMPROVEMENT_MINE [city: Qusqu] — nearest builder id:720898, 4 tiles
+  (48,9): build IMPROVEMENT_MINE [city: Qusqu] — nearest builder id:720898, 5 tiles
+  (45,8): build IMPROVEMENT_MINE [city: Wanuku] — nearest builder id:720898, 5 tiles
+  (43,7): build IMPROVEMENT_LUMBER_MILL [city: Wanuku] — nearest builder id:720898, 6 tiles
+
+IDLE BUILDERS (1):
+  id:720898 at (45,13) — 3 charges, 2 moves

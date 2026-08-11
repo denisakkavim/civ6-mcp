@@ -1,0 +1,10 @@
+9 purchasable tiles:
+  (47,11): 60g — Grassland (Hills) Hills [Sheep]
+  (43,14): 60g — Plains [Wheat]
+  (46,14): 40g — Plains (Mountain)
+  (44,14): 40g — Plains (Mountain)
+  (47,12): 40g — Grassland (Mountain)
+  (45,14): 40g — Plains (Mountain)
+  (46,13): 40g — Plains (Mountain)
+  (45,9): 60g — Plains
+  (42,13): 60g — Plains

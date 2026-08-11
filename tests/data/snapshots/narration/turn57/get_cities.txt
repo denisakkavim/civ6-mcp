@@ -1,0 +1,16 @@
+3 cities:
+  Qusqu (pop 5) at (45,12) — Food 12 Prod 16 Gold 8 Sci 4 Cul 4 | Housing 8 Amenities 6 | Growth: 2/27 food (13t, +2.0/t) | Building: nothing | Walls 100/100 Garrison 200/200 Def:21 Gar:UNIT_ARCHER [id:65536]
+    Buildings: BUILDING_MONUMENT, BUILDING_PALACE, BUILDING_GRANARY, BUILDING_WALLS
+    Needs builder: RESOURCE_INCENSE, 9, RESOURCE_WHEAT, 10 (unimproved)
+  Wanuku (pop 3) at (44,8) — Food 10 Prod 4 Gold 0 Sci 1 Cul 3 | Housing 4 Amenities 3 | Growth: 14/16 food (2t, +4.0/t) | Building: UNIT_BUILDER (4 turns) | HP:200/200 Def:20 Gar:UNIT_WARRIOR [id:131073]
+    Buildings: BUILDING_MONUMENT, BUILDING_GRANARY
+    Needs builder: RESOURCE_SALT, 6, RESOURCE_WHEAT, 8, RESOURCE_INCENSE, 9, RESOURCE_WHEAT, 10 (unimproved)
+  Antawaylla (pop 2) at (47,9) — Food 6 Prod 6 Gold 0 Sci 1 Cul 1 | Housing 3 Amenities 3 | Growth: 4/12 food (8t, +2.0/t) | Building: PROJECT_ENHANCE_DISTRICT_HOLY_SITE (5 turns) | HP:200/200 Def:17 Gar:UNIT_ARCHER [id:196610]
+    Districts: DISTRICT_HOLY_SITE(46,7)
+    Buildings: BUILDING_SHRINE
+    Needs builder: RESOURCE_SALT, 6, RESOURCE_WHEAT, 8, RESOURCE_DEER, 8, RESOURCE_INCENSE, 9, RESOURCE_HORSES, 10 (unimproved)
+
+City Distances:
+  Qusqu <-> Wanuku: 4 tiles
+  Qusqu <-> Antawaylla: 4 tiles
+  Wanuku <-> Antawaylla: 4 tiles

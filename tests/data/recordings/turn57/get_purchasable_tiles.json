@@ -1,0 +1,29 @@
+{
+  "tool": "get_purchasable_tiles",
+  "arguments": {
+    "city_id": 65536
+  },
+  "scenario": "turn57",
+  "recorded_at": "2026-08-11T20:02:46+00:00",
+  "notes": null,
+  "result": "11 purchasable tiles:\n  (47,11): 55g \u2014 Grassland (Hills) Hills [Sheep]\n  (43,14): 55g \u2014 Plains [Wheat]\n  (46,14): 35g \u2014 Plains (Mountain)\n  (44,14): 35g \u2014 Plains (Mountain)\n  (43,12): 35g \u2014 Plains\n  (45,14): 35g \u2014 Plains (Mountain)\n  (46,13): 35g \u2014 Plains (Mountain)\n  (47,12): 35g \u2014 Grassland (Mountain)\n  (42,13): 55g \u2014 Plains\n  (45,9): 55g \u2014 Plains\n  (42,11): 55g \u2014 Desert (Hills) Hills",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local pCity = CityManager.GetCity(me, 65536 % 65536) if pCity == nil then print(\"ERR:CITY_NOT_FOUND\"); print(\"---END---\"); return end\nlocal pTech = Players[me]:GetTechs()\nlocal targets = CityManager.GetCommandTargets(pCity, CityCommandTypes.PURCHASE, {[CityCommandTypes.PARAM_PLOT_PURCHASE] = 1})\nif targets == nil then print(\"ERR:NO_TARGETS|No purchasable tiles found\"); print(\"---END---\"); return end\nlocal plotIndices = {}\nfor k, v in pairs(targets) do\n    if type(v) == \"table\" then\n        for _, idx in ipairs(v) do table.insert(plotIndices, idx) end\n    end\nend\nif #plotIndices == 0 then print(\"ERR:NO_TILES|No purchasable tiles\"); print(\"---END---\"); return end\nlocal results = {}\nfor _, pIdx in ipairs(plotIndices) do\n    local plot = Map.GetPlotByIndex(pIdx)\n    if plot then\n        local px, py = plot:GetX(), plot:GetY()\n        local cost = pCity:GetGold():GetPlotPurchaseCost(px, py)\n        if cost > 0 then\n            local terrain = \"\"\n            local tInfo = GameInfo.Terrains[plot:GetTerrainType()]\n            if tInfo then terrain = Locale.Lookup(tInfo.Name) end\n            if plot:IsHills() then terrain = terrain .. \" Hills\" end\n            local resName, resClass = \"\", \"\"\n            local res = plot:GetResourceType()\n            if res >= 0 then\n                local rInfo = GameInfo.Resources[res]\n                if rInfo then\n                    local rTechOk = true\n                    if rInfo.PrereqTech then\n                        local rt = GameInfo.Technologies[rInfo.PrereqTech]\n                        if rt and not pTech:HasTech(rt.Index) then rTechOk = false end\n                    end\n                    if rTechOk then\n                        resName = Locale.Lookup(rInfo.Name)\n                        local rc = rInfo.ResourceClassType\n                        if rc == \"RESOURCECLASS_STRATEGIC\" then resClass = \"strategic\"\n                        elseif rc == \"RESOURCECLASS_LUXURY\" then resClass = \"luxury\"\n                        else resClass = \"bonus\" end\n                    end\n                end\n            end\n            local sortKey = 0\n            if resClass == \"luxury\" then sortKey = 3\n            elseif resClass == \"strategic\" then sortKey = 2\n            elseif resClass == \"bonus\" then sortKey = 1 end\n            table.insert(results, {x=px, y=py, cost=cost, terrain=terrain, res=resName, cls=resClass, sk=sortKey})\n        end\n    end\nend\ntable.sort(results, function(a, b)\n    if a.sk ~= b.sk then return a.sk > b.sk end\n    return a.cost < b.cost\nend)\nfor i = 1, math.min(#results, 15) do\n    local r = results[i]\n    print(\"PTILE|\" .. r.x .. \",\" .. r.y .. \"|\" .. r.cost .. \"|\" .. r.terrain .. \"|\" .. r.res .. \"|\" .. r.cls)\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "PTILE|47,11|55|Grassland (Hills) Hills|Sheep|bonus",
+        "PTILE|43,14|55|Plains|Wheat|bonus",
+        "PTILE|46,14|35|Plains (Mountain)||",
+        "PTILE|44,14|35|Plains (Mountain)||",
+        "PTILE|43,12|35|Plains||",
+        "PTILE|45,14|35|Plains (Mountain)||",
+        "PTILE|46,13|35|Plains (Mountain)||",
+        "PTILE|47,12|35|Grassland (Mountain)||",
+        "PTILE|42,13|55|Plains||",
+        "PTILE|45,9|55|Plains||",
+        "PTILE|42,11|55|Desert (Hills) Hills||"
+      ]
+    }
+  ]
+}

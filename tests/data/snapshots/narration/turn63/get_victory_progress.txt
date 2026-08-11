@@ -1,0 +1,53 @@
+=== VICTORY PROGRESS ===
+
+Enabled: Science, Domination, Culture, Religious, Diplomatic
+
+SCIENCE VICTORY (launch 4 space projects = 50 VP)
+  Georgia: 0/25 VP | 15 techs | 0 spaceport(s) [0/25]
+  Inca: 0/25 VP | 12 techs | 0 spaceport(s) [0/25] <--
+
+  YOUR SPACE PROJECT CHAIN:
+    [LOCKED] Launch Earth Satellite -- requires TECH_ROCKETRY (NEED)
+    [LOCKED] Launch Moon Landing -- requires TECH_SATELLITES (NEED)
+    [LOCKED] Launch Exoplanet Expedition -- requires TECH_OFFWORLD_MISSION (NEED)
+
+DOMINATION (own all original capitals)
+  Inca: holds own capital | military 161 <--
+  Georgia: holds own capital | military 141
+
+CULTURE (your tourists > every civ's domestic tourists)
+  Our domestic tourists: 3
+  vs Georgia: 0/7 tourists (need 7 more)
+
+RELIGION (your religion majority in all civs — slots: 3/3)
+  Inca: majority=RELIGION_SHINTO (FOUNDED: Shinto) | 2 cities converted <--
+  Georgia: majority=RELIGION_ORTHODOXY (FOUNDED: Eastern Orthodoxy) | 5 cities converted
+  !! All 3 religion slots filled — no more Great Prophets available
+
+DIPLOMATIC (20 VP from World Congress)
+  Georgia: 2/20 VP
+  Inca: 1/20 VP <--
+
+SCORE (highest at turn 500)
+  Georgia: 191
+  Inca: 138 <--
+
+RIVAL INTELLIGENCE (met civilizations)
+  Georgia: 4 cities | Sci 16 Cul 23 Gold +4 | Mil 141
+  Inca: 3 cities | Sci 8 Cul 8 Gold +3 | Mil 161 <--
+
+DEMOGRAPHICS (all civilizations)
+  Population   Rank 4 | Ours: 12 | Best: 22 | Avg: 18.5 | Worst: 12
+  Soldiers     Rank 2 | Ours: 161 | Best: 249 | Avg: 177.0 | Worst: 141
+  Crop Yield   Rank 4 | Ours: 33 | Best: 64 | Avg: 52.8 | Worst: 33
+  GNP          Rank 4 | Ours: 3 | Best: 38 | Avg: 13.8 | Worst: 3
+  Land         Rank 4 | Ours: 32 | Best: 48 | Avg: 42.2 | Worst: 32
+  Goods        Rank 4 | Ours: 28 | Best: 54 | Avg: 40.0 | Worst: 28
+
+VICTORY ASSESSMENT
+  Culture      [#######---] 70% — Close to cultural victory (max gap: 7) ** RECOMMENDED **
+  Science      [######----] 60% — Near tech lead (3 behind best known: Georgia (15))
+  Religion     [#####-----] 50% — Religion in 1/2 civs
+  Score        [##--------] 25% — Rank #4 by population (proxy for score)
+  Diplomatic   [##--------] 20% — 1/20 VP — slow accumulation
+  Domination   [#---------] 15% — Military too weak (161 vs best 249)

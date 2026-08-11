@@ -1,0 +1,71 @@
+Researching: Apprenticeship (5 turns) | Completed: 13 techs, 11 civics
+Civic: Defensive Tactics (5 turns)
+
+Available techs:
+  Wheel (TECH_THE_WHEEL) [ANCIENT] — 37%, 2 turns BOOSTED [Boost: Mine a resource.] -> Heavy Chariot, Maryannu Chariot Archer, Water Mill (needs: TECH_MINING) !! GRAB THIS
+  Celestial Navigation (TECH_CELESTIAL_NAVIGATION) [CLASSICAL] — 0%, 5 turns [Boost: Improve 2 sea resources.] -> Lighthouse, Great Lighthouse, Harbor, Royal Navy Dockyard, Cothon (needs: TECH_SAILING,TECH_ASTROLOGY)
+  Apprenticeship (TECH_APPRENTICESHIP) [MEDIEVAL] — 65%, 5 turns [Boost: Build 3 Mines.] -> Man-At-Arms, Workshop, Industrial Zone, Hansa (needs: TECH_CURRENCY,TECH_HORSEBACK_RIDING)
+  Shipbuilding (TECH_SHIPBUILDING) [CLASSICAL] — 0%, 8 turns [Boost: Own 2 Galleys.] -> Quadrireme, Colossus, Kampung (needs: TECH_SAILING)
+  Mathematics (TECH_MATHEMATICS) [CLASSICAL] — 0%, 8 turns [Boost: Build 3 different specialty districts.] -> Petra (needs: TECH_CURRENCY)
+  Construction (TECH_CONSTRUCTION) [CLASSICAL] — 0%, 8 turns [Boost: Build a Water Mill.] -> Toa, Terracotta Army, Lumber Mill (needs: TECH_MASONRY,TECH_HORSEBACK_RIDING)
+
+Available civics:
+  Military Training (CIVIC_MILITARY_TRAINING) [CLASSICAL] — 0%, 5 turns [Boost: Build an Encampment.] (needs: CIVIC_MILITARY_TRADITION,CIVIC_GAMES_RECREATION)
+  Defensive Tactics (CIVIC_DEFENSIVE_TACTICS) [CLASSICAL] — 0%, 8 turns [Boost: Be the target of a Declaration of War.] (needs: CIVIC_GAMES_RECREATION,CIVIC_POLITICAL_PHILOSOPHY)
+  Recorded History (CIVIC_RECORDED_HISTORY) [CLASSICAL] — 0%, 8 turns [Boost: Build 2 Campus districts.] (needs: CIVIC_POLITICAL_PHILOSOPHY,CIVIC_DRAMA_POETRY)
+
+Locked techs (prerequisites missing):
+  -- CLASSICAL --
+  Engineering (TECH_ENGINEERING) — needs: Wheel BOOSTED [Boost: Build Ancient Walls.]
+  -- MEDIEVAL --
+  Military Tactics (TECH_MILITARY_TACTICS) — needs: Mathematics [Boost: Kill a unit with a Spearman.]
+  Machinery (TECH_MACHINERY) — needs: Engineering [Boost: Own 3 Archers.]
+  Education (TECH_EDUCATION) — needs: Mathematics, Apprenticeship [Boost: Earn a Great Scientist.]
+  Stirrups (TECH_STIRRUPS) — needs: Apprenticeship [Boost: Have the Feudalism civic.]
+  Military Engineering (TECH_MILITARY_ENGINEERING) — needs: Construction [Boost: Build an Aqueduct.]
+  Castles (TECH_CASTLES) — needs: Construction [Boost: Adopt a government with 6 inherent policy slots.]
+  Buttress (TECH_BUTTRESS) — needs: Shipbuilding, Mathematics [Boost: Build a Classical era or later wonder]
+  -- RENAISSANCE --
+  Cartography (TECH_CARTOGRAPHY) — needs: Buttress [Boost: Build 2 Harbors.]
+  Mass Production (TECH_MASS_PRODUCTION) — needs: Education, Buttress, Military Tactics [Boost: Build a Lumber Mill.]
+  Banking (TECH_BANKING) — needs: Education, Stirrups [Boost: Have the Guilds civic.]
+  Gunpowder (TECH_GUNPOWDER) — needs: Apprenticeship, Stirrups, Military Engineering [Boost: Build an Armory.]
+  Printing (TECH_PRINTING) — needs: Machinery [Boost: Build 2 Universities.]
+  Square Rigging (TECH_SQUARE_RIGGING) — needs: Cartography [Boost: Kill a unit with a Musketman.]
+  Astronomy (TECH_ASTRONOMY) — needs: Education [Boost: Build a University adjacent to a Mountain.]
+  Metal Casting (TECH_METAL_CASTING) — needs: Gunpowder [Boost: Own 2 Crossbowman.]
+  Siege Tactics (TECH_SIEGE_TACTICS) — needs: Castles [Boost: Own 2 Trebuchets.]
+  -- INDUSTRIAL --
+  Industrialization (TECH_INDUSTRIALIZATION) — needs: Square Rigging, Mass Production [Boost: Build 2 Workshops.]
+  Scientific Theory (TECH_SCIENTIFIC_THEORY) — needs: Astronomy, Banking [Boost: Have The Enlightenment civic.]
+  Ballistics (TECH_BALLISTICS) — needs: Metal Casting [Boost: Have 2 Forts in your territory. Both constructed by a Military Engineer.]
+  Military Science (TECH_MILITARY_SCIENCE) — needs: Siege Tactics, Printing [Boost: Kill a unit with a Knight.]
+  Steam Power (TECH_STEAM_POWER) — needs: Industrialization [Boost: Build 2 Shipyards.]
+  Sanitation (TECH_SANITATION) — needs: Scientific Theory [Boost: Build 2 Neighborhoods.]
+  Economics (TECH_ECONOMICS) — needs: Scientific Theory, Metal Casting [Boost: Build 2 Banks.]
+  Rifling (TECH_RIFLING) — needs: Ballistics, Military Science [Boost: Build a Niter Mine.]
+
+Locked civics (prerequisites missing):
+  -- MEDIEVAL --
+  Naval Tradition (CIVIC_NAVAL_TRADITION) — needs: Defensive Tactics [Boost: Kill a unit with a Quadrireme.]
+  Feudalism (CIVIC_FEUDALISM) — needs: Defensive Tactics [Boost: Build 6 Farms.]
+  Civil Service (CIVIC_CIVIL_SERVICE) — needs: Defensive Tactics, Recorded History [Boost: Grow a city to 10 population.]
+  Mercenaries (CIVIC_MERCENARIES) — needs: Military Training, Feudalism BOOSTED [Boost: Have 8 land combat units in your military.]
+  Medieval Faires (CIVIC_MEDIEVAL_FAIRES) — needs: Feudalism [Boost: Maintain 4 Trade Routes.]
+  Guilds (CIVIC_GUILDS) — needs: Feudalism, Civil Service [Boost: Build 2 Markets.]
+  Divine Right (CIVIC_DIVINE_RIGHT) — needs: Civil Service [Boost: Build 2 Temples.]
+  -- RENAISSANCE --
+  Exploration (CIVIC_EXPLORATION) — needs: Mercenaries, Medieval Faires [Boost: Build 2 Caravels.]
+  Humanism (CIVIC_HUMANISM) — needs: Medieval Faires, Guilds [Boost: Earn a Great Artist.]
+  Diplomatic Service (CIVIC_DIPLOMATIC_SERVICE) — needs: Guilds [Boost: Have an alliance with another civilization.]
+  Reformed Church (CIVIC_REFORMED_CHURCH) — needs: Guilds, Divine Right [Boost: Have 6 cities following your Religion.]
+  Mercantilism (CIVIC_MERCANTILISM) — needs: Humanism [Boost: Earn a Great Merchant.]
+  The Enlightenment (CIVIC_THE_ENLIGHTENMENT) — needs: Humanism, Diplomatic Service [Boost: Earn 3 Great People.]
+  -- INDUSTRIAL --
+  Colonialism (CIVIC_COLONIALISM) — needs: Mercantilism [Boost: Research the Astronomy technology.]
+  Civil Engineering (CIVIC_CIVIL_ENGINEERING) — needs: Mercantilism [Boost: Build 7 different specialty districts.]
+  Nationalism (CIVIC_NATIONALISM) — needs: The Enlightenment [Boost: Declare war using a casus belli.]
+  Opera and Ballet (CIVIC_OPERA_BALLET) — needs: The Enlightenment [Boost: Build an Art Museum.]
+  Natural History (CIVIC_NATURAL_HISTORY) — needs: Colonialism [Boost: Build an Archaeological Museum.]
+  Scorched Earth (CIVIC_SCORCHED_EARTH) — needs: Nationalism [Boost: Build 2 Field Cannons.]
+  Urbanization (CIVIC_URBANIZATION) — needs: Civil Engineering, Nationalism [Boost: Grow a city to 15 population.]

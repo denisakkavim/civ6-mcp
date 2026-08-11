@@ -1,0 +1,2 @@
+Pantheon: Initiation Rites (BELIEF_INITIATION_RITES)
+Faith: 249

@@ -1,0 +1,20 @@
+{
+  "tool": "unit_action",
+  "arguments": {
+    "unit_id": 786438,
+    "action": "alert"
+  },
+  "scenario": "turn57",
+  "recorded_at": "2026-08-11T20:02:51+00:00",
+  "notes": null,
+  "result": "ALERT|59,10",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local unit = UnitManager.GetUnit(me, 6) if unit == nil then print(\"ERR:UNIT_NOT_FOUND\"); print(\"---END---\"); return end\nif UnitManager.CanStartOperation(unit, UnitOperationTypes.ALERT, nil, nil) then\n    UnitManager.RequestOperation(unit, UnitOperationTypes.ALERT, {})\n    print(\"OK:ALERT|\" .. unit:GetX() .. \",\" .. unit:GetY())\nelse\n    print(\"ERR:CANNOT_ALERT|Unit cannot be put on alert\"); print(\"---END---\"); return\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:ALERT|59,10"
+      ]
+    }
+  ]
+}

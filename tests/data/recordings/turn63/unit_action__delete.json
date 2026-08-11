@@ -1,0 +1,20 @@
+{
+  "tool": "unit_action",
+  "arguments": {
+    "unit_id": 1048586,
+    "action": "delete"
+  },
+  "scenario": "turn63",
+  "recorded_at": "2026-08-11T19:59:57+00:00",
+  "notes": null,
+  "result": "DELETED|UNIT_ARCHER at 47,9",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local unit = UnitManager.GetUnit(me, 10) if unit == nil then print(\"ERR:UNIT_NOT_FOUND\"); print(\"---END---\"); return end\nlocal unitInfo = GameInfo.Units[unit:GetType()]\nlocal uName = unitInfo and unitInfo.UnitType or \"UNKNOWN\"\nif UnitManager.CanStartCommand(unit, UnitCommandTypes.DELETE, true) then\n    UnitManager.RequestCommand(unit, UnitCommandTypes.DELETE)\n    print(\"OK:DELETED|\" .. uName .. \" at \" .. unit:GetX() .. \",\" .. unit:GetY())\nelse\n    print(\"ERR:CANNOT_DELETE|Unit cannot be deleted\"); print(\"---END---\"); return\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:DELETED|UNIT_ARCHER at 47,9"
+      ]
+    }
+  ]
+}

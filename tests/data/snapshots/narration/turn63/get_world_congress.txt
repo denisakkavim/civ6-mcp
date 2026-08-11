@@ -1,0 +1,5 @@
+World Congress: Next session in 18 turns
+Favor: 26
+
+  Trade Policy — Outcome A (Unmet Player): [ICON_TradeRoute] Trade Routes sent to the chosen player provide +4 [ICON_Gold] Gold to the sender. The chosen player receives +1 [ICON_TradeRoute] Trade Route capacity.
+  Luxury Policy — Outcome B (Citrus): The chosen Luxury resource grants no [ICON_Amenities] Amenities.

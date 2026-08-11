@@ -1,0 +1,30 @@
+Government: Classical Republic (GOVERNMENT_CLASSICAL_REPUBLIC)
+
+4 policy slots:
+  Slot 0 (Economic): Urban Planning (POLICY_URBAN_PLANNING)
+  Slot 1 (Economic): Caravansaries (POLICY_CARAVANSARIES)
+  Slot 2 (Diplomatic): Diplomatic League (POLICY_DIPLOMATIC_LEAGUE)
+  Slot 3 (Wildcard): Inspiration (POLICY_INSPIRATION)
+
+Available policies:
+  Military:
+    Discipline (POLICY_DISCIPLINE): +5 [ICON_Strength] Unit Combat Strength when fighting Barbarians.
+    Survey (POLICY_SURVEY): Double experience for recon units.
+    Agoge (POLICY_AGOGE): +50% [ICON_Production] Production toward Ancient and Classical era melee, anti-cavalry, and ranged units.
+    Maritime Industries (POLICY_MARITIME_INDUSTRIES): +100% [ICON_Production] Production toward Ancient and Classical era naval units.
+    Maneuver (POLICY_MANEUVER): +50% [ICON_Production] Production toward Ancient and Classical era heavy and light cavalry units.
+    Conscription (POLICY_CONSCRIPTION): Unit maintenance reduced by 1 [ICON_Gold] Gold per turn, per unit.
+    Limitanei (POLICY_LIMITANEI): +2 Loyalty per turn for cities with a garrisoned unit.
+  Economic:
+    God King (POLICY_GOD_KING): +1 [ICON_Faith] Faith and +1 [ICON_Gold] Gold in the [ICON_Capital] Capital.
+    Ilkum (POLICY_ILKUM): +30% [ICON_Production] Production toward Builders.
+    Corvée (POLICY_CORVEE): +15% [ICON_Production] Production toward Ancient and Classical wonders.
+    Land Surveyors (POLICY_LAND_SURVEYORS): Reduces the cost of purchasing a tile by 20%.
+    Colonization (POLICY_COLONIZATION): +50% [ICON_Production] Production toward Settlers.
+    Insulae (POLICY_INSULAE): +1 [ICON_Housing] Housing in all cities with at least 2 specialty districts.
+    Scripture (POLICY_SCRIPTURE): +100% Holy Site adjacency bonuses.
+  Diplomatic:
+    Charismatic Leader (POLICY_CHARISMATIC_LEADER): +2 Influence points per turn toward earning city-state [ICON_Envoy] Envoys.
+
+Use set_policies with slot assignments, e.g. {0: "POLICY_AGOGE", 1: "POLICY_URBAN_PLANNING"}
+Wildcard slots can accept any policy type.

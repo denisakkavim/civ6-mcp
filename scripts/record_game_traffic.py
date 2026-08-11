@@ -16,7 +16,11 @@ once they are gone there is no way to demonstrate that the eleven replacements
 behave like what they replaced.
 
 Write calls mutate the game. Reload the save between runs if you care about
-comparability, and prefer `--reads-only` when you only need the read corpus.
+comparability, and pass `--subset reads` when you only need the read corpus.
+
+A verb whose preconditions the loaded save cannot meet is skipped, with the
+reason printed. So no single save has to cover everything: record each scenario
+from its own save and the corpus accumulates verbs across them.
 """
 
 from __future__ import annotations
@@ -44,7 +48,11 @@ READ_PLAN: list[tuple[str, dict, bool]] = [
     ("get_units", {}, False),
     ("get_cities", {}, False),
     ("get_city_production", {"city_id": "$CITY"}, False),
-    ("get_map_area", {"center_x": "$CITY_X", "center_y": "$CITY_Y", "radius": 2}, False),
+    (
+        "get_map_area",
+        {"center_x": "$CITY_X", "center_y": "$CITY_Y", "radius": 2},
+        False,
+    ),
     ("get_empire_resources", {}, False),
     ("get_builder_tasks", {}, False),
     ("get_strategic_map", {}, False),
@@ -69,10 +77,16 @@ READ_PLAN: list[tuple[str, dict, bool]] = [
     ("get_purchasable_tiles", {"city_id": "$CITY"}, False),
     ("get_district_advisor", {"city_id": "$CITY", "district_type": "$DISTRICT"}, False),
     ("get_wonder_advisor", {"city_id": "$CITY", "wonder_name": "$WONDER"}, False),
-    ("get_settle_advisor", {"unit_id": "$SETTLER"}, False),
+    # Any unit will do — this asks where that unit could settle, and a save
+    # without a settler should still record the read.
+    ("get_settle_advisor", {"unit_id": "$UNIT"}, False),
     ("get_global_settle_advisor", {}, False),
     ("get_unit_promotions", {"unit_id": "$UNIT"}, False),
-    ("get_pathing_estimate", {"unit_id": "$UNIT", "target_x": "$CITY_X", "target_y": "$CITY_Y"}, False),
+    (
+        "get_pathing_estimate",
+        {"unit_id": "$UNIT", "target_x": "$CITY_X", "target_y": "$CITY_Y"},
+        False,
+    ),
 ]
 
 # The dispatchers Stage 4 deletes. One recording per verb, so the replacements
@@ -83,32 +97,111 @@ READ_PLAN: list[tuple[str, dict, bool]] = [
 # `NO_MOVES` and the recording captures a failure instead of the behaviour.
 # `move` runs first for the same reason.
 #
-# `heal` needs a damaged unit and `spy_action` needs a spy; neither exists in
-# every save, so both are omitted here and recorded from a scenario that has
-# them (see --show-plan). A recording of an error is not a fixture.
+# Verbs below the divider need a unit or a tile state no single save is
+# guaranteed to have — a settler, an idle trader, a damaged unit, a builder
+# standing somewhere it can actually build. Their placeholders resolve to None
+# when the game cannot supply one, and `_resolve` drops the entry with a
+# printed reason. That is deliberate: a recording of an error is not a fixture,
+# so a verb is captured from whichever scenario can satisfy it and skipped
+# everywhere else.
 DISPATCHER_PLAN: list[tuple[str, dict, bool]] = [
     (
         "unit_action",
-        {"unit_id": "$UNIT_0", "action": "move", "target_x": "$MOVE_X", "target_y": "$MOVE_Y"},
+        {
+            "unit_id": "$UNIT_0",
+            "action": "move",
+            "target_x": "$MOVE_X",
+            "target_y": "$MOVE_Y",
+        },
         True,
     ),
     ("unit_action", {"unit_id": "$UNIT_1", "action": "fortify"}, True),
     ("unit_action", {"unit_id": "$UNIT_2", "action": "skip"}, True),
-    # Sleep is refused for a unit that has already fortified or alerted, which
-    # most military units in a mid-game save have. A builder can always sleep.
-    ("unit_action", {"unit_id": "$BUILDER", "action": "sleep"}, True),
     ("unit_action", {"unit_id": "$UNIT_3", "action": "alert"}, True),
     ("unit_action", {"unit_id": "$UNIT_4", "action": "automate"}, True),
+    # --- conditional on what the save contains ---------------------------
+    # `improve` has to run before anything that ends the builder's turn, and it
+    # takes no coordinates: the builder acts on the tile it is standing on, so
+    # the resolver only offers this verb when `get_units` reports a `Can build`
+    # line for that builder. (Stage 3.2 adds move-then-act; until then, being
+    # on the tile is the precondition.)
+    (
+        "unit_action",
+        {
+            "unit_id": "$IMPROVE_UNIT",
+            "action": "improve",
+            "improvement": "$IMPROVEMENT",
+        },
+        True,
+    ),
+    # Sleep is refused for a unit that has already fortified or alerted, which
+    # most military units in a mid-game save have — and the builder above is
+    # busy improving. So this wants a *second* builder, and skips otherwise;
+    # the turn37 corpus already holds a sleep recording.
+    ("unit_action", {"unit_id": "$SLEEPER", "action": "sleep"}, True),
+    ("unit_action", {"unit_id": "$DAMAGED", "action": "heal"}, True),
+    # `activate` also needs the Great Person to be standing on its matching
+    # district, which nothing in `get_units` reports. If it is not, this
+    # records an error — `test_recording_captured_a_successful_call` fails on
+    # it by name, which is the signal to delete that one capture.
+    ("unit_action", {"unit_id": "$GREAT_PERSON", "action": "activate"}, True),
+    ("unit_action", {"unit_id": "$RELIGIOUS_UNIT", "action": "spread_religion"}, True),
+    # Teleport first: it needs an idle trader, and establishing a route
+    # consumes exactly that idleness.
+    (
+        "unit_action",
+        {
+            "unit_id": "$IDLE_TRADER",
+            "action": "teleport",
+            "target_x": "$OTHER_CITY_X",
+            "target_y": "$OTHER_CITY_Y",
+        },
+        True,
+    ),
+    (
+        "spy_action",
+        {
+            "unit_id": "$SPY",
+            "action": "travel",
+            "target_x": "$OTHER_CITY_X",
+            "target_y": "$OTHER_CITY_Y",
+        },
+        True,
+    ),
+    # Founding reshapes ownership and city lists, so it follows every read-like
+    # verb above.
+    ("unit_action", {"unit_id": "$SETTLER", "action": "found_city"}, True),
     # Last: it acts on whatever is still unmoved, so it has to follow the rest.
     ("skip_remaining_units", {}, True),
+    # After skip_remaining_units, because it destroys its unit. Harmless to the
+    # fixture — every session reloads the save first.
+    ("unit_action", {"unit_id": "$EXPENDABLE", "action": "delete"}, True),
 ]
 
 WRITE_PLAN: list[tuple[str, dict, bool]] = [
-    ("set_city_production", {"city_id": "$CITY", "item_type": "UNIT", "item_name": "$UNIT_TYPE"}, True),
-    ("set_research", {"tech_or_civic": "$TECH", "category": "tech"}, True),
+    ("set_city_production", {"city_id": "$CITY", "item_name": "$UNIT_TYPE"}, True),
+    ("set_tech", {"tech_type": "$TECH"}, True),
     ("set_city_focus", {"city_id": "$CITY", "focus": "production"}, True),
     ("end_turn", {}, True),
 ]
+
+
+# Placeholders that name a unit by its role. `delete` must not be handed any of
+# them, and they are strict: a save without the unit skips the verb rather than
+# aiming it at whatever unit happens to be first.
+ROLE_PLACEHOLDERS = frozenset(
+    {
+        "$SETTLER",
+        "$SPY",
+        "$DAMAGED",
+        "$GREAT_PERSON",
+        "$RELIGIOUS_UNIT",
+        "$IDLE_TRADER",
+        "$IMPROVE_UNIT",
+        "$BUILDER",
+        "$SLEEPER",
+    }
+)
 
 
 async def _resolve(client, plan):
@@ -120,34 +213,76 @@ async def _resolve(client, plan):
 
     unit_ids = _ids(units_text, r"id[=: ](\d+)")
     city_ids = _ids(cities_text, r"id[=: ](\d+)")
-    coords = _coords(cities_text)
+    coords = _city_positions(cities_text)
     unit_coords = _coords(units_text)
 
     if not unit_ids:
         print("! No units found — is a game actually loaded?", file=sys.stderr)
     context["$UNIT"] = unit_ids[0] if unit_ids else 0
-    context["$SETTLER"] = _first_matching(units_text, "SETTLER") or context["$UNIT"]
-    context["$SPY"] = _first_matching(units_text, "SPY") or context["$UNIT"]
     context["$CITY"] = city_ids[0] if city_ids else 0
     context["$CITY_X"], context["$CITY_Y"] = coords[0] if coords else (0, 0)
 
-    # One unit per dispatcher verb. The builder is addressed by role (only it
-    # can reliably sleep) and therefore excluded from the numbered slots, or
-    # two verbs would land on it and interfere.
-    context["$BUILDER"] = _first_matching(units_text, "BUILDER")
-    others = [uid for uid in unit_ids if uid != context["$BUILDER"]]
-    if context["$BUILDER"] is None:
-        context["$BUILDER"] = others[0] if others else 0
+    # A second city, for the verbs that send a unit somewhere. None when the
+    # empire has only one — teleport and spy travel then skip.
+    if len(coords) > 1:
+        context["$OTHER_CITY_X"], context["$OTHER_CITY_Y"] = coords[1]
+    else:
+        context["$OTHER_CITY_X"], context["$OTHER_CITY_Y"] = None, None
+
+    # Strict: these gate a *write*, so a miss must skip the verb rather than
+    # aim it at whatever unit happens to be first. (The settle-site read below
+    # is happy with any unit and asks for `$UNIT`.)
+    context["$SETTLER"] = _first_matching(units_text, "UNIT_SETTLER")
+    context["$SPY"] = _first_matching(units_text, "UNIT_SPY")
+    context["$DAMAGED"] = _first_matching(units_text, "[HP:")
+    context["$GREAT_PERSON"] = _first_matching(units_text, "UNIT_GREAT_")
+    context["$RELIGIOUS_UNIT"] = _first_matching(
+        units_text, "UNIT_MISSIONARY"
+    ) or _first_matching(units_text, "UNIT_APOSTLE")
+    context["$IDLE_TRADER"] = _idle_trader(units_text)
+
+    # `improve` acts where the builder stands, so the unit and the improvement
+    # have to come from the same `Can build` line.
+    improve_unit, improvement = _builder_with_buildable(units_text)
+    context["$IMPROVE_UNIT"] = improve_unit
+    context["$IMPROVEMENT"] = improvement
+
+    builders = _all_matching(units_text, "UNIT_BUILDER")
+    context["$BUILDER"] = builders[0] if builders else None
+    context["$SLEEPER"] = builders[1] if len(builders) > 1 else None
+
+    # The numbered slots feed fortify / alert / automate, which a civilian
+    # cannot do — a Trader in a slot recorded
+    # `Error: CANNOT_ALERT|Unit cannot be put on alert`. Take combat units
+    # only, and keep off any unit a role placeholder has already claimed, so
+    # two verbs never land on one unit.
+    claimed = set(builders)
+    for key, value in context.items():
+        if key in ROLE_PLACEHOLDERS and isinstance(value, int):
+            claimed.add(value)
+
+    military = [uid for uid in _military_units(units_text) if uid not in claimed]
     for slot in range(5):
         context[f"$UNIT_{slot}"] = (
-            others[slot] if slot < len(others) else (others[-1] if others else 0)
+            military[slot]
+            if slot < len(military)
+            else (military[-1] if military else 0)
         )
-    if len(others) < 5:
+    if len(military) < 5:
         print(
-            f"! Only {len(others)} non-builder units — dispatcher verbs will "
-            f"share units and may record interference errors.",
+            f"! Only {len(military)} unclaimed combat units — dispatcher verbs "
+            f"will share units and may record interference errors.",
             file=sys.stderr,
         )
+
+    # Destroyed by `delete`, so it must not be a unit any other verb needs.
+    # A first cut reserved only the numbered slots and the builders, which
+    # handed `delete` the Great Person that `activate` was about to use.
+    # Combat units only, for the same reason the slots are: a deleted Settler
+    # or Trader is a far more expensive fixture to rebuild.
+    reserved = set(claimed) | set(military[:5])
+    spare = [uid for uid in _military_units(units_text) if uid not in reserved]
+    context["$EXPENDABLE"] = spare[-1] if spare else None
 
     # Move one tile onto a neighbour that is actually passable. Stepping
     # blindly east records `BLOCKED (impassable mountain)`, which is a real
@@ -160,23 +295,44 @@ async def _resolve(client, plan):
     # Districts and wonders have to come from what this city can actually
     # build right now — a hardcoded DISTRICT_CAMPUS records an error recording
     # in any game that has not researched Writing yet.
-    production = await _call(client, "get_city_production", {"city_id": context["$CITY"]})
-    context["$DISTRICT"] = _first_token(production, "DISTRICT_") or "DISTRICT_ENCAMPMENT"
+    production = await _call(
+        client, "get_city_production", {"city_id": context["$CITY"]}
+    )
+    context["$DISTRICT"] = (
+        _first_token(production, "DISTRICT_") or "DISTRICT_ENCAMPMENT"
+    )
     context["$WONDER"] = _first_wonder(production) or "BUILDING_PYRAMIDS"
     context["$UNIT_TYPE"] = _first_token(production, "UNIT_") or "UNIT_WARRIOR"
 
     research = await _call(client, "get_tech_civics", {})
-    context["$TECH"] = _first_token(research, "TECH_") or "TECH_MINING"
+    context["$TECH"] = _researchable_tech(research) or "TECH_MINING"
 
-    print("Resolved:", {k: v for k, v in context.items()})
+    print("Resolved:", {k: v for k, v in context.items() if v is not None})
 
     resolved = []
+    skipped = []
     for tool, arguments, mutates in plan:
-        filled = {
-            key: context.get(value, value) if isinstance(value, str) else value
-            for key, value in arguments.items()
-        }
+        filled = {}
+        missing = []
+        for key, value in arguments.items():
+            if not isinstance(value, str) or not value.startswith("$"):
+                filled[key] = value
+                continue
+            substituted = context.get(value, value)
+            if substituted is None:
+                missing.append(value)
+            else:
+                filled[key] = substituted
+        if missing:
+            skipped.append((tool, arguments, missing))
+            continue
         resolved.append((tool, filled, mutates))
+
+    for tool, arguments, missing in skipped:
+        verb = arguments.get("action", "")
+        label = f"{tool}({verb})" if verb else tool
+        print(f"  skip {label}: this save has no {', '.join(missing)}")
+
     return resolved
 
 
@@ -197,11 +353,103 @@ def _first_matching(text: str, needle: str) -> int | None:
     return None
 
 
+def _all_matching(text: str, needle: str) -> list[int]:
+    """Every unit id whose line mentions `needle`, in narration order."""
+    import re
+
+    found = []
+    for line in text.splitlines():
+        if needle in line.upper():
+            match = re.search(r"id[=: ](\d+)", line)
+            if match:
+                found.append(int(match.group(1)))
+    return found
+
+
+def _military_units(text: str) -> list[int]:
+    """Unit ids that can fortify, alert and automate.
+
+    `narrate_units` prints `CS:` only for a unit with combat strength, so it
+    separates the military units from Settlers, Traders and Builders exactly
+    where the dispatcher verbs need the line drawn.
+    """
+    import re
+
+    found = []
+    for line in text.splitlines():
+        if "CS:" not in line:
+            continue
+        match = re.search(r"id[=: ](\d+)", line)
+        if match:
+            found.append(int(match.group(1)))
+    return found
+
+
+def _idle_trader(text: str) -> int | None:
+    """A trader not already on a route.
+
+    `teleport` and `trade_route` both refuse a trader mid-route, and
+    `narrate_units` marks those with `[ON ROUTE: ...]`.
+    """
+    import re
+
+    for line in text.splitlines():
+        if "UNIT_TRADER" not in line.upper():
+            continue
+        if "ON ROUTE" in line.upper():
+            continue
+        match = re.search(r"id[=: ](\d+)", line)
+        if match:
+            return int(match.group(1))
+    return None
+
+
+def _builder_with_buildable(text: str) -> tuple[int | None, str | None]:
+    """A builder and something it can build where it currently stands.
+
+    `narrate_units` prints `>> Can build: ...` on the line after the unit it
+    belongs to, and only when the game itself reported improvements as legal
+    on that tile — which is the precondition `improve` needs.
+    """
+    import re
+
+    last_unit_id = None
+    for line in text.splitlines():
+        match = re.search(r"id[=: ](\d+)", line)
+        if match:
+            last_unit_id = int(match.group(1))
+            continue
+        if ">> Can build:" in line and last_unit_id is not None:
+            improvement = _first_token(line, "IMPROVEMENT_")
+            if improvement:
+                return last_unit_id, improvement
+    return None, None
+
+
 def _coords(text: str) -> list[tuple[int, int]]:
     """Positions as the narrator prints them: `at (45,12)`."""
     import re
 
     return [(int(x), int(y)) for x, y in re.findall(r"\((\d+),\s*(\d+)\)", text)]
+
+
+def _city_positions(cities_text: str) -> list[tuple[int, int]]:
+    """City centre tiles only.
+
+    `_coords` over the whole block also matches district tiles —
+    `DISTRICT_HOLY_SITE(46,12)` — so taking its second entry aimed `teleport`
+    at a district and recorded
+    `Error: CANNOT_TELEPORT|Cannot teleport trader to (46,12)`. A city line is
+    the one carrying `(pop N) at (x,y)`.
+    """
+    import re
+
+    found = []
+    for line in cities_text.splitlines():
+        match = re.search(r"\(pop \d+\) at \((\d+),\s*(\d+)\)", line)
+        if match:
+            found.append((int(match.group(1)), int(match.group(2))))
+    return found
 
 
 IMPASSABLE = ("MOUNTAIN", "OCEAN", "CLIFF")
@@ -235,6 +483,41 @@ def _first_token(text: str, prefix: str) -> str | None:
 
     match = re.search(rf"\b{prefix}[A-Z_]+\b", text)
     return match.group(0) if match else None
+
+
+def _researchable_tech(research: str) -> str | None:
+    """A tech from the Available list that is not the one already running.
+
+    Taking the first `TECH_` token in the whole output recorded
+    `Error: ALREADY_COMPLETED|TECH_SAILING is already researched`: the current
+    research heads the available list, and by the time the write ran the game
+    had finished it. Read the Available section, and skip the entry whose
+    display name matches the `Researching:` header.
+    """
+    import re
+
+    running = re.search(r"^Researching:\s*(.+?)\s*\(", research, flags=re.M)
+    running_name = running.group(1).strip() if running else ""
+
+    section = re.split(r"^Available techs:", research, flags=re.M)
+    if len(section) < 2:
+        return None
+
+    for line in section[1].splitlines():
+        if not line.strip():
+            continue  # `re.split` leaves the rest of the header line first
+        if not line.startswith("  "):
+            break  # the Available block has ended
+        match = re.match(r"\s*(.+?)\s*\(([A-Z_]+)\)", line)
+        if not match:
+            continue
+        display_name, tech_type = match.group(1), match.group(2)
+        if display_name == running_name:
+            continue
+        if not tech_type.startswith("TECH_"):
+            continue
+        return tech_type
+    return None
 
 
 def _first_wonder(production: str) -> str | None:
@@ -286,18 +569,40 @@ async def _record(scenario: str, plan, dry_run: bool) -> None:
             if dry_run:
                 for tool, arguments, _ in resolved:
                     print(f"  would record {tool}({_short(arguments)})")
-                print(f"\nDry run — nothing written.")
+                print("\nDry run — nothing written.")
                 return
 
-            recording.enable(RECORDING_DIR, scenario)
+            recorder = recording.enable(RECORDING_DIR, scenario)
+            discarded = 0
             for tool, arguments, _ in resolved:
+                before = len(recorder.written)
                 text = await _call(client, tool, arguments)
                 first = text.split("\n", 1)[0][:90]
-                flag = "!" if text.startswith("Error") else " "
-                print(f" {flag} {tool}({_short(arguments)}) -> {first}")
 
-            written = recording._active.written if recording._active else []
-            print(f"\nWrote {len(written)} recordings to {RECORDING_DIR / scenario}")
+                # A failed call is not a fixture. `_resolve` skips the verbs it
+                # can predict, but some preconditions are not visible in any
+                # tool's output — whether a Missionary is next to a city,
+                # whether a Great Person stands on its district. Rather than
+                # guess at those, keep the call and throw the recording away
+                # when the game refuses it.
+                if text.startswith("Error"):
+                    for path in recorder.written[before:]:
+                        path.unlink(missing_ok=True)
+                    del recorder.written[before:]
+                    discarded += 1
+                    print(f" ! {tool}({_short(arguments)}) -> {first}")
+                    print("     discarded — the game refused this call")
+                    continue
+
+                print(f"   {tool}({_short(arguments)}) -> {first}")
+
+            print(
+                f"\nWrote {len(recorder.written)} recordings to {RECORDING_DIR / scenario}"
+            )
+            if discarded:
+                print(
+                    f"Discarded {discarded} refused call(s); nothing stale was left behind."
+                )
 
 
 def _short(arguments: dict) -> str:

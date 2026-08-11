@@ -1,0 +1,12 @@
+== Action Required (1) ==
+  * Choose Production  -> Use: set_city_production(city_id=..., item_name=...)
+
+== Notifications (8) ==
+  - Wonder Completed
+  - Wonder Completed
+  - Production Salvaged [Inca] (City Center) at (45,12)
+  - Major River Flooding at (56,28)
+  - First Civic of New Era
+  - Discovered Political Philosophy
+  - First Tier 1 Government
+  - Tribal Village Discovered at (0,12)

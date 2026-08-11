@@ -1,0 +1,8 @@
+== Notifications (7) ==
+  - Wonder Completed
+  - Wonder Completed
+  - Production Salvaged [Inca] (City Center) at (45,12)
+  - Megacolossal Volcano Erupts! at (48,20)
+  - City Starving!
+  - Need More Housing
+  - Command Units  -> Units have moves remaining — move them or use skip_remaining_units()

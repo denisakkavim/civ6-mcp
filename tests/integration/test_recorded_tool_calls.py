@@ -89,6 +89,20 @@ def test_recording_replays_to_its_snapshot(civ_server, scenario, name):
 # corpus into something nobody can regenerate or extend.
 SCENARIO_SAVES = {
     "turn37": "0T_TURN37_INCA.Civ6Save",
+    # Turn 57 carries what turn 37 could not: a settler, a trader, a builder
+    # with charges, walls, a met civ and a Holy Site. Those are the
+    # preconditions for the `unit_action` verbs turn 37 leaves unrecorded, and
+    # Stage 4 replaces every one of them.
+    "turn57": "0T_TURN57_INCA.Civ6Save",
+    # Turn 63 is the first scenario with a religion founded, so it is the only
+    # one where `religion_type` is non-empty and `get_religion_spread` prints
+    # RELIGION_* rather than falling back to a display name. It also sees
+    # Georgia's cities, which Stage 3.4 needs for foreign-city ids.
+    "turn63": "0T_TURN63_INCA.Civ6Save",
+    # Turn 73 has a builder standing where it can build, an idle trader and a
+    # missionary — the preconditions for `improve` and `teleport`, which no
+    # earlier save could satisfy.
+    "turn73": "0T_TURN73_INCA.Civ6Save",
     "round_trip": None,  # written by a test, not recorded from a game
 }
 

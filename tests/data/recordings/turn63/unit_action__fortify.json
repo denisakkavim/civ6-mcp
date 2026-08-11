@@ -1,0 +1,20 @@
+{
+  "tool": "unit_action",
+  "arguments": {
+    "unit_id": 131073,
+    "action": "fortify"
+  },
+  "scenario": "turn63",
+  "recorded_at": "2026-08-11T19:59:54+00:00",
+  "notes": null,
+  "result": "ALREADY_FORTIFIED|Fortify turns: 2",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local unit = UnitManager.GetUnit(me, 1) if unit == nil then print(\"ERR:UNIT_NOT_FOUND\"); print(\"---END---\"); return end\nif unit:GetFortifyTurns() > 0 then\n    print(\"OK:ALREADY_FORTIFIED|Fortify turns: \" .. unit:GetFortifyTurns())\n    print(\"---END---\"); return\nend\nif UnitManager.CanStartOperation(unit, UnitOperationTypes.FORTIFY, nil, true) then\n    UnitManager.RequestOperation(unit, UnitOperationTypes.FORTIFY)\n    print(\"OK:FORTIFIED\")\nelse\n    local sleepOp = GameInfo.UnitOperations[\"UNITOPERATION_SLEEP\"]\n    if sleepOp and UnitManager.CanStartOperation(unit, sleepOp.Hash, nil, true) then\n        UnitManager.RequestOperation(unit, sleepOp.Hash)\n        print(\"OK:SLEEPING\")\n    else\n        print(\"ERR:CANNOT_FORTIFY|Unit cannot fortify or sleep\"); print(\"---END---\"); return\n    end\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:ALREADY_FORTIFIED|Fortify turns: 2"
+      ]
+    }
+  ]
+}

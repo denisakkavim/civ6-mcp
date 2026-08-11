@@ -1,0 +1,24 @@
+{
+  "tool": "get_religion_spread",
+  "arguments": {},
+  "scenario": "turn63",
+  "recorded_at": "2026-08-11T19:59:47+00:00",
+  "notes": null,
+  "result": "Religious Victory Tracker:\n  RELIGION_ORTHODOXY: majority in 1/4 civilizations\n  RELIGION_SHINTO: majority in 1/4 civilizations\n\nInca:\n  Qusqu (pop 5) \u2014 RELIGION_SHINTO (Shinto:4)\n  Wanuku (pop 4) \u2014 none (Eastern Orthodoxy:0)\n  Antawaylla (pop 3) \u2014 RELIGION_SHINTO (Shinto:3)\nGeorgia:\n  Kutaisi (pop 3) \u2014 RELIGION_ORTHODOXY (Eastern Orthodoxy:3)\n  Rustavi (pop 5) \u2014 RELIGION_ORTHODOXY (Eastern Orthodoxy:3)\n  Gori (pop 4) \u2014 RELIGION_ORTHODOXY (Eastern Orthodoxy:3)",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pVis = PlayersVisibility[me]\nlocal pDiplo = Players[me]:GetDiplomacy()\nfor pid = 0, 62 do\n    local p = Players[pid]\n    if p and p:IsMajor() and p:IsAlive() then\n        if pid == me or pDiplo:HasMet(pid) then\n            local cfg = PlayerConfigurations[pid]\n            local civName = Locale.Lookup(cfg:GetCivilizationShortDescription())\n            for _, c in p:GetCities():Members() do\n                local cx, cy = c:GetX(), c:GetY()\n                if pid == me or pVis:IsRevealed(cx, cy) then\n                    local cityName = Locale.Lookup(c:GetName())\n                    local cityRel = c:GetReligion()\n                    local majRel = cityRel:GetMajorityReligion()\n                    local relName = \"none\"\n                    local relType = \"\"\n                    if majRel >= 0 then\n                        local r = GameInfo.Religions[majRel]\n                        if r then\n                            relName = Locale.Lookup(r.Name)\n                            relType = r.ReligionType\n                        end\n                    end\n                    local pop = c:GetPopulation()\n                    local followers = \"\"\n                    local rels = cityRel:GetReligionsInCity()\n                    if rels then\n                        local parts = {}\n                        for _, r in ipairs(rels) do\n                            if r.Religion >= 0 then\n                                local rn = GameInfo.Religions[r.Religion]\n                                local rName = rn and Locale.Lookup(rn.Name) or \"Unknown\"\n                                table.insert(parts, rName .. \":\" .. r.Followers)\n                            end\n                        end\n                        followers = table.concat(parts, \",\")\n                    end\n                    print(\"RCITY|\" .. pid .. \"|\" .. civName .. \"|\" .. cityName .. \"|\" .. relName .. \"|\" .. pop .. \"|\" .. followers .. \"|\" .. relType)\n                end\n            end\n        end\n    end\nend\nlocal relTotals = {}\nlocal relTypes = {}\nlocal nMajors = 0\nfor i = 0, 62 do\n    local p = Players[i]\n    if p and p:IsMajor() and p:IsAlive() then\n        nMajors = nMajors + 1\n        local majRel = p:GetReligion():GetReligionInMajorityOfCities()\n        if majRel >= 0 then\n            local r = GameInfo.Religions[majRel]\n            local rName = r and Locale.Lookup(r.Name) or \"Unknown\"\n            relTotals[rName] = (relTotals[rName] or 0) + 1\n            relTypes[rName] = r and r.ReligionType or \"\"\n        end\n    end\nend\nfor rName, count in pairs(relTotals) do\n    print(\"RSUMMARY|\" .. rName .. \"|\" .. count .. \"|\" .. nMajors .. \"|\" .. (relTypes[rName] or \"\"))\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "RCITY|0|Inca|Qusqu|Shinto|5|Shinto:4|RELIGION_SHINTO",
+        "RCITY|0|Inca|Wanuku|none|4|Eastern Orthodoxy:0|",
+        "RCITY|0|Inca|Antawaylla|Shinto|3|Shinto:3|RELIGION_SHINTO",
+        "RCITY|1|Georgia|Kutaisi|Eastern Orthodoxy|3|Eastern Orthodoxy:3|RELIGION_ORTHODOXY",
+        "RCITY|1|Georgia|Rustavi|Eastern Orthodoxy|5|Eastern Orthodoxy:3|RELIGION_ORTHODOXY",
+        "RCITY|1|Georgia|Gori|Eastern Orthodoxy|4|Eastern Orthodoxy:3|RELIGION_ORTHODOXY",
+        "RSUMMARY|Eastern Orthodoxy|1|4|RELIGION_ORTHODOXY",
+        "RSUMMARY|Shinto|1|4|RELIGION_SHINTO"
+      ]
+    }
+  ]
+}

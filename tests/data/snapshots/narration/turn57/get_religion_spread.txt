@@ -1,0 +1,11 @@
+Religious Victory Tracker:
+  RELIGION_ORTHODOXY: majority in 1/4 civilizations
+
+Inca:
+  Qusqu (pop 5) — none
+  Wanuku (pop 3) — none
+  Antawaylla (pop 2) — none
+Georgia:
+  Kutaisi (pop 2) — RELIGION_ORTHODOXY (Eastern Orthodoxy:2)
+  Rustavi (pop 4) — RELIGION_ORTHODOXY (Eastern Orthodoxy:2)
+  Gori (pop 2) — RELIGION_ORTHODOXY (Eastern Orthodoxy:2)

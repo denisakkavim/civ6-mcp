@@ -1,0 +1,12 @@
+Religious Victory Tracker:
+  RELIGION_ORTHODOXY: majority in 1/4 civilizations
+
+Inca:
+  Qusqu (pop 6) — RELIGION_SHINTO (Shinto:4, Eastern Orthodoxy:0)
+  Wanuku (pop 5) — RELIGION_ORTHODOXY (Eastern Orthodoxy:3, Shinto:1)
+  Antawaylla (pop 4) — RELIGION_SHINTO (Shinto:3, Eastern Orthodoxy:0)
+  Ollantaytambo (pop 2) — RELIGION_ORTHODOXY (Shinto:1, Eastern Orthodoxy:1)
+Georgia:
+  Kutaisi (pop 5) — RELIGION_ORTHODOXY (Eastern Orthodoxy:4)
+  Rustavi (pop 5) — RELIGION_ORTHODOXY (Eastern Orthodoxy:4)
+  Gori (pop 6) — RELIGION_ORTHODOXY (Eastern Orthodoxy:5)

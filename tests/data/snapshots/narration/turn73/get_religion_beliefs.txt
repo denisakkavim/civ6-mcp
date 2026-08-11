@@ -1,0 +1,3 @@
+Religion: Shinto (RELIGION_SHINTO)
+Faith: 333
+You have already founded a religion.

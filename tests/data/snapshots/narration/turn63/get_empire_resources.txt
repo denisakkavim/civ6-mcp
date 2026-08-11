@@ -1,0 +1,47 @@
+Empire Resources:
+
+Strategic Stockpiles:
+  RESOURCE_HORSES: 25/25 (+2/turn) [income 2]
+  RESOURCE_IRON: 0/25 (+0/turn)
+
+Luxury Resources:
+  RESOURCE_SALT: 1
+
+Strategic Tiles:
+  RESOURCE_HORSES — improved at (44,13)
+  !! RESOURCE_HORSES — UNIMPROVED at (49,10) — needs builder!
+
+Luxury Tiles:
+  !! RESOURCE_SALT — UNIMPROVED at (44,6) — needs builder!
+  RESOURCE_SALT — improved at (45,11)
+  !! RESOURCE_INCENSE — UNIMPROVED at (46,9) — needs builder!
+
+Bonus Tiles:
+  RESOURCE_CATTLE — UNIMPROVED at (42,8)
+  RESOURCE_WHEAT — UNIMPROVED at (43,10)
+  RESOURCE_WHEAT — UNIMPROVED at (44,8)
+  RESOURCE_WHEAT — improved at (44,9)
+  RESOURCE_DEER — UNIMPROVED at (48,8)
+
+Nearby Unclaimed:
+  [L] RESOURCE_INCENSE at (45,7) — 5 tiles from Qusqu
+  [L] RESOURCE_SPICES at (49,7) — 7 tiles from Qusqu
+  [B] RESOURCE_FISH at (40,8) — 7 tiles from Qusqu
+  [S] RESOURCE_HORSES at (49,9) — 6 tiles from Qusqu
+  [B] RESOURCE_SHEEP at (47,11) — 3 tiles from Qusqu
+  [B] RESOURCE_CATTLE at (50,11) — 6 tiles from Qusqu
+  [B] RESOURCE_FISH at (40,12) — 5 tiles from Qusqu
+  [S] RESOURCE_IRON at (49,12) — 4 tiles from Qusqu
+  [B] RESOURCE_COPPER at (41,14) — 5 tiles from Qusqu
+  [B] RESOURCE_WHEAT at (43,14) — 3 tiles from Qusqu
+  [B] RESOURCE_SHEEP at (48,14) — 4 tiles from Qusqu
+  [B] RESOURCE_STONE at (50,14) — 6 tiles from Qusqu
+  [B] RESOURCE_BANANAS at (43,16) — 4 tiles from Qusqu
+  [L] RESOURCE_TOBACCO at (49,17) — 7 tiles from Qusqu
+  [B] RESOURCE_FISH at (42,4) — 4 tiles from Wanuku
+  [B] RESOURCE_CRABS at (44,4) — 4 tiles from Wanuku
+  [B] RESOURCE_DEER at (42,6) — 3 tiles from Wanuku
+  [B] RESOURCE_FISH at (39,13) — 7 tiles from Wanuku
+  [B] RESOURCE_COPPER at (52,7) — 6 tiles from Antawaylla
+  [L] RESOURCE_SPICES at (51,8) — 4 tiles from Antawaylla
+  [B] RESOURCE_SHEEP at (51,10) — 4 tiles from Antawaylla

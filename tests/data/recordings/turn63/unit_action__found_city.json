@@ -1,0 +1,38 @@
+{
+  "tool": "unit_action",
+  "arguments": {
+    "unit_id": 983049,
+    "action": "found_city"
+  },
+  "scenario": "turn63",
+  "recorded_at": "2026-08-11T19:59:56+00:00",
+  "notes": null,
+  "result": "FOUNDED|41,11",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "do local c = ContextPtr:LookUpControl(\"/InGame/InGamePopup\") if c and not c:IsHidden() then   pcall(function() UIManager:DequeuePopup(c) end)   pcall(function() Input.PopContext() end)   c:SetHide(true)   print(\"DISMISSED|InGamePopup\") end end do local c = ContextPtr:LookUpControl(\"/InGame/GenericPopup\") if c and not c:IsHidden() then   pcall(function() UIManager:DequeuePopup(c) end)   pcall(function() Input.PopContext() end)   c:SetHide(true)   print(\"DISMISSED|GenericPopup\") end end do local c = ContextPtr:LookUpControl(\"/InGame/PopupDialog\") if c and not c:IsHidden() then   pcall(function() UIManager:DequeuePopup(c) end)   pcall(function() Input.PopContext() end)   c:SetHide(true)   print(\"DISMISSED|PopupDialog\") end end do local c = ContextPtr:LookUpControl(\"/InGame/BoostUnlockedPopup\") if c and not c:IsHidden() then   pcall(function() UIManager:DequeuePopup(c) end)   pcall(function() Input.PopContext() end)   c:SetHide(true)   print(\"DISMISSED|BoostUnlockedPopup\") end end do local c = ContextPtr:LookUpControl(\"/InGame/GreatWorkShowcase\") if c and not c:IsHidden() then   pcall(function() UIManager:DequeuePopup(c) end)   pcall(function() Input.PopContext() end)   c:SetHide(true)   print(\"DISMISSED|GreatWorkShowcase\") end end do local c = ContextPtr:LookUpControl(\"/InGame/WorldCongressPopup\") if c and not c:IsHidden() then   pcall(function() UIManager:DequeuePopup(c) end)   pcall(function() Input.PopContext() end)   c:SetHide(true)   print(\"DISMISSED|WorldCongressPopup\") end end do local c = ContextPtr:LookUpControl(\"/InGame/WorldCongressIntro\") if c and not c:IsHidden() then   pcall(function() UIManager:DequeuePopup(c) end)   pcall(function() Input.PopContext() end)   c:SetHide(true)   print(\"DISMISSED|WorldCongressIntro\") end end do local ls = ContextPtr:LookUpControl(\"/InGame/LeaderScene\") if ls and not ls:IsHidden() then   pcall(function() Events.HideLeaderScreen() end)   ls:SetHide(true)   print(\"DISMISSED|LeaderScene\") end end do local dv = ContextPtr:LookUpControl(\"/InGame/DiplomacyActionView\") if dv and not dv:IsHidden() then   print(\"PENDING|DiplomacyActionView\") end end do local ddv = ContextPtr:LookUpControl(\"/InGame/DiplomacyDealView\") if ddv and not ddv:IsHidden() then   print(\"PENDING|DiplomacyDealView\") end end local mode = UI.GetInterfaceMode() if mode == InterfaceModeTypes.CINEMATIC then   pcall(function() UI.ClearTemporaryPlotVisibility(\"NaturalDisaster\") end)   pcall(function() UI.ClearTemporaryPlotVisibility(\"NaturalWonder\") end)   pcall(function() Events.StopAllCameraAnimations() end)   pcall(function() UILens.RestoreActiveLens() end)   UI.SetInterfaceMode(InterfaceModeTypes.SELECTION)   print(\"DISMISSED|cinematic_camera\") end print(\"---END---\")",
+      "lines": []
+    },
+    {
+      "context": "write",
+      "lua": "do local c = ContextPtr:LookUpControl(\"/InGame/TechCivicCompletedPopup\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end do local c = ContextPtr:LookUpControl(\"/InGame/NaturalWonderPopup\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end do local c = ContextPtr:LookUpControl(\"/InGame/NaturalDisasterPopup\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end do local c = ContextPtr:LookUpControl(\"/InGame/WonderBuiltPopup\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end do local c = ContextPtr:LookUpControl(\"/InGame/EraCompletePopup\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end do local c = ContextPtr:LookUpControl(\"/InGame/HistoricMoments\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end do local c = ContextPtr:LookUpControl(\"/InGame/MomentPopup\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end do local c = ContextPtr:LookUpControl(\"/InGame/ProjectBuiltPopup\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end do local c = ContextPtr:LookUpControl(\"/InGame/RockBandPopup\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end do local c = ContextPtr:LookUpControl(\"/InGame/RockBandMoviePopup\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end print(\"---END---\")",
+      "lines": []
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local unit = UnitManager.GetUnit(me, 9) if unit == nil then print(\"ERR:UNIT_NOT_FOUND\"); print(\"---END---\"); return end\nif not UnitManager.CanStartOperation(unit, UnitOperationTypes.FOUND_CITY, nil, true) then\n    print(\"ERR:CANNOT_FOUND|Unit cannot found cities (not a settler or no moves)\"); print(\"---END---\"); return\nend\nlocal x, y = unit:GetX(), unit:GetY()\nlocal plot = Map.GetPlot(x, y)\nif plot:IsWater() then print(\"ERR:CANNOT_FOUND|Cannot found city on water\"); print(\"---END---\"); return end\nif plot:IsMountain() then print(\"ERR:CANNOT_FOUND|Cannot found city on mountain\"); print(\"---END---\"); return end\nfor i = 0, 62 do\n    if Players[i] and Players[i]:IsAlive() then\n        local cities = Players[i]:GetCities()\n        if cities then\n            for _, c in cities:Members() do\n                local dist = Map.GetPlotDistance(x, y, c:GetX(), c:GetY())\n                if dist <= 3 then\n                    print(\"ERR:CANNOT_FOUND|Too close to \" .. Locale.Lookup(c:GetName()) .. \" (settler at \" .. x .. \",\" .. y .. \", distance \" .. dist .. \", need > 3)\"); print(\"---END---\"); return\n                end\n            end\n        end\n    end\nend\nlocal params = {}\nparams[UnitOperationTypes.PARAM_X] = x\nparams[UnitOperationTypes.PARAM_Y] = y\npcall(function() LuaEvents.DiplomacyActionView_ShowIngameUI() end)\nUnitManager.RequestOperation(unit, UnitOperationTypes.FOUND_CITY, params)\nprint(\"OK:FOUNDED|\" .. x .. \",\" .. y)\nprint(\"---END---\")\n",
+      "lines": [
+        "Request to BulkHide( false, Diplomacy ), Show on 0 = -1",
+        "OK:FOUNDED|41,11"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "\nlocal plot = Map.GetPlot(41, 11)\nif plot and plot:IsCity() then\n    print(\"OK:CITY_EXISTS\")\nelse\n    print(\"OK:NO_CITY\")\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:CITY_EXISTS"
+      ]
+    }
+  ]
+}
