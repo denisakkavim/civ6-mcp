@@ -15,5 +15,5 @@ Available policies:
     Ilkum (POLICY_ILKUM): +30% [ICON_Production] Production toward Builders.
     Caravansaries (POLICY_CARAVANSARIES): +2 [ICON_Gold] Gold from all [ICON_TradeRoute] Trade Routes.
 
-Use set_policies with slot assignments, e.g. '0=POLICY_AGOGE,1=POLICY_URBAN_PLANNING'
+Use set_policies with slot assignments, e.g. {0: "POLICY_AGOGE", 1: "POLICY_URBAN_PLANNING"}
 Wildcard slots can accept any policy type.

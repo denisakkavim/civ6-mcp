@@ -93,7 +93,7 @@ for i, c in Players[me]:GetCities():Members() do
     local pBuildings = c:GetBuildings()
     for bldg in GameInfo.Buildings() do
         if pBuildings:HasBuilding(bldg.Index) then
-            table.insert(allBuildings, (bldg.BuildingType:gsub("BUILDING_", "")))
+            table.insert(allBuildings, bldg.BuildingType)
             if pBuildings:IsPillaged(bldg.Index) then
                 table.insert(pillBuildings, bldg.BuildingType)
             end
@@ -112,7 +112,7 @@ for i, c in Players[me]:GetCities():Members() do
             if res >= 0 and imp < 0 then
                 local resInfo = GameInfo.Resources[res]
                 if resInfo then
-                    table.insert(unimproved, resInfo.ResourceType:gsub("RESOURCE_","") .. "@" .. px .. "," .. py)
+                    table.insert(unimproved, resInfo.ResourceType .. "@" .. px .. "," .. py)
                 end
             end
             if imp >= 0 then
@@ -120,7 +120,7 @@ for i, c in Players[me]:GetCities():Members() do
                 if okP and pil then
                     local impInfo = GameInfo.Improvements[imp]
                     if impInfo then
-                        table.insert(pillImprov, impInfo.ImprovementType:gsub("IMPROVEMENT_","") .. "@" .. px .. "," .. py)
+                        table.insert(pillImprov, impInfo.ImprovementType .. "@" .. px .. "," .. py)
                     end
                 end
             end

@@ -6,9 +6,9 @@ SCIENCE VICTORY (launch 4 space projects = 50 VP)
   Inca: 0/25 VP | 5 techs | 0 spaceport(s) [0/25] <--
 
   YOUR SPACE PROJECT CHAIN:
-    [LOCKED] Launch Earth Satellite -- requires Rocketry (NEED)
-    [LOCKED] Launch Moon Landing -- requires Satellites (NEED)
-    [LOCKED] Launch Exoplanet Expedition -- requires Offworld Mission (NEED)
+    [LOCKED] Launch Earth Satellite -- requires TECH_ROCKETRY (NEED)
+    [LOCKED] Launch Moon Landing -- requires TECH_SATELLITES (NEED)
+    [LOCKED] Launch Exoplanet Expedition -- requires TECH_OFFWORLD_MISSION (NEED)
 
 DOMINATION (own all original capitals)
   Inca: holds own capital | military 97 <--

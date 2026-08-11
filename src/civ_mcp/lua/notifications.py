@@ -149,10 +149,10 @@ def parse_end_turn_blocking(lines: list[str]) -> list[tuple[str, str]]:
 
 
 NOTIFICATION_TOOL_MAP: dict[str, str] = {
-    "NOTIFICATION_CHOOSE_TECH": "set_research(tech_or_civic=..., category='tech')",
-    "NOTIFICATION_CHOOSE_CIVIC": "set_research(tech_or_civic=..., category='civic')",
-    "NOTIFICATION_CHOOSE_CITY_PRODUCTION": "set_city_production(city_id=..., item_type=..., item_name=...)",
-    "NOTIFICATION_FILL_CIVIC_SLOT": "get_policies() then set_policies(assignments='...')",
+    "NOTIFICATION_CHOOSE_TECH": "set_tech(tech_type=...)",
+    "NOTIFICATION_CHOOSE_CIVIC": "set_civic(civic_type=...)",
+    "NOTIFICATION_CHOOSE_CITY_PRODUCTION": "set_city_production(city_id=..., item_name=...)",
+    "NOTIFICATION_FILL_CIVIC_SLOT": "get_policies() then set_policies(assignments={...})",
     "NOTIFICATION_CONSIDER_GOVERNMENT_CHANGE": "get_policies() then set_policies()",
     "NOTIFICATION_CHOOSE_PANTHEON": "get_pantheon_beliefs() then choose_pantheon(belief_type=...)",
     "NOTIFICATION_CHOOSE_RELIGION": "get_religion_beliefs() then found_religion(religion_type=..., follower_belief=..., founder_belief=...)",
@@ -191,8 +191,8 @@ BLOCKING_TOOL_MAP: dict[str, str] = {
     "ENDTURN_BLOCKING_UNIT_PROMOTION": "Use get_unit_promotions(unit_id=...) then promote_unit()",
     "ENDTURN_BLOCKING_FILL_CIVIC_SLOT": "Use get_policies() then set_policies()",
     "ENDTURN_BLOCKING_PRODUCTION": "Use set_city_production()",
-    "ENDTURN_BLOCKING_RESEARCH": "Use set_research()",
-    "ENDTURN_BLOCKING_CIVIC": "Use set_research(category='civic')",
+    "ENDTURN_BLOCKING_RESEARCH": "Use set_tech()",
+    "ENDTURN_BLOCKING_CIVIC": "Use set_civic()",
     "ENDTURN_BLOCKING_UNITS": "Move or skip remaining units",
     "ENDTURN_BLOCKING_PANTHEON": "Use get_pantheon_beliefs() then choose_pantheon(belief_type=...)",
     "ENDTURN_BLOCKING_STACKED_UNITS": "Move units — cannot stack military units",

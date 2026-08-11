@@ -408,7 +408,7 @@ class TechOption:
     """An available technology for research."""
 
     name: str
-    tech_type: str  # e.g. "TECHNOLOGY_MINING"
+    tech_type: str  # e.g. "TECH_MINING"
     cost: int
     progress_pct: int  # 0-100
     turns: int
@@ -609,7 +609,7 @@ class ResourceStockpile:
 class OwnedResource:
     """A resource on a tile owned by the player."""
 
-    name: str
+    name: str  # full form, e.g. "RESOURCE_IRON" — feeds propose_trade
     resource_class: str  # "strategic", "luxury", "bonus"
     improved: bool
     x: int
@@ -620,7 +620,7 @@ class OwnedResource:
 class NearbyResource:
     """An unclaimed resource near one of the player's cities."""
 
-    name: str
+    name: str  # full form, e.g. "RESOURCE_IRON"
     resource_class: str
     x: int
     y: int
@@ -1251,6 +1251,9 @@ class CityReligionInfo:
     majority_religion: str  # display name or "none"
     population: int
     followers: dict[str, int]  # religion_name -> follower count
+    # The identifier `found_religion` takes, e.g. "RELIGION_HINDUISM". Empty
+    # when the city has no majority religion.
+    religion_type: str = ""
 
 
 @dataclass
@@ -1258,6 +1261,7 @@ class ReligionSummary:
     religion_name: str
     civs_with_majority: int
     total_majors: int
+    religion_type: str = ""  # e.g. "RELIGION_HINDUISM"
 
 
 @dataclass
@@ -1272,7 +1276,10 @@ class BuilderTask:
     x: int
     y: int
     improvement: str  # e.g. "IMPROVEMENT_MINE"
-    resource: str  # e.g. "IRON", "" for non-resource tiles
+    # Full form, matching `WonderPlacement.resource` — the two disagreed until
+    # Stage 1b. For a "pillaged" task this holds the improvement to repair
+    # ("IMPROVEMENT_FARM") rather than a resource.
+    resource: str  # e.g. "RESOURCE_IRON", "" for non-resource tiles
     resource_class: str  # "strategic", "luxury", "bonus", "pillaged", ""
     city_name: str
     nearest_builder_id: int = -1

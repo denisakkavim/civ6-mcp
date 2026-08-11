@@ -4,7 +4,7 @@
     "unit_id": 196608
   },
   "scenario": "turn37",
-  "recorded_at": "2026-08-10T21:01:08+00:00",
+  "recorded_at": "2026-08-11T19:14:53+00:00",
   "notes": null,
   "result": "16 trade route destinations:\n\nDomestic (food + production to destination):\n  Qusqu at (45,12) | Food:1 Prod:1\n  Wanuku at (44,8) | Food:1 Prod:1\n  Antawaylla at (47,9) | Food:1 Prod:1\n\nInternational (gold to origin):\n  Tbilisi (Georgia) at (52,21) | Gold:3\n  Kutaisi (Georgia) at (55,19) | Gold:3\n  Ulundi (Zulu) at (19,20) | Prod:1 Gold:5\n  Kwadukuza (Zulu) at (17,25) | Gold:3\n  Aachen (Germany) at (7,26) | Gold:3 Sci:1\n  Cologne (Germany) at (9,30) | Gold:3 Faith:1\n  Heidelberg (Germany) at (4,28) | Gold:3\n  Wolin (Wolin) at (53,12) | Gold:3\n  La Venta (La Venta) at (46,23) | Gold:3 Faith:1\n  Preslav (Preslav) at (11,21) | Gold:3\n  Mohenjo-Daro (Mohenjo-Daro) at (14,30) | Gold:3\n  Zanzibar (Zanzibar) at (15,14) | Gold:3\n  Vilnius (Vilnius) at (24,23) | Gold:3\n\nUse unit_action with action='trade_route', target_x=X, target_y=Y",
   "exchanges": [

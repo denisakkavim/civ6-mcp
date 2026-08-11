@@ -26,11 +26,17 @@ from civ_mcp.server import mcp
 from utils import snapshots
 
 # A tool schema past this size is almost always prose that belongs in the
-# schema itself — `unit_action` is 2,610 chars mostly because its 20 verbs and
-# their parameter rules are written out in the docstring. Ratchet this down as
-# the refactor lands; never up.
-MAX_TOOL_SCHEMA_CHARS = 2700
-MAX_SURFACE_CHARS = 43_000
+# schema itself. Ratchet these down as the refactor lands; never up.
+#
+# Stage 1.3 is close to size-neutral by construction: an enum states its values
+# in the schema at roughly the length the docstring stated them in prose, so
+# what it buys is legibility, not bytes. `unit_action` still fell 2,621 -> 2,328
+# and `set_city_production` 1,027 -> 903, but splitting `set_research` into
+# `set_tech` / `set_civic` (1.4) spent most of that back on a second tool's
+# boilerplate. The large drop is Stage 4, where 20 verbs in one docstring
+# become six tools with fixed signatures.
+MAX_TOOL_SCHEMA_CHARS = 2600
+MAX_SURFACE_CHARS = 42_600
 
 
 def _tools():
@@ -106,11 +112,6 @@ def test_total_surface_size_does_not_grow():
 # ---------------------------------------------------------------------------
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="Stage 1.2: get_religion_beliefs, get_dedications, get_gp_advisor "
-    "are pure reads with no readOnlyHint annotation.",
-)
 def test_every_read_tool_is_annotated_read_only():
     """Clients gate on `readOnlyHint`; a pure read without it reads as a mutation."""
     missing = [
@@ -152,11 +153,17 @@ def test_tool_names_use_the_get_set_convention():
     assert not strays, f"`list_*` tools in a `get_*` surface: {strays}"
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="Stage 1.3 types the dispatcher discriminators with Literal; "
-    "Stage 4 splits them. Until then action/focus/votes are bare values.",
-)
+def _declares_a_collection(spec: dict) -> bool:
+    """True if the parameter holds a list or an object rather than one value."""
+    collections = ("array", "object")
+    if spec.get("type") in collections:
+        return True
+    for variant in spec.get("anyOf", []) or []:
+        if variant.get("type") in collections:
+            return True
+    return False
+
+
 def test_dispatchers_name_their_discriminator_after_themselves():
     """`<subject>_<discriminator>` carries a parameter of the same name (§6b).
 
@@ -171,10 +178,16 @@ def test_dispatchers_name_their_discriminator_after_themselves():
         properties = (tool.inputSchema or {}).get("properties", {})
         # Only tools that actually have a discriminator-shaped parameter are
         # in scope: a tool named for its verb (`move_unit`) is exempt.
-        if discriminator in properties:
-            spec = properties[discriminator]
-            if not spec.get("enum") and not spec.get("anyOf"):
-                violations.append(f"{tool.name}.{discriminator}")
+        if discriminator not in properties:
+            continue
+        spec = properties[discriminator]
+        # So is a tool whose trailing word names a payload rather than a
+        # choice: `queue_wc_votes(votes=[…])` is verb-plus-object, and a
+        # discriminator is always one value picked from a set, never a list.
+        if _declares_a_collection(spec):
+            continue
+        if not spec.get("enum") and not spec.get("anyOf"):
+            violations.append(f"{tool.name}.{discriminator}")
     assert not violations, (
         f"Discriminator parameters typed as bare values rather than a closed "
         f"set: {violations}"
@@ -221,26 +234,28 @@ def test_core_reads_are_present(tool_name):
 # Closed-set parameters (Stage 1.3)
 # ---------------------------------------------------------------------------
 
-# Parameters the review identified as closed sets typed as bare `str`. Each
-# becomes a `Literal` in Stage 1.3; the tool names on the left change in
+# Parameters the review identified as closed sets typed as bare `str`. Stage
+# 1.3 typed all of them with `Literal`; the tool names on the left change in
 # Stage 2 and again in Stage 4, so update this table as those land.
-# Every one is `xfail(strict=True)`: the check is correct today and the code is
-# not. When Stage 1.3 types a parameter, its entry XPASSes and the suite goes
-# red — which is the prompt to delete the marker. The list is a checklist that
-# cannot rot.
-_PENDING = pytest.mark.xfail(strict=True, reason="Stage 1.3: not yet a Literal")
-
+#
+# `unit_action.improvement` is deliberately absent. Its legal values are a
+# property of the game database, not of this server, and the read side emits
+# values from that database directly — `get_units` prints what each builder can
+# build here, and `get_builder_tasks` can recommend IMPROVEMENT_OIL_WELL. An
+# enum hand-written from the review's eight generic improvements would refuse
+# values the server's own reads suggest. It gets typed when it is generated
+# from GameInfo.Improvements (the review's exit path), not before.
 CLOSED_SET_PARAMETERS = [
-    pytest.param("unit_action", "action", marks=_PENDING),
-    pytest.param("spy_action", "action", marks=_PENDING),
-    pytest.param("send_diplomatic_action", "action", marks=_PENDING),
-    pytest.param("form_alliance", "alliance_type", marks=_PENDING),
-    pytest.param("respond_to_diplomacy", "response", marks=_PENDING),
-    pytest.param("set_city_focus", "focus", marks=_PENDING),
-    pytest.param("purchase_item", "yield_type", marks=_PENDING),
-    pytest.param("patronize_great_person", "yield_type", marks=_PENDING),
-    pytest.param("propose_trade", "mode", marks=_PENDING),
-    pytest.param("run_lua", "context", marks=_PENDING),
+    ("unit_action", "action"),
+    ("spy_action", "action"),
+    ("send_diplomatic_action", "action"),
+    ("form_alliance", "alliance_type"),
+    ("respond_to_diplomacy", "response"),
+    ("set_city_focus", "focus"),
+    ("purchase_item", "yield_type"),
+    ("patronize_great_person", "yield_type"),
+    ("propose_trade", "mode"),
+    ("run_lua", "context"),
 ]
 
 

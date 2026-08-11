@@ -183,8 +183,7 @@ def narrate_units(
         charges = f" charges:{u.build_charges}" if u.build_charges > 0 else ""
         religion_flag = ""
         if u.religion:
-            short = u.religion.replace("RELIGION_", "")
-            religion_flag = f" [{short}]"
+            religion_flag = f" [{u.religion}]"
         promo_flag = " **NEEDS PROMOTION**" if u.needs_promotion else ""
         upgrade_flag = ""
         if u.can_upgrade:
@@ -269,7 +268,7 @@ def narrate_builder_tasks(
             if t.resource_class == "pillaged":
                 action = f"repair {t.resource}"
             else:
-                imp_label = t.improvement.replace("IMPROVEMENT_", "")
+                imp_label = t.improvement
                 suffix = ""
                 if t.resource_class == "luxury":
                     suffix = "+"
@@ -334,9 +333,7 @@ def narrate_cities(
             )
         elif c.defense_strength > 0:
             defense = f" | Def:{c.defense_strength}"
-        garrison_str = (
-            c.garrison_unit.replace("UNIT_", "") if c.garrison_unit else "none"
-        )
+        garrison_str = c.garrison_unit if c.garrison_unit else "none"
         if defense:
             defense += f" Gar:{garrison_str}"
         else:
@@ -387,15 +384,12 @@ def narrate_cities(
             dist_strs = []
             for d in c.districts:
                 dtype, coords = d.split("@")
-                short = dtype.replace("DISTRICT_", "")
-                dist_strs.append(f"{short}({coords})")
+                dist_strs.append(f"{dtype}({coords})")
             lines.append(f"    Districts: {' '.join(dist_strs)}")
         if c.buildings:
             lines.append(f"    Buildings: {', '.join(c.buildings)}")
         if c.pillaged_districts or c.pillaged_buildings:
-            pill_names = [d.replace("DISTRICT_", "") for d in c.pillaged_districts]
-            pill_bldgs = [b.replace("BUILDING_", "") for b in c.pillaged_buildings]
-            all_pillaged = pill_names + pill_bldgs
+            all_pillaged = c.pillaged_districts + c.pillaged_buildings
             lines.append(
                 f"    !! PILLAGED: {', '.join(all_pillaged)}"
                 " (repair via set_city_production)"
@@ -507,7 +501,7 @@ def narrate_map(tiles: list[lq.TileInfo]) -> str:
         if t.feature:
             parts.append(t.feature.replace("FEATURE_", ""))
         if t.resource:
-            res_label = t.resource.replace("RESOURCE_", "")
+            res_label = t.resource
             if t.resource_class == "strategic":
                 res_label += "*"
             elif t.resource_class == "luxury":
@@ -521,7 +515,7 @@ def narrate_map(tiles: list[lq.TileInfo]) -> str:
             # Fresh water from lake/oasis (river already implies fresh water)
             parts.append("FreshWater")
         if t.improvement:
-            imp_label = t.improvement.replace("IMPROVEMENT_", "")
+            imp_label = t.improvement
             if t.is_pillaged:
                 imp_label += " PILLAGED"
             parts.append(f"({imp_label})")
@@ -602,11 +596,9 @@ def narrate_strategic_map(data: lq.StrategicMapData) -> str:
         lines.append("")
         lines.append("UNCLAIMED RESOURCES (revealed, unowned):")
         for r in luxuries:
-            name = r.resource_type.replace("RESOURCE_", "")
-            lines.append(f"  {name}+ at ({r.x},{r.y}) — luxury")
+            lines.append(f"  {r.resource_type}+ at ({r.x},{r.y}) — luxury")
         for r in strategics:
-            name = r.resource_type.replace("RESOURCE_", "")
-            lines.append(f"  {name}* at ({r.x},{r.y}) — strategic")
+            lines.append(f"  {r.resource_type}* at ({r.x},{r.y}) — strategic")
     elif not data.fog_boundaries:
         lines.append("\nNo data available.")
 
@@ -1027,10 +1019,9 @@ def _describe_trade_item(item: lq.TestTradeItem) -> str:
             return f"{item.amount} gold/turn ({item.duration} turns)"
         return f"{item.amount} gold"
     elif item.item_type == "RESOURCE":
-        name = item.value_id.replace("RESOURCE_", "").replace("_", " ").title()
         dur = f" ({item.duration} turns)" if item.duration > 0 else ""
         amt = f" x{item.amount}" if item.amount > 1 else ""
-        return f"{name}{amt}{dur}"
+        return f"{item.value_id}{amt}{dur}"
     elif item.item_type == "AGREEMENT":
         sub = item.subtype_id.replace("DIPLOACTION_", "").replace("_", " ").title()
         return sub
@@ -1127,7 +1118,8 @@ def narrate_policies(gov: lq.GovernmentStatus) -> str:
                     lines.append(f"    {p.name} ({p.policy_type}): {p.description}")
 
     lines.append(
-        "\nUse set_policies with slot assignments, e.g. '0=POLICY_AGOGE,1=POLICY_URBAN_PLANNING'"
+        "\nUse set_policies with slot assignments, e.g."
+        ' {0: "POLICY_AGOGE", 1: "POLICY_URBAN_PLANNING"}'
     )
     lines.append("Wildcard slots can accept any policy type.")
     return "\n".join(lines)
@@ -1316,7 +1308,6 @@ def narrate_wonder_advisor(
 ) -> str:
     if not placements:
         return f"No valid placement tiles for {wonder_name} in this city."
-    short_name = wonder_name.replace("BUILDING_", "").replace("_", " ").title()
     lines = [f"{wonder_name} placement options ({len(placements)} tiles):"]
     for i, p in enumerate(placements, 1):
         # Build terrain description
@@ -1332,11 +1323,9 @@ def narrate_wonder_advisor(
         tag_str = f" [{', '.join(tags)}]" if tags else ""
         warn_parts = []
         if p.improvement != "none":
-            imp = p.improvement.replace("IMPROVEMENT_", "").replace("_", " ").lower()
-            warn_parts.append(f"⚠ REMOVES {imp}")
+            warn_parts.append(f"⚠ REMOVES {p.improvement}")
         if p.resource != "none":
-            res = p.resource.replace("RESOURCE_", "").replace("_", " ").lower()
-            warn_parts.append(f"⚠ DISPLACES {res}")
+            warn_parts.append(f"⚠ DISPLACES {p.resource}")
         warn_str = f" — {', '.join(warn_parts)}" if warn_parts else ""
         prefix = "!!" if warn_parts else "  "
         lines.append(
@@ -1346,8 +1335,8 @@ def narrate_wonder_advisor(
     best = placements[0]
     lines.append(f"\nRecommended: ({best.x},{best.y}) — lowest displacement")
     lines.append(
-        f'Use: set_city_production(city_id=<id>, item_type="BUILDING",'
-        f' item_name="{wonder_name}", target_x={best.x}, target_y={best.y})'
+        f'Use: set_city_production(city_id=<id>, item_name="{wonder_name}",'
+        f" target_x={best.x}, target_y={best.y})"
     )
     return "\n".join(lines)
 
@@ -1391,14 +1380,12 @@ def narrate_great_people(gp: list[lq.GreatPersonInfo]) -> str:
 
 
 def narrate_gp_advisor(result: lq.GPAdvisorResult) -> str:
-    district_short = (
-        result.target_district.replace("DISTRICT_", "").replace("_", " ").title()
-    )
     class_short = (
         result.gp_class.replace("GREAT_PERSON_CLASS_", "").replace("_", " ").title()
     )
     lines = [
-        f"Best activation cities for {result.gp_name} ({class_short} -> {district_short}):"
+        f"Best activation cities for {result.gp_name}"
+        f" ({class_short} -> {result.target_district}):"
     ]
     if result.charges > 0:
         lines[0] += f" [{result.charges} charge(s)]"
@@ -1432,8 +1419,9 @@ def narrate_religion_status(rs: lq.ReligionStatus) -> str:
                 warning = " !! VICTORY ACHIEVED"
             elif s.civs_with_majority >= s.total_majors - 1:
                 warning = " !! IMMINENT"
+            label = s.religion_type if s.religion_type else s.religion_name
             lines.append(
-                f"  {s.religion_name}: majority in {s.civs_with_majority}/{s.total_majors} civilizations{warning}"
+                f"  {label}: majority in {s.civs_with_majority}/{s.total_majors} civilizations{warning}"
             )
     # Per-civ city breakdown
     if rs.cities:
@@ -1448,8 +1436,9 @@ def narrate_religion_status(rs: lq.ReligionStatus) -> str:
                 if c.followers:
                     parts = [f"{name}:{count}" for name, count in c.followers.items()]
                     follower_str = f" ({', '.join(parts)})"
+                majority = c.religion_type if c.religion_type else c.majority_religion
                 lines.append(
-                    f"  {c.city_name} (pop {c.population}) — {c.majority_religion}{follower_str}"
+                    f"  {c.city_name} (pop {c.population}) — {majority}{follower_str}"
                 )
     return "\n".join(lines)
 
@@ -1617,7 +1606,8 @@ def narrate_world_congress(status: lq.WorldCongressStatus) -> str:
                             tgt_strs.append(t)
                     lines.append(f"  Targets: {', '.join(tgt_strs)}")
                 lines.append(
-                    f'  -> queue_wc_votes(votes=\'[{{"hash": {r.resolution_hash}, "option": 1or2, "target": 0, "votes": 1}}]\')'
+                    f"  -> queue_wc_votes(votes=[{{hash: {r.resolution_hash},"
+                    f" option: 1 or 2, target: 0, votes: 1}}])"
                 )
             elif imminent:
                 # Imminent but not yet in session — resolutions are LAST SESSION's passed outcomes
@@ -1646,7 +1636,8 @@ def narrate_world_congress(status: lq.WorldCongressStatus) -> str:
             )
             lines.append("")
             lines.append(
-                'To vote: queue_wc_votes(votes=\'[{"hash": <hash>, "option": 1or2, "target": <player_id>, "votes": N}, ...]\')'
+                "To vote: queue_wc_votes(votes=[{hash: <hash>, option: 1 or 2,"
+                " target: <player_id>, votes: N}, ...])"
             )
             lines.append(
                 "Common hashes: Diplomatic Victory = 334823573. Use get_diplomacy for player IDs."
@@ -1733,10 +1724,7 @@ def narrate_victory_progress(vp: lq.VictoryProgress) -> str:
                     detail += " -- tech done, but need to complete prior projects first or build a Spaceport"
                 if sp.status == "locked":
                     tech_status = "HAVE" if sp.has_tech else "NEED"
-                    tech_name = (
-                        sp.tech_prereq.replace("TECH_", "").replace("_", " ").title()
-                    )
-                    detail += f" -- requires {tech_name} ({tech_status})"
+                    detail += f" -- requires {sp.tech_prereq} ({tech_status})"
                 if sp.cost > 0 and sp.status != "completed":
                     detail += f" [cost: {sp.cost}]"
                 lines.append(detail)
@@ -1777,10 +1765,7 @@ def narrate_victory_progress(vp: lq.VictoryProgress) -> str:
         )
         lines.append(f"RELIGION (your religion majority in all civs{slots_str})")
         for p in vp.players:
-            rel = vp.religion_majority.get(p.name, "none")
-            rel_short = (
-                rel.replace("RELIGION_", "").title() if rel != "none" else "none"
-            )
+            rel_short = vp.religion_majority.get(p.name, "none")
             founded_name = vp.religion_founded_names.get(p.name)
             founded = f" (FOUNDED: {founded_name})" if founded_name else ""
             marker = " <--" if us and p.player_id == us.player_id else ""
@@ -2074,7 +2059,7 @@ def narrate_move_discoveries(
             parts.append(feat)
         is_notable = False
         if m.get("resource"):
-            res = m["resource"].replace("RESOURCE_", "").replace("_", " ").title()
+            res = m["resource"]
             cls = m.get("resource_class", "")
             marker = "*" if cls == "strategic" else "+" if cls == "luxury" else ""
             parts.append(f"[{res}{marker}]")

@@ -307,9 +307,13 @@ for pid = 0, 62 do
                     local cityRel = c:GetReligion()
                     local majRel = cityRel:GetMajorityReligion()
                     local relName = "none"
+                    local relType = ""
                     if majRel >= 0 then
                         local r = GameInfo.Religions[majRel]
-                        if r then relName = Locale.Lookup(r.Name) end
+                        if r then
+                            relName = Locale.Lookup(r.Name)
+                            relType = r.ReligionType
+                        end
                     end
                     local pop = c:GetPopulation()
                     local followers = ""
@@ -325,13 +329,14 @@ for pid = 0, 62 do
                         end
                         followers = table.concat(parts, ",")
                     end
-                    print("RCITY|" .. pid .. "|" .. civName .. "|" .. cityName .. "|" .. relName .. "|" .. pop .. "|" .. followers)
+                    print("RCITY|" .. pid .. "|" .. civName .. "|" .. cityName .. "|" .. relName .. "|" .. pop .. "|" .. followers .. "|" .. relType)
                 end
             end
         end
     end
 end
 local relTotals = {}
+local relTypes = {}
 local nMajors = 0
 for i = 0, 62 do
     local p = Players[i]
@@ -342,11 +347,12 @@ for i = 0, 62 do
             local r = GameInfo.Religions[majRel]
             local rName = r and Locale.Lookup(r.Name) or "Unknown"
             relTotals[rName] = (relTotals[rName] or 0) + 1
+            relTypes[rName] = r and r.ReligionType or ""
         end
     end
 end
 for rName, count in pairs(relTotals) do
-    print("RSUMMARY|" .. rName .. "|" .. count .. "|" .. nMajors)
+    print("RSUMMARY|" .. rName .. "|" .. count .. "|" .. nMajors .. "|" .. (relTypes[rName] or ""))
 end
 print("{SENTINEL}")
 """.replace("{SENTINEL}", SENTINEL)
@@ -368,6 +374,9 @@ def parse_religion_status_response(lines: list[str]) -> ReligionStatus:
                                 followers[name] = int(count)
                             except ValueError:
                                 pass
+                # `religion_type` is appended last so a recording made before
+                # it existed still parses; a city with no majority religion
+                # has no type to report either way.
                 cities.append(
                     CityReligionInfo(
                         player_id=int(parts[1]),
@@ -376,6 +385,7 @@ def parse_religion_status_response(lines: list[str]) -> ReligionStatus:
                         majority_religion=parts[4],
                         population=int(parts[5]),
                         followers=followers,
+                        religion_type=parts[7] if len(parts) > 7 else "",
                     )
                 )
         elif line.startswith("RSUMMARY|"):
@@ -386,6 +396,7 @@ def parse_religion_status_response(lines: list[str]) -> ReligionStatus:
                         religion_name=parts[1],
                         civs_with_majority=int(parts[2]),
                         total_majors=int(parts[3]),
+                        religion_type=parts[4] if len(parts) > 4 else "",
                     )
                 )
     return ReligionStatus(cities=cities, summary=summary)

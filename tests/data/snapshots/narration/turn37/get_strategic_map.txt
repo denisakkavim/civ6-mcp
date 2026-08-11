@@ -6,8 +6,8 @@ FOG BOUNDARIES (distance to unexplored, -1 = fully explored):
   Antawaylla (47,9): N:5 NE:3 SE:3 S:4 SW:8 NW:7 <- EXPLORE N/NE/SE/S!
 
 UNCLAIMED RESOURCES (revealed, unowned):
-  SALT+ at (44,6) — luxury
-  INCENSE+ at (45,7) — luxury
-  SPICES+ at (49,7) — luxury
-  HORSES* at (49,9) — strategic
-  HORSES* at (49,10) — strategic
+  RESOURCE_SALT+ at (44,6) — luxury
+  RESOURCE_INCENSE+ at (45,7) — luxury
+  RESOURCE_SPICES+ at (49,7) — luxury
+  RESOURCE_HORSES* at (49,9) — strategic
+  RESOURCE_HORSES* at (49,10) — strategic

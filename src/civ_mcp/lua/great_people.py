@@ -52,7 +52,7 @@ local function getAbility(ind)
                     local ut = args["UnitType"] or ""
                     if ut ~= "" then
                         local uRow = GameInfo.Units[ut]
-                        table.insert(parts, "free " .. (uRow and Locale.Lookup(uRow.Name) or ut:gsub("UNIT_", "")))
+                        table.insert(parts, "free " .. (uRow and Locale.Lookup(uRow.Name) or ut))
                     else
                         table.insert(parts, "free military unit")
                     end
@@ -82,7 +82,7 @@ local function getAbility(ind)
                     matched = true
                 elseif string.find(mt, "GRANT_RESOURCE") then
                     local resType = args["ResourceType"] or ""
-                    table.insert(parts, "+" .. (amt ~= "" and amt or "1") .. " " .. resType:gsub("RESOURCE_", ""))
+                    table.insert(parts, "+" .. (amt ~= "" and amt or "1") .. " " .. resType)
                     matched = true
                 elseif string.find(mt, "ADJUST_SCIENCE") and amt ~= "" then
                     table.insert(parts, "+" .. amt .. " science to adjacent tiles")

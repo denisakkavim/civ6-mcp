@@ -18,6 +18,9 @@ classifiers = [
 ]
 dependencies = [
     "mcp>=1.20",
+    # `server.py` declares tool parameter models directly (WorldCongressVote).
+    # It arrives via mcp, but importing it makes it a dependency of ours too.
+    "pydantic>=2",
 ]
 
 [project.optional-dependencies]

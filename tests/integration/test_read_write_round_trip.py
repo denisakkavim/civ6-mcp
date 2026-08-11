@@ -72,11 +72,6 @@ def _bare_mentions(text: str) -> dict[str, list[str]]:
     return found
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="Stage 1b: reads print bare identifiers (HORSES, FARM) that the "
-    "write tools require prefixed (RESOURCE_HORSES, IMPROVEMENT_FARM).",
-)
 @pytest.mark.parametrize(
     "scenario,name", _BARE_CASES, ids=[f"{s}/{n}" for s, n in _BARE_CASES] or None
 )

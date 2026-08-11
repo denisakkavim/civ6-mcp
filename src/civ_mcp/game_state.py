@@ -636,9 +636,9 @@ class GameState:
                             hint = (
                                 f" Prerequisite district is pillaged:"
                                 f" {pillaged_dists}. Repair it first via"
-                                " set_city_production(city_id, 'DISTRICT',"
-                                " 'DISTRICT_NAME', x, y) — use get_cities"
-                                " to find district coordinates."
+                                " set_city_production(city_id, 'DISTRICT_NAME',"
+                                " x, y) — use get_cities to find district"
+                                " coordinates."
                             )
                         else:
                             bld_info = item_name.replace("BUILDING_", "")

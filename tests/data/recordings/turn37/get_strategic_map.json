@@ -2,9 +2,9 @@
   "tool": "get_strategic_map",
   "arguments": {},
   "scenario": "turn37",
-  "recorded_at": "2026-08-10T21:01:05+00:00",
+  "recorded_at": "2026-08-11T19:14:50+00:00",
   "notes": null,
-  "result": "=== STRATEGIC MAP ===\n\nFOG BOUNDARIES (distance to unexplored, -1 = fully explored):\n  Qusqu (45,12): N:9 NE:5 SE:3 S:8 SW:6 NW:6 <- EXPLORE NE/SE!\n  Wanuku (44,8): N:6 NE:4 SE:4 S:12 SW:4 NW:4 <- EXPLORE NE/SE/SW/NW!\n  Antawaylla (47,9): N:5 NE:3 SE:3 S:4 SW:8 NW:7 <- EXPLORE N/NE/SE/S!\n\nUNCLAIMED RESOURCES (revealed, unowned):\n  SALT+ at (44,6) \u2014 luxury\n  INCENSE+ at (45,7) \u2014 luxury\n  SPICES+ at (49,7) \u2014 luxury\n  HORSES* at (49,9) \u2014 strategic\n  HORSES* at (49,10) \u2014 strategic",
+  "result": "=== STRATEGIC MAP ===\n\nFOG BOUNDARIES (distance to unexplored, -1 = fully explored):\n  Qusqu (45,12): N:9 NE:5 SE:3 S:8 SW:6 NW:6 <- EXPLORE NE/SE!\n  Wanuku (44,8): N:6 NE:4 SE:4 S:12 SW:4 NW:4 <- EXPLORE NE/SE/SW/NW!\n  Antawaylla (47,9): N:5 NE:3 SE:3 S:4 SW:8 NW:7 <- EXPLORE N/NE/SE/S!\n\nUNCLAIMED RESOURCES (revealed, unowned):\n  RESOURCE_SALT+ at (44,6) \u2014 luxury\n  RESOURCE_INCENSE+ at (45,7) \u2014 luxury\n  RESOURCE_SPICES+ at (49,7) \u2014 luxury\n  RESOURCE_HORSES* at (49,9) \u2014 strategic\n  RESOURCE_HORSES* at (49,10) \u2014 strategic",
   "exchanges": [
     {
       "context": "read",

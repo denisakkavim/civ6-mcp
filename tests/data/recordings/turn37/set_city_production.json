@@ -2,11 +2,10 @@
   "tool": "set_city_production",
   "arguments": {
     "city_id": 65536,
-    "item_type": "UNIT",
     "item_name": "UNIT_SETTLER"
   },
   "scenario": "turn37",
-  "recorded_at": "2026-08-10T21:01:18+00:00",
+  "recorded_at": "2026-08-11T19:15:03+00:00",
   "notes": null,
   "result": "PRODUCING|UNIT_SETTLER|6 turns",
   "exchanges": [

@@ -1675,7 +1675,7 @@ for dy = -r, r do
                                     local cfg = PlayerConfigurations[pid]
                                     if cfg then ownerLabel = Locale.Lookup(cfg:GetCivilizationShortDescription()) end
                                 end
-                                table.insert(uParts, ownerLabel .. " " .. nm:gsub("UNIT_", ""))
+                                table.insert(uParts, ownerLabel .. " " .. nm)
                             end
                         end
                     end
@@ -1834,14 +1834,14 @@ for _, city in pCities:Members() do
                                 local d = Map.GetPlotDistance(b.x, b.y, px, py)
                                 if d < nearDist then nearDist = d; nearId = b.id end
                             end
-                            print("TASK|urgent|" .. px .. "," .. py .. "|REPAIR|" .. impName:gsub("IMPROVEMENT_", "") .. "|pillaged|" .. cityName .. "|" .. nearId .. "|" .. nearDist)
+                            print("TASK|urgent|" .. px .. "," .. py .. "|REPAIR|" .. impName .. "|pillaged|" .. cityName .. "|" .. nearId .. "|" .. nearDist)
                         end
                     -- Check for unimproved resource tiles
                     elseif resIdx >= 0 and impIdx < 0 then
                         local resInfo = GameInfo.Resources[resIdx]
                         if resInfo then
                             local resClass = resInfo.ResourceClassType or ""
-                            local resName = resInfo.ResourceType:gsub("RESOURCE_", "")
+                            local resName = resInfo.ResourceType
                             local priority = "normal"
                             if resClass == "RESOURCECLASS_STRATEGIC" then priority = "urgent"
                             elseif resClass == "RESOURCECLASS_LUXURY" then priority = "high"

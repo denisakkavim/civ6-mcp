@@ -74,7 +74,7 @@ _SETTLE_SCORE_BODY = """
                                 if rIdx >= 0 then
                                     local resEntry = GameInfo.Resources[rIdx]
                                     if resVisible(resEntry) then
-                                        local rName = resEntry.ResourceType:gsub("RESOURCE_", "")
+                                        local rName = resEntry.ResourceType
                                         local prefix = classPrefix[resEntry.ResourceClassType] or "B"
                                         table.insert(resList, prefix .. ":" .. rName)
                                         if prefix == "L" then luxCount = luxCount + 1
@@ -216,7 +216,7 @@ for dy = -r, r do
                                             local oCfg = PlayerConfigurations[i]
                                             label = Locale.Lookup(oCfg:GetCivilizationShortDescription())
                                         end
-                                        table.insert(uParts, label .. " " .. ut:gsub("UNIT_", ""))
+                                        table.insert(uParts, label .. " " .. ut)
                                     end
                                 end
                             end
@@ -233,7 +233,7 @@ for dy = -r, r do
                         if u:GetX() == x and u:GetY() == y then
                             local entry = GameInfo.Units[u:GetType()]
                             local ut = entry and entry.UnitType or "UNKNOWN"
-                            table.insert(myParts, (ut:gsub("UNIT_", "")))
+                            table.insert(myParts, ut)
                         end
                     end
                 end
@@ -500,12 +500,12 @@ for row in GameInfo.Resources() do
             local accum = pRes:GetResourceAccumulationPerTurn(row.Index)
             local demand = pRes:GetUnitResourceDemandPerTurn(row.Index)
             local imported = pRes:GetResourceImportPerTurn(row.Index)
-            local rName = row.ResourceType:gsub("RESOURCE_", "")
+            local rName = row.ResourceType
             print("STOCKPILE|" .. rName .. "|" .. amt .. "|" .. cap .. "|" .. accum .. "|" .. demand .. "|" .. imported)
         elseif cls == "luxury" then
             local amt = pRes:GetResourceAmount(row.Index)
             if amt > 0 then
-                local rName = row.ResourceType:gsub("RESOURCE_", "")
+                local rName = row.ResourceType
                 print("LUXURY_OWNED|" .. rName .. "|" .. amt)
             end
         end
@@ -525,7 +525,7 @@ for x = 0, mapW - 1 do
             local rIdx = plot:GetResourceType()
             if rIdx >= 0 and pRes:IsResourceVisible(rIdx) then
                 local resEntry = GameInfo.Resources[rIdx]
-                local rName = resEntry.ResourceType:gsub("RESOURCE_", "")
+                local rName = resEntry.ResourceType
                 local rClass = classMap[resEntry.ResourceClassType] or "bonus"
                 local impIdx = plot:GetImprovementType()
                 local improved = "0"
@@ -548,7 +548,7 @@ for _, city in ipairs(myCities) do
                     local rIdx = tPlot:GetResourceType()
                     if rIdx >= 0 and pRes:IsResourceVisible(rIdx) then
                         local resEntry = GameInfo.Resources[rIdx]
-                        local rName = resEntry.ResourceType:gsub("RESOURCE_", "")
+                        local rName = resEntry.ResourceType
                         local rClass = classMap[resEntry.ResourceClassType] or "bonus"
                         local dist = Map.GetPlotDistance(city.x, city.y, tx, ty)
                         print("NEARBY|" .. rName .. "|" .. rClass .. "|" .. tx .. "," .. ty .. "|" .. city.name .. "|" .. dist)
@@ -986,7 +986,7 @@ for row in GameInfo.Resources() do
         local accum = pRes:GetResourceAccumulationPerTurn(row.Index)
         local demand = pRes:GetUnitResourceDemandPerTurn(row.Index)
         local imported = pRes:GetResourceImportPerTurn(row.Index)
-        local rName = row.ResourceType:gsub("RESOURCE_", "")
+        local rName = row.ResourceType
         print("STOCKPILE|" .. rName .. "|" .. amt .. "|" .. cap .. "|" .. accum .. "|" .. demand .. "|" .. imported)
     end
 end

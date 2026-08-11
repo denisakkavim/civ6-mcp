@@ -659,7 +659,7 @@ def build_rival_snapshot_query() -> str:
         "        local amt = 0 "
         "        pcall(function() amt = pRes:GetResourceAmount(row.Index) end) "
         "        if amt and amt > 0 then "
-        '          local rName = row.ResourceType:gsub("RESOURCE_", "") '
+        '          local rName = row.ResourceType '
         '          resStr = resStr .. (resStr ~= "" and "," or "") .. rName .. ":" .. amt '
         "        end "
         "      end "

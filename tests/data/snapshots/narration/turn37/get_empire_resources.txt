@@ -1,36 +1,36 @@
 Empire Resources:
 
 Strategic Stockpiles:
-  HORSES: 25/25 (+2/turn) [income 2]
-  IRON: 0/25 (+0/turn)
+  RESOURCE_HORSES: 25/25 (+2/turn) [income 2]
+  RESOURCE_IRON: 0/25 (+0/turn)
 
 Luxury Resources:
-  SALT: 1
+  RESOURCE_SALT: 1
 
 Strategic Tiles:
-  HORSES — improved at (44,13)
+  RESOURCE_HORSES — improved at (44,13)
 
 Luxury Tiles:
-  SALT — improved at (45,11)
-  !! INCENSE — UNIMPROVED at (46,9) — needs builder!
+  RESOURCE_SALT — improved at (45,11)
+  !! RESOURCE_INCENSE — UNIMPROVED at (46,9) — needs builder!
 
 Bonus Tiles:
-  WHEAT — UNIMPROVED at (44,8)
-  WHEAT — improved at (44,9)
-  DEER — UNIMPROVED at (48,8)
+  RESOURCE_WHEAT — UNIMPROVED at (44,8)
+  RESOURCE_WHEAT — improved at (44,9)
+  RESOURCE_DEER — UNIMPROVED at (48,8)
 
 Nearby Unclaimed:
-  [L] INCENSE at (45,7) — 5 tiles from Qusqu
-  [L] SPICES at (49,7) — 7 tiles from Qusqu
-  [B] CATTLE at (42,8) — 5 tiles from Qusqu
-  [S] HORSES at (49,9) — 6 tiles from Qusqu
-  [B] WHEAT at (43,10) — 3 tiles from Qusqu
-  [S] HORSES at (49,10) — 5 tiles from Qusqu
-  [B] SHEEP at (47,11) — 3 tiles from Qusqu
-  [B] COPPER at (41,14) — 5 tiles from Qusqu
-  [B] WHEAT at (43,14) — 3 tiles from Qusqu
-  [B] BANANAS at (43,16) — 4 tiles from Qusqu
-  [B] FISH at (42,4) — 4 tiles from Wanuku
-  [B] CRABS at (44,4) — 4 tiles from Wanuku
-  [B] DEER at (42,6) — 3 tiles from Wanuku
-  [L] SALT at (44,6) — 2 tiles from Wanuku
+  [L] RESOURCE_INCENSE at (45,7) — 5 tiles from Qusqu
+  [L] RESOURCE_SPICES at (49,7) — 7 tiles from Qusqu
+  [B] RESOURCE_CATTLE at (42,8) — 5 tiles from Qusqu
+  [S] RESOURCE_HORSES at (49,9) — 6 tiles from Qusqu
+  [B] RESOURCE_WHEAT at (43,10) — 3 tiles from Qusqu
+  [S] RESOURCE_HORSES at (49,10) — 5 tiles from Qusqu
+  [B] RESOURCE_SHEEP at (47,11) — 3 tiles from Qusqu
+  [B] RESOURCE_COPPER at (41,14) — 5 tiles from Qusqu
+  [B] RESOURCE_WHEAT at (43,14) — 3 tiles from Qusqu
+  [B] RESOURCE_BANANAS at (43,16) — 4 tiles from Qusqu
+  [B] RESOURCE_FISH at (42,4) — 4 tiles from Wanuku
+  [B] RESOURCE_CRABS at (44,4) — 4 tiles from Wanuku
+  [B] RESOURCE_DEER at (42,6) — 3 tiles from Wanuku
+  [L] RESOURCE_SALT at (44,6) — 2 tiles from Wanuku

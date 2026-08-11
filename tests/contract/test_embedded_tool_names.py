@@ -72,25 +72,13 @@ INTERNAL_IDENTIFIERS = frozenset(
     }
 )
 
-# Discriminator values of `unit_action` / `city_action` / `spy_action`, which
-# docstrings legitimately name. They are not enums in the schema *yet* —
-# Stage 1.3 types those parameters with `Literal`, at which point they become
-# visible to `_live_surface()` and `test_allowlist_has_no_dead_entries` will
-# require their removal from here. That is the intended lifecycle: this block
-# should be empty once the dispatchers are typed and split.
+# Stage 1.3 typed `unit_action` / `city_action` / `spy_action` with `Literal`,
+# so their verbs are now enum values that `_live_surface()` resolves on its
+# own. Only the sub-label below is left: it is what `_logged` records for
+# `city_action`'s capture branch, and it becomes a tool name of its own in
+# Stage 2.6, at which point this block empties.
 UNTYPED_ACTION_VERBS = frozenset(
     {
-        "build_route",
-        "found_city",
-        "liberate_founder",
-        "liberate_previous",
-        "remove_feature",
-        "remove_improvement",
-        "sacrifice_charges",
-        "spread_religion",
-        "trade_route",
-        # `_logged` sub-label for `city_action`'s capture branch; becomes a
-        # tool name of its own in Stage 2.6.
         "resolve_city_capture",
     }
 )

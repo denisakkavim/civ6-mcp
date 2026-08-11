@@ -20,8 +20,6 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-import pytest
-
 from utils import paths
 
 SRC = paths.SRC
@@ -99,11 +97,6 @@ def test_display_only_prefixes_are_still_stripped():
     )
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="Stage 1b: the write-feeding prefixes are still stripped, so read "
-    "output does not paste into write input.",
-)
 def test_write_feeding_prefixes_are_not_stripped():
     """Values destined for a write tool must keep their prefix."""
     sites = _strip_sites()

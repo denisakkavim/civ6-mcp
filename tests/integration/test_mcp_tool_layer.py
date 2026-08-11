@@ -160,6 +160,62 @@ def test_unknown_tool_is_an_error(civ_server):
     assert result.isError is True
 
 
+@pytest.mark.parametrize(
+    "tool,arguments",
+    [
+        ("unit_action", {"unit_id": 1, "action": "teleport_to_moon"}),
+        ("set_city_focus", {"city_id": 1, "focus": "happiness"}),
+        ("run_lua", {"code": "print(1)", "context": "gamecore_but_wrong"}),
+        (
+            "purchase_item",
+            {"city_id": 1, "item_name": "UNIT_WARRIOR", "yield_type": "YIELD_CULTURE"},
+        ),
+    ],
+    ids=["unit_action", "set_city_focus", "run_lua", "purchase_item"],
+)
+def test_a_value_outside_a_closed_set_is_rejected_at_the_schema(
+    civ_server, tool, arguments
+):
+    """Stage 1.3 put the legal values in the schema, so this never reaches Lua.
+
+    The point of the `Literal`s is that a wrong value is refused with the legal
+    set attached, rather than discovered through an error string after the call
+    has already been made.
+    """
+    conn = RecordingConnection()
+    result = civ_server(conn).call_raw(tool, arguments)
+    assert result.isError is True
+    assert not conn.reads and not conn.writes, (
+        f"{tool} reached the game with a value outside its enum"
+    )
+
+
+def test_an_unrecognised_item_prefix_never_reaches_the_game(civ_server):
+    """Stage 1.4 infers the category, so a bad identifier fails before the Lua.
+
+    The failure has to be legible: `item_type` is gone, so the only thing the
+    agent can correct is the identifier it passed.
+    """
+    conn = RecordingConnection()
+    text = civ_server(conn).call(
+        "set_city_production", {"city_id": 1, "item_name": "CAMPUS"}
+    )
+    assert text.startswith("Error:"), text
+    assert "CAMPUS" in text and "DISTRICT_" in text
+    assert not conn.reads and not conn.writes
+
+
+def test_an_inferred_category_reaches_the_lua(civ_server):
+    """Counterpart: the inference must actually drive the query it replaced."""
+    conn = RecordingConnection(write_lines=["OK:PRODUCING|DISTRICT_CAMPUS|6 turns"])
+    civ_server(conn).call(
+        "set_city_production",
+        {"city_id": 1, "item_name": "DISTRICT_CAMPUS", "target_x": 4, "target_y": 5},
+    )
+    issued = "\n".join(conn.reads + conn.writes)
+    assert "DISTRICT" in issued, "the inferred category never reached the game"
+
+
 # ---------------------------------------------------------------------------
 # The harness must not touch the developer's real state
 # ---------------------------------------------------------------------------

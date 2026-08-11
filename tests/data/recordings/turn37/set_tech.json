@@ -1,11 +1,10 @@
 {
-  "tool": "set_research",
+  "tool": "set_tech",
   "arguments": {
-    "tech_or_civic": "TECH_ASTROLOGY",
-    "category": "tech"
+    "tech_type": "TECH_ASTROLOGY"
   },
   "scenario": "turn37",
-  "recorded_at": "2026-08-10T21:01:19+00:00",
+  "recorded_at": "2026-08-11T19:15:04+00:00",
   "notes": null,
   "result": "RESEARCHING|TECH_ASTROLOGY",
   "exchanges": [

@@ -2,7 +2,7 @@
   "tool": "get_trade_routes",
   "arguments": {},
   "scenario": "turn37",
-  "recorded_at": "2026-08-10T21:01:08+00:00",
+  "recorded_at": "2026-08-11T19:14:53+00:00",
   "notes": null,
   "result": "Trade Routes: 0/1 active\n\nNo trader units.\n\n1 free route slot(s) \u2014 build/buy a Trader to fill.",
   "exchanges": [

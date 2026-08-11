@@ -5,7 +5,6 @@ to the running game via FireTuner protocol.
 """
 
 import asyncio
-import json
 import logging
 import os
 import re
@@ -14,9 +13,10 @@ import time
 from contextlib import asynccontextmanager, contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, AsyncIterator, Awaitable, Callable, Generator, Optional
+from typing import Any, AsyncIterator, Awaitable, Callable, Generator, Literal, Optional
 
 from mcp.server.fastmcp import Context, FastMCP
+from pydantic import BaseModel, Field
 
 from civ_mcp import game_launcher
 from civ_mcp import narrate as nr
@@ -327,7 +327,13 @@ async def lifespan(server: FastMCP) -> AsyncIterator[AppContext]:
 
 mcp = FastMCP(
     "Civilization VI",
-    instructions="Read game state and issue commands to a running Civ 6 game. Call get_game_overview first to orient yourself.",
+    instructions=(
+        "Read game state and issue commands to a running Civ 6 game. Call "
+        "get_game_overview first to orient yourself.\n"
+        "Coordinates: a higher y is further south, a lower y is further north.\n"
+        "Identifiers: unit ids always come from get_units, city ids always "
+        "from get_cities."
+    ),
     lifespan=lifespan,
 )
 
@@ -342,6 +348,38 @@ def _get_logger(ctx: Context) -> GameLogger:
 
 def _get_camera(ctx: Context) -> CameraController:
     return ctx.request_context.lifespan_context.camera
+
+
+# A fully-qualified game identifier already states its own category:
+# DISTRICT_CAMPUS is a district. Asking the agent to say so a second time is a
+# parameter it can only get wrong, so the tools infer it from the prefix.
+PRODUCIBLE_CATEGORIES = {
+    "UNIT_": "UNIT",
+    "BUILDING_": "BUILDING",
+    "DISTRICT_": "DISTRICT",
+    "PROJECT_": "PROJECT",
+}
+
+PURCHASABLE_CATEGORIES = {
+    "UNIT_": "UNIT",
+    "BUILDING_": "BUILDING",
+}
+
+
+def _category_from_prefix(item_name: str, categories: dict[str, str]) -> str | None:
+    """The category a game identifier belongs to, or None if the prefix is unknown."""
+    for prefix, category in categories.items():
+        if item_name.startswith(prefix):
+            return category
+    return None
+
+
+def _unknown_prefix_error(item_name: str, categories: dict[str, str]) -> str:
+    expected = ", ".join(sorted(categories))
+    return (
+        f"Error: cannot tell what '{item_name}' is. Expected a fully-qualified "
+        f"identifier starting with one of: {expected}"
+    )
 
 
 def _param_summary(params: dict[str, Any]) -> str:
@@ -560,7 +598,18 @@ async def get_spies(ctx: Context) -> str:
 async def spy_action(
     ctx: Context,
     unit_id: int,
-    action: str,
+    action: Literal[
+        "travel",
+        "COUNTERSPY",
+        "GAIN_SOURCES",
+        "SIPHON_FUNDS",
+        "STEAL_TECH_BOOST",
+        "SABOTAGE_PRODUCTION",
+        "GREAT_WORK_HEIST",
+        "RECRUIT_PARTISANS",
+        "NEUTRALIZE_GOVERNOR",
+        "FABRICATE_SCANDAL",
+    ],
     target_x: int,
     target_y: int,
 ) -> str:
@@ -568,10 +617,7 @@ async def spy_action(
 
     Args:
         unit_id: The spy's composite ID (from get_spies output)
-        action: 'travel' to move spy to a city, or a mission type to launch a mission.
-            Mission types: COUNTERSPY, GAIN_SOURCES, SIPHON_FUNDS, STEAL_TECH_BOOST,
-            SABOTAGE_PRODUCTION, GREAT_WORK_HEIST, RECRUIT_PARTISANS,
-            NEUTRALIZE_GOVERNOR, FABRICATE_SCANDAL
+        action: 'travel' to move the spy to a city, or a mission type to launch
         target_x: X coordinate of the target city tile
         target_y: Y coordinate of the target city tile
 
@@ -596,9 +642,9 @@ async def spy_action(
     }
 
     async def _run():
-        if action.lower() == "travel":
+        if action == "travel":
             return await gs.spy_travel(unit_index, target_x, target_y)
-        return await gs.spy_mission(unit_index, action.upper(), target_x, target_y)
+        return await gs.spy_mission(unit_index, action, target_x, target_y)
 
     result = await _logged(ctx, "spy_action", params, _run)
     _get_camera(ctx).push(target_x, target_y, f"spy {action}")
@@ -1075,7 +1121,7 @@ async def choose_pantheon(ctx: Context, belief_type: str) -> str:
     )
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True})
 async def get_religion_beliefs(ctx: Context) -> str:
     """Get religion founding status, available religions, and available beliefs.
 
@@ -1136,7 +1182,7 @@ async def upgrade_unit(ctx: Context, unit_id: int) -> str:
     )
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True})
 async def get_dedications(ctx: Context) -> str:
     """Get current era age, available dedications, and active ones.
 
@@ -1218,16 +1264,16 @@ async def propose_trade(
     other_player_id: int,
     offer_gold: int = 0,
     offer_gold_per_turn: int = 0,
-    offer_resources: str = "",
+    offer_resources: list[str] | None = None,
     offer_favor: int = 0,
     offer_open_borders: bool = False,
     request_gold: int = 0,
     request_gold_per_turn: int = 0,
-    request_resources: str = "",
+    request_resources: list[str] | None = None,
     request_favor: int = 0,
     request_open_borders: bool = False,
     joint_war_target: int = 0,
-    mode: str = "send",
+    mode: Literal["send", "test"] = "send",
 ) -> str:
     """Propose a trade deal to another civilization.
 
@@ -1235,22 +1281,26 @@ async def propose_trade(
         other_player_id: The player ID (from get_diplomacy output)
         offer_gold: Lump sum gold to give them
         offer_gold_per_turn: Gold per turn to give them (30-turn duration)
-        offer_resources: Comma-separated resource types to offer, e.g. "RESOURCE_SILK,RESOURCE_TEA"
+        offer_resources: Resource types to offer, e.g. ["RESOURCE_SILK", "RESOURCE_TEA"]
         offer_favor: Diplomatic favor to offer
         offer_open_borders: True to offer our open borders
         request_gold: Lump sum gold to request from them
         request_gold_per_turn: Gold per turn to request (30-turn duration)
-        request_resources: Comma-separated resource types to request
+        request_resources: Resource types to request
         request_favor: Diplomatic favor to request from them
         request_open_borders: True to request their open borders
         joint_war_target: Player ID of a third civ to declare joint war against
-        mode: "send" to commit the deal, "test" to preview AI's counter-offer without committing
+        mode: "send" commits the deal, "test" previews the AI's counter-offer
 
-    Examples: Gift 100 gold: offer_gold=100. Trade silk for 3 gpt: offer_resources="RESOURCE_SILK", request_gold_per_turn=3.
+    Examples: Gift 100 gold: offer_gold=100. Trade silk for 3 gpt:
+    offer_resources=["RESOURCE_SILK"], request_gold_per_turn=3.
     Mutual open borders: offer_open_borders=True, request_open_borders=True.
-    Test a deal first: mode="test" to see what the AI thinks is fair, then mode="send" to commit.
+    Test a deal first with mode="test", then commit it with mode="send".
     """
     gs = _get_game(ctx)
+
+    offered_resources = offer_resources if offer_resources is not None else []
+    requested_resources = request_resources if request_resources is not None else []
 
     offer_items: list[dict] = []
     request_items: list[dict] = []
@@ -1260,9 +1310,9 @@ async def propose_trade(
         offer_items.append(
             {"type": "GOLD", "amount": offer_gold_per_turn, "duration": 30}
         )
-    for res in (r.strip() for r in offer_resources.split(",") if r.strip()):
+    for resource in offered_resources:
         offer_items.append(
-            {"type": "RESOURCE", "name": res, "amount": 1, "duration": 30}
+            {"type": "RESOURCE", "name": resource, "amount": 1, "duration": 30}
         )
     if offer_favor > 0:
         offer_items.append({"type": "FAVOR", "amount": offer_favor})
@@ -1274,9 +1324,9 @@ async def propose_trade(
         request_items.append(
             {"type": "GOLD", "amount": request_gold_per_turn, "duration": 30}
         )
-    for res in (r.strip() for r in request_resources.split(",") if r.strip()):
+    for resource in requested_resources:
         request_items.append(
-            {"type": "RESOURCE", "name": res, "amount": 1, "duration": 30}
+            {"type": "RESOURCE", "name": resource, "amount": 1, "duration": 30}
         )
     if request_favor > 0:
         request_items.append({"type": "FAVOR", "amount": request_favor})
@@ -1334,45 +1384,40 @@ async def propose_peace(ctx: Context, other_player_id: int) -> str:
 
 
 @mcp.tool()
-async def set_policies(ctx: Context, assignments: str) -> str:
+async def set_policies(ctx: Context, assignments: dict[int, str]) -> str:
     """Set policy cards in government slots.
 
     Args:
-        assignments: Comma-separated slot assignments, e.g.
-            "0=POLICY_AGOGE,1=POLICY_URBAN_PLANNING"
-            Slots not listed keep their current policy. Use NONE to
-            explicitly clear a slot (e.g. "2=NONE"). Use get_policies to
-            see available policies and slot indices.
+        assignments: Slot index to policy type, e.g.
+            {0: "POLICY_AGOGE", 1: "POLICY_URBAN_PLANNING"}
+            Slots not listed keep their current policy. Use "NONE" to
+            explicitly clear a slot. Use get_policies to see available
+            policies and slot indices.
 
     Wildcard slots can accept any policy type. Military slots accept
     military policies, economic slots accept economic policies, etc.
     """
+    if not assignments:
+        return "Error: no slot assignments given"
+
     gs = _get_game(ctx)
-
-    async def _run():
-        parsed: dict[int, str] = {}
-        for pair in assignments.split(","):
-            pair = pair.strip()
-            if "=" not in pair:
-                continue
-            idx_str, policy = pair.split("=", 1)
-            parsed[int(idx_str.strip())] = policy.strip()
-        if not parsed:
-            return "Error: no valid assignments. Format: '0=POLICY_AGOGE,1=POLICY_URBAN_PLANNING'"
-        return await gs.set_policies(parsed)
-
-    return await _logged(ctx, "set_policies", {"assignments": assignments}, _run)
+    return await _logged(
+        ctx,
+        "set_policies",
+        {"assignments": assignments},
+        lambda: gs.set_policies(assignments),
+    )
 
 
 @mcp.tool()
 async def respond_to_diplomacy(
-    ctx: Context, other_player_id: int, response: str
+    ctx: Context, other_player_id: int, response: Literal["POSITIVE", "NEGATIVE"]
 ) -> str:
     """Respond to a pending diplomacy encounter.
 
     Args:
         other_player_id: The player ID of the other civilization (from get_pending_diplomacy)
-        response: "POSITIVE" (friendly) or "NEGATIVE" (dismissive)
+        response: POSITIVE is friendly, NEGATIVE is dismissive
 
     First meetings typically have 2-3 rounds. The tool automatically detects
     and closes goodbye-phase sessions (where dialogue text stops changing).
@@ -1389,18 +1434,29 @@ async def respond_to_diplomacy(
 
 @mcp.tool()
 async def send_diplomatic_action(
-    ctx: Context, other_player_id: int, action: str
+    ctx: Context,
+    other_player_id: int,
+    action: Literal[
+        "DIPLOMATIC_DELEGATION",
+        "DECLARE_FRIENDSHIP",
+        "DENOUNCE",
+        "RESIDENT_EMBASSY",
+        "OPEN_BORDERS",
+        "DECLARE_SURPRISE_WAR",
+        "DECLARE_FORMAL_WAR",
+        "DECLARE_HOLY_WAR",
+        "DECLARE_LIBERATION_WAR",
+        "DECLARE_RECONQUEST_WAR",
+        "DECLARE_PROTECTORATE_WAR",
+        "DECLARE_COLONIAL_WAR",
+        "DECLARE_TERRITORIAL_WAR",
+    ],
 ) -> str:
     """Send a proactive diplomatic action to another civilization.
 
     Args:
         other_player_id: The player ID (from get_diplomacy output)
-        action: One of: DIPLOMATIC_DELEGATION, DECLARE_FRIENDSHIP, DENOUNCE,
-                RESIDENT_EMBASSY, OPEN_BORDERS,
-                DECLARE_SURPRISE_WAR, DECLARE_FORMAL_WAR, DECLARE_HOLY_WAR,
-                DECLARE_LIBERATION_WAR, DECLARE_RECONQUEST_WAR,
-                DECLARE_PROTECTORATE_WAR, DECLARE_COLONIAL_WAR,
-                DECLARE_TERRITORIAL_WAR
+        action: The diplomatic action to send
 
     Delegations cost 25 gold and can be rejected if the civ dislikes you.
     Embassies require Writing tech. Use get_diplomacy to see available actions.
@@ -1418,13 +1474,17 @@ async def send_diplomatic_action(
 
 @mcp.tool()
 async def form_alliance(
-    ctx: Context, other_player_id: int, alliance_type: str = "MILITARY"
+    ctx: Context,
+    other_player_id: int,
+    alliance_type: Literal[
+        "MILITARY", "RESEARCH", "CULTURAL", "ECONOMIC", "RELIGIOUS"
+    ] = "MILITARY",
 ) -> str:
     """Form an alliance with another civilization.
 
     Args:
         other_player_id: The player ID (from get_diplomacy output)
-        alliance_type: One of: MILITARY, RESEARCH, CULTURAL, ECONOMIC, RELIGIOUS
+        alliance_type: The kind of alliance to form
 
     Requires declared friendship and Diplomatic Service civic.
     Use get_trade_options to check alliance eligibility first.
@@ -1434,7 +1494,7 @@ async def form_alliance(
         ctx,
         "form_alliance",
         {"other_player_id": other_player_id, "alliance_type": alliance_type},
-        lambda: gs.form_alliance(other_player_id, alliance_type.upper()),
+        lambda: gs.form_alliance(other_player_id, alliance_type),
     )
 
 
@@ -1442,7 +1502,14 @@ async def form_alliance(
 async def city_action(
     ctx: Context,
     city_id: int,
-    action: str,
+    action: Literal[
+        "attack",
+        "keep",
+        "reject",
+        "raze",
+        "liberate_founder",
+        "liberate_previous",
+    ],
     target_x: Optional[int] = None,
     target_y: Optional[int] = None,
 ) -> str:
@@ -1450,15 +1517,16 @@ async def city_action(
 
     Args:
         city_id: City ID (from get_cities output)
-        action: Currently supported: 'attack' (city ranged attack)
+        action: 'attack' is a city ranged attack; the rest resolve a captured
+            or disloyal city
         target_x: Target X coordinate (required for attack)
         target_y: Target Y coordinate (required for attack)
 
     For attack: city must have walls and not have fired this turn.
     Range is 2 tiles from city center.
 
-    For captured/disloyal city decisions (city_id is ignored, uses pending city):
-    - 'keep': Keep the city (works for both captured and loyalty-flipped cities)
+    The resolution actions ignore city_id and act on the pending city:
+    - 'keep': Keep the city (captured or loyalty-flipped)
     - 'reject': Reject/free a disloyal city (loyalty flip only)
     - 'raze': Raze a captured city (military conquest only)
     - 'liberate_founder': Liberate to original founder
@@ -1485,14 +1553,35 @@ async def city_action(
                 lambda: gs.resolve_city_capture(action),
             )
         case _:
-            return f"Error: Unknown city action '{action}'. Available: attack, keep, reject, raze, liberate_founder, liberate_previous"
+            return f"Error: Unknown city action '{action}'"
 
 
 @mcp.tool()
 async def unit_action(
     ctx: Context,
     unit_id: int,
-    action: str,
+    action: Literal[
+        "move",
+        "attack",
+        "fortify",
+        "skip",
+        "found_city",
+        "improve",
+        "repair",
+        "remove_improvement",
+        "remove_feature",
+        "build_route",
+        "automate",
+        "heal",
+        "alert",
+        "sleep",
+        "delete",
+        "trade_route",
+        "activate",
+        "sacrifice_charges",
+        "teleport",
+        "spread_religion",
+    ],
     target_x: Optional[int] = None,
     target_y: Optional[int] = None,
     improvement: Optional[str] = None,
@@ -1501,28 +1590,30 @@ async def unit_action(
 
     Args:
         unit_id: The unit's composite ID (from get_units output)
-        action: One of: move, attack, fortify, skip, found_city, improve, repair, remove_improvement, remove_feature, build_route, automate, heal, alert, sleep, delete, trade_route, activate, sacrifice_charges, teleport, spread_religion
+        action: The command to issue
         target_x: Target X coordinate (required for move/attack/trade_route/teleport)
         target_y: Target Y coordinate (required for move/attack/trade_route/teleport)
         improvement: Improvement type for builders (required for improve), e.g.
-            IMPROVEMENT_FARM, IMPROVEMENT_MINE, IMPROVEMENT_QUARRY,
-            IMPROVEMENT_PLANTATION, IMPROVEMENT_CAMP, IMPROVEMENT_PASTURE,
-            IMPROVEMENT_FISHING_BOATS, IMPROVEMENT_LUMBER_MILL
+            IMPROVEMENT_FARM. get_units lists what each builder can build here.
 
-    For move/attack: provide target_x and target_y.
-    For trade_route: provide target_x and target_y of destination city.
-    For teleport: provide target_x and target_y of destination city. Traders only, must be idle (not on active route).
-    For improve: provide improvement name. Builder must be on the tile.
-    For repair: repairs a pillaged improvement on the builder's current tile. No improvement name needed.
-    For remove_improvement: demolishes an intact improvement on the builder's current tile (e.g. to replace a farm with a mine). Costs one charge.
-    For activate: activates a Great Person on their matching district.
-    For sacrifice_charges: Royal Society builder sacrifice — spends ALL builder charges to boost a district project (2% of cost per charge). Builder must be on the district tile.
-    For spread_religion: spreads religion at current tile. Missionaries/Apostles only.
-    For build_route: builds road/railroad on current tile. Military Engineers only. No charges used; costs 1 Iron + 1 Coal per railroad tile.
-    For fortify/skip/found_city/automate/heal/alert/sleep/delete: no target needed.
-    heal = fortify until healed (auto-wake at full HP).
-    alert = sleep but auto-wake when enemy enters sight range.
-    delete = permanently disband the unit.
+    Verbs that act at the unit's current tile: improve, repair,
+    remove_improvement, remove_feature, build_route, activate,
+    sacrifice_charges, spread_religion, found_city.
+
+    teleport: destination city tile. Traders only, must be idle (not on an active route).
+    repair: repairs a pillaged improvement. No improvement name needed.
+    remove_improvement: demolishes an intact improvement (e.g. to replace a farm
+        with a mine). Costs one charge.
+    activate: activates a Great Person on their matching district.
+    sacrifice_charges: Royal Society builder sacrifice — spends ALL builder
+        charges to boost a district project (2% of cost per charge). Builder
+        must be on the district tile.
+    spread_religion: Missionaries/Apostles only.
+    build_route: builds road/railroad. Military Engineers only. No charges used;
+        costs 1 Iron + 1 Coal per railroad tile.
+    heal: fortify until healed (auto-wake at full HP).
+    alert: sleep but auto-wake when an enemy enters sight range.
+    delete: permanently disband the unit.
     """
     gs = _get_game(ctx)
     unit_index = unit_id % 65536
@@ -1535,7 +1626,7 @@ async def unit_action(
         params["improvement"] = improvement
 
     async def _run():
-        match action.lower():
+        match action:
             case "move":
                 if target_x is None or target_y is None:
                     return "Error: move requires target_x and target_y"
@@ -1587,11 +1678,11 @@ async def unit_action(
                     return "Error: teleport requires target_x and target_y of the destination city"
                 return await gs.teleport_to_city(unit_index, target_x, target_y)
             case _:
-                return f"Error: Unknown action '{action}'. Valid: move, attack, fortify, skip, found_city, improve, repair, remove_improvement, remove_feature, build_route, automate, heal, alert, sleep, delete, trade_route, activate, sacrifice_charges, teleport, spread_religion"
+                return f"Error: Unknown action '{action}'"
 
     result = await _logged(ctx, "unit_action", params, _run)
     if (
-        action.lower() in ("move", "attack", "trade_route", "teleport")
+        action in ("move", "attack", "trade_route", "teleport")
         and target_x is not None
         and target_y is not None
     ):
@@ -1616,7 +1707,6 @@ async def skip_remaining_units(ctx: Context) -> str:
 async def set_city_production(
     ctx: Context,
     city_id: int,
-    item_type: str,
     item_name: str,
     target_x: int | None = None,
     target_y: int | None = None,
@@ -1625,15 +1715,18 @@ async def set_city_production(
 
     Args:
         city_id: City ID (from get_cities output)
-        item_type: UNIT, BUILDING, DISTRICT, or PROJECT
         item_name: e.g. UNIT_WARRIOR, BUILDING_MONUMENT, DISTRICT_CAMPUS, PROJECT_LAUNCH_EARTH_SATELLITE
         target_x: X coordinate for district/wonder placement (required for districts — use get_district_advisor to find best tile)
         target_y: Y coordinate for district/wonder placement
 
     Tip: call get_cities first to see your cities and their IDs.
     """
+    category = _category_from_prefix(item_name, PRODUCIBLE_CATEGORIES)
+    if category is None:
+        return _unknown_prefix_error(item_name, PRODUCIBLE_CATEGORIES)
+
     gs = _get_game(ctx)
-    params: dict = {"city_id": city_id, "item_type": item_type, "item_name": item_name}
+    params: dict = {"city_id": city_id, "item_name": item_name}
     if target_x is not None:
         params["target_x"] = target_x
         params["target_y"] = target_y
@@ -1642,7 +1735,7 @@ async def set_city_production(
         "set_city_production",
         params,
         lambda: gs.set_city_production(
-            city_id, item_type, item_name, target_x, target_y
+            city_id, category, item_name, target_x, target_y
         ),
     )
 
@@ -1651,56 +1744,70 @@ async def set_city_production(
 async def purchase_item(
     ctx: Context,
     city_id: int,
-    item_type: str,
     item_name: str,
-    yield_type: str = "YIELD_GOLD",
+    yield_type: Literal["YIELD_GOLD", "YIELD_FAITH"] = "YIELD_GOLD",
 ) -> str:
     """Purchase a unit or building instantly with gold or faith.
 
     Args:
         city_id: City ID (from get_cities output)
-        item_type: UNIT or BUILDING
         item_name: e.g. UNIT_WARRIOR, BUILDING_MONUMENT
-        yield_type: YIELD_GOLD (default) or YIELD_FAITH
+        yield_type: What to spend
 
     Costs gold/faith immediately. Use get_city_production to see what's available.
     """
+    category = _category_from_prefix(item_name, PURCHASABLE_CATEGORIES)
+    if category is None:
+        return _unknown_prefix_error(item_name, PURCHASABLE_CATEGORIES)
+
     gs = _get_game(ctx)
     return await _logged(
         ctx,
         "purchase_item",
         {
             "city_id": city_id,
-            "item_type": item_type,
             "item_name": item_name,
             "yield_type": yield_type,
         },
-        lambda: gs.purchase_item(city_id, item_type, item_name, yield_type),
+        lambda: gs.purchase_item(city_id, category, item_name, yield_type),
     )
 
 
 @mcp.tool()
-async def set_research(ctx: Context, tech_or_civic: str, category: str = "tech") -> str:
-    """Choose a technology or civic to research.
+async def set_tech(ctx: Context, tech_type: str) -> str:
+    """Choose a technology to research in the science tree.
 
     Args:
-        tech_or_civic: The type name, e.g. TECH_POTTERY or CIVIC_CRAFTSMANSHIP
-        category: "tech" or "civic" (default: tech)
+        tech_type: The type name, e.g. TECH_POTTERY, from get_tech_civics
 
-    Tip: call get_tech_civics first to see available options.
+    The two trees research in parallel; set_civic drives the culture tree and
+    does not disturb this one.
     """
     gs = _get_game(ctx)
-
-    async def _run():
-        if category.lower() == "civic":
-            return await gs.set_civic(tech_or_civic)
-        return await gs.set_research(tech_or_civic)
-
     return await _logged(
         ctx,
-        "set_research",
-        {"tech_or_civic": tech_or_civic, "category": category},
-        _run,
+        "set_tech",
+        {"tech_type": tech_type},
+        lambda: gs.set_research(tech_type),
+    )
+
+
+@mcp.tool()
+async def set_civic(ctx: Context, civic_type: str) -> str:
+    """Choose a civic to research in the culture tree.
+
+    Args:
+        civic_type: The type name, e.g. CIVIC_CRAFTSMANSHIP, from get_tech_civics
+
+    The two trees research in parallel; set_tech drives the science tree and
+    does not disturb this one.
+    """
+    gs = _get_game(ctx)
+    return await _logged(
+        ctx,
+        "set_civic",
+        {"civic_type": civic_type},
+        lambda: gs.set_civic(civic_type),
     )
 
 
@@ -2188,7 +2295,7 @@ async def get_great_people(ctx: Context) -> str:
     return await _logged(ctx, "get_great_people", {}, _run)
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True})
 async def get_gp_advisor(ctx: Context, unit_index: int) -> str:
     """Show best cities to activate a Great Person, ranked by suitability.
 
@@ -2231,13 +2338,15 @@ async def recruit_great_person(ctx: Context, individual_id: int) -> str:
 
 @mcp.tool()
 async def patronize_great_person(
-    ctx: Context, individual_id: int, yield_type: str = "YIELD_GOLD"
+    ctx: Context,
+    individual_id: int,
+    yield_type: Literal["YIELD_GOLD", "YIELD_FAITH"] = "YIELD_GOLD",
 ) -> str:
     """Buy a Great Person instantly with gold or faith.
 
     Args:
         individual_id: The individual's ID (from get_great_people output)
-        yield_type: YIELD_GOLD (default) or YIELD_FAITH
+        yield_type: What to spend
 
     Costs shown in get_great_people output under "Patronize:".
     Requires enough gold/faith to cover the cost.
@@ -2292,20 +2401,24 @@ async def get_world_congress(ctx: Context) -> str:
     return await _logged(ctx, "get_world_congress", {}, _run)
 
 
+class WorldCongressVote(BaseModel):
+    """One resolution's voting preference."""
+
+    hash: int = Field(description="Resolution type hash, from get_world_congress")
+    option: Literal[1, 2] = Field(description="1 for option A, 2 for option B")
+    target: int = Field(
+        description="Player ID for PlayerType resolutions, otherwise the raw "
+        "target value; resolved to a 0-based index at runtime"
+    )
+    votes: int = Field(description="Maximum votes to allocate, as favor allows")
+
+
 @mcp.tool()
-async def queue_wc_votes(ctx: Context, votes: str) -> str:
+async def queue_wc_votes(ctx: Context, votes: list[WorldCongressVote]) -> str:
     """Pre-configure World Congress votes for the upcoming session.
 
     Args:
-        votes: JSON array of vote objects, e.g.
-            '[{"hash": -513644209, "option": 1, "target": 2, "votes": 5}]'
-            hash = resolution type hash (from get_world_congress)
-            option = 1 for A, 2 for B
-            target = player ID for PlayerType resolutions (from get_world_congress
-                     target list, e.g. [target=2] Portugal), or target value for
-                     non-player resolutions. The handler resolves to the correct
-                     0-based index at runtime.
-            votes = max votes to allocate (will use as many as favor allows)
+        votes: One entry per resolution you want to vote on.
 
     Call this BEFORE end_turn when get_world_congress shows 0 turns until next
     session. Registers an event handler that fires during WC processing and
@@ -2315,12 +2428,16 @@ async def queue_wc_votes(ctx: Context, votes: str) -> str:
     and return control to you for interactive voting.
     """
     gs = _get_game(ctx)
-    vote_list = json.loads(votes)
+    vote_list: list[dict] = []
+    for vote in votes:
+        vote_list.append(vote.model_dump())
 
-    async def _run():
-        return await gs.queue_wc_votes(vote_list)
-
-    return await _logged(ctx, "queue_wc_votes", {"votes": vote_list}, _run)
+    return await _logged(
+        ctx,
+        "queue_wc_votes",
+        {"votes": vote_list},
+        lambda: gs.queue_wc_votes(vote_list),
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -2373,13 +2490,18 @@ async def get_religion_spread(ctx: Context) -> str:
 
 
 @mcp.tool()
-async def set_city_focus(ctx: Context, city_id: int, focus: str) -> str:
+async def set_city_focus(
+    ctx: Context,
+    city_id: int,
+    focus: Literal[
+        "food", "production", "gold", "science", "culture", "faith", "default"
+    ],
+) -> str:
     """Set a city's citizen yield priority.
 
     Args:
         city_id: City ID
-        focus: One of: food, production, gold, science, culture, faith, default
-               'default' clears all focus settings.
+        focus: The yield to prioritise. 'default' clears all focus settings.
 
     Cities automatically assign citizens to tiles. This biases the AI
     toward the chosen yield type when assigning new citizens.
@@ -2410,13 +2532,14 @@ async def dismiss_popup(ctx: Context) -> str:
 
 
 @mcp.tool(annotations={"destructiveHint": True})
-async def run_lua(ctx: Context, code: str, context: str = "gamecore") -> str:
+async def run_lua(
+    ctx: Context, code: str, context: Literal["gamecore", "ingame"] = "gamecore"
+) -> str:
     """Run arbitrary Lua code in the game. Advanced escape hatch — prefer built-in tools.
 
     Args:
         code: Lua code to execute. Use print() for output, end with print("---END---").
-        context: "gamecore" (default) for read-only state queries.
-                 "ingame" for commands and UI-dependent queries.
+        context: Which Lua state to run in.
 
     Context differences:
       gamecore: Players[], GameInfo.*, Map.*, Game.* — safe read-only access.
