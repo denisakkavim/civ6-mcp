@@ -38,6 +38,10 @@ its precondition. It prints the reason. One save therefore does not have to
 hold everything. Record each scenario from its own save. The corpus collects
 the verbs across the scenarios.
 
+`WISHLIST.md` lists every game state that no save holds, and names the tool or
+the verb that each state unblocks. Read it before you make a save. It also says
+when a new save is the wrong fix.
+
 These verbs still have no recording. Each one needs a unit or a tile state that
 none of the three saves holds:
 
