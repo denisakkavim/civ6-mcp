@@ -1,7 +1,7 @@
 """Stage 1.4 deleted `item_type`; the category is inferred from the prefix.
 
 `set_city_production` and `purchase_item` used to take both `item_type`
-("DISTRICT") and `item_name` ("DISTRICT_CAMPUS"), so the agent stated the same
+("DISTRICT") and `item_type` ("DISTRICT_CAMPUS"), so the agent stated the same
 fact twice and could state it inconsistently. The identifier already carries
 its category, so the tools read it off the prefix.
 
@@ -23,7 +23,7 @@ from civ_mcp.server import (
 
 
 @pytest.mark.parametrize(
-    "item_name,expected",
+    "item_type,expected",
     [
         ("UNIT_WARRIOR", "UNIT"),
         ("BUILDING_MONUMENT", "BUILDING"),
@@ -31,16 +31,16 @@ from civ_mcp.server import (
         ("PROJECT_LAUNCH_EARTH_SATELLITE", "PROJECT"),
     ],
 )
-def test_a_producible_identifier_states_its_own_category(item_name, expected):
-    assert _category_from_prefix(item_name, PRODUCIBLE_CATEGORIES) == expected
+def test_a_producible_identifier_states_its_own_category(item_type, expected):
+    assert _category_from_prefix(item_type, PRODUCIBLE_CATEGORIES) == expected
 
 
 @pytest.mark.parametrize(
-    "item_name,expected",
+    "item_type,expected",
     [("UNIT_WARRIOR", "UNIT"), ("BUILDING_MONUMENT", "BUILDING")],
 )
-def test_a_purchasable_identifier_states_its_own_category(item_name, expected):
-    assert _category_from_prefix(item_name, PURCHASABLE_CATEGORIES) == expected
+def test_a_purchasable_identifier_states_its_own_category(item_type, expected):
+    assert _category_from_prefix(item_type, PURCHASABLE_CATEGORIES) == expected
 
 
 def test_districts_and_projects_cannot_be_purchased():
@@ -53,13 +53,13 @@ def test_districts_and_projects_cannot_be_purchased():
 
 
 @pytest.mark.parametrize(
-    "item_name",
+    "item_type",
     ["CAMPUS", "campus", "IMPROVEMENT_FARM", "TECH_POTTERY", ""],
     ids=["bare", "lowercase", "wrong-family", "wrong-family-2", "empty"],
 )
-def test_an_unrecognised_identifier_infers_nothing(item_name):
+def test_an_unrecognised_identifier_infers_nothing(item_type):
     """Including the bare form: stripping the prefix is exactly the §4j defect."""
-    assert _category_from_prefix(item_name, PRODUCIBLE_CATEGORIES) is None
+    assert _category_from_prefix(item_type, PRODUCIBLE_CATEGORIES) is None
 
 
 def test_the_error_names_the_value_and_every_expected_prefix():

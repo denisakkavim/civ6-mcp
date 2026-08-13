@@ -2,9 +2,9 @@
   "tool": "get_game_overview",
   "arguments": {},
   "scenario": "turn63",
-  "recorded_at": "2026-08-11T19:59:40+00:00",
+  "recorded_at": "2026-08-13T21:38:08+00:00",
   "notes": null,
-  "result": "Turn 63 | Inca (Pachacuti) | Score: 138 | Prince\nGold: 133 (+3/turn) | Income: 8 | Maintenance: -5 (units: 2) | Science: 7.8 | Culture: 8.3 | Faith: 249 | Favor: 26 (+1/turn)\nResearch: Sailing | Civic: Theology\nCities: 3 | Population: 12 | Units: 12 \u2014 3 Warrior, 2 Archer, 2 Builder, 2 Slinger, 1 Trader, 1 Settler, 1 Scout\nExplored: 36% of land (286/790 tiles)\nReligion: Shinto (3/3 slots)\nEra: Medieval Era | Score: 34 (Dark: 40, Golden: 51) !! 6 short of avoiding Dark Age\nRankings: Georgia 191 > Inca 138",
+  "result": "Turn 63 | Inca (Pachacuti) | Score: 138 | Prince\nGold: 133 (+3/turn) | Income: 8 | Maintenance: -5 (units: 2) | Science: 7.8 | Culture: 8.3 | Faith: 249 | Favor: 26 (+1/turn)\nResearch: Sailing | Civic: Theology\nCities: 3 | Population: 12 | Units: 12 \u2014 3 Warrior, 2 Builder, 2 Slinger, 2 Archer, 1 Trader, 1 Settler, 1 Scout\nExplored: 36% of land (286/790 tiles)\nReligion: Shinto (3/3 slots)\nEra: Medieval Era | Score: 34 (Dark: 40, Golden: 51) !! 6 short of avoiding Dark Age\nRankings: Georgia 191 > Inca 138",
   "exchanges": [
     {
       "context": "write",
@@ -19,7 +19,7 @@
         "ERA|Medieval Era|34|40|51",
         "MAXTURNS|0",
         "DIFFICULTY|Prince",
-        "UNITBREAKDOWN|Warrior:3,Archer:2,Builder:2,Slinger:2,Trader:1,Settler:1,Scout:1|2"
+        "UNITBREAKDOWN|Warrior:3,Builder:2,Slinger:2,Archer:2,Trader:1,Settler:1,Scout:1|2"
       ]
     },
     {

@@ -196,7 +196,7 @@ def narrate_units(
         lines.append(
             f"  {u.name} ({u.unit_type}) at ({u.x},{u.y}) —{strength} "
             f"moves {moves_disp}{charges}{religion_flag}{status}{route_flag}{promo_flag}{upgrade_flag} "
-            f"[id:{u.unit_id}, idx:{u.unit_index}]"
+            f"[id:{u.unit_id}]"
         )
         if u.targets:
             for t in u.targets:
@@ -821,7 +821,7 @@ def narrate_diplomacy_sessions(sessions: list[lq.DiplomacySession]) -> str:
         if s.deal_summary:
             lines.append(f"  Deal: {s.deal_summary}")
             lines.append(
-                f"  This is a DEAL proposal — use respond_to_trade(other_player_id={s.other_player_id}, accept=True/False)"
+                f"  This is a DEAL proposal — use respond_to_deal(player_id={s.other_player_id}, accept=True/False)"
             )
         elif s.buttons == "GOODBYE":
             lines.append(
@@ -958,7 +958,7 @@ def narrate_pending_deals(deals: list[lq.PendingDeal]) -> str:
                 )
                 lines.append(f"    - {item.name}{amt}{dur}")
         lines.append(
-            f"  -> respond_to_trade(other_player_id={d.other_player_id}, accept=True/False)"
+            f"  -> respond_to_deal(player_id={d.other_player_id}, accept=True/False)"
         )
     return "\n".join(lines)
 
@@ -1249,7 +1249,7 @@ def narrate_religion_founding_status(status: lq.ReligionFoundingStatus) -> str:
 
         if status.available_religions and status.beliefs_by_class:
             lines.append(
-                "\nUse found_religion(religion_type, follower_belief, founder_belief) "
+                "\nUse found_religion(religion_type, follower_belief_type, founder_belief_type) "
                 "after your Great Prophet has activated on a Holy Site."
             )
     return "\n".join(lines)
@@ -1304,11 +1304,11 @@ def narrate_district_advisor(
 
 
 def narrate_wonder_advisor(
-    placements: list[lq.WonderPlacement], wonder_name: str
+    placements: list[lq.WonderPlacement], wonder_type: str
 ) -> str:
     if not placements:
-        return f"No valid placement tiles for {wonder_name} in this city."
-    lines = [f"{wonder_name} placement options ({len(placements)} tiles):"]
+        return f"No valid placement tiles for {wonder_type} in this city."
+    lines = [f"{wonder_type} placement options ({len(placements)} tiles):"]
     for i, p in enumerate(placements, 1):
         # Build terrain description
         terrain = p.terrain.replace("TERRAIN_", "").replace("_", " ").lower()
@@ -1335,7 +1335,7 @@ def narrate_wonder_advisor(
     best = placements[0]
     lines.append(f"\nRecommended: ({best.x},{best.y}) — lowest displacement")
     lines.append(
-        f'Use: set_city_production(city_id=<id>, item_name="{wonder_name}",'
+        f'Use: set_city_production(city_id=<id>, item_type="{wonder_type}",'
         f" target_x={best.x}, target_y={best.y})"
     )
     return "\n".join(lines)
@@ -1558,7 +1558,7 @@ def narrate_world_congress(status: lq.WorldCongressStatus) -> str:
             lines.append("World Congress: IN SESSION (vote required!)")
         else:
             lines.append(
-                "World Congress: FIRES THIS TURN — use queue_wc_votes() before end_turn()!"
+                "World Congress: FIRES THIS TURN — use queue_world_congress_votes() before end_turn()!"
             )
         # Build clear cost table: "N votes = X favor total"
         costs = status.favor_costs
@@ -1606,7 +1606,7 @@ def narrate_world_congress(status: lq.WorldCongressStatus) -> str:
                             tgt_strs.append(t)
                     lines.append(f"  Targets: {', '.join(tgt_strs)}")
                 lines.append(
-                    f"  -> queue_wc_votes(votes=[{{hash: {r.resolution_hash},"
+                    f"  -> queue_world_congress_votes(votes=[{{hash: {r.resolution_hash},"
                     f" option: 1 or 2, target: 0, votes: 1}}])"
                 )
             elif imminent:
@@ -1636,7 +1636,7 @@ def narrate_world_congress(status: lq.WorldCongressStatus) -> str:
             )
             lines.append("")
             lines.append(
-                "To vote: queue_wc_votes(votes=[{hash: <hash>, option: 1 or 2,"
+                "To vote: queue_world_congress_votes(votes=[{hash: <hash>, option: 1 or 2,"
                 " target: <player_id>, votes: N}, ...])"
             )
             lines.append(

@@ -1,0 +1,41 @@
+{
+  "tool": "get_production_options",
+  "arguments": {
+    "city_id": 65536
+  },
+  "scenario": "turn73",
+  "recorded_at": "2026-08-13T21:30:21+00:00",
+  "notes": null,
+  "result": "Units:\n  UNIT_SETTLER (cost 80, 5 turns, buy: 340g)\n  UNIT_BUILDER (cost 50, 2 turns, buy: 130g)\n  UNIT_TRADER (cost 40, 2 turns, buy: 120g)\n  UNIT_SCOUT (cost 30, 1 turns, buy: 60g)\n  UNIT_ARCHER (cost 60, 2 turns, buy: 120g)\n  UNIT_SPEARMAN (cost 65, 2 turns, buy: 125g)\n  UNIT_BATTERING_RAM (cost 65, 2 turns, buy: 125g)\n  UNIT_SWORDSMAN (cost 90, 3 turns, buy: 180g)\n  UNIT_HORSEMAN (cost 80, 3 turns, buy: 160g)\nBuildings:\n  BUILDING_SHRINE (cost 70, 2 turns, buy: 140g)\n  BUILDING_APADANA (cost 400, 14 turns)\nDistricts:\n  DISTRICT_CAMPUS (cost 54, 5 turns)\n  DISTRICT_ENCAMPMENT (cost 54, 5 turns)\n  DISTRICT_ENTERTAINMENT_COMPLEX (cost 54, 5 turns)\n  DISTRICT_THEATER (cost 54, 5 turns)\n  DISTRICT_GOVERNMENT (cost 30, 3 turns)\nProjects:\n  PROJECT_ENHANCE_DISTRICT_COMMERCIAL_HUB (cost 25, 3 turns)\n  PROJECT_ENHANCE_DISTRICT_HOLY_SITE (cost 25, 3 turns)",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local pCity = CityManager.GetCity(me, 65536 % 65536) if pCity == nil then print(\"ERR:CITY_NOT_FOUND\"); print(\"---END---\"); return end\nlocal bq = pCity:GetBuildQueue()\nlocal goldIdx = GameInfo.Yields[\"YIELD_GOLD\"].Index\nlocal cityGold = pCity:GetGold()\nlocal function getGoldCost(hash, isUnit)\n    local ok, cost = pcall(function()\n        if isUnit then\n            return cityGold:GetPurchaseCost(goldIdx, hash, MilitaryFormationTypes.STANDARD_MILITARY_FORMATION)\n        else\n            return cityGold:GetPurchaseCost(goldIdx, hash, -1)\n        end\n    end)\n    if ok and cost and cost > 0 then return math.floor(cost) end\n    return -1\nend\n-- Check Trader cap: game silently rejects Traders when count >= route capacity\nlocal pTrade = Players[me]:GetTrade()\nlocal traderCount = 0\nfor _, u in Players[me]:GetUnits():Members() do\n    if GameInfo.Units[u:GetType()].UnitType == \"UNIT_TRADER\" then traderCount = traderCount + 1 end\nend\nlocal routeCap = pTrade:GetOutgoingRouteCapacity()\nlocal traderCapped = (traderCount >= routeCap)\nprint(\"UNITS:\")\nfor unit in GameInfo.Units() do\n    if bq:CanProduce(unit.Hash, true) then\n        if unit.UnitType == \"UNIT_TRADER\" and traderCapped then\n            -- skip: game will silently reject (traders >= route capacity)\n        else\n            -- CanStartOperation catches missing strategic resources that CanProduce misses\n            local unitCheck = {}\n            unitCheck[CityOperationTypes.PARAM_UNIT_TYPE] = unit.Hash\n            local canStart = CityManager.CanStartOperation(pCity, CityOperationTypes.BUILD, unitCheck, true)\n            if canStart then\n                local t = bq:GetTurnsLeft(unit.Hash)\n                local gc = getGoldCost(unit.Hash, true)\n                local adjCost = unit.Cost\n                pcall(function() local c = bq:GetProductionCost(unit.Hash); if c > 0 then adjCost = math.floor(c) end end)\n                print(\"UNIT|\" .. unit.UnitType .. \"|\" .. adjCost .. \"|\" .. t .. \"|\" .. gc)\n            end\n        end\n    end\nend\nprint(\"BUILDINGS:\")\nfor bldg in GameInfo.Buildings() do\n    if bq:CanProduce(bldg.Hash, true) then\n        -- CanStartOperation catches pillaged-district prerequisites that CanProduce misses\n        local bldgCheck = {}\n        bldgCheck[CityOperationTypes.PARAM_BUILDING_TYPE] = bldg.Hash\n        local canStart = CityManager.CanStartOperation(pCity, CityOperationTypes.BUILD, bldgCheck, true)\n        if canStart then\n            local t = bq:GetTurnsLeft(bldg.Hash)\n            local gc = -1\n            if not bldg.IsWonder then\n                gc = getGoldCost(bldg.Hash, false)\n            end\n            local adjCost = bldg.Cost\n            pcall(function() local c = bq:GetProductionCost(bldg.Hash); if c > 0 then adjCost = math.floor(c) end end)\n            print(\"BUILDING|\" .. bldg.BuildingType .. \"|\" .. adjCost .. \"|\" .. t .. \"|\" .. gc)\n        end\n    end\nend\nprint(\"DISTRICTS:\")\nfor dist in GameInfo.Districts() do\n    if bq:CanProduce(dist.Hash, true) then\n        local t = bq:GetTurnsLeft(dist.Hash)\n        local adjCost = dist.Cost\n        pcall(function() local c = bq:GetProductionCost(dist.Hash); if c > 0 then adjCost = math.floor(c) end end)\n        print(\"DISTRICT|\" .. dist.DistrictType .. \"|\" .. adjCost .. \"|\" .. t .. \"|-1\")\n    end\nend\nprint(\"PROJECTS:\")\nfor proj in GameInfo.Projects() do\n    if bq:CanProduce(proj.Hash, true) then\n        local t = bq:GetTurnsLeft(proj.Hash)\n        local adjCost = proj.Cost\n        pcall(function() local c = bq:GetProductionCost(proj.Hash); if c > 0 then adjCost = math.floor(c) end end)\n        print(\"PROJECT|\" .. proj.ProjectType .. \"|\" .. adjCost .. \"|\" .. t .. \"|-1\")\n    end\nend\n-- Pillaged districts/buildings that can be repaired via production queue\nprint(\"REPAIRS:\")\nlocal pBuildings = pCity:GetBuildings()\nfor _, d in pCity:GetDistricts():Members() do\n    if d:IsPillaged() then\n        local dInfo = GameInfo.Districts[d:GetType()]\n        if dInfo and dInfo.DistrictType ~= \"DISTRICT_CITY_CENTER\" then\n            local repParams = {}\n            repParams[CityOperationTypes.PARAM_DISTRICT_TYPE] = dInfo.Hash\n            repParams[CityOperationTypes.PARAM_X] = d:GetX()\n            repParams[CityOperationTypes.PARAM_Y] = d:GetY()\n            local canRepair = CityManager.CanStartOperation(pCity, CityOperationTypes.BUILD, repParams, true)\n            if canRepair then\n                local t = bq:GetTurnsLeft(dInfo.Hash)\n                local adjCost = dInfo.Cost\n                pcall(function() local c = bq:GetProductionCost(dInfo.Hash); if c > 0 then adjCost = math.floor(c) end end)\n                print(\"DISTRICT|\" .. dInfo.DistrictType .. \"|\" .. adjCost .. \"|\" .. t .. \"|-1|REPAIR|\" .. d:GetX() .. \",\" .. d:GetY())\n            end\n        end\n    end\nend\nfor bldg in GameInfo.Buildings() do\n    if pBuildings:HasBuilding(bldg.Index) and pBuildings:IsPillaged(bldg.Index) then\n        local repCheck = {}\n        repCheck[CityOperationTypes.PARAM_BUILDING_TYPE] = bldg.Hash\n        local canRepair = CityManager.CanStartOperation(pCity, CityOperationTypes.BUILD, repCheck, true)\n        if canRepair then\n            local t = bq:GetTurnsLeft(bldg.Hash)\n            local adjCost = bldg.Cost\n            pcall(function() local c = bq:GetProductionCost(bldg.Hash); if c > 0 then adjCost = math.floor(c) end end)\n            print(\"BUILDING|\" .. bldg.BuildingType .. \"|\" .. adjCost .. \"|\" .. t .. \"|-1|REPAIR\")\n        end\n    end\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "UNITS:",
+        "UNIT|UNIT_SETTLER|80|5|340",
+        "UNIT|UNIT_BUILDER|50|2|130",
+        "UNIT|UNIT_TRADER|40|2|120",
+        "UNIT|UNIT_SCOUT|30|1|60",
+        "UNIT|UNIT_ARCHER|60|2|120",
+        "UNIT|UNIT_SPEARMAN|65|2|125",
+        "UNIT|UNIT_BATTERING_RAM|65|2|125",
+        "UNIT|UNIT_SWORDSMAN|90|3|180",
+        "UNIT|UNIT_HORSEMAN|80|3|160",
+        "BUILDINGS:",
+        "BUILDING|BUILDING_SHRINE|70|2|140",
+        "BUILDING|BUILDING_APADANA|400|14|-1",
+        "DISTRICTS:",
+        "DISTRICT|DISTRICT_CAMPUS|54|5|-1",
+        "DISTRICT|DISTRICT_ENCAMPMENT|54|5|-1",
+        "DISTRICT|DISTRICT_ENTERTAINMENT_COMPLEX|54|5|-1",
+        "DISTRICT|DISTRICT_THEATER|54|5|-1",
+        "DISTRICT|DISTRICT_GOVERNMENT|30|3|-1",
+        "PROJECTS:",
+        "PROJECT|PROJECT_ENHANCE_DISTRICT_COMMERCIAL_HUB|25|3|-1",
+        "PROJECT|PROJECT_ENHANCE_DISTRICT_HOLY_SITE|25|3|-1",
+        "REPAIRS:"
+      ]
+    }
+  ]
+}

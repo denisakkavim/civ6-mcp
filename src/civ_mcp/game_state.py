@@ -222,11 +222,6 @@ class GameState:
         log.info("Seeded revealed-tile set with %d tiles", len(self._revealed))
 
     async def move_unit(self, unit_index: int, target_x: int, target_y: int) -> str:
-        # Pre-dismiss any blocking popups that would silently eat the move
-        try:
-            await self.dismiss_popup()
-        except Exception:
-            pass
         # Seed before moving so the first move of a session reports
         # discoveries. Warn loudly on failure — a silent failure here once
         # disabled this feature for months.
@@ -274,7 +269,7 @@ class GameState:
                                         int(tgt_match.group(2)),
                                     )
                                     if (now_x, now_y) != (tx, ty):
-                                        result += f"|STOPPED_MID_PATH (moves exhausted)"
+                                        result += "|STOPPED_MID_PATH (moves exhausted)"
                         break
             except Exception:
                 pass
@@ -307,11 +302,6 @@ class GameState:
         return result
 
     async def attack_unit(self, unit_index: int, target_x: int, target_y: int) -> str:
-        # Pre-attack: dismiss any blocking popups that would silently eat the attack
-        try:
-            await self.dismiss_popup()
-        except Exception:
-            pass
         # Pre-attack: run combat estimator
         estimate_str = ""
         est: lq.CombatEstimate | None = None
@@ -426,12 +416,6 @@ class GameState:
         return _action_result(lines)
 
     async def found_city(self, unit_index: int) -> str:
-        # Pre-dismiss any blocking popups (tech completion, era change, etc.)
-        try:
-            await self.dismiss_popup()
-        except Exception:
-            pass
-
         lua = lq.build_found_city(unit_index)
         lines = await self.conn.execute_write(lua)
         result = _action_result(lines)
@@ -624,7 +608,7 @@ class GameState:
                                 hint += f" Valid tiles: {alts}."
                         except Exception:
                             pass
-                        hint += " Use get_district_advisor for details."
+                        hint += " Use get_district_sites for details."
                     elif itype == "BUILDING":
                         # Check if Lua reported pillaged districts
                         pillaged_dists = ""
@@ -1671,24 +1655,58 @@ class GameState:
 
         return await dismiss_popup(self.conn)
 
+    async def ensure_no_blocking_popup(self) -> None:
+        """Clear a popup that would otherwise swallow the next command.
+
+        A popup blocks the InGame context, so a command issued underneath one
+        is accepted and then silently discarded. Every mutating tool runs this
+        first, which is why no tool asks the agent to dismiss popups itself.
+
+        Two round trips at worst. The poll is one, and reports CLEAR, POPUP, or
+        CRITICAL; the shallow dismissal is the second, and only on POPUP.
+        CRITICAL means a diplomacy screen is open: the agent may be part-way
+        through answering it, and force-closing the session leaves the AI
+        diplomacy subsystem inconsistent. That is the guard PopupWatcher
+        applies, inherited here.
+
+        Shallow (`deep=False`) on purpose: the deep phases probe up to 150 Lua
+        states one at a time, which is minutes of round trips across a turn of
+        unit orders, to reach popups that do not swallow commands anyway.
+        PopupWatcher clears those on its own timer.
+
+        Never raises. A failed poll must not turn into a failed tool call.
+        """
+        from civ_mcp.game_lifecycle import dismiss_popup
+        from civ_mcp.spectator import _POPUP_POLL_LUA
+
+        try:
+            lines = await self.conn.execute_write(_POPUP_POLL_LUA, timeout=2.0)
+        except Exception:
+            return
+
+        status = "CLEAR"
+        for line in lines:
+            stripped = line.strip()
+            if stripped in ("POPUP", "CRITICAL", "CLEAR"):
+                status = stripped
+                break
+
+        if status != "POPUP":
+            return
+
+        try:
+            await dismiss_popup(self.conn, deep=False)
+        except Exception:
+            log.debug("Pre-command popup dismissal failed", exc_info=True)
+
     async def list_saves(self) -> str:
         """List available save files."""
         from civ_mcp.game_lifecycle import list_saves
 
         return await list_saves(self.conn)
 
-    async def load_save(self, save_index: int) -> str:
-        """Load a save file by index."""
-        import time
-        from civ_mcp.game_lifecycle import load_save
-
-        result = await load_save(self.conn, save_index)
-        if not result.startswith(("Error", "ERR", "FAILED")):
-            self._record_save_load(f"index:{save_index}")
-        return result
-
     async def load_game_save(self, save_name: str) -> str:
-        """Load a save file by name (no list_saves prerequisite)."""
+        """Load a save file by name (no get_saves prerequisite)."""
         from civ_mcp.game_lifecycle import load_game_save
 
         result = await load_game_save(self.conn, save_name)

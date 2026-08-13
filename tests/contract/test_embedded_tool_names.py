@@ -33,6 +33,12 @@ AGENT_FACING = [
     SRC / "narrate.py",
     SRC / "end_turn.py",
     SRC / "game_state.py",
+    # Two lookup tables mapping a notification or an end-turn blocker to the
+    # tools that clear it. Stage 2 renamed five tools these named and merged
+    # three more, and nothing caught it, because the scan stopped at the four
+    # files above — the advice reaches the agent at exactly the moment it is
+    # blocked, which is when a dead tool name costs the most.
+    SRC / "lua" / "notifications.py",
 ]
 
 # snake_case tokens — the shape a tool or parameter name takes.
@@ -61,27 +67,26 @@ INTERNAL_IDENTIFIERS = frozenset(
         "total_new",
         "wall_hp",
         "wall_max",
-        # `propose_trade`'s parameters are named offer_*/request_* per item
+        # `propose_deal`'s parameters are named offer_*/request_* per item
         # class; the docstring refers to the pair collectively.
         "offer_items",
         "request_items",
         # Lua-side and narration-internal labels, not callable surface.
-        "city_attack",
         "map_area",
-        "test_trade",
+        # Parser docstrings in notifications.py: the query builder they read
+        # from, and a tuple field they return.
+        "build_notifications_query",
+        "blocking_type",
+        "test_deal",
     }
 )
 
-# Stage 1.3 typed `unit_action` / `city_action` / `spy_action` with `Literal`,
-# so their verbs are now enum values that `_live_surface()` resolves on its
-# own. Only the sub-label below is left: it is what `_logged` records for
-# `city_action`'s capture branch, and it becomes a tool name of its own in
-# Stage 2.6, at which point this block empties.
-UNTYPED_ACTION_VERBS = frozenset(
-    {
-        "resolve_city_capture",
-    }
-)
+# Stage 1.3 typed the action dispatchers with `Literal`, so their verbs are
+# enum values that `_live_surface()` resolves on its own, and Stage 2.6 turned
+# the last sub-label (`resolve_city_capture`) into a tool of its own. Nothing
+# is allowlisted here now. Keep it that way: a verb that needs allowlisting is
+# a verb the schema does not state.
+UNTYPED_ACTION_VERBS: frozenset[str] = frozenset()
 
 
 def _live_surface() -> tuple[set[str], set[str], set[str]]:

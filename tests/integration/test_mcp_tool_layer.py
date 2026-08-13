@@ -59,9 +59,9 @@ def test_harness_reaches_the_real_tool_body(civ_server):
     conn = RecordingConnection()
     civ_server(conn).call("get_units", {})
     assert conn.reads or conn.writes, "the tool never queried the game"
-    assert any(
-        "print(" in lua for lua in conn.reads + conn.writes
-    ), "the query does not look like the real Lua builders' output"
+    assert any("print(" in lua for lua in conn.reads + conn.writes), (
+        "the query does not look like the real Lua builders' output"
+    )
 
 
 def test_all_tools_are_registered(civ_server):
@@ -168,7 +168,7 @@ def test_unknown_tool_is_an_error(civ_server):
         ("run_lua", {"code": "print(1)", "context": "gamecore_but_wrong"}),
         (
             "purchase_item",
-            {"city_id": 1, "item_name": "UNIT_WARRIOR", "yield_type": "YIELD_CULTURE"},
+            {"city_id": 1, "item_type": "UNIT_WARRIOR", "yield_type": "YIELD_CULTURE"},
         ),
     ],
     ids=["unit_action", "set_city_focus", "run_lua", "purchase_item"],
@@ -198,7 +198,7 @@ def test_an_unrecognised_item_prefix_never_reaches_the_game(civ_server):
     """
     conn = RecordingConnection()
     text = civ_server(conn).call(
-        "set_city_production", {"city_id": 1, "item_name": "CAMPUS"}
+        "set_city_production", {"city_id": 1, "item_type": "CAMPUS"}
     )
     assert text.startswith("Error:"), text
     assert "CAMPUS" in text and "DISTRICT_" in text
@@ -210,7 +210,7 @@ def test_an_inferred_category_reaches_the_lua(civ_server):
     conn = RecordingConnection(write_lines=["OK:PRODUCING|DISTRICT_CAMPUS|6 turns"])
     civ_server(conn).call(
         "set_city_production",
-        {"city_id": 1, "item_name": "DISTRICT_CAMPUS", "target_x": 4, "target_y": 5},
+        {"city_id": 1, "item_type": "DISTRICT_CAMPUS", "target_x": 4, "target_y": 5},
     )
     issued = "\n".join(conn.reads + conn.writes)
     assert "DISTRICT" in issued, "the inferred category never reached the game"

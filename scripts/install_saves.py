@@ -2,7 +2,7 @@
 """Install the test saves into the Civ 6 save directory.
 
 Copies .Civ6Save files from tests/data/saves/ into the platform-specific
-Civilization VI save directory so they can be loaded via load_game_save().
+Civilization VI save directory so they can be loaded via load_game().
 Needed before running `pytest -m live` or recording game traffic.
 """
 

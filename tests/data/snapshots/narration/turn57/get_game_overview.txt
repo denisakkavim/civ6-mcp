@@ -1,7 +1,7 @@
 Turn 57 | Inca (Pachacuti) | Score: 105 | Prince
 Gold: 371 (+4/turn) | Income: 8 | Maintenance: -4 (units: 2) | Science: 6.9 | Culture: 7.7 | Faith: 151 | Favor: 20 (+1/turn)
 Research: Horseback Riding | Civic: Drama and Poetry
-Cities: 3 | Population: 10 | Units: 10 — 3 Warrior, 2 Archer, 2 Slinger, 1 Builder, 1 Settler, 1 Trader
+Cities: 3 | Population: 10 | Units: 10 — 3 Warrior, 2 Slinger, 2 Archer, 1 Settler, 1 Trader, 1 Builder
 Explored: 33% of land (268/790 tiles)
 Religion: none yet (2/3 slots remaining — Great Prophet needed)
 Era: Classical Era | Score: 27 (Dark: 19, Golden: 30)

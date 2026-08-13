@@ -4,7 +4,7 @@
     "unit_id": 1179648
   },
   "scenario": "turn63",
-  "recorded_at": "2026-08-11T19:59:46+00:00",
+  "recorded_at": "2026-08-13T21:38:25+00:00",
   "notes": null,
   "result": "19 trade route destinations:\n\nDomestic (food + production to destination):\n  Qusqu at (45,12) | Food:2 Prod:1 Gold:2 | Trading Post Shinto <- 0.5\n  Wanuku at (44,8) | Food:1 Prod:1 Gold:2 | Trading Post\n  Antawaylla at (47,9) | Food:2 Prod:1 Gold:2 | Shinto <- 0.5\n\nInternational (gold to origin):\n  Tbilisi (Georgia) at (52,21) | Gold:7 Sci:1 Faith:1 | Eastern Orthodoxy <- 0.5\n  Kutaisi (Georgia) at (55,19) | Gold:7 Faith:1 | Eastern Orthodoxy <- 0.5\n  Rustavi (Georgia) at (56,14) | Gold:7 Sci:1 | Eastern Orthodoxy <- 0.5\n  Gori (Georgia) at (53,25) | Gold:7 | Eastern Orthodoxy <- 0.5\n  Ulundi (Zulu) at (19,20) | Prod:1 Gold:9 Cul:1\n  Kwadukuza (Zulu) at (17,25) | Gold:7 Sci:1\n  Nobamba (Zulu) at (15,18) | Gold:7\n  Aachen (Germany) at (7,26) | Gold:7 Sci:1\n  Cologne (Germany) at (9,30) | Gold:7 Faith:1 | Catholicism <- 0.5\n  Heidelberg (Germany) at (4,28) | Gold:7\n  Wolin (Wolin) at (53,12) | Prod:1 Gold:7 | Eastern Orthodoxy <- 0.5\n  La Venta (La Venta) at (46,23) | Gold:7 Faith:1\n  Preslav (Preslav) at (11,21) | Gold:7\n  Mohenjo-Daro (Mohenjo-Daro) at (14,30) | Gold:7\n  Zanzibar (Zanzibar) at (15,14) | Gold:13\n  Vilnius (Vilnius) at (24,23) | Gold:7 Cul:1\n\nUse unit_action with action='trade_route', target_x=X, target_y=Y",
   "exchanges": [

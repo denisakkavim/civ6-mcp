@@ -1,7 +1,7 @@
 """Tests for the per-turn advisor call budget in GameState.
 
 Gemini Pro's `divine-vermil-monument-72` run died in an infinite
-`get_wonder_advisor` loop — 1,567 calls in a single turn. The budget cap
+`get_wonder_sites` loop — 1,567 calls in a single turn. The budget cap
 prevents this class of failure by short-circuiting further calls after
 the hard limit.
 """

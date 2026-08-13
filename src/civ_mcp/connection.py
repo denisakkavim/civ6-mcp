@@ -137,7 +137,17 @@ class GameConnection:
         self, state_index: int, lua_code: str, timeout: float = 5.0
     ) -> list[str]:
         """Execute Lua in an arbitrary state index. Returns parsed output lines."""
-        return await self._execute_and_collect(state_index, lua_code, timeout)
+        lines = await self._execute_and_collect(state_index, lua_code, timeout)
+        # Record under the context the index belongs to, matching how a replay
+        # maps the index back. Without this the popup dismissal's per-state
+        # probing was invisible to the recorder but still consumed exchanges on
+        # replay, so any tool call that met a popup replayed one query out of
+        # step and returned the dismissal's output as its own result.
+        context = (
+            recording.READ if state_index == self.gamecore_index else recording.WRITE
+        )
+        recording.record(context, lua_code, lines)
+        return lines
 
     async def _execute_and_collect(
         self, state_index: int, lua_code: str, timeout: float

@@ -11,7 +11,7 @@ exercise the whole stack offline.
     uv run python scripts/record_game_traffic.py --scenario turn37
 
 **Record the dispatcher captures before Stage 4 splits them.** `unit_action`,
-`city_action`, `spy_action` and `skip_remaining_units` disappear in that stage;
+`city_attack`, `spy_action` and `skip_remaining_units` disappear in that stage;
 once they are gone there is no way to demonstrate that the eleven replacements
 behave like what they replaced.
 
@@ -47,7 +47,7 @@ READ_PLAN: list[tuple[str, dict, bool]] = [
     ("get_game_overview", {}, False),
     ("get_units", {}, False),
     ("get_cities", {}, False),
-    ("get_city_production", {"city_id": "$CITY"}, False),
+    ("get_production_options", {"city_id": "$CITY"}, False),
     (
         "get_map_area",
         {"center_x": "$CITY_X", "center_y": "$CITY_Y", "radius": 2},
@@ -55,9 +55,9 @@ READ_PLAN: list[tuple[str, dict, bool]] = [
     ),
     ("get_empire_resources", {}, False),
     ("get_builder_tasks", {}, False),
-    ("get_strategic_map", {}, False),
+    ("get_exploration_status", {}, False),
     ("get_diplomacy", {}, False),
-    ("get_tech_civics", {}, False),
+    ("get_research_options", {}, False),
     ("get_policies", {}, False),
     ("get_notifications", {}, False),
     ("get_governors", {}, False),
@@ -67,20 +67,19 @@ READ_PLAN: list[tuple[str, dict, bool]] = [
     ("get_trade_destinations", {"unit_id": "$UNIT"}, False),
     ("get_victory_progress", {}, False),
     ("get_religion_spread", {}, False),
-    ("get_pantheon_beliefs", {}, False),
-    ("get_religion_beliefs", {}, False),
+    ("get_belief_options", {}, False),
     ("get_dedications", {}, False),
     ("get_world_congress", {}, False),
-    ("get_pending_trades", {}, False),
+    ("get_pending_deals", {}, False),
     ("get_pending_diplomacy", {}, False),
     ("get_spies", {}, False),
     ("get_purchasable_tiles", {"city_id": "$CITY"}, False),
-    ("get_district_advisor", {"city_id": "$CITY", "district_type": "$DISTRICT"}, False),
-    ("get_wonder_advisor", {"city_id": "$CITY", "wonder_name": "$WONDER"}, False),
+    ("get_district_sites", {"city_id": "$CITY", "district_type": "$DISTRICT"}, False),
+    ("get_wonder_sites", {"city_id": "$CITY", "wonder_type": "$WONDER"}, False),
     # Any unit will do — this asks where that unit could settle, and a save
     # without a settler should still record the read.
-    ("get_settle_advisor", {"unit_id": "$UNIT"}, False),
-    ("get_global_settle_advisor", {}, False),
+    ("get_settle_sites_near_unit", {"unit_id": "$UNIT"}, False),
+    ("get_settle_sites_on_map", {}, False),
     ("get_unit_promotions", {"unit_id": "$UNIT"}, False),
     (
         "get_pathing_estimate",
@@ -130,7 +129,7 @@ DISPATCHER_PLAN: list[tuple[str, dict, bool]] = [
         {
             "unit_id": "$IMPROVE_UNIT",
             "action": "improve",
-            "improvement": "$IMPROVEMENT",
+            "improvement_type": "$IMPROVEMENT",
         },
         True,
     ),
@@ -179,7 +178,7 @@ DISPATCHER_PLAN: list[tuple[str, dict, bool]] = [
 ]
 
 WRITE_PLAN: list[tuple[str, dict, bool]] = [
-    ("set_city_production", {"city_id": "$CITY", "item_name": "$UNIT_TYPE"}, True),
+    ("set_city_production", {"city_id": "$CITY", "item_type": "$UNIT_TYPE"}, True),
     ("set_tech", {"tech_type": "$TECH"}, True),
     ("set_city_focus", {"city_id": "$CITY", "focus": "production"}, True),
     ("end_turn", {}, True),
@@ -296,7 +295,7 @@ async def _resolve(client, plan):
     # build right now — a hardcoded DISTRICT_CAMPUS records an error recording
     # in any game that has not researched Writing yet.
     production = await _call(
-        client, "get_city_production", {"city_id": context["$CITY"]}
+        client, "get_production_options", {"city_id": context["$CITY"]}
     )
     context["$DISTRICT"] = (
         _first_token(production, "DISTRICT_") or "DISTRICT_ENCAMPMENT"
@@ -304,7 +303,7 @@ async def _resolve(client, plan):
     context["$WONDER"] = _first_wonder(production) or "BUILDING_PYRAMIDS"
     context["$UNIT_TYPE"] = _first_token(production, "UNIT_") or "UNIT_WARRIOR"
 
-    research = await _call(client, "get_tech_civics", {})
+    research = await _call(client, "get_research_options", {})
     context["$TECH"] = _researchable_tech(research) or "TECH_MINING"
 
     print("Resolved:", {k: v for k, v in context.items() if v is not None})
@@ -535,6 +534,20 @@ async def _call(client, tool: str, arguments: dict) -> str:
     return "".join(b.text for b in result.content if getattr(b, "text", None))
 
 
+async def _clear_popups(conn) -> None:
+    """Dismiss whatever is on screen, between recorded calls.
+
+    Safe to run on the recording connection: `recording.record` is a no-op
+    while no tool call is in flight, so this traffic lands in no recording.
+    """
+    from civ_mcp.game_lifecycle import dismiss_popup
+
+    try:
+        await dismiss_popup(conn)
+    except Exception as exc:
+        print(f"  ! could not clear popups: {exc}")
+
+
 async def _record(scenario: str, plan, dry_run: bool) -> None:
     from mcp.shared.memory import create_connected_server_and_client_session
 
@@ -555,14 +568,22 @@ async def _record(scenario: str, plan, dry_run: bool) -> None:
     # connection on a timer, and a poll that lands mid-tool-call is recorded
     # into that tool's recording — traffic the tool never issued, which then
     # desynchronises every replay.
+    # Kept so `_clear_popups` can reach the same connection the tools use.
+    live: dict[str, object] = {}
+
+    def _connect():
+        conn = GameConnection()
+        live["conn"] = conn
+        return conn
+
     with server.testing_overrides(
-        connection_factory=GameConnection, background_services=False
+        connection_factory=_connect, background_services=False
     ):
         async with create_connected_server_and_client_session(
             server.mcp, raise_exceptions=False
         ) as client:
             # The resolver calls real tools (`get_units`, `get_cities`,
-            # `get_city_production`, …) to fill in live ids. Those calls must
+            # `get_production_options`, …) to fill in live ids. Those calls must
             # not be recorded.
             resolved = await _resolve(client, plan)
 
@@ -575,6 +596,18 @@ async def _record(scenario: str, plan, dry_run: bool) -> None:
             recorder = recording.enable(RECORDING_DIR, scenario)
             discarded = 0
             for tool, arguments, _ in resolved:
+                # Clear the UI before recording, outside the recording bracket.
+                # Every mutating tool polls for popups first, and when that poll
+                # finds one it runs the full dismissal — which probes each Lua
+                # state individually, driven by `conn.lua_states`. A replay has
+                # no state table to drive that loop, so those probes are
+                # recorded and never re-issued, and the call replays out of
+                # step. Starting clean keeps each recording to the traffic the
+                # tool itself issues. The dismissal path is covered live, in
+                # `tests/e2e/`, which is where it can be covered honestly.
+                if live.get("conn") is not None:
+                    await _clear_popups(live["conn"])
+
                 before = len(recorder.written)
                 text = await _call(client, tool, arguments)
                 first = text.split("\n", 1)[0][:90]

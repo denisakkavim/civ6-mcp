@@ -4,10 +4,17 @@
     "tech_type": "TECH_THE_WHEEL"
   },
   "scenario": "turn73",
-  "recorded_at": "2026-08-11T20:25:24+00:00",
+  "recorded_at": "2026-08-13T21:31:54+00:00",
   "notes": null,
   "result": "RESEARCHING|TECH_THE_WHEEL",
   "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CLEAR"
+      ]
+    },
     {
       "context": "write",
       "lua": "\nlocal id = Game.GetLocalPlayer()\nlocal idx = nil\nfor row in GameInfo.Technologies() do\n    if row.TechnologyType == \"TECH_THE_WHEEL\" then idx = row.Index; break end\nend\nif idx == nil then print(\"ERR:TECH_NOT_FOUND|TECH_THE_WHEEL\"); print(\"---END---\"); return end\nif Players[id]:GetTechs():HasTech(idx) then\n    print(\"ERR:ALREADY_COMPLETED|TECH_THE_WHEEL is already researched\"); print(\"---END---\"); return\nend\nlocal params = {}\nparams[PlayerOperations.PARAM_TECH_TYPE] = idx\nUI.RequestPlayerOperation(id, PlayerOperations.RESEARCH, params)\nlocal list = NotificationManager.GetList(id)\nif list then\n    for _, nid in ipairs(list) do\n        local e = NotificationManager.Find(id, nid)\n        if e and not e:IsDismissed() then\n            local bt = e:GetEndTurnBlocking()\n            if bt and bt == EndTurnBlockingTypes.ENDTURN_BLOCKING_RESEARCH then\n                pcall(function() NotificationManager.SendActivated(id, nid) end)\n                pcall(function() NotificationManager.Dismiss(id, nid) end)\n            end\n        end\n    end\nend\nprint(\"OK:RESEARCHING|TECH_THE_WHEEL\")\nprint(\"---END---\")\n",

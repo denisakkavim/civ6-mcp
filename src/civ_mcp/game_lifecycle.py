@@ -10,8 +10,17 @@ from civ_mcp.connection import GameConnection
 log = logging.getLogger(__name__)
 
 
-async def dismiss_popup(conn: GameConnection) -> str:
+async def dismiss_popup(conn: GameConnection, deep: bool = True) -> str:
     """Dismiss any blocking popup or UI overlay in the game.
+
+    `deep=False` stops after Phase 1 — the single batched call that clears the
+    popups which actually swallow commands. Phases 2 and 3 escalate to
+    ExclusivePopupManager screens, and Phase 3 does so by probing up to 150 Lua
+    states one at a time. That is the right trade for a background watcher on a
+    timer, and the wrong one for the check that runs before every mutating
+    tool call: it turns one command into dozens of round trips, and its query
+    count depends on which states the game happens to have, so a recorded call
+    that meets a popup cannot be replayed. `PopupWatcher` keeps the deep path.
 
     Three-phase approach:
     1. Single batched InGame call that checks all known popup/overlay names
@@ -74,7 +83,7 @@ async def dismiss_popup(conn: GameConnection) -> str:
     )
     # NOTE: DiplomacyDealView is NOT dismissed here — it represents an
     # incoming trade deal offer that the agent must accept/reject via
-    # get_pending_trades + respond_to_trade.  Dismissing it silently kills
+    # get_pending_deals + respond_to_deal.  Dismissing it silently kills
     # the offer (e.g. incoming delegations from other civs).
     checks.append(
         'do local ddv = ContextPtr:LookUpControl("/InGame/DiplomacyDealView") '
@@ -109,6 +118,9 @@ async def dismiss_popup(conn: GameConnection) -> str:
                     pending_diplomacy = True
     except Exception as e:
         log.debug("Phase 1 dismiss failed: %s", e)
+
+    if not deep:
+        return _dismissal_summary(dismissed, pending_diplomacy, pending_deal)
 
     # Pre-check: single InGame call to detect visible ExclusivePopupManager
     # popups.  Phase 2 scans ~30 Lua states individually (~450ms each = ~13.5s)
@@ -255,17 +267,23 @@ async def dismiss_popup(conn: GameConnection) -> str:
     crash_dismissed = await game_launcher.dismiss_crash_dialogs()
     dismissed.extend(crash_dismissed)
 
+    return _dismissal_summary(dismissed, pending_diplomacy, pending_deal)
+
+
+def _dismissal_summary(
+    dismissed: list[str], pending_diplomacy: bool, pending_deal: bool
+) -> str:
     if dismissed:
         msg = f"Dismissed: {', '.join(dismissed)}"
         if pending_diplomacy:
             msg += ". Also: diplomacy session active — use respond_to_diplomacy."
         if pending_deal:
-            msg += " (incoming trade deal pending — use get_pending_trades)"
+            msg += " (incoming trade deal pending — use get_pending_deals)"
         return msg
     if pending_diplomacy:
         return "Diplomacy session active — use respond_to_diplomacy to handle it."
     if pending_deal:
-        return "No popups to dismiss (incoming trade deal pending — use get_pending_trades)."
+        return "No popups to dismiss (incoming trade deal pending — use get_pending_deals)."
     return "No popups to dismiss."
 
 
@@ -370,7 +388,7 @@ async def _list_saves_lua(conn: GameConnection) -> str | None:
                 results = [l for l in check_lines if l.startswith("SAVE|")]
                 if not results:
                     return None  # empty — fall through to filesystem
-                lines_out = ["Available saves (use load_save with the index number):"]
+                lines_out = ["Available saves (use load_game with the save name):"]
                 for r in results:
                     parts = r.split("|", 2)
                     idx = parts[1]
@@ -408,39 +426,6 @@ def _list_saves_filesystem() -> str:
     for i, (_mtime, name) in enumerate(all_saves[:25], 1):
         lines.append(f"  {i}. {name.replace('.Civ6Save', '')}")
     return "\n".join(lines)
-
-
-async def load_save(conn: GameConnection, save_index: int) -> str:
-    """Load a save by index from the most recent list_saves() query.
-
-    The game will reload — the FireTuner connection stays alive but
-    all Lua state is wiped. Wait a few seconds after calling this.
-    """
-    lines = await conn.execute_write(
-        f"if not ExposedMembers or not ExposedMembers.MCPSaveList then "
-        f'  print("ERR:NO_SAVE_LIST"); print("{lq.SENTINEL}"); return '
-        f"end; "
-        f"local fl = ExposedMembers.MCPSaveList; "
-        f"local idx = {save_index}; "
-        f"if idx < 1 or idx > #fl then "
-        f'  print("ERR:INDEX_OUT_OF_RANGE|" .. #fl); print("{lq.SENTINEL}"); return '
-        f"end; "
-        f"local save = fl[idx]; "
-        f'print("LOADING|" .. tostring(save.Name)); '
-        f'print("{lq.SENTINEL}"); '
-        f"Network.LeaveGame(); "
-        f"Network.LoadGame(save, ServerType.SERVER_TYPE_NONE)"
-    )
-    for line in lines:
-        if line.startswith("ERR:NO_SAVE_LIST"):
-            return "Error: No save list cached. Call list_saves() first."
-        if line.startswith("ERR:INDEX_OUT_OF_RANGE"):
-            count = line.split("|")[1] if "|" in line else "?"
-            return f"Error: Index {save_index} out of range (1-{count}). Call list_saves() to see available saves."
-        if line.startswith("LOADING|"):
-            name = line.split("|", 1)[1]
-            return f"Loading save: {name}. Game will reload — wait ~10 seconds then call get_game_overview to verify."
-    return "Load command sent. Wait for game to reload."
 
 
 async def load_game_save(conn: GameConnection, save_name: str) -> str:

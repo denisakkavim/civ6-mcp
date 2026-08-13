@@ -1,9 +1,21 @@
 {
   "appoint_governor": {
     "annotations": null,
-    "description": "Appoint a new governor.\n\n    Args:\n        governor_type: e.g. GOVERNOR_THE_EDUCATOR (Pingala), GOVERNOR_THE_DEFENDER (Victor)\n\n    Requires available governor points. Use get_governors to see options.\n    ",
+    "description": "Appoint a new governor, and optionally assign them to a city.\n\n    Args:\n        governor_type: e.g. GOVERNOR_THE_EDUCATOR (Pingala), GOVERNOR_THE_DEFENDER (Victor)\n        city_id: City to assign them to (from get_cities output). Omit to\n            appoint only and assign later with assign_governor.\n\n    Requires available governor points. Use get_governors to see options.\n    An appointed governor takes several turns to establish in their city.\n    ",
     "inputSchema": {
       "properties": {
+        "city_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "City Id"
+        },
         "governor_type": {
           "title": "Governor Type",
           "type": "string"
@@ -38,23 +50,6 @@
       "type": "object"
     }
   },
-  "change_government": {
-    "annotations": null,
-    "description": "Switch to a different government type.\n\n    Args:\n        government_type: e.g. GOVERNMENT_CLASSICAL_REPUBLIC, GOVERNMENT_OLIGARCHY\n\n    Use get_policies to see current government. First switch after\n    unlocking a new tier is free (no anarchy).\n    ",
-    "inputSchema": {
-      "properties": {
-        "government_type": {
-          "title": "Government Type",
-          "type": "string"
-        }
-      },
-      "required": [
-        "government_type"
-      ],
-      "title": "change_governmentArguments",
-      "type": "object"
-    }
-  },
   "choose_dedication": {
     "annotations": null,
     "description": "Choose a dedication/commemoration for the current era.\n\n    Args:\n        dedication_index: The index of the dedication (from get_dedications output)\n\n    Use get_dedications first to see available options and their bonuses.\n    ",
@@ -74,7 +69,7 @@
   },
   "choose_pantheon": {
     "annotations": null,
-    "description": "Found a pantheon with the specified belief.\n\n    Args:\n        belief_type: e.g. BELIEF_GOD_OF_THE_FORGE, BELIEF_DIVINE_SPARK\n\n    Use get_pantheon_beliefs first to see options. Requires enough faith\n    and no existing pantheon.\n    ",
+    "description": "Found a pantheon with the specified belief.\n\n    Args:\n        belief_type: e.g. BELIEF_GOD_OF_THE_FORGE, BELIEF_DIVINE_SPARK\n\n    Use get_belief_options first to see options. Requires enough faith\n    and no existing pantheon.\n    ",
     "inputSchema": {
       "properties": {
         "belief_type": {
@@ -89,66 +84,67 @@
       "type": "object"
     }
   },
-  "city_action": {
+  "city_attack": {
     "annotations": null,
-    "description": "Issue a command to a city.\n\n    Args:\n        city_id: City ID (from get_cities output)\n        action: 'attack' is a city ranged attack; the rest resolve a captured\n            or disloyal city\n        target_x: Target X coordinate (required for attack)\n        target_y: Target Y coordinate (required for attack)\n\n    For attack: city must have walls and not have fired this turn.\n    Range is 2 tiles from city center.\n\n    The resolution actions ignore city_id and act on the pending city:\n    - 'keep': Keep the city (captured or loyalty-flipped)\n    - 'reject': Reject/free a disloyal city (loyalty flip only)\n    - 'raze': Raze a captured city (military conquest only)\n    - 'liberate_founder': Liberate to original founder\n    - 'liberate_previous': Liberate to previous owner\n    ",
+    "description": "Fire a city's ranged attack at a tile.\n\n    Args:\n        city_id: City ID (from get_cities output)\n        target_x: Target X coordinate\n        target_y: Target Y coordinate\n\n    The city must have walls and must not have fired this turn.\n    Range is 2 tiles from the city centre.\n    ",
     "inputSchema": {
       "properties": {
-        "action": {
-          "enum": [
-            "attack",
-            "keep",
-            "reject",
-            "raze",
-            "liberate_founder",
-            "liberate_previous"
-          ],
-          "title": "Action",
-          "type": "string"
-        },
         "city_id": {
           "title": "City Id",
           "type": "integer"
         },
         "target_x": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Target X"
+          "title": "Target X",
+          "type": "integer"
         },
         "target_y": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Target Y"
+          "title": "Target Y",
+          "type": "integer"
         }
       },
       "required": [
         "city_id",
-        "action"
+        "target_x",
+        "target_y"
       ],
-      "title": "city_actionArguments",
+      "title": "city_attackArguments",
       "type": "object"
     }
   },
-  "dismiss_popup": {
+  "diplomacy_action": {
     "annotations": null,
-    "description": "Dismiss any blocking popup in the game UI.\n\n    Call this if you suspect a popup (e.g. historic moment, boost notification)\n    is blocking interaction.\n    ",
+    "description": "Send a proactive diplomatic action to another civilization.\n\n    Args:\n        player_id: The player ID (from get_diplomacy output)\n        action: The diplomatic action to send\n\n    Delegations cost 25 gold and can be rejected if the civ dislikes you.\n    Embassies require Writing tech. Use get_diplomacy to see available actions.\n    Surprise war is always available if not allied/friends. Other war types\n    (casus belli) require specific civics and conditions.\n    ",
     "inputSchema": {
-      "properties": {},
-      "title": "dismiss_popupArguments",
+      "properties": {
+        "action": {
+          "enum": [
+            "DIPLOMATIC_DELEGATION",
+            "DECLARE_FRIENDSHIP",
+            "DENOUNCE",
+            "RESIDENT_EMBASSY",
+            "OPEN_BORDERS",
+            "DECLARE_SURPRISE_WAR",
+            "DECLARE_FORMAL_WAR",
+            "DECLARE_HOLY_WAR",
+            "DECLARE_LIBERATION_WAR",
+            "DECLARE_RECONQUEST_WAR",
+            "DECLARE_PROTECTORATE_WAR",
+            "DECLARE_COLONIAL_WAR",
+            "DECLARE_TERRITORIAL_WAR"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "player_id": {
+          "title": "Player Id",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "player_id",
+        "action"
+      ],
+      "title": "diplomacy_actionArguments",
       "type": "object"
     }
   },
@@ -165,7 +161,7 @@
   },
   "form_alliance": {
     "annotations": null,
-    "description": "Form an alliance with another civilization.\n\n    Args:\n        other_player_id: The player ID (from get_diplomacy output)\n        alliance_type: The kind of alliance to form\n\n    Requires declared friendship and Diplomatic Service civic.\n    Use get_trade_options to check alliance eligibility first.\n    ",
+    "description": "Form an alliance with another civilization.\n\n    Args:\n        player_id: The player ID (from get_diplomacy output)\n        alliance_type: The kind of alliance to form\n\n    Requires declared friendship and Diplomatic Service civic.\n    Use get_deal_options to check alliance eligibility first.\n    ",
     "inputSchema": {
       "properties": {
         "alliance_type": {
@@ -180,13 +176,13 @@
           "title": "Alliance Type",
           "type": "string"
         },
-        "other_player_id": {
-          "title": "Other Player Id",
+        "player_id": {
+          "title": "Player Id",
           "type": "integer"
         }
       },
       "required": [
-        "other_player_id"
+        "player_id"
       ],
       "title": "form_allianceArguments",
       "type": "object"
@@ -194,15 +190,15 @@
   },
   "found_religion": {
     "annotations": null,
-    "description": "Found a religion with a chosen name, follower belief, and founder belief.\n\n    Args:\n        religion_type: e.g. RELIGION_HINDUISM, RELIGION_BUDDHISM, RELIGION_ISLAM\n        follower_belief: e.g. BELIEF_WORK_ETHIC, BELIEF_CHORAL_MUSIC\n        founder_belief: e.g. BELIEF_STEWARDSHIP, BELIEF_CHURCH_PROPERTY\n\n    Requires your Great Prophet to have already activated on a Holy Site\n    (via UNITOPERATION_FOUND_RELIGION). Use get_religion_beliefs\n    first to see available options.\n    ",
+    "description": "Found a religion with a chosen name, follower belief, and founder belief.\n\n    Args:\n        religion_type: e.g. RELIGION_HINDUISM, RELIGION_BUDDHISM, RELIGION_ISLAM\n        follower_belief_type: e.g. BELIEF_WORK_ETHIC, BELIEF_CHORAL_MUSIC\n        founder_belief_type: e.g. BELIEF_STEWARDSHIP, BELIEF_CHURCH_PROPERTY\n\n    Requires your Great Prophet to have already activated on a Holy Site\n    (via UNITOPERATION_FOUND_RELIGION). Use get_belief_options first to see\n    available options.\n    ",
     "inputSchema": {
       "properties": {
-        "follower_belief": {
-          "title": "Follower Belief",
+        "follower_belief_type": {
+          "title": "Follower Belief Type",
           "type": "string"
         },
-        "founder_belief": {
-          "title": "Founder Belief",
+        "founder_belief_type": {
+          "title": "Founder Belief Type",
           "type": "string"
         },
         "religion_type": {
@@ -212,10 +208,21 @@
       },
       "required": [
         "religion_type",
-        "follower_belief",
-        "founder_belief"
+        "follower_belief_type",
+        "founder_belief_type"
       ],
       "title": "found_religionArguments",
+      "type": "object"
+    }
+  },
+  "get_belief_options": {
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "description": "Get the beliefs you can choose right now, pantheon or religion.\n\n    Pantheon selection and religion founding are sequential stages, so only\n    one of them is ever live. Before you have a pantheon this returns pantheon\n    status and available pantheon beliefs; after that it returns religion\n    founding status, available religions, and beliefs grouped by class\n    (Follower, Founder, Enhancer, Worship). The result names the tool that\n    applies \u2014 choose_pantheon or found_religion.\n    ",
+    "inputSchema": {
+      "properties": {},
+      "title": "get_belief_optionsArguments",
       "type": "object"
     }
   },
@@ -241,25 +248,6 @@
       "type": "object"
     }
   },
-  "get_city_production": {
-    "annotations": {
-      "readOnlyHint": true
-    },
-    "description": "List what a city can produce right now.\n\n    Args:\n        city_id: City ID (from get_cities output)\n\n    Returns available units, buildings, and districts with production costs.\n    Call this when a city finishes building or to decide what to produce next.\n    ",
-    "inputSchema": {
-      "properties": {
-        "city_id": {
-          "title": "City Id",
-          "type": "integer"
-        }
-      },
-      "required": [
-        "city_id"
-      ],
-      "title": "get_city_productionArguments",
-      "type": "object"
-    }
-  },
   "get_city_states": {
     "annotations": {
       "readOnlyHint": true
@@ -268,6 +256,25 @@
     "inputSchema": {
       "properties": {},
       "title": "get_city_statesArguments",
+      "type": "object"
+    }
+  },
+  "get_deal_options": {
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "description": "See what both sides can trade \u2014 like opening the trade screen.\n\n    Args:\n        player_id: The player ID (from get_diplomacy output)\n\n    Shows gold, resources, favor, open borders status, and alliance eligibility\n    for both you and the other civilization. Use before propose_deal to see\n    what's available.\n    ",
+    "inputSchema": {
+      "properties": {
+        "player_id": {
+          "title": "Player Id",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "player_id"
+      ],
+      "title": "get_deal_optionsArguments",
       "type": "object"
     }
   },
@@ -293,7 +300,7 @@
       "type": "object"
     }
   },
-  "get_district_advisor": {
+  "get_district_sites": {
     "annotations": {
       "readOnlyHint": true
     },
@@ -313,7 +320,7 @@
         "city_id",
         "district_type"
       ],
-      "title": "get_district_advisorArguments",
+      "title": "get_district_sitesArguments",
       "type": "object"
     }
   },
@@ -328,6 +335,17 @@
       "type": "object"
     }
   },
+  "get_exploration_status": {
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "description": "Get fog-of-war boundaries and unclaimed resources across the map.\n\n    Shows how far explored territory extends from each city (in 6 directions),\n    highlighting directions that need exploration. Also lists unclaimed luxury\n    and strategic resources on revealed but unowned land.\n    ",
+    "inputSchema": {
+      "properties": {},
+      "title": "get_exploration_statusArguments",
+      "type": "object"
+    }
+  },
   "get_game_overview": {
     "annotations": {
       "readOnlyHint": true
@@ -336,17 +354,6 @@
     "inputSchema": {
       "properties": {},
       "title": "get_game_overviewArguments",
-      "type": "object"
-    }
-  },
-  "get_global_settle_advisor": {
-    "annotations": {
-      "readOnlyHint": true
-    },
-    "description": "Find the best settle locations across the entire revealed map.\n\n    Unlike get_settle_advisor (which searches near a specific settler),\n    this scans all revealed land for the top 10 settle candidates.\n    Use this when deciding WHERE to send a settler, not just where to settle.\n    ",
-    "inputSchema": {
-      "properties": {},
-      "title": "get_global_settle_advisorArguments",
       "type": "object"
     }
   },
@@ -361,25 +368,6 @@
       "type": "object"
     }
   },
-  "get_gp_advisor": {
-    "annotations": {
-      "readOnlyHint": true
-    },
-    "description": "Show best cities to activate a Great Person, ranked by suitability.\n\n    Args:\n        unit_index: The Great Person unit's index (from get_units output).\n\n    Lists all cities with the matching district (e.g., campuses for Great Scientists),\n    showing which ones the GP can activate on, distance, city yield, and great work\n    slot availability for cultural GPs.\n    ",
-    "inputSchema": {
-      "properties": {
-        "unit_index": {
-          "title": "Unit Index",
-          "type": "integer"
-        }
-      },
-      "required": [
-        "unit_index"
-      ],
-      "title": "get_gp_advisorArguments",
-      "type": "object"
-    }
-  },
   "get_great_people": {
     "annotations": {
       "readOnlyHint": true
@@ -388,6 +376,25 @@
     "inputSchema": {
       "properties": {},
       "title": "get_great_peopleArguments",
+      "type": "object"
+    }
+  },
+  "get_great_person_sites": {
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "description": "Show best cities to activate a Great Person, ranked by suitability.\n\n    Args:\n        unit_id: The Great Person unit's composite ID (from get_units output)\n\n    Lists all cities with the matching district (e.g., campuses for Great Scientists),\n    showing which ones the GP can activate on, distance, city yield, and great work\n    slot availability for cultural GPs.\n    ",
+    "inputSchema": {
+      "properties": {
+        "unit_id": {
+          "title": "Unit Id",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "unit_id"
+      ],
+      "title": "get_great_person_sitesArguments",
       "type": "object"
     }
   },
@@ -431,17 +438,6 @@
       "type": "object"
     }
   },
-  "get_pantheon_beliefs": {
-    "annotations": {
-      "readOnlyHint": true
-    },
-    "description": "Get pantheon status and available beliefs for selection.\n\n    Shows current pantheon (if any), faith balance, and all available\n    pantheon beliefs with their bonuses. Use choose_pantheon to found one.\n    ",
-    "inputSchema": {
-      "properties": {},
-      "title": "get_pantheon_beliefsArguments",
-      "type": "object"
-    }
-  },
   "get_pathing_estimate": {
     "annotations": {
       "readOnlyHint": true
@@ -471,6 +467,17 @@
       "type": "object"
     }
   },
+  "get_pending_deals": {
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "description": "Check for pending trade deal offers from other civilizations.\n\n    Shows what each civ is offering and what they want in return.\n    Use respond_to_deal to accept or reject.\n    ",
+    "inputSchema": {
+      "properties": {},
+      "title": "get_pending_dealsArguments",
+      "type": "object"
+    }
+  },
   "get_pending_diplomacy": {
     "annotations": {
       "readOnlyHint": true
@@ -482,17 +489,6 @@
       "type": "object"
     }
   },
-  "get_pending_trades": {
-    "annotations": {
-      "readOnlyHint": true
-    },
-    "description": "Check for pending trade deal offers from other civilizations.\n\n    Shows what each civ is offering and what they want in return.\n    Use respond_to_trade to accept or reject.\n    ",
-    "inputSchema": {
-      "properties": {},
-      "title": "get_pending_tradesArguments",
-      "type": "object"
-    }
-  },
   "get_policies": {
     "annotations": {
       "readOnlyHint": true
@@ -501,6 +497,25 @@
     "inputSchema": {
       "properties": {},
       "title": "get_policiesArguments",
+      "type": "object"
+    }
+  },
+  "get_production_options": {
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "description": "List what a city can produce right now.\n\n    Args:\n        city_id: City ID (from get_cities output)\n\n    Returns available units, buildings, and districts with production costs.\n    Call this when a city finishes building or to decide what to produce next.\n    ",
+    "inputSchema": {
+      "properties": {
+        "city_id": {
+          "title": "City Id",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "city_id"
+      ],
+      "title": "get_production_optionsArguments",
       "type": "object"
     }
   },
@@ -523,17 +538,6 @@
       "type": "object"
     }
   },
-  "get_religion_beliefs": {
-    "annotations": {
-      "readOnlyHint": true
-    },
-    "description": "Get religion founding status, available religions, and available beliefs.\n\n    Shows whether you've founded a religion, available religion types to choose,\n    and beliefs grouped by class (Follower, Founder, Enhancer, Worship).\n    Use found_religion to found a religion after your Great Prophet activates.\n    ",
-    "inputSchema": {
-      "properties": {},
-      "title": "get_religion_beliefsArguments",
-      "type": "object"
-    }
-  },
   "get_religion_spread": {
     "annotations": {
       "readOnlyHint": true
@@ -545,7 +549,29 @@
       "type": "object"
     }
   },
-  "get_settle_advisor": {
+  "get_research_options": {
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "description": "Get technology and civic research status.\n\n    Shows current research, current civic, turns remaining,\n    and lists of available technologies and civics to choose from.\n    ",
+    "inputSchema": {
+      "properties": {},
+      "title": "get_research_optionsArguments",
+      "type": "object"
+    }
+  },
+  "get_saves": {
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "description": "List available save files (normal, autosave).\n\n    Returns the save names. Use load_game(save_name=...) to load one.\n    ",
+    "inputSchema": {
+      "properties": {},
+      "title": "get_savesArguments",
+      "type": "object"
+    }
+  },
+  "get_settle_sites_near_unit": {
     "annotations": {
       "readOnlyHint": true
     },
@@ -560,7 +586,18 @@
       "required": [
         "unit_id"
       ],
-      "title": "get_settle_advisorArguments",
+      "title": "get_settle_sites_near_unitArguments",
+      "type": "object"
+    }
+  },
+  "get_settle_sites_on_map": {
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "description": "Find the best settle locations across the entire revealed map.\n\n    Unlike get_settle_sites_near_unit (which searches near a specific settler),\n    this scans all revealed land for the top 10 settle candidates.\n    Use this when deciding WHERE to send a settler, not just where to settle.\n    ",
+    "inputSchema": {
+      "properties": {},
+      "title": "get_settle_sites_on_mapArguments",
       "type": "object"
     }
   },
@@ -572,28 +609,6 @@
     "inputSchema": {
       "properties": {},
       "title": "get_spiesArguments",
-      "type": "object"
-    }
-  },
-  "get_strategic_map": {
-    "annotations": {
-      "readOnlyHint": true
-    },
-    "description": "Get fog-of-war boundaries and unclaimed resources across the map.\n\n    Shows how far explored territory extends from each city (in 6 directions),\n    highlighting directions that need exploration. Also lists unclaimed luxury\n    and strategic resources on revealed but unowned land.\n    ",
-    "inputSchema": {
-      "properties": {},
-      "title": "get_strategic_mapArguments",
-      "type": "object"
-    }
-  },
-  "get_tech_civics": {
-    "annotations": {
-      "readOnlyHint": true
-    },
-    "description": "Get technology and civic research status.\n\n    Shows current research, current civic, turns remaining,\n    and lists of available technologies and civics to choose from.\n    ",
-    "inputSchema": {
-      "properties": {},
-      "title": "get_tech_civicsArguments",
       "type": "object"
     }
   },
@@ -613,25 +628,6 @@
         "unit_id"
       ],
       "title": "get_trade_destinationsArguments",
-      "type": "object"
-    }
-  },
-  "get_trade_options": {
-    "annotations": {
-      "readOnlyHint": true
-    },
-    "description": "See what both sides can trade \u2014 like opening the trade screen.\n\n    Args:\n        other_player_id: The player ID (from get_diplomacy output)\n\n    Shows gold, resources, favor, open borders status, and alliance eligibility\n    for both you and the other civilization. Use before propose_trade to see\n    what's available.\n    ",
-    "inputSchema": {
-      "properties": {
-        "other_player_id": {
-          "title": "Other Player Id",
-          "type": "integer"
-        }
-      },
-      "required": [
-        "other_player_id"
-      ],
-      "title": "get_trade_optionsArguments",
       "type": "object"
     }
   },
@@ -687,27 +683,27 @@
       "type": "object"
     }
   },
-  "get_wonder_advisor": {
+  "get_wonder_sites": {
     "annotations": {
       "readOnlyHint": true
     },
-    "description": "Show best tiles to place a wonder with displacement cost analysis.\n\n    Args:\n        city_id: City ID (from get_cities output)\n        wonder_name: Wonder building type, e.g. BUILDING_CHICHEN_ITZA, BUILDING_ORSZAGHAZ\n\n    Returns valid placement tiles ranked by displacement cost (lowest = best):\n    tiles with no improvements or resources are preferred over productive tiles.\n    Also shows terrain, feature, river/coastal status, and any resources/improvements\n    that would be removed by placing the wonder there.\n    Use set_city_production with target_x/target_y to build the wonder.\n    ",
+    "description": "Show best tiles to place a wonder with displacement cost analysis.\n\n    Args:\n        city_id: City ID (from get_cities output)\n        wonder_type: Wonder building type, e.g. BUILDING_CHICHEN_ITZA, BUILDING_ORSZAGHAZ\n\n    Returns valid placement tiles ranked by displacement cost (lowest = best):\n    tiles with no improvements or resources are preferred over productive tiles.\n    Also shows terrain, feature, river/coastal status, and any resources/improvements\n    that would be removed by placing the wonder there.\n    Use set_city_production with target_x/target_y to build the wonder.\n    ",
     "inputSchema": {
       "properties": {
         "city_id": {
           "title": "City Id",
           "type": "integer"
         },
-        "wonder_name": {
-          "title": "Wonder Name",
+        "wonder_type": {
+          "title": "Wonder Type",
           "type": "string"
         }
       },
       "required": [
         "city_id",
-        "wonder_name"
+        "wonder_type"
       ],
-      "title": "get_wonder_advisorArguments",
+      "title": "get_wonder_sitesArguments",
       "type": "object"
     }
   },
@@ -715,113 +711,27 @@
     "annotations": {
       "readOnlyHint": true
     },
-    "description": "Get World Congress status, active resolutions, and voting options.\n\n    Shows whether congress is in session, resolutions to vote on (with options A/B\n    and possible targets), turns until next session, and your diplomatic favor.\n    When in session, use queue_wc_votes to register votes before end_turn.\n    ",
+    "description": "Get World Congress status, active resolutions, and voting options.\n\n    Shows whether congress is in session, resolutions to vote on (with options A/B\n    and possible targets), turns until next session, and your diplomatic favor.\n    When in session, use queue_world_congress_votes to register votes before end_turn.\n    ",
     "inputSchema": {
       "properties": {},
       "title": "get_world_congressArguments",
       "type": "object"
     }
   },
-  "kill_game": {
-    "annotations": {
-      "destructiveHint": true
-    },
-    "description": "Kill the Civ 6 game process and wait for Steam to deregister.\n\n    Only kills Civ 6 processes. Waits ~10 seconds for Steam to deregister\n    so the game can be relaunched cleanly.\n    ",
-    "inputSchema": {
-      "properties": {},
-      "title": "kill_gameArguments",
-      "type": "object"
-    }
-  },
-  "launch_game": {
-    "annotations": {
-      "destructiveHint": true
-    },
-    "description": "Launch Civ 6 via Steam.\n\n    Starts the game and waits for the process to appear (~15-30 seconds).\n    The game will be at the main menu after launch \u2014 use load_save or\n    restart_and_load to load a specific save.\n\n    NOTE: FireTuner connection is NOT available at the main menu.\n    Only in-game MCP tools work after a save is loaded.\n    ",
-    "inputSchema": {
-      "properties": {},
-      "title": "launch_gameArguments",
-      "type": "object"
-    }
-  },
-  "list_saves": {
-    "annotations": {
-      "readOnlyHint": true
-    },
-    "description": "List available save files (normal, autosave).\n\n    Returns indexed list of saves. Use load_save(save_index=N) to load one.\n    Call this before load_save to see what's available.\n    ",
-    "inputSchema": {
-      "properties": {},
-      "title": "list_savesArguments",
-      "type": "object"
-    }
-  },
-  "load_game_save": {
-    "annotations": {
-      "destructiveHint": true
-    },
-    "description": "Load a save file by name. No need to call list_saves first.\n\n    Args:\n        save_name: Save name without extension (e.g. \"0_MCP_0079\",\n                   \"0A_GROUND_CONTROL\", \"AutoSave_0221\", \"quicksave\").\n\n    Tries Lua-based loading first (fast, ~5s). If the save isn't found\n    via Lua (common for autosaves/quicksaves), falls back to OCR menu\n    navigation (~90s) after verifying the file exists on disk.\n    ",
-    "inputSchema": {
-      "properties": {
-        "save_name": {
-          "title": "Save Name",
-          "type": "string"
-        }
-      },
-      "required": [
-        "save_name"
-      ],
-      "title": "load_game_saveArguments",
-      "type": "object"
-    }
-  },
-  "load_save": {
-    "annotations": {
-      "destructiveHint": true
-    },
-    "description": "Load a save file by index from the most recent list_saves() result.\n\n    Args:\n        save_index: Index number from list_saves output (1-based)\n\n    The game will reload entirely. Wait ~10 seconds after calling this,\n    then use get_game_overview to verify the loaded state.\n    ",
-    "inputSchema": {
-      "properties": {
-        "save_index": {
-          "title": "Save Index",
-          "type": "integer"
-        }
-      },
-      "required": [
-        "save_index"
-      ],
-      "title": "load_saveArguments",
-      "type": "object"
-    }
-  },
-  "load_save_from_menu": {
-    "annotations": {
-      "destructiveHint": true
-    },
-    "description": "Navigate the main menu to load a save via OCR-guided clicking.\n\n    Args:\n        save_name: Autosave name (e.g. \"AutoSave_0221\"). If not provided,\n                   loads the most recent autosave.\n\n    Requires the game to be running and at the main menu. Uses macOS Vision\n    OCR to find and click menu elements. Takes 30-90 seconds.\n\n    After loading, wait ~10 seconds then call get_game_overview to verify.\n\n    Requires pyobjc: uv pip install 'civ6-mcp[launcher]'\n    ",
-    "inputSchema": {
-      "properties": {
-        "save_name": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Save Name"
-        }
-      },
-      "title": "load_save_from_menuArguments",
-      "type": "object"
-    }
-  },
-  "patronize_great_person": {
+  "great_person_action": {
     "annotations": null,
-    "description": "Buy a Great Person instantly with gold or faith.\n\n    Args:\n        individual_id: The individual's ID (from get_great_people output)\n        yield_type: What to spend\n\n    Costs shown in get_great_people output under \"Patronize:\".\n    Requires enough gold/faith to cover the cost.\n    ",
+    "description": "Recruit, buy, or pass on a Great Person candidate.\n\n    Args:\n        individual_id: The individual's ID (from get_great_people output, shown after ability)\n        action: recruit spends accumulated Great Person points; patronize buys\n            the candidate instantly; reject passes to the next candidate in\n            that class\n        yield_type: What patronize spends. Ignored by recruit and reject.\n\n    recruit: requires enough Great Person points for that class. The GP spawns\n        in your capital. get_great_people marks candidates [CAN RECRUIT].\n    patronize: costs are shown in get_great_people output under \"Patronize:\".\n    reject: costs faith, and makes the next Great Person of that class available.\n    ",
     "inputSchema": {
       "properties": {
+        "action": {
+          "enum": [
+            "recruit",
+            "patronize",
+            "reject"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
         "individual_id": {
           "title": "Individual Id",
           "type": "integer"
@@ -837,9 +747,29 @@
         }
       },
       "required": [
-        "individual_id"
+        "individual_id",
+        "action"
       ],
-      "title": "patronize_great_personArguments",
+      "title": "great_person_actionArguments",
+      "type": "object"
+    }
+  },
+  "load_game": {
+    "annotations": {
+      "destructiveHint": true
+    },
+    "description": "Load a save file by name. No need to call get_saves first.\n\n    Args:\n        save_name: Save name without extension (e.g. \"0_MCP_0079\",\n                   \"0A_GROUND_CONTROL\", \"AutoSave_0221\", \"quicksave\").\n\n    Tries Lua-based loading first (fast, ~5s). If the save isn't found\n    via Lua (common for autosaves/quicksaves), falls back to OCR menu\n    navigation (~90s) after verifying the file exists on disk.\n\n    The game reloads entirely. Wait ~10 seconds after calling this, then use\n    get_game_overview to verify the loaded state.\n    ",
+    "inputSchema": {
+      "properties": {
+        "save_name": {
+          "title": "Save Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "save_name"
+      ],
+      "title": "load_gameArguments",
       "type": "object"
     }
   },
@@ -887,31 +817,14 @@
       "type": "object"
     }
   },
-  "propose_peace": {
+  "propose_deal": {
     "annotations": null,
-    "description": "Propose white peace to a civilization you're at war with.\n\n    Args:\n        other_player_id: The player ID (from get_diplomacy output)\n\n    Requires being at war and past the 10-turn war cooldown.\n    The AI may accept or reject based on war score and relationship.\n    ",
+    "description": "Propose a trade deal to another civilization.\n\n    Args:\n        player_id: The player ID (from get_diplomacy output)\n        offer_gold: Lump sum gold to give them\n        offer_gold_per_turn: Gold per turn to give them (30-turn duration)\n        offer_resources: Resource types to offer, e.g. [\"RESOURCE_SILK\", \"RESOURCE_TEA\"]\n        offer_favor: Diplomatic favor to offer\n        offer_open_borders: True to offer our open borders\n        request_gold: Lump sum gold to request from them\n        request_gold_per_turn: Gold per turn to request (30-turn duration)\n        request_resources: Resource types to request\n        request_favor: Diplomatic favor to request from them\n        request_open_borders: True to request their open borders\n        joint_war_player_id: Player ID of a third civ to declare joint war against\n        mode: \"send\" commits the deal, \"test\" previews the AI's counter-offer\n\n    Examples: Gift 100 gold: offer_gold=100. Trade silk for 3 gpt:\n    offer_resources=[\"RESOURCE_SILK\"], request_gold_per_turn=3.\n    Mutual open borders: offer_open_borders=True, request_open_borders=True.\n    Test a deal first with mode=\"test\", then commit it with mode=\"send\".\n    ",
     "inputSchema": {
       "properties": {
-        "other_player_id": {
-          "title": "Other Player Id",
-          "type": "integer"
-        }
-      },
-      "required": [
-        "other_player_id"
-      ],
-      "title": "propose_peaceArguments",
-      "type": "object"
-    }
-  },
-  "propose_trade": {
-    "annotations": null,
-    "description": "Propose a trade deal to another civilization.\n\n    Args:\n        other_player_id: The player ID (from get_diplomacy output)\n        offer_gold: Lump sum gold to give them\n        offer_gold_per_turn: Gold per turn to give them (30-turn duration)\n        offer_resources: Resource types to offer, e.g. [\"RESOURCE_SILK\", \"RESOURCE_TEA\"]\n        offer_favor: Diplomatic favor to offer\n        offer_open_borders: True to offer our open borders\n        request_gold: Lump sum gold to request from them\n        request_gold_per_turn: Gold per turn to request (30-turn duration)\n        request_resources: Resource types to request\n        request_favor: Diplomatic favor to request from them\n        request_open_borders: True to request their open borders\n        joint_war_target: Player ID of a third civ to declare joint war against\n        mode: \"send\" commits the deal, \"test\" previews the AI's counter-offer\n\n    Examples: Gift 100 gold: offer_gold=100. Trade silk for 3 gpt:\n    offer_resources=[\"RESOURCE_SILK\"], request_gold_per_turn=3.\n    Mutual open borders: offer_open_borders=True, request_open_borders=True.\n    Test a deal first with mode=\"test\", then commit it with mode=\"send\".\n    ",
-    "inputSchema": {
-      "properties": {
-        "joint_war_target": {
+        "joint_war_player_id": {
           "default": 0,
-          "title": "Joint War Target",
+          "title": "Joint War Player Id",
           "type": "integer"
         },
         "mode": {
@@ -958,8 +871,8 @@
           "default": null,
           "title": "Offer Resources"
         },
-        "other_player_id": {
-          "title": "Other Player Id",
+        "player_id": {
+          "title": "Player Id",
           "type": "integer"
         },
         "request_favor": {
@@ -999,23 +912,40 @@
         }
       },
       "required": [
-        "other_player_id"
+        "player_id"
       ],
-      "title": "propose_tradeArguments",
+      "title": "propose_dealArguments",
+      "type": "object"
+    }
+  },
+  "propose_peace": {
+    "annotations": null,
+    "description": "Propose white peace to a civilization you're at war with.\n\n    Args:\n        player_id: The player ID (from get_diplomacy output)\n\n    Requires being at war and past the 10-turn war cooldown.\n    The AI may accept or reject based on war score and relationship.\n    ",
+    "inputSchema": {
+      "properties": {
+        "player_id": {
+          "title": "Player Id",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "player_id"
+      ],
+      "title": "propose_peaceArguments",
       "type": "object"
     }
   },
   "purchase_item": {
     "annotations": null,
-    "description": "Purchase a unit or building instantly with gold or faith.\n\n    Args:\n        city_id: City ID (from get_cities output)\n        item_name: e.g. UNIT_WARRIOR, BUILDING_MONUMENT\n        yield_type: What to spend\n\n    Costs gold/faith immediately. Use get_city_production to see what's available.\n    ",
+    "description": "Purchase a unit or building instantly with gold or faith.\n\n    Args:\n        city_id: City ID (from get_cities output)\n        item_type: e.g. UNIT_WARRIOR, BUILDING_MONUMENT\n        yield_type: What to spend\n\n    Costs gold/faith immediately. Use get_production_options to see what's available.\n    ",
     "inputSchema": {
       "properties": {
         "city_id": {
           "title": "City Id",
           "type": "integer"
         },
-        "item_name": {
-          "title": "Item Name",
+        "item_type": {
+          "title": "Item Type",
           "type": "string"
         },
         "yield_type": {
@@ -1030,7 +960,7 @@
       },
       "required": [
         "city_id",
-        "item_name"
+        "item_type"
       ],
       "title": "purchase_itemArguments",
       "type": "object"
@@ -1038,32 +968,32 @@
   },
   "purchase_tile": {
     "annotations": null,
-    "description": "Buy a tile for a city with gold.\n\n    Args:\n        city_id: City ID\n        x: Tile X coordinate\n        y: Tile Y coordinate\n\n    Use get_purchasable_tiles first to see costs and options.\n    ",
+    "description": "Buy a tile for a city with gold.\n\n    Args:\n        city_id: City ID\n        target_x: Tile X coordinate\n        target_y: Tile Y coordinate\n\n    Use get_purchasable_tiles first to see costs and options.\n    ",
     "inputSchema": {
       "properties": {
         "city_id": {
           "title": "City Id",
           "type": "integer"
         },
-        "x": {
-          "title": "X",
+        "target_x": {
+          "title": "Target X",
           "type": "integer"
         },
-        "y": {
-          "title": "Y",
+        "target_y": {
+          "title": "Target Y",
           "type": "integer"
         }
       },
       "required": [
         "city_id",
-        "x",
-        "y"
+        "target_x",
+        "target_y"
       ],
       "title": "purchase_tileArguments",
       "type": "object"
     }
   },
-  "queue_wc_votes": {
+  "queue_world_congress_votes": {
     "annotations": null,
     "description": "Pre-configure World Congress votes for the upcoming session.\n\n    Args:\n        votes: One entry per resolution you want to vote on.\n\n    Call this BEFORE end_turn when get_world_congress shows 0 turns until next\n    session. Registers an event handler that fires during WC processing and\n    casts your votes with the specified preferences.\n\n    If you don't call this, end_turn will pause at the World Congress session\n    and return control to you for interactive voting.\n    ",
     "inputSchema": {
@@ -1118,51 +1048,63 @@
       "required": [
         "votes"
       ],
-      "title": "queue_wc_votesArguments",
+      "title": "queue_world_congress_votesArguments",
       "type": "object"
     }
   },
-  "recruit_great_person": {
+  "resolve_city_capture": {
     "annotations": null,
-    "description": "Recruit a Great Person using accumulated GP points.\n\n    Args:\n        individual_id: The individual's ID (from get_great_people output, shown after ability)\n\n    Requires enough Great Person points for that class.\n    The GP spawns in your capital. Use get_great_people to check [CAN RECRUIT] status.\n    ",
+    "description": "Decide what happens to a city you have just taken.\n\n    Args:\n        action: What to do with the city awaiting a decision\n            - 'keep': keep it (captured or loyalty-flipped)\n            - 'reject': free a disloyal city (loyalty flip only)\n            - 'raze': raze a captured city (military conquest only)\n            - 'liberate_founder': liberate to its original founder\n            - 'liberate_previous': liberate to its previous owner\n\n    Takes no city id: the game holds exactly one city awaiting a decision, and\n    that is the city this acts on. Call it when a capture or loyalty flip\n    blocks the turn.\n    ",
     "inputSchema": {
       "properties": {
-        "individual_id": {
-          "title": "Individual Id",
+        "action": {
+          "enum": [
+            "keep",
+            "reject",
+            "raze",
+            "liberate_founder",
+            "liberate_previous"
+          ],
+          "title": "Action",
+          "type": "string"
+        }
+      },
+      "required": [
+        "action"
+      ],
+      "title": "resolve_city_captureArguments",
+      "type": "object"
+    }
+  },
+  "respond_to_deal": {
+    "annotations": null,
+    "description": "Accept or reject a pending trade deal.\n\n    Args:\n        player_id: The player ID of the civilization (from get_pending_deals)\n        accept: True to accept the deal, False to reject it\n\n    Use get_pending_deals first to see what's being offered.\n    ",
+    "inputSchema": {
+      "properties": {
+        "accept": {
+          "title": "Accept",
+          "type": "boolean"
+        },
+        "player_id": {
+          "title": "Player Id",
           "type": "integer"
         }
       },
       "required": [
-        "individual_id"
+        "player_id",
+        "accept"
       ],
-      "title": "recruit_great_personArguments",
-      "type": "object"
-    }
-  },
-  "reject_great_person": {
-    "annotations": null,
-    "description": "Pass on a Great Person (skip to the next one in that class).\n\n    Args:\n        individual_id: The individual's ID (from get_great_people output)\n\n    Costs faith. The next Great Person in that class becomes available.\n    Use when you don't want the current GP and want to save points for a better one.\n    ",
-    "inputSchema": {
-      "properties": {
-        "individual_id": {
-          "title": "Individual Id",
-          "type": "integer"
-        }
-      },
-      "required": [
-        "individual_id"
-      ],
-      "title": "reject_great_personArguments",
+      "title": "respond_to_dealArguments",
       "type": "object"
     }
   },
   "respond_to_diplomacy": {
     "annotations": null,
-    "description": "Respond to a pending diplomacy encounter.\n\n    Args:\n        other_player_id: The player ID of the other civilization (from get_pending_diplomacy)\n        response: POSITIVE is friendly, NEGATIVE is dismissive\n\n    First meetings typically have 2-3 rounds. The tool automatically detects\n    and closes goodbye-phase sessions (where dialogue text stops changing).\n    If SESSION_CONTINUES is returned, send another response for the next round.\n    ",
+    "description": "Respond to a pending diplomacy encounter.\n\n    Args:\n        player_id: The player ID of the other civilization (from get_pending_diplomacy)\n        response: POSITIVE is friendly, NEGATIVE is dismissive\n\n    First meetings typically have 2-3 rounds. The tool automatically detects\n    and closes goodbye-phase sessions (where dialogue text stops changing).\n    If SESSION_CONTINUES is returned, send another response for the next round.\n    ",
     "inputSchema": {
       "properties": {
-        "other_player_id": {
-          "title": "Other Player Id",
+        "player_id": {
+          "title": "Player Id",
           "type": "integer"
         },
         "response": {
@@ -1175,36 +1117,14 @@
         }
       },
       "required": [
-        "other_player_id",
+        "player_id",
         "response"
       ],
       "title": "respond_to_diplomacyArguments",
       "type": "object"
     }
   },
-  "respond_to_trade": {
-    "annotations": null,
-    "description": "Accept or reject a pending trade deal.\n\n    Args:\n        other_player_id: The player ID of the civilization (from get_pending_trades)\n        accept: True to accept the deal, False to reject it\n\n    Use get_pending_trades first to see what's being offered.\n    ",
-    "inputSchema": {
-      "properties": {
-        "accept": {
-          "title": "Accept",
-          "type": "boolean"
-        },
-        "other_player_id": {
-          "title": "Other Player Id",
-          "type": "integer"
-        }
-      },
-      "required": [
-        "other_player_id",
-        "accept"
-      ],
-      "title": "respond_to_tradeArguments",
-      "type": "object"
-    }
-  },
-  "restart_and_load": {
+  "restart_game": {
     "annotations": {
       "destructiveHint": true
     },
@@ -1224,7 +1144,7 @@
           "title": "Save Name"
         }
       },
-      "title": "restart_and_loadArguments",
+      "title": "restart_gameArguments",
       "type": "object"
     }
   },
@@ -1253,43 +1173,6 @@
         "code"
       ],
       "title": "run_luaArguments",
-      "type": "object"
-    }
-  },
-  "send_diplomatic_action": {
-    "annotations": null,
-    "description": "Send a proactive diplomatic action to another civilization.\n\n    Args:\n        other_player_id: The player ID (from get_diplomacy output)\n        action: The diplomatic action to send\n\n    Delegations cost 25 gold and can be rejected if the civ dislikes you.\n    Embassies require Writing tech. Use get_diplomacy to see available actions.\n    Surprise war is always available if not allied/friends. Other war types\n    (casus belli) require specific civics and conditions.\n    ",
-    "inputSchema": {
-      "properties": {
-        "action": {
-          "enum": [
-            "DIPLOMATIC_DELEGATION",
-            "DECLARE_FRIENDSHIP",
-            "DENOUNCE",
-            "RESIDENT_EMBASSY",
-            "OPEN_BORDERS",
-            "DECLARE_SURPRISE_WAR",
-            "DECLARE_FORMAL_WAR",
-            "DECLARE_HOLY_WAR",
-            "DECLARE_LIBERATION_WAR",
-            "DECLARE_RECONQUEST_WAR",
-            "DECLARE_PROTECTORATE_WAR",
-            "DECLARE_COLONIAL_WAR",
-            "DECLARE_TERRITORIAL_WAR"
-          ],
-          "title": "Action",
-          "type": "string"
-        },
-        "other_player_id": {
-          "title": "Other Player Id",
-          "type": "integer"
-        }
-      },
-      "required": [
-        "other_player_id",
-        "action"
-      ],
-      "title": "send_diplomatic_actionArguments",
       "type": "object"
     }
   },
@@ -1343,15 +1226,15 @@
   },
   "set_city_production": {
     "annotations": null,
-    "description": "Set what a city should produce.\n\n    Args:\n        city_id: City ID (from get_cities output)\n        item_name: e.g. UNIT_WARRIOR, BUILDING_MONUMENT, DISTRICT_CAMPUS, PROJECT_LAUNCH_EARTH_SATELLITE\n        target_x: X coordinate for district/wonder placement (required for districts \u2014 use get_district_advisor to find best tile)\n        target_y: Y coordinate for district/wonder placement\n\n    Tip: call get_cities first to see your cities and their IDs.\n    ",
+    "description": "Set what a city should produce.\n\n    Args:\n        city_id: City ID (from get_cities output)\n        item_type: e.g. UNIT_WARRIOR, BUILDING_MONUMENT, DISTRICT_CAMPUS, PROJECT_LAUNCH_EARTH_SATELLITE\n        target_x: X coordinate for district/wonder placement (required for districts \u2014 use get_district_sites to find best tile)\n        target_y: Y coordinate for district/wonder placement\n\n    Tip: call get_cities first to see your cities and their IDs.\n    ",
     "inputSchema": {
       "properties": {
         "city_id": {
           "title": "City Id",
           "type": "integer"
         },
-        "item_name": {
-          "title": "Item Name",
+        "item_type": {
+          "title": "Item Type",
           "type": "string"
         },
         "target_x": {
@@ -1381,7 +1264,7 @@
       },
       "required": [
         "city_id",
-        "item_name"
+        "item_type"
       ],
       "title": "set_city_productionArguments",
       "type": "object"
@@ -1389,7 +1272,7 @@
   },
   "set_civic": {
     "annotations": null,
-    "description": "Choose a civic to research in the culture tree.\n\n    Args:\n        civic_type: The type name, e.g. CIVIC_CRAFTSMANSHIP, from get_tech_civics\n\n    The two trees research in parallel; set_tech drives the science tree and\n    does not disturb this one.\n    ",
+    "description": "Choose a civic to research in the culture tree.\n\n    Args:\n        civic_type: The type name, e.g. CIVIC_CRAFTSMANSHIP, from get_research_options\n\n    The two trees research in parallel; set_tech drives the science tree and\n    does not disturb this one.\n    ",
     "inputSchema": {
       "properties": {
         "civic_type": {
@@ -1401,6 +1284,23 @@
         "civic_type"
       ],
       "title": "set_civicArguments",
+      "type": "object"
+    }
+  },
+  "set_government": {
+    "annotations": null,
+    "description": "Switch to a different government type.\n\n    Args:\n        government_type: e.g. GOVERNMENT_CLASSICAL_REPUBLIC, GOVERNMENT_OLIGARCHY\n\n    Use get_policies to see current government. First switch after\n    unlocking a new tier is free (no anarchy).\n    ",
+    "inputSchema": {
+      "properties": {
+        "government_type": {
+          "title": "Government Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "government_type"
+      ],
+      "title": "set_governmentArguments",
       "type": "object"
     }
   },
@@ -1426,7 +1326,7 @@
   },
   "set_tech": {
     "annotations": null,
-    "description": "Choose a technology to research in the science tree.\n\n    Args:\n        tech_type: The type name, e.g. TECH_POTTERY, from get_tech_civics\n\n    The two trees research in parallel; set_civic drives the culture tree and\n    does not disturb this one.\n    ",
+    "description": "Choose a technology to research in the science tree.\n\n    Args:\n        tech_type: The type name, e.g. TECH_POTTERY, from get_research_options\n\n    The two trees research in parallel; set_civic drives the culture tree and\n    does not disturb this one.\n    ",
     "inputSchema": {
       "properties": {
         "tech_type": {
@@ -1496,7 +1396,7 @@
   },
   "unit_action": {
     "annotations": null,
-    "description": "Issue a command to a unit.\n\n    Args:\n        unit_id: The unit's composite ID (from get_units output)\n        action: The command to issue\n        target_x: Target X coordinate (required for move/attack/trade_route/teleport)\n        target_y: Target Y coordinate (required for move/attack/trade_route/teleport)\n        improvement: Improvement type for builders (required for improve), e.g.\n            IMPROVEMENT_FARM. get_units lists what each builder can build here.\n\n    Verbs that act at the unit's current tile: improve, repair,\n    remove_improvement, remove_feature, build_route, activate,\n    sacrifice_charges, spread_religion, found_city.\n\n    teleport: destination city tile. Traders only, must be idle (not on an active route).\n    repair: repairs a pillaged improvement. No improvement name needed.\n    remove_improvement: demolishes an intact improvement (e.g. to replace a farm\n        with a mine). Costs one charge.\n    activate: activates a Great Person on their matching district.\n    sacrifice_charges: Royal Society builder sacrifice \u2014 spends ALL builder\n        charges to boost a district project (2% of cost per charge). Builder\n        must be on the district tile.\n    spread_religion: Missionaries/Apostles only.\n    build_route: builds road/railroad. Military Engineers only. No charges used;\n        costs 1 Iron + 1 Coal per railroad tile.\n    heal: fortify until healed (auto-wake at full HP).\n    alert: sleep but auto-wake when an enemy enters sight range.\n    delete: permanently disband the unit.\n    ",
+    "description": "Issue a command to a unit.\n\n    Args:\n        unit_id: The unit's composite ID (from get_units output)\n        action: The command to issue\n        target_x: Target X coordinate (required for move/attack/trade_route/teleport)\n        target_y: Target Y coordinate (required for move/attack/trade_route/teleport)\n        improvement_type: Improvement type for builders (required for improve), e.g.\n            IMPROVEMENT_FARM. get_units lists what each builder can build here.\n\n    Verbs that act at the unit's current tile: improve, repair,\n    remove_improvement, remove_feature, build_route, activate,\n    sacrifice_charges, spread_religion, found_city.\n\n    teleport: destination city tile. Traders only, must be idle (not on an active route).\n    repair: repairs a pillaged improvement. No improvement name needed.\n    remove_improvement: demolishes an intact improvement (e.g. to replace a farm\n        with a mine). Costs one charge.\n    activate: activates a Great Person on their matching district.\n    sacrifice_charges: Royal Society builder sacrifice \u2014 spends ALL builder\n        charges to boost a district project (2% of cost per charge). Builder\n        must be on the district tile.\n    spread_religion: Missionaries/Apostles only.\n    build_route: builds road/railroad. Military Engineers only. No charges used;\n        costs 1 Iron + 1 Coal per railroad tile.\n    heal: fortify until healed (auto-wake at full HP).\n    alert: sleep but auto-wake when an enemy enters sight range.\n    delete: permanently disband the unit.\n    ",
     "inputSchema": {
       "properties": {
         "action": {
@@ -1525,7 +1425,7 @@
           "title": "Action",
           "type": "string"
         },
-        "improvement": {
+        "improvement_type": {
           "anyOf": [
             {
               "type": "string"
@@ -1535,7 +1435,7 @@
             }
           ],
           "default": null,
-          "title": "Improvement"
+          "title": "Improvement Type"
         },
         "target_x": {
           "anyOf": [

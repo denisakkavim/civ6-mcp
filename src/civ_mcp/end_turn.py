@@ -114,7 +114,7 @@ async def _check_mid_turn_diplomacy(
                 lines.append(f"Deal from {s.other_civ_name}: {s.deal_summary}")
         if has_deal:
             lines.append(
-                "Use respond_to_trade(other_player_id=X, accept=True/False) to handle it, then end_turn again."
+                "Use respond_to_deal(player_id=X, accept=True/False) to handle it, then end_turn again."
             )
         else:
             lines.append("Use respond_to_diplomacy to handle it, then end_turn again.")
@@ -575,7 +575,7 @@ async def execute_end_turn(gs: GameState) -> str:
                     return (
                         f"World Congress fires this turn ({n_res} resolution(s), {wc_status.favor} favor). "
                         f"Use get_world_congress() to review resolutions and targets, "
-                        f"then queue_wc_votes() to register your votes, "
+                        f"then queue_world_congress_votes() to register your votes, "
                         f"then call end_turn() again."
                     )
     except Exception:
@@ -657,7 +657,7 @@ async def execute_end_turn(gs: GameState) -> str:
 
                 if blocking_type == "ENDTURN_BLOCKING_WORLD_CONGRESS_SESSION":
                     # NEVER auto-resolve session blockers — the agent must
-                    # call get_world_congress() and queue_wc_votes()
+                    # call get_world_congress() and queue_world_congress_votes()
                     # to deploy diplomatic favor strategically.
                     hard_blockers.append((blocking_type, blocking_msg))
                     continue
@@ -1400,7 +1400,10 @@ async def execute_end_turn(gs: GameState) -> str:
                 f"End turn requested (turn is still {turn_num}). "
                 f"AI turn processing appears stuck."
             )
-        return f"End turn requested (turn is still {turn_num}). Check get_pending_diplomacy or dismiss_popup."
+        return (
+            f"End turn requested (turn is still {turn_num}). "
+            f"Check get_pending_diplomacy and get_notifications for a blocker."
+        )
 
     # Turn advanced — clear the pending flag
     gs._pending_end_turn = False
@@ -1421,7 +1424,7 @@ async def execute_end_turn(gs: GameState) -> str:
                 f"CRITICAL: Turn regressed from {gs._high_water_turn} to {turn_after}. "
                 f"You may have loaded the wrong save file. "
                 f"Your most recent MCP autosave is {latest_autosave}. "
-                f'Use load_game_save("{latest_autosave}") to recover.'
+                f'Use load_game("{latest_autosave}") to recover.'
             )
     if turn_after is not None:
         # Reset per-turn counters only on TRUE advance. Blocker turns have

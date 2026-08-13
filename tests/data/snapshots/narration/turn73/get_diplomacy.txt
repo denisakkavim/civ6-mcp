@@ -9,6 +9,6 @@
     +6 Unknown Reason
     Agenda: Narikala Fortress — Tries to put high-level walls around her cities and respects civilizations who follow her lead. Does not like civilizations who fail to fortify their cities.
     Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
-    Can: Diplomatic Delegation, Declare Friendship, Denounce, Open Borders (Via Propose Trade), Declare War
+    Can: Diplomatic Delegation, Declare Friendship, Denounce, Open Borders (Via Propose Deal), Declare War
   Unmet Civilization (Unknown Leader) — not met
   Unmet Civilization (Unknown Leader) — not met

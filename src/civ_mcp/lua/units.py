@@ -278,7 +278,7 @@ pcall(function()
                 local isMajor = true
                 pcall(function() isMajor = Players[owner]:IsMajor() end)
                 if isMajor then
-                    print("DIAG|BORDER|foreign territory (" .. civName .. ") - need Open Borders via propose_trade")
+                    print("DIAG|BORDER|foreign territory (" .. civName .. ") - need Open Borders via propose_deal")
                 else
                     print("DIAG|BORDER_CS|city-state territory (" .. civName .. ") - need suzerainty or Open Borders")
                 end

@@ -609,7 +609,7 @@ class ResourceStockpile:
 class OwnedResource:
     """A resource on a tile owned by the player."""
 
-    name: str  # full form, e.g. "RESOURCE_IRON" — feeds propose_trade
+    name: str  # full form, e.g. "RESOURCE_IRON" — feeds propose_deal
     resource_class: str  # "strategic", "luxury", "bonus"
     improved: bool
     x: int

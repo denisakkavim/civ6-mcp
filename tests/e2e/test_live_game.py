@@ -122,9 +122,9 @@ READ_TOOLS = [
     "get_cities",
     "get_empire_resources",
     "get_builder_tasks",
-    "get_strategic_map",
+    "get_exploration_status",
     "get_diplomacy",
-    "get_tech_civics",
+    "get_research_options",
     "get_policies",
     "get_notifications",
     "get_governors",
@@ -133,14 +133,13 @@ READ_TOOLS = [
     "get_trade_routes",
     "get_victory_progress",
     "get_religion_spread",
-    "get_pantheon_beliefs",
-    "get_religion_beliefs",
+    "get_belief_options",
     "get_dedications",
     "get_world_congress",
-    "get_pending_trades",
+    "get_pending_deals",
     "get_pending_diplomacy",
     "get_spies",
-    "get_global_settle_advisor",
+    "get_settle_sites_on_map",
 ]
 
 
@@ -179,7 +178,11 @@ def test_map_area_is_readable_around_a_city(live_client):
         pytest.skip("no city with coordinates to centre on")
     result = live_client.call(
         "get_map_area",
-        {"center_x": int(coords.group(1)), "center_y": int(coords.group(2)), "radius": 2},
+        {
+            "center_x": int(coords.group(1)),
+            "center_y": int(coords.group(2)),
+            "radius": 2,
+        },
     )
     assert not result.startswith("Error"), result[:200]
 
@@ -234,28 +237,28 @@ def test_end_turn_advances_the_turn_counter(live_client):
 
 def test_save_listing_works(live_client):
     """The non-destructive half of the recovery path."""
-    saves = live_client.call("list_saves", {})
+    saves = live_client.call("get_saves", {})
     assert not saves.startswith("Error"), saves[:200]
     assert re.search(r"[A-Za-z0-9_]+", saves), saves[:200]
 
 
 @pytest.mark.destructive
 def test_save_reload_round_trip(live_client):
-    """`list_saves` → `load_game_save` → the overview confirms the turn.
+    """`get_saves` → `load_game` → the overview confirms the turn.
 
-    Separately marked because it is genuinely destructive: `load_game_save`
+    Separately marked because it is genuinely destructive: `load_game`
     falls back to killing and relaunching the game, which takes ~100s and
     leaves every later test in this module talking to a different process.
     Run it alone:
 
         uv run pytest -m "live and destructive"
     """
-    saves = live_client.call("list_saves", {})
+    saves = live_client.call("get_saves", {})
     match = re.search(r"(0_MCP_\d+)", saves)
     if not match:
         pytest.skip("no MCP autosave to reload")
 
-    result = live_client.call("load_game_save", {"save_name": match.group(1)})
+    result = live_client.call("load_game", {"save_name": match.group(1)})
     assert not result.startswith("Error"), result[:200]
 
     # The reload kills and relaunches the process, so the socket that served

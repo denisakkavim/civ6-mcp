@@ -20,8 +20,8 @@ from utils import recordings
 # Read tool -> the write tool its type strings are meant to feed.
 CONSUMERS = {
     "get_builder_tasks": "unit_action",
-    "get_city_production": "set_city_production",
-    "get_empire_resources": "propose_trade",
+    "get_production_options": "set_city_production",
+    "get_empire_resources": "propose_deal",
     "get_religion_spread": "found_religion",
 }
 
@@ -32,18 +32,44 @@ QUALIFIED_TYPE = re.compile(
 
 # Values these reads actually print, taken from recorded output. Each is the
 # bare form of an identifier whose write tool requires the prefixed form:
-# `get_empire_resources` prints `HORSES`, `propose_trade` wants
+# `get_empire_resources` prints `HORSES`, `propose_deal` wants
 # `RESOURCE_HORSES`; `get_builder_tasks` prints `FARM`, the improve verb wants
 # `IMPROVEMENT_FARM`.
 BARE_FORMS = {
     "RESOURCE_": [
-        "HORSES", "IRON", "NITER", "COAL", "OIL", "ALUMINUM", "URANIUM",
-        "SALT", "INCENSE", "WINE", "FURS", "IVORY", "SILK", "DYES", "SPICES",
-        "WHEAT", "RICE", "DEER", "SHEEP", "CATTLE", "BANANAS", "STONE", "COPPER",
+        "HORSES",
+        "IRON",
+        "NITER",
+        "COAL",
+        "OIL",
+        "ALUMINUM",
+        "URANIUM",
+        "SALT",
+        "INCENSE",
+        "WINE",
+        "FURS",
+        "IVORY",
+        "SILK",
+        "DYES",
+        "SPICES",
+        "WHEAT",
+        "RICE",
+        "DEER",
+        "SHEEP",
+        "CATTLE",
+        "BANANAS",
+        "STONE",
+        "COPPER",
     ],
     "IMPROVEMENT_": [
-        "FARM", "MINE", "QUARRY", "PASTURE", "PLANTATION", "CAMP",
-        "FISHING_BOATS", "LUMBER_MILL",
+        "FARM",
+        "MINE",
+        "QUARRY",
+        "PASTURE",
+        "PLANTATION",
+        "CAMP",
+        "FISHING_BOATS",
+        "LUMBER_MILL",
     ],
 }
 

@@ -35,8 +35,14 @@ from utils import snapshots
 # `set_tech` / `set_civic` (1.4) spent most of that back on a second tool's
 # boilerplate. The large drop is Stage 4, where 20 verbs in one docstring
 # become six tools with fixed signatures.
-MAX_TOOL_SCHEMA_CHARS = 2600
-MAX_SURFACE_CHARS = 42_600
+#
+# Stage 2 took the surface from 76 tools / 42,330 chars to 69 / 40,425, almost
+# all of it from deleting tools rather than shrinking them: the seven
+# save/lifecycle and great-person tools that merged, plus `dismiss_popup`. The
+# largest schema is now `propose_deal` (2,498), which Stage 4 does not touch —
+# it is ten flat scalars, deliberately (see "Considered and rejected").
+MAX_TOOL_SCHEMA_CHARS = 2500
+MAX_SURFACE_CHARS = 40_500
 
 
 def _tools():
@@ -45,9 +51,7 @@ def _tools():
 
 def _tool_size(tool) -> int:
     return (
-        len(tool.name)
-        + len(tool.description or "")
-        + len(json.dumps(tool.inputSchema))
+        len(tool.name) + len(tool.description or "") + len(json.dumps(tool.inputSchema))
     )
 
 
@@ -144,9 +148,6 @@ def test_no_tool_takes_a_json_string_parameter():
     )
 
 
-@pytest.mark.xfail(
-    strict=True, reason="Stage 2.4: `list_saves` becomes `get_saves`."
-)
 def test_tool_names_use_the_get_set_convention():
     """`list_*` in an otherwise `get_*` surface is a stray (§4 verb families)."""
     strays = [t.name for t in _tools() if t.name.startswith("list_")]
@@ -182,7 +183,7 @@ def test_dispatchers_name_their_discriminator_after_themselves():
             continue
         spec = properties[discriminator]
         # So is a tool whose trailing word names a payload rather than a
-        # choice: `queue_wc_votes(votes=[…])` is verb-plus-object, and a
+        # choice: `queue_world_congress_votes(votes=[…])` is verb-plus-object, and a
         # discriminator is always one value picked from a set, never a list.
         if _declares_a_collection(spec):
             continue
@@ -248,14 +249,19 @@ def test_core_reads_are_present(tool_name):
 CLOSED_SET_PARAMETERS = [
     ("unit_action", "action"),
     ("spy_action", "action"),
-    ("send_diplomatic_action", "action"),
+    ("diplomacy_action", "action"),
     ("form_alliance", "alliance_type"),
     ("respond_to_diplomacy", "response"),
     ("set_city_focus", "focus"),
     ("purchase_item", "yield_type"),
-    ("patronize_great_person", "yield_type"),
-    ("propose_trade", "mode"),
+    ("propose_deal", "mode"),
     ("run_lua", "context"),
+    # Stage 2 merged the three great-person verbs into one dispatcher and split
+    # the capture branch out of `city_action`; both discriminators are closed
+    # sets and belong here.
+    ("great_person_action", "action"),
+    ("great_person_action", "yield_type"),
+    ("resolve_city_capture", "action"),
 ]
 
 

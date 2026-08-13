@@ -93,7 +93,7 @@ for i = 0, 62 do
                 local ok2, valid = pcall(function() return pDiplo:IsDiplomaticActionValid(aName, i, false) end)
                 if ok2 and valid then
                     local label = aName:gsub("DIPLOACTION_", "")
-                    if label == "OPEN_BORDERS" then label = "Open Borders (via propose_trade)" end
+                    if label == "OPEN_BORDERS" then label = "Open Borders (via propose_deal)" end
                     table.insert(avail, label)
                 end
             end
@@ -322,7 +322,7 @@ def build_send_diplo_action(other_player_id: int, action_name: str) -> str:
     RESIDENT_EMBASSY, DECLARE_SURPRISE_WAR, DECLARE_FORMAL_WAR, etc.
 
     Open Borders is NOT supported here — it's a trade deal, not a diplomatic
-    action. Use propose_trade with AGREEMENT/OPEN_BORDERS items instead.
+    action. Use propose_deal with AGREEMENT/OPEN_BORDERS items instead.
 
     Key discovery: RequestSession uses DIFFERENT action strings from DIPLOACTION_ names:
     - DECLARE_FRIENDSHIP -> session string "DECLARE_FRIEND" (not "DECLARE_FRIENDSHIP")
@@ -568,7 +568,7 @@ print("{SENTINEL}")
 
 def parse_deal_options_response(lines: list[str]) -> DealOptions:
     """Parse the deal options query response."""
-    opts = DealOptions(other_player_id=0, other_civ_name="")
+    opts = DealOptions(player_id=0, other_civ_name="")
     for line in lines:
         if line.startswith("CIV|"):
             parts = line.split("|")
@@ -928,7 +928,7 @@ print("{SENTINEL}")
 def parse_test_trade_response(lines: list[str]) -> TestTradeResult:
     """Parse the test trade response."""
     result = TestTradeResult(
-        other_player_id=0,
+        player_id=0,
         other_civ_name="",
         proposed=[],
         counter=[],
@@ -1206,7 +1206,7 @@ def parse_diplomacy_sessions(lines: list[str]) -> list[DiplomacySession]:
                 sessions.append(
                     DiplomacySession(
                         session_id=int(parts[1]),
-                        other_player_id=int(parts[2]),
+                        player_id=int(parts[2]),
                         other_civ_name=parts[3],
                         other_leader_name=parts[4],
                         choices=[],
@@ -1243,7 +1243,7 @@ def parse_pending_deals_response(lines: list[str]) -> list[PendingDeal]:
             if len(parts) >= 4:
                 pid = int(parts[1])
                 deals[pid] = PendingDeal(
-                    other_player_id=pid,
+                    player_id=pid,
                     other_player_name=parts[2],
                     other_leader_name=parts[3],
                 )

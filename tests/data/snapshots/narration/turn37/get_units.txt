@@ -1,7 +1,7 @@
 6 units:
-  Scout (UNIT_SCOUT) at (43,14) — CS:10 moves 3/3 [id:196608, idx:0]
-  Warrior (UNIT_WARRIOR) at (45,11) — CS:20 moves 2/2 [id:131073, idx:1]
-  Builder (UNIT_BUILDER) at (45,12) — moves 2/2 charges:3 [id:720898, idx:2]
-  Slinger (UNIT_SLINGER) at (43,7) — CS:5 RS:15 moves 2/2 [id:327683, idx:3]
-  Slinger (UNIT_SLINGER) at (44,8) — CS:5 RS:15 moves 2/2 [id:458757, idx:5]
-  Slinger (UNIT_SLINGER) at (45,12) — CS:5 RS:15 moves 2/2 [id:655367, idx:7]
+  Scout (UNIT_SCOUT) at (43,14) — CS:10 moves 3/3 [id:196608]
+  Warrior (UNIT_WARRIOR) at (45,11) — CS:20 moves 2/2 [id:131073]
+  Builder (UNIT_BUILDER) at (45,12) — moves 2/2 charges:3 [id:720898]
+  Slinger (UNIT_SLINGER) at (43,7) — CS:5 RS:15 moves 2/2 [id:327683]
+  Slinger (UNIT_SLINGER) at (44,8) — CS:5 RS:15 moves 2/2 [id:458757]
+  Slinger (UNIT_SLINGER) at (45,12) — CS:5 RS:15 moves 2/2 [id:655367]

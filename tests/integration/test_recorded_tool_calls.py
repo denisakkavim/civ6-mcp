@@ -53,7 +53,7 @@ def test_corpus_exists():
             "  # launch Civ 6 (EnableTuner=1), load 0A_GROUND_CONTROL\n"
             "  uv run python scripts/record_game_traffic.py --scenario ground_control\n"
             "Record the dispatcher recordings (--dispatchers-only) BEFORE Stage 4 "
-            "deletes unit_action / city_action / spy_action."
+            "deletes unit_action / spy_action."
         )
     assert CORPUS
 

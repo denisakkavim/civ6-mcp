@@ -4,7 +4,7 @@
     "city_id": 65536
   },
   "scenario": "turn37",
-  "recorded_at": "2026-08-11T19:14:56+00:00",
+  "recorded_at": "2026-08-13T20:57:47+00:00",
   "notes": null,
   "result": "11 purchasable tiles:\n  (43,10): 45g \u2014 Plains [Wheat]\n  (45,14): 30g \u2014 Plains (Mountain)\n  (44,14): 30g \u2014 Plains (Mountain)\n  (43,13): 30g \u2014 Plains\n  (46,14): 30g \u2014 Plains (Mountain)\n  (47,12): 30g \u2014 Grassland (Mountain)\n  (46,13): 30g \u2014 Plains (Mountain)\n  (43,12): 30g \u2014 Plains\n  (46,11): 30g \u2014 Grassland\n  (45,9): 45g \u2014 Plains\n  (42,11): 45g \u2014 Desert (Hills) Hills",
   "exchanges": [

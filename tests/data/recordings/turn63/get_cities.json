@@ -2,7 +2,7 @@
   "tool": "get_cities",
   "arguments": {},
   "scenario": "turn63",
-  "recorded_at": "2026-08-11T19:59:41+00:00",
+  "recorded_at": "2026-08-13T21:38:11+00:00",
   "notes": null,
   "result": "3 cities:\n  Qusqu (pop 5) at (45,12) \u2014 Food 12 Prod 16 Gold 8 Sci 4 Cul 4 | Housing 9 Amenities 7 | Growth: 14/27 food (7t, +2.0/t) | Building: DISTRICT_COMMERCIAL_HUB (2 turns) | Walls 100/100 Garrison 200/200 Def:23 Gar:UNIT_ARCHER [id:65536]\n    Districts: DISTRICT_HOLY_SITE(46,12) DISTRICT_COMMERCIAL_HUB(44,11)\n    Buildings: BUILDING_MONUMENT, BUILDING_PALACE, BUILDING_GRANARY, BUILDING_WALLS\n    Needs builder: RESOURCE_INCENSE, 9, RESOURCE_WHEAT, 10 (unimproved)\n  Wanuku (pop 4) at (44,8) \u2014 Food 13 Prod 5 Gold 0 Sci 2 Cul 3 | Housing 5 Amenities 3 | Growth: 6/22 food (8t, +5.0/t) | Building: BUILDING_WALLS (5 turns) | HP:200/200 Def:20 Gar:UNIT_WARRIOR [id:131073]\n    Buildings: BUILDING_MONUMENT, BUILDING_GRANARY\n    Needs builder: RESOURCE_SALT, 6, RESOURCE_CATTLE, 8, RESOURCE_WHEAT, 8, RESOURCE_INCENSE, 9, RESOURCE_WHEAT, 10 (unimproved)\n  Antawaylla (pop 3) at (47,9) \u2014 Food 8 Prod 7 Gold 0 Sci 2 Cul 1 | Housing 3 Amenities 4 | Growth: 6/16 food (20t, +2.0/t) | Building: BUILDING_GRANARY (4 turns) | HP:200/200 Def:17 Gar:UNIT_ARCHER [id:196610]\n    !! SLOW GROWTH: 20 turns to next pop \u2014 needs farm, granary, or trade route\n    Districts: DISTRICT_HOLY_SITE(46,7)\n    Buildings: BUILDING_SHRINE\n    Needs builder: RESOURCE_SALT, 6, RESOURCE_WHEAT, 8, RESOURCE_DEER, 8, RESOURCE_INCENSE, 9, RESOURCE_HORSES, 10 (unimproved)\n\nCity Distances:\n  Qusqu <-> Wanuku: 4 tiles\n  Qusqu <-> Antawaylla: 4 tiles\n  Wanuku <-> Antawaylla: 4 tiles",
   "exchanges": [

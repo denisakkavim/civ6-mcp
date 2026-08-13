@@ -421,7 +421,7 @@ def build_produce_item(
     if itype == "DISTRICT" and (target_x is None or target_y is None):
         return (
             f'print("ERR:MISSING_COORDS|{item_name} is a district and requires '
-            f"target_x/target_y for placement. Use get_district_advisor(city_id, "
+            f"target_x/target_y for placement. Use get_district_sites(city_id, "
             f"'{item_name}') to find the best tile.\")\n"
             f'print("{SENTINEL}")'
         )
@@ -469,7 +469,7 @@ end
         ""
         if itype != "BUILDING" or (target_x is not None and target_y is not None)
         else f'''if item.IsWonder then
-    {_bail(f"ERR:MISSING_COORDS|{item_name} is a wonder and requires target_x/target_y for placement. Use get_wonder_advisor(city_id, '{item_name}') to find valid tiles.")}
+    {_bail(f"ERR:MISSING_COORDS|{item_name} is a wonder and requires target_x/target_y for placement. Use get_wonder_sites(city_id, '{item_name}') to find valid tiles.")}
 end'''
     }
 -- Trader cap check: game silently rejects when count >= route capacity

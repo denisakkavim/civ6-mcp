@@ -2,9 +2,9 @@
   "tool": "get_game_overview",
   "arguments": {},
   "scenario": "turn37",
-  "recorded_at": "2026-08-11T19:14:47+00:00",
+  "recorded_at": "2026-08-13T20:57:38+00:00",
   "notes": null,
-  "result": "Turn 37 | Inca (Pachacuti) | Score: 60 | Prince\nGold: 275 (+7/turn) | Income: 7 | Maintenance: -0 (units: 0) | Science: 5.0 | Culture: 4.8 | Faith: 42 | Favor: 20 (+0/turn)\nResearch: Astrology | Civic: Early Empire\nCities: 3 | Population: 6 | Units: 6 \u2014 3 Slinger, 1 Scout, 1 Warrior, 1 Builder\nExplored: 11% of land (91/790 tiles)\nReligion: none yet (3/3 slots remaining \u2014 Great Prophet needed)\nEra: Classical Era | Score: 14 (Dark: 19, Golden: 30) !! 5 short of avoiding Dark Age",
+  "result": "Turn 37 | Inca (Pachacuti) | Score: 60 | Prince\nGold: 275 (+7/turn) | Income: 7 | Maintenance: -0 (units: 0) | Science: 5.0 | Culture: 4.8 | Faith: 42 | Favor: 20 (+0/turn)\nResearch: Astrology | Civic: Early Empire\nCities: 3 | Population: 6 | Units: 6 \u2014 3 Slinger, 1 Warrior, 1 Scout, 1 Builder\nExplored: 11% of land (91/790 tiles)\nReligion: none yet (3/3 slots remaining \u2014 Great Prophet needed)\nEra: Classical Era | Score: 14 (Dark: 19, Golden: 30) !! 5 short of avoiding Dark Age",
   "exchanges": [
     {
       "context": "write",
@@ -16,7 +16,7 @@
         "ERA|Classical Era|14|19|30",
         "MAXTURNS|0",
         "DIFFICULTY|Prince",
-        "UNITBREAKDOWN|Slinger:3,Scout:1,Warrior:1,Builder:1|0"
+        "UNITBREAKDOWN|Slinger:3,Warrior:1,Scout:1,Builder:1|0"
       ]
     },
     {
