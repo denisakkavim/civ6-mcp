@@ -1,133 +1,149 @@
 # Test save wish list
 
-This file lists the game states that the test saves do not hold. Each state is
-a precondition. A tool or a verb stays untested until a save meets it.
+This file says which saves the project still needs, and why. The goal is a
+recording for every tool on the surface that Stage 4 leaves behind.
 
 Read `README.md` first. It says what the four saves hold today.
 
-Counts at the time of writing:
+Coverage now: **39 of 70 tools have a recording.**
 
-- 38 of 69 tools have a recording.
-- 10 of 20 `unit_action` verbs have a recording.
+Two tools will never have one. `load_game` and `restart_game` kill and relaunch
+the game. The destructive live test covers them instead. That leaves 68 tools
+to reach today, and about 75 after Stage 4 splits the dispatchers.
 
-## A new save is not always the fix
+## Read this before you make a save
 
-A tool has no recording for one of two reasons. Find the reason before you make
-a save.
+A tool has no recording for one of two reasons. The fix differs, and only the
+second reason needs you.
 
-| Reason | The fix |
+| Reason | Who fixes it |
 |---|---|
-| `scripts/record_game_traffic.py` never calls the tool | Add the call to `READ_PLAN`, `DISPATCHER_PLAN`, or `WRITE_PLAN` |
-| The plan calls the tool, and no save meets its precondition | Make a save |
+| `scripts/record_game_traffic.py` never calls the tool | Me. I add the call to a plan and record it against a save we already have |
+| No save meets the tool's precondition | You. Play to that state and save |
 
-Today 30 tools are absent from the plans. Only `spy_action` is in a plan and
-still has no recording. A new save alone therefore closes few gaps. Add the
-plan entry as well.
+31 tools have no recording. They split three ways:
 
-Seven verbs need both: `attack`, `trade_route`, `repair`, `remove_feature`,
-`remove_improvement`, `build_route`, and `sacrifice_charges`.
+- **18 are mine.** The four saves already meet their preconditions. Do not play
+  for these: `assign_governor`, `city_attack`, `diplomacy_action`,
+  `get_deal_options`, `get_great_person_sites`, `get_saves`,
+  `great_person_action`, `promote_governor`, `propose_deal`, `purchase_item`,
+  `purchase_tile`, `queue_world_congress_votes`, `respond_to_deal`, `run_lua`,
+  `set_civic`, `set_government`, `set_policies`, `upgrade_unit`.
+- **11 need a save.** They are the three lists below.
+- **2 never get one.** `load_game` and `restart_game`.
 
-## Priority 1: states that no save holds
+Four `unit_action` verbs are also missing and are also mine: `attack`,
+`trade_route`, `activate` and `spread_religion`. Turn 73 holds an enemy in
+range, an idle trader, and a Missionary that can reach a city in one move.
+Stage 4 turns each into a tool of its own, so recording them now gives the
+split a before-picture.
 
-Each row blocks a verb or a tool that the plan already reaches, or that
-Stage 2 could not verify.
+Two of those deserve a note, because earlier versions of this file asked for
+saves that turned out to be unnecessary:
 
-| Game state | It unblocks |
+- **A claimable Great Person.** Turn 73 holds 349 faith, and Marcus Licinius
+  Crassus costs 290 faith to patronize. So `great_person_action(patronize)`
+  works today, and the unit it creates then unblocks `get_great_person_sites`
+  and `activate_great_person`. Only `recruit` still needs a save, because that
+  verb needs Great Person points rather than faith.
+- **An appointed governor with a promotion.** Turn 73 has two, each with five
+  promotions available. `promote_governor` and `assign_governor` need no save.
+
+## The saves I need
+
+Three saves close every remaining gap. Each one is a checklist. Check the
+conditions in the game before you save, because several of them are cleared by
+ending a turn.
+
+### Save 1 — a war in progress
+
+The largest unlock. Aim for turn 140 or later, at war with a major civ.
+
+| Condition | It unblocks |
 |---|---|
-| A damaged unit | `unit_action(heal)` |
-| A Great Person on its matching district | `unit_action(activate)`, `get_great_person_sites`, `activate_great_person` |
-| A Missionary or an Apostle in or next to a city | `unit_action(spread_religion)`, `spread_religion` |
-| A pillaged improvement | `unit_action(repair)` |
-| A pillaged district | The `type@x,y` output that Stage 3.4d adds. The code is written; no save can run it |
-| A builder on a removable feature | `unit_action(remove_feature)` |
-| A builder on an intact improvement | `unit_action(remove_improvement)` |
-| A Military Engineer | `unit_action(build_route)` |
-| A trader that is not on a route | `unit_action(trade_route)`, `establish_trade_route` |
-| A Spy | `spy_action(travel)`, the 9 missions, `spy_mission` |
-| The Royal Society card, and a builder on a district tile | `unit_action(sacrifice_charges)`, `disband_unit` |
-| A spare governor point | `appoint_governor(city_id=...)`, which appoints and assigns |
-| A claimable Great Person | `great_person_action` in all three verbs |
-| A captured or a disloyal city awaiting a decision | `resolve_city_capture` |
-| A unit with a promotion available | `promote_unit`, and the marker in Stage 4.9 |
-| A unit that can upgrade, and the gold to pay | `upgrade_unit`, and the gold cost in Stage 4.9 |
+| A captured or disloyal city awaiting your decision | `resolve_city_capture`. Stage 2 could only prove that this fails by name |
+| A pillaged improvement | `builder_work(work="repair")` |
+| A pillaged district | The `type@x,y` output that Stage 3.4d added and nothing has run |
+| A damaged unit | `unit_stance(stance="heal")` |
+| A unit with a promotion available | `promote_unit`, and the eligibility marker in Stage 4.9 |
+| Past the peace cooldown | `propose_peace` |
+| An Encampment district of your own | Stage 4.1 asks whether an encampment can attack. Nothing can answer it today |
+| An enemy city you can capture on the next turn | Stage 3.4a. A city id encodes its owner, so capturing changes it. No save has ever shown that happen |
 
-The last three rows matter most. Stage 2 left `great_person_action`,
-`resolve_city_capture`, and the governor chain with no live test. Each one
-fails cleanly and by name today. That proves the dispatch. It does not prove
-the happy path.
+A war produces most of this by itself. The last row is the one to plan for:
+leave an enemy city at low health rather than taking it, so the capture happens
+inside the recording.
 
-## Priority 2: states that Stage 3 and Stage 4 need
+### Save 2 — specialist units
 
-| Game state | It unblocks |
+These are units that no save has ever held. Any era after the Renaissance will
+do. One save can hold all of them at once.
+
+| Condition | It unblocks |
 |---|---|
-| A city that you can capture this turn | Stage 3.4a. The composite id changes when the owner changes |
-| Free Cities holding at least one revolted city | Stage 3.4b. `CityStateInfo.cities` is a list because player 62 collects revolted cities. Turn 73 has Free Cities with none, so the empty case is covered and the populated one is not |
-| A wonder tile that a district also wants | Stage 3.1. The implicit wonder tile is the risky default. Turn 73 proved the path works, not that the choice is good |
-| An Encampment district | Stage 4.1. Check whether an encampment can attack |
-| An Aerodrome and an Airport | The airlift capability that §6b asks about |
+| A Spy, idle, not in transit | `spy_mission` and its 9 missions, and `send_unit_to_city` for a spy. `spy_action` is the only tool that has been in the recording plan since the start and has never once been recorded |
+| A Military Engineer with charges | `builder_work(work="build_route")` |
+| A Builder standing on a removable feature | `builder_work(work="remove_feature")` |
+| A Builder standing on an intact improvement | `builder_work(work="remove_improvement")` |
+| The Royal Society policy card slotted, and a Builder on a district under construction | `disband_unit(mode="sacrifice_charges")`. Stage 4.5 asks whether this verb belongs in `disband_unit` at all, and the answer decides where it goes |
+| An Aerodrome and an Airport | §6b asks whether airlift is exposed anywhere. If it is not, that is a missing capability rather than a naming problem |
 
-Turn 73 answered three Stage 3 questions. Do not ask for these saves again:
+### Save 3 — early game, before a pantheon
 
-- A builder whose task is out of reach. `MOVED_PARTIAL` was recorded live.
-- A unit that arrives with no movement left. `ARRIVED_WAITING` was recorded
-  live. **The case exists.** The plan expected that it would not. A builder
-  that lands on its target tile with 0 movement is refused. In this save that
-  is the usual outcome, not the rare one.
-- A city with a free district slot. `DISTRICT_HOLY_SITE` in Wanuku and
-  `BUILDING_APADANA` in Qusqu both placed themselves from the advisor.
+Small and quick. Turn 20 to 30 is enough. Stop before you choose a pantheon.
 
-## Do not ask for these again
-
-The saves already hold these states. Check here before you add a row above.
-
-| Game state | Where |
+| Condition | It unblocks |
 |---|---|
-| A founded religion, so `religion_type` holds a value | Turn 63 (Shinto) |
-| Foreign cities, for the composite city id | Turn 63 (Georgia) |
-| City-states with envoys | Turn 73 (Wolin, La Venta) |
-| Enemy units in the threat scan | Turn 73 (2 threats) |
-| An enemy unit in range of a city | Turn 73 (`CAN ATTACK: UNIT_SCOUT@43,5`) |
-| An idle trader, and a builder on a buildable tile | Turn 73 |
-| A civ unique improvement, and a leader unique improvement | Every save. Inca gives Terrace Farm and Qhapaq Ñan |
+| No pantheon chosen, and enough faith to choose one | `choose_pantheon`, and the pantheon branch of `get_belief_options` |
+| A Great Prophet, or the faith to patronize one | `found_religion`, and the founding branch of `get_belief_options` |
 
-The Inca row is useful. The civ trait and the leader trait grant improvements
-by different rules. One civ tests both. Any save that replaces the Inca saves
-loses that.
+Every current save has a religion already, so both branches of
+`get_belief_options` have only ever been seen in one state.
 
-Turn 73 already holds an enemy unit in range. The `attack` verb therefore
-needs a plan entry, not a save.
+## States that a turn boundary destroys
 
-## The save that would close the most gaps
+These six are transient. They cannot be reached by playing to a turn number,
+because ending a turn clears them. Save at the moment you see them, in whichever
+game you are already playing. Any of the three saves above can carry one.
 
-One save cannot hold every state. The recorder skips a verb when the save
-cannot meet its precondition, and it prints the reason. The corpus collects
-the verbs across the scenarios. Add saves; do not replace them.
+| Condition | It unblocks |
+|---|---|
+| A spare governor point, unspent | `appoint_governor(city_id=…)`, which appoints and assigns in one call. Stage 2 added that path and never ran it |
+| Envoy tokens available | `send_envoy` |
+| An incoming diplomacy session from an AI | `respond_to_diplomacy` |
+| An era about to turn, with a dedication to choose | `choose_dedication` |
+| A declared friendship, so an alliance is legal | `form_alliance` |
+| Enough Great Person points to recruit | `great_person_action(action="recruit")` |
 
-That said, one late-game save closes most of Priority 1 at once. Aim for these
-conditions together:
+## How to hand a save over
 
-- Turn 120 or later, in the Medieval era or after.
-- At war, with a captured city awaiting a decision.
-- Pillaged improvements and a pillaged district, which a war produces.
-- A Spy, a Missionary, a Military Engineer, and a Great Person on its district.
-- A spare governor point, and a claimable Great Person.
-- A damaged unit, a unit with a promotion waiting, and an upgradeable unit.
-- Enough gold to pay for the upgrade.
+Follow "How to add a save" in `README.md`. In short:
 
-Play the game to that state with this repository's own server. Do not curate
-the save. `README.md` says why a curated save may not load.
+1. Use a save this repository's own server made, on the machine the tests run
+   on. A curated save may refuse to load. Section 7 of
+   `tool-surface-test-plan.md` records how that was found out.
+2. Rename it so that it does not match `0_MCP_*`. The server deletes those
+   before it loads a scenario, and the crash-recovery path restores from them.
+3. Copy it into this folder and add a row to the table in `README.md`. State
+   the civ, the turn, and the number of cities and units.
+4. Add the scenario to `SCENARIO_SAVES` in
+   `tests/integration/test_recorded_tool_calls.py`.
+5. Tell me which of the conditions above the save meets. I will add the plan
+   entries and record it.
 
-## Two saves for agent versus agent
+Keep the Inca saves. The civ trait and the leader trait grant improvements by
+different rules, and Inca is the one civ that tests both.
 
-The intended consumer is a hot-seat harness. Two agents play each other. That
-needs a start position with two human players and a documented, balanced start.
-No save in this folder gives one. The CivBench saves did, and they need about
-15 DLC packs. `README.md` says how to recover them.
+## What will still be untested
 
-Record the civ, the leader, the map, and the difficulty for any such save. A
-result from an agent-versus-agent run means nothing without them.
+Two things, and neither is a save problem.
 
-## How to add a save
+**Whether the surface is easier for an agent to use.** A recording proves that
+a tool still says what it said. It cannot prove that an agent picks the right
+tool, or plays a better game. That needs an agent, a full game, and a
+comparison. The eval harness was the instrument, and Stage 0a deleted it.
 
-Follow "How to add a save" in `README.md`. Then delete the row you closed from
-this file.
+**Whether two tools agree with each other.** Every recording agrees with
+itself, because the same code wrote it. During Stage 3 four tools printed raw
+game ids while every other tool printed composite ids, and the whole corpus
+still replayed clean. Only reading the source caught it.
