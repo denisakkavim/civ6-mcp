@@ -6,7 +6,7 @@
     "radius": 1
   },
   "scenario": "turn73",
-  "recorded_at": "2026-08-16T20:03:28+00:00",
+  "recorded_at": "2026-08-16T20:16:08+00:00",
   "notes": null,
   "result": "9 tiles:\n  (48,9): PLAINS_HILLS Hills FOREST {F:1 P:3} (owned by Inca) [mv:3]\n  (49,9): GRASS [RESOURCE_HORSES*] {F:3 P:1} (owned by Inca)\n  (50,9): PLAINS_HILLS Hills {F:1 P:2} [mv:2]\n  (48,10): GRASS_HILLS Hills {F:2 P:1} (owned by Inca) [mv:2]\n  (49,10): GRASS [RESOURCE_HORSES*] {F:3 P:1} (owned by Inca) [my: UNIT_SCOUT]\n  (50,10): GRASS FOREST {F:2 P:1} [mv:2]\n  (48,11): GRASS {F:2 P:0} (owned by Inca)\n  (49,11): GRASS_HILLS Hills FOREST {F:2 P:2} [mv:3]\n  (50,11): GRASS [RESOURCE_CATTLE] [fog]",
   "exchanges": [

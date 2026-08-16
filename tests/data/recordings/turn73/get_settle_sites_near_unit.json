@@ -4,7 +4,7 @@
     "unit_id": 0
   },
   "scenario": "turn73",
-  "recorded_at": "2026-08-16T20:01:53+00:00",
+  "recorded_at": "2026-08-16T20:14:34+00:00",
   "notes": null,
   "result": "Top 5 settle locations:\n  #1 (50,14): Score 191 \u2014 unreachable \u2014 F:64 P:25 \u2014 fresh water, defense:4 | !! Loyalty: ~-2/turn (enemy pressure)\n     [B] RESOURCE_CATTLE, [S] RESOURCE_IRON, [B] RESOURCE_SHEEP, [B] RESOURCE_STONE, [B] RESOURCE_RICE, [B] RESOURCE_SHEEP, [L] RESOURCE_TOBACCO\n  #2 (49,13): Score 184 \u2014 1t away \u2014 F:62 P:25 \u2014 no water, defense:4\n     [S] RESOURCE_HORSES, [B] RESOURCE_SHEEP, [B] RESOURCE_SHEEP, [B] RESOURCE_CATTLE, [S] RESOURCE_IRON, [B] RESOURCE_SHEEP, [B] RESOURCE_STONE, [B] RESOURCE_SHEEP\n  #3 (50,15): Score 170 \u2014 3t away \u2014 F:64 P:23 \u2014 fresh water, defense:3 | !! Loyalty: ~-9/turn (enemy pressure)\n     [S] RESOURCE_IRON, [B] RESOURCE_SHEEP, [B] RESOURCE_STONE, [B] RESOURCE_RICE, [B] RESOURCE_SHEEP, [L] RESOURCE_TOBACCO, [B] RESOURCE_STONE\n  #4 (49,14): Score 167 \u2014 2t away \u2014 F:50 P:24 \u2014 fresh water, defense:7\n     [B] RESOURCE_SHEEP, [B] RESOURCE_CATTLE, [S] RESOURCE_IRON, [B] RESOURCE_SHEEP, [B] RESOURCE_STONE, [B] RESOURCE_SHEEP, [L] RESOURCE_TOBACCO\n  #5 (49,15): Score 158 \u2014 2t away \u2014 F:52 P:22 \u2014 fresh water, defense:6 | !! Loyalty: ~-4/turn (enemy pressure)\n     [S] RESOURCE_IRON, [B] RESOURCE_SHEEP, [B] RESOURCE_STONE, [B] RESOURCE_RICE, [B] RESOURCE_SHEEP, [L] RESOURCE_TOBACCO",
   "exchanges": [

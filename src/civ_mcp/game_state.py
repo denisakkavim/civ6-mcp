@@ -1534,9 +1534,23 @@ class GameState:
         lines = await self.conn.execute_write(lua)
         return lq.parse_great_people_response(lines)
 
-    async def get_gp_advisor(self, unit_index: int) -> lq.GPAdvisorResult | None:
+    async def get_gp_advisor(
+        self, unit_index: int
+    ) -> lq.GPAdvisorResult | str | None:
+        """Placements, or the game's own reason for refusing, or None.
+
+        The query bails with a specific reason — the unit is not a Great
+        Person, its class is unknown — and the parser has no field for one, so
+        it returned None and the caller replaced every reason with the same
+        guess. That hid a real defect for as long as the tool existed: the
+        class lookup read a column that does not exist, so every Great Person
+        was reported as "not a Great Person unit".
+        """
         lua = lq.build_gp_advisor_query(unit_index)
         lines = await self.conn.execute_write(lua)
+        for line in lines:
+            if line.startswith("ERR:"):
+                return f"Error: {line[4:]}"
         return lq.parse_gp_advisor_response(lines)
 
     async def recruit_great_person(self, individual_id: int) -> str:

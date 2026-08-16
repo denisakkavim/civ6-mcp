@@ -384,8 +384,17 @@ def build_gp_advisor_query(unit_index: int) -> str:
 {_lua_get_unit(unit_index)}
 local uInfo = GameInfo.Units[unit:GetType()]
 if not uInfo then {_bail("ERR:UNIT_INFO_NOT_FOUND")} end
+-- The class comes from the unit's GreatPerson object, not from its
+-- GameInfo.Units row: that row has no GreatPersonClass column, so reading it
+-- returned nil for every Great Person and the query bailed as though the unit
+-- were something else. GetClass() gives an index into GreatPersonClasses.
+local gpObj = unit:GetGreatPerson()
+if not gpObj then {_bail("ERR:NOT_A_GREAT_PERSON")} end
 local gpClass = ""
-pcall(function() gpClass = uInfo.GreatPersonClass end)
+pcall(function()
+    local row = GameInfo.GreatPersonClasses[gpObj:GetClass()]
+    if row then gpClass = row.GreatPersonClassType end
+end)
 if gpClass == "" then {_bail("ERR:NOT_A_GREAT_PERSON")} end
 local classToDistrict = {{
     GREAT_PERSON_CLASS_SCIENTIST = "DISTRICT_CAMPUS",

@@ -2619,6 +2619,8 @@ async def get_great_person_sites(ctx: Context, unit_id: int) -> str:
 
     async def _run():
         result = await gs.get_gp_advisor(unit_index)
+        if isinstance(result, str):
+            return result
         if result is None:
             return "Could not get GP advisor info. Is this a Great Person unit?"
         return nr.narrate_gp_advisor(result)

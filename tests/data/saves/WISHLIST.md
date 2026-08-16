@@ -88,7 +88,7 @@ The largest unlock. Aim for turn 140 or later, at war with a major civ.
 | Past the peace cooldown | `propose_peace` |
 | An Encampment district of your own | Stage 4.1 asks whether an encampment can attack. Nothing can answer it today |
 | An enemy unit within 2 tiles of one of your cities, while at war | `attack` and `city_attack`, and so the general `attack` tool that Stage 4 merges them into. Both are refused at peace, and the city range is 2 |
-| A Great Person standing on its matching district | `unit_action(activate)` and `activate_great_person`. Note first: `get_great_person_sites` answered "Could not get GP advisor info. Is this a Great Person unit?" for a Great Merchant that `great_person_action(patronize)` had just created, in a save whose capital holds a Commercial Hub. That may be a defect in the advisor rather than a missing save |
+| A Great Person with movement left, on or next to its matching district | `unit_action(activate)` and `activate_great_person`. A patronized Great Person spawns on the city centre with 0 moves, so it cannot reach its district until the next turn — which is after the recording ends. A save that already holds one, with moves, closes this |
 | A Missionary standing in or next to a city | `spread_religion` |
 | A spare governor point | `promote_governor`, and `appoint_governor(city_id=…)` which appoints and assigns in one call |
 | An enemy city you can capture on the next turn | Stage 3.4a. A city id encodes its owner, so capturing changes it. No save has ever shown that happen |

@@ -1,1 +1,2 @@
-Could not get GP advisor info. Is this a Great Person unit?
+Best activation cities for Marcus Licinius Crassus (Merchant -> DISTRICT_COMMERCIAL_HUB): [3 charge(s)]
+  1. Qusqu (44,11) — needs move (dist 1), yield 10

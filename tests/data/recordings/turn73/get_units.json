@@ -2,7 +2,7 @@
   "tool": "get_units",
   "arguments": {},
   "scenario": "turn73",
-  "recorded_at": "2026-08-16T20:03:27+00:00",
+  "recorded_at": "2026-08-16T20:16:08+00:00",
   "notes": null,
   "result": "15 units:\n  Scout (UNIT_SCOUT) at (49,10) \u2014 CS:10 moves 0/3 (no moves) [id:0]\n  Warrior (UNIT_WARRIOR) at (53,18) \u2014 CS:20 moves 3/3 [id:1]\n  Builder (UNIT_BUILDER) at (43,11) \u2014 moves 0/2 charges:2 (no moves) [id:2]\n  Archer (UNIT_ARCHER) at (45,12) \u2014 CS:15 RS:25 moves 0/2 (no moves) [id:3]\n  Trader (UNIT_TRADER) at (44,8) \u2014 moves 0/2 (no moves) [id:4]\n  Warrior (UNIT_WARRIOR) at (51,14) \u2014 CS:20 moves 2/2 [id:6]\n  Slinger (UNIT_SLINGER) at (49,15) \u2014 CS:5 RS:15 moves 0/2 (no moves) [id:7]\n  Warrior (UNIT_WARRIOR) at (44,8) \u2014 CS:20 moves 2/2 [id:8]\n  Builder (UNIT_BUILDER) at (44,11) \u2014 moves 2/2 charges:3 [id:9]\n  Archer (UNIT_ARCHER) at (47,9) \u2014 CS:15 RS:25 moves 2/2 [id:10]\n  Builder (UNIT_BUILDER) at (45,13) \u2014 moves 2/2 charges:1 [id:11]\n  Trader (UNIT_TRADER) at (44,11) \u2014 moves 0/2 (no moves) [ON ROUTE: Qusqu -> Wanuku (Domestic)] [id:12]\n  Missionary (UNIT_MISSIONARY) at (46,7) \u2014 moves 4/4 charges:3 [RELIGION_SHINTO] [id:13]\n  Archer (UNIT_ARCHER) at (41,11) \u2014 CS:15 RS:25 moves 0/2 (no moves) [id:14]\n  Marcus Licinius Crassus (UNIT_GREAT_MERCHANT) at (45,12) \u2014 moves 0/4 charges:3 (no moves) [id:15]\n\nNearby threats (2):\n  Georgia (2 units):\n    UNIT_SPEARMAN at (54,20) \u2014 CS:25 HP:100/100 (2 tiles away) [id:65546]\n    UNIT_SCOUT at (43,5) \u2014 CS:10 HP:100/100 (3 tiles away) [id:65541]",
   "exchanges": [

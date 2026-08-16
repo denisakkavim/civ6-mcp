@@ -2,9 +2,9 @@
   "tool": "get_game_overview",
   "arguments": {},
   "scenario": "turn73",
-  "recorded_at": "2026-08-16T20:03:29+00:00",
+  "recorded_at": "2026-08-16T20:16:10+00:00",
   "notes": null,
-  "result": "Turn 73 | Inca (Pachacuti) | Score: 176 | Prince\nGold: 28 (+5/turn) | Income: 11 | Maintenance: -6 (units: 3) | Science: 11.0 | Culture: 9.6 | Faith: 13 | Favor: 36 (+1/turn)\nResearch: Wheel | Civic: Military Training\nCities: 4 | Population: 17 | Units: 15 \u2014 3 Builder, 3 Warrior, 3 Archer, 2 Trader, 1 Great Merchant, 1 Slinger, 1 Missionary, 1 Scout\nExplored: 37% of land (295/790 tiles)\nReligion: Shinto (3/3 slots)\nEra: Medieval Era | Score: 41 (Dark: 40, Golden: 51)\nRankings: Georgia 238 > Inca 176",
+  "result": "Turn 73 | Inca (Pachacuti) | Score: 176 | Prince\nGold: 28 (+5/turn) | Income: 11 | Maintenance: -6 (units: 3) | Science: 11.0 | Culture: 9.6 | Faith: 13 | Favor: 36 (+1/turn)\nResearch: Wheel | Civic: Military Training\nCities: 4 | Population: 17 | Units: 15 \u2014 3 Warrior, 3 Archer, 3 Builder, 2 Trader, 1 Scout, 1 Great Merchant, 1 Missionary, 1 Slinger\nExplored: 37% of land (295/790 tiles)\nReligion: Shinto (3/3 slots)\nEra: Medieval Era | Score: 41 (Dark: 40, Golden: 51)\nRankings: Georgia 238 > Inca 176",
   "exchanges": [
     {
       "context": "write",
@@ -19,7 +19,7 @@
         "ERA|Medieval Era|41|40|51",
         "MAXTURNS|0",
         "DIFFICULTY|Prince",
-        "UNITBREAKDOWN|Builder:3,Warrior:3,Archer:3,Trader:2,Great Merchant:1,Slinger:1,Missionary:1,Scout:1|3"
+        "UNITBREAKDOWN|Warrior:3,Archer:3,Builder:3,Trader:2,Scout:1,Great Merchant:1,Missionary:1,Slinger:1|3"
       ]
     },
     {
