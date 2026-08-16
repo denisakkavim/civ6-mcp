@@ -344,6 +344,8 @@ class VisibleCity:
     loyalty_per_turn: float = 0.0
     has_walls: bool = False
     defense_strength: int = 0
+    # Composite id, so a foreign city can be named rather than located.
+    city_id: int | None = None
 
 
 @dataclass
@@ -563,6 +565,10 @@ class SettleCandidate:
     loyalty_pressure: float = (
         0.0  # approx loyalty/turn from population pressure, negative = bad
     )
+    # Turns for a specific settler to reach this tile. Filled in only by the
+    # unit-scoped advisor, which knows which settler is asking; None on the
+    # whole-map scan, which has no unit.
+    turns_to_reach: int | None = None
 
 
 @dataclass
@@ -912,6 +918,14 @@ class UnitPromotionStatus:
 
 
 @dataclass
+class CityStateCity:
+    """A city belonging to a city-state or to Free Cities."""
+
+    city_id: int
+    name: str
+
+
+@dataclass
 class CityStateInfo:
     """A known city-state with envoy info."""
 
@@ -922,6 +936,11 @@ class CityStateInfo:
     suzerain_id: int  # player ID of suzerain (-1 = none)
     suzerain_name: str  # "None" or civ name
     can_send_envoy: bool
+    # A city-state is a *player* to send_envoy and a *city* to spy travel, and
+    # nothing used to link the two. Usually one city; Free Cities (player 62)
+    # collects every city that revolts through loyalty, so it can hold several
+    # or none.
+    cities: list[CityStateCity] = field(default_factory=list)
 
 
 @dataclass
@@ -1127,6 +1146,8 @@ class TradeDestination:
     religion_out: str = ""  # our majority religion name
     pressure_in: float = 0.0  # their religion → our city
     religion_in: str = ""  # destination's majority religion name
+    # Composite id, so a route can be started without copying coordinates.
+    city_id: int | None = None
 
 
 @dataclass
@@ -1254,6 +1275,7 @@ class CityReligionInfo:
     # The identifier `found_religion` takes, e.g. "RELIGION_HINDUISM". Empty
     # when the city has no majority religion.
     religion_type: str = ""
+    city_id: int | None = None
 
 
 @dataclass

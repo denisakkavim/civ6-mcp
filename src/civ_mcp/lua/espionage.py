@@ -39,7 +39,7 @@ for i, u in Players[me]:GetUnits():Members() do
         local ok_spy, err_spy = pcall(function()
             local x, y = u:GetX(), u:GetY()
             local name = Locale.Lookup(u:GetName())
-            local uid = u:GetID() + me * 65536
+            local uid = ((u:GetID() % 65536) + u:GetOwner() * 65536)
             local rank = 1
             local xp = 0
             local exp = u:GetExperience()

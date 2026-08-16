@@ -1,11 +1,11 @@
 Top 5 settle locations:
-  #1 (43,16): Score 154 — F:40 P:27 — coast, defense:2
+  #1 (43,16): Score 154 — this turn — F:40 P:27 — coast, defense:2
      [S] RESOURCE_HORSES, [B] RESOURCE_COPPER, [B] RESOURCE_WHEAT, [B] RESOURCE_BANANAS, [B] RESOURCE_FISH, [B] RESOURCE_FISH
-  #2 (42,15): Score 152 — F:38 P:27 — fresh water, defense:2
+  #2 (42,15): Score 152 — this turn — F:38 P:27 — fresh water, defense:2
      [S] RESOURCE_HORSES, [B] RESOURCE_COPPER, [B] RESOURCE_WHEAT, [B] RESOURCE_BANANAS, [B] RESOURCE_FISH, [B] RESOURCE_FISH
-  #3 (42,14): Score 135 — F:29 P:29 — fresh water, defense:2
+  #3 (42,14): Score 135 — this turn — F:29 P:29 — fresh water, defense:2
      [S] RESOURCE_HORSES, [B] RESOURCE_COPPER, [B] RESOURCE_WHEAT, [B] RESOURCE_BANANAS
-  #4 (42,16): Score 125 — F:33 P:22 — coast, defense:0
+  #4 (42,16): Score 125 — this turn — F:33 P:22 — coast, defense:0
      [B] RESOURCE_COPPER, [B] RESOURCE_WHEAT, [B] RESOURCE_BANANAS, [B] RESOURCE_FISH, [B] RESOURCE_FISH
-  #5 (41,13): Score 121 — F:26 P:28 — coast, defense:1
+  #5 (41,13): Score 121 — 1t away — F:26 P:28 — coast, defense:1
      [B] RESOURCE_WHEAT, [S] RESOURCE_HORSES, [B] RESOURCE_COPPER, [B] RESOURCE_WHEAT, [B] RESOURCE_BANANAS

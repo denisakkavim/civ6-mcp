@@ -20,6 +20,33 @@ from civ_mcp.lua.models import (
 )
 
 
+def build_unit_roster_query() -> str:
+    """GameCore: just the local player's unit ids and types.
+
+    Cheap enough to run either side of an operation that spawns a unit, so the
+    caller can name what appeared without rescanning the full unit list.
+    """
+    return f"""
+local me = Game.GetLocalPlayer()
+for _, u in Players[me]:GetUnits():Members() do
+    print("UID|" .. ((u:GetID() % 65536) + u:GetOwner() * 65536) .. "|" .. GameInfo.Units[u:GetType()].UnitType)
+end
+print("{SENTINEL}")
+"""
+
+
+def parse_unit_roster(lines: list[str]) -> dict[int, str]:
+    """Parse UID| lines into ``{unit_id: unit_type}``."""
+    roster: dict[int, str] = {}
+    for line in lines:
+        if not line.startswith("UID|"):
+            continue
+        parts = line.split("|")
+        if len(parts) >= 3:
+            roster[int(parts[1])] = parts[2]
+    return roster
+
+
 def build_units_query() -> str:
     """InGame context: lists all units with upgrade and builder improvement info."""
     return """
@@ -27,7 +54,7 @@ local id = Game.GetLocalPlayer()
 for i, u in Players[id]:GetUnits():Members() do
     local x, y = u:GetX(), u:GetY()
     if x ~= -9999 then
-        local uid = u:GetID()
+        local uid = ((u:GetID() % 65536) + u:GetOwner() * 65536)
         local entry = GameInfo.Units[u:GetType()]
         local ut = entry and entry.UnitType or "UNKNOWN"
         local nm = Locale.Lookup(u:GetName())
@@ -292,7 +319,7 @@ end)
     return f"""
 local me = Game.GetLocalPlayer()
 local u = Players[me]:GetUnits():FindID({unit_index})
-if u then print("POS|" .. u:GetX() .. "|" .. u:GetY()) else print("POS|GONE") end
+if u then print("POS|" .. u:GetX() .. "|" .. u:GetY() .. "|" .. u:GetMovesRemaining()) else print("POS|GONE") end
 {diag_block}print("{SENTINEL}")
 """
 
@@ -786,7 +813,7 @@ for pid = 0, 63 do
                         local hp = bu:GetMaxDamage() - bu:GetDamage()
                         local brs = entry and entry.RangedCombat or 0
                         local isCS = Players[pid]:IsMajor() and "0" or "1"
-                        print("THREAT|" .. pid .. "|" .. ownerName:gsub("|","/") .. "|" .. name .. "|" .. bx .. "," .. by .. "|" .. hp .. "/" .. bu:GetMaxDamage() .. "|CS:" .. bcs .. "|RS:" .. brs .. "|dist:" .. minDist .. "|cs:" .. isCS .. "|uid:" .. bu:GetID())
+                        print("THREAT|" .. pid .. "|" .. ownerName:gsub("|","/") .. "|" .. name .. "|" .. bx .. "," .. by .. "|" .. hp .. "/" .. bu:GetMaxDamage() .. "|CS:" .. bcs .. "|RS:" .. brs .. "|dist:" .. minDist .. "|cs:" .. isCS .. "|uid:" .. ((bu:GetID() % 65536) + bu:GetOwner() * 65536))
                         found = true
                     end
                 end
@@ -1761,7 +1788,7 @@ for _, u in Players[me]:GetUnits():Members() do
     if entry and entry.UnitType == "UNIT_BUILDER" and u:GetBuildCharges() > 0 then
         local bx, by = u:GetX(), u:GetY()
         if bx ~= -9999 then
-            table.insert(builders, {id=u:GetID(), idx=u:GetID() % 65536, x=bx, y=by, charges=u:GetBuildCharges(), moves=u:GetMovesRemaining()})
+            table.insert(builders, {id=((u:GetID() % 65536) + u:GetOwner() * 65536), idx=u:GetID() % 65536, x=bx, y=by, charges=u:GetBuildCharges(), moves=u:GetMovesRemaining()})
         end
     end
 end

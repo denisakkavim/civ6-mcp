@@ -11,7 +11,9 @@ from __future__ import annotations
 import asyncio
 import logging
 import re
+from collections.abc import Awaitable, Callable
 
+from civ_mcp import ids
 from civ_mcp import lua as lq
 from civ_mcp.connection import GameConnection
 from civ_mcp.narrate import (
@@ -220,6 +222,108 @@ class GameState:
         lines = await self.conn.execute_read(lq.build_revealed_tiles_seed_query())
         self._revealed = lq.parse_revealed_tiles_seed(lines)
         log.info("Seeded revealed-tile set with %d tiles", len(self._revealed))
+
+    async def resolve_city_position(self, city_id: int) -> tuple[int, int, str] | str:
+        """Turn a composite city id into ``(x, y, name)``, or an error string.
+
+        Keeps both halves of the id. Own-city tools drop the owner because
+        their Lua assumes the local player, but a foreign city is only
+        findable through the player that holds it, so this must not reduce the
+        id to its low bits.
+        """
+        owner = ids.owner_of(city_id)
+        local_id = ids.local_of(city_id)
+        lines = await self.conn.execute_read(
+            lq.build_city_position_query(owner, local_id)
+        )
+        position = lq.parse_city_position(lines)
+        if position is None:
+            return (
+                f"Error: CITY_NOT_FOUND|No city {city_id} (player {owner},"
+                f" city {local_id}). Ids change when a city is captured and are"
+                f" recycled after razing — re-read get_cities or get_diplomacy."
+            )
+        return position
+
+    async def read_unit_position(self, unit_index: int) -> tuple[int, int, int] | None:
+        """Return ``(x, y, moves_remaining)``, or None if the unit is gone.
+
+        ``moves_remaining`` is 0 when the game gave no value, which is the
+        conservative reading: a caller uses it to decide whether the unit can
+        still act this turn.
+        """
+        lines = await self.conn.execute_read(lq.build_unit_position_query(unit_index))
+        for line in lines:
+            if not line.startswith("POS|") or "GONE" in line:
+                continue
+            parts = line.split("|")
+            if len(parts) < 3:
+                continue
+            moves = 0
+            if len(parts) > 3 and parts[3].strip():
+                moves = int(float(parts[3]))
+            return int(parts[1]), int(parts[2]), moves
+        return None
+
+    async def move_then_act(
+        self,
+        unit_index: int,
+        verb: str,
+        target_x: int,
+        target_y: int,
+        act: Callable[[], Awaitable[str]],
+    ) -> str:
+        """Move the unit to (target_x, target_y) if needed, then run ``act``.
+
+        Collapses the two-turn "move there, then improve it next turn" chain
+        into one call. There are three outcomes, and they are deliberately
+        distinct, because the agent's next move differs in each:
+
+        - acted: the action's own result, noting the move.
+        - did not arrive: ``MOVED_PARTIAL`` — re-issue the same call next turn.
+        - arrived with no movement left and the action refused:
+          ``ARRIVED_WAITING`` — re-issue without moving. Builder verbs do
+          require movement, so this case is real; it was measured on a live
+          game rather than assumed.
+
+        The action never runs unless the unit is standing on the target tile,
+        so a result never claims an action happened when only the move did.
+        """
+        before = await self.read_unit_position(unit_index)
+        if before is None:
+            return f"Error: UNIT_GONE|Unit {unit_index} no longer exists."
+
+        if (before[0], before[1]) == (target_x, target_y):
+            return await act()
+
+        move_result = await self.move_unit(unit_index, target_x, target_y)
+
+        after = await self.read_unit_position(unit_index)
+        if after is None:
+            return f"Error: UNIT_GONE|Unit {unit_index} was lost while moving."
+        now_x, now_y, moves_left = after
+
+        if (now_x, now_y) != (target_x, target_y):
+            return (
+                f"MOVED_PARTIAL|at=({now_x},{now_y})"
+                f"|target=({target_x},{target_y})"
+                f"|remaining={moves_left}"
+                f"|Re-issue {verb} with the same target next turn."
+                f" Move detail: {move_result}"
+            )
+
+        result = await act()
+
+        if result.startswith("Error:") and moves_left == 0:
+            return (
+                f"ARRIVED_WAITING|at=({target_x},{target_y})"
+                f"|remaining=0"
+                f"|{verb} needs movement and the move used all of it."
+                f" Re-issue {verb} next turn without moving."
+                f" Game said: {result}"
+            )
+
+        return f"{result} (moved to {target_x},{target_y})"
 
     async def move_unit(self, unit_index: int, target_x: int, target_y: int) -> str:
         # Seed before moving so the first move of a session reports
@@ -465,16 +569,43 @@ class GameState:
         lines = await self.conn.execute_read(lua)
         candidates = lq.parse_settle_advisor_response(lines)
         if candidates:
+            await self._add_turns_to_reach(unit_index, candidates)
             return narrate_settle_candidates(candidates)
         # Auto-fallback to global scan when no local candidates
         try:
             global_candidates = await self.get_global_settle_scan()
             if global_candidates:
+                nearest = global_candidates[:5]
+                await self._add_turns_to_reach(unit_index, nearest)
                 header = "No valid settle locations within 5 tiles. Best sites on revealed map:\n"
-                return header + narrate_settle_candidates(global_candidates[:5])
+                return header + narrate_settle_candidates(nearest)
         except Exception:
             log.debug("Global settle fallback failed", exc_info=True)
         return "No valid settle locations found within 5 tiles or on revealed map."
+
+    async def _add_turns_to_reach(
+        self, unit_index: int, candidates: list[lq.SettleCandidate]
+    ) -> None:
+        """Fill in turns_to_reach for each candidate, in place.
+
+        A ranking of settle sites is nearly useless without it: the agent
+        otherwise has to ask for a pathing estimate per candidate before it can
+        compare them. One query per candidate, and a failure leaves the field
+        as None rather than failing the whole read.
+        """
+        for candidate in candidates:
+            try:
+                estimate = await self.get_pathing_estimate(
+                    unit_index, candidate.x, candidate.y
+                )
+                candidate.turns_to_reach = estimate.turns
+            except Exception:
+                log.debug(
+                    "Pathing estimate failed for (%d,%d)",
+                    candidate.x,
+                    candidate.y,
+                    exc_info=True,
+                )
 
     async def get_global_settle_scan(self) -> list[lq.SettleCandidate]:
         lua = lq.build_global_settle_scan()
@@ -576,8 +707,33 @@ class GameState:
     ) -> str:
         itype = item_type.upper()
 
+        # No tile given: ask the advisor and build on its top-ranked pick, so
+        # placing a district is one call rather than advisor-then-copy-coords.
+        # A district always needs a tile, so resolve it before the write.
+        placement_note = ""
+        if itype == "DISTRICT" and target_x is None:
+            chosen = await self._auto_place_district(city_id, item_name)
+            if isinstance(chosen, str):
+                return chosen
+            target_x, target_y, placement_note = chosen
+
         lua = lq.build_produce_item(city_id, item_type, item_name, target_x, target_y)
         lines = await self.conn.execute_write(lua)
+
+        # A wonder needs a tile too, but only the game database knows which
+        # buildings are wonders, so the check is the game's. It bails before
+        # RequestOperation, so nothing has been mutated and a retry is safe.
+        # Ordinary buildings therefore pay nothing for this path.
+        if itype == "BUILDING" and target_x is None and _is_missing_coords(lines):
+            chosen = await self._auto_place_wonder(city_id, item_name)
+            if isinstance(chosen, str):
+                return chosen
+            target_x, target_y, placement_note = chosen
+            lua = lq.build_produce_item(
+                city_id, item_type, item_name, target_x, target_y
+            )
+            lines = await self.conn.execute_write(lua)
+
         result = _action_result(lines)
 
         # If CanStartOperation failed but CanProduce passed, verify via readback
@@ -591,7 +747,10 @@ class GameState:
                     for vl in verify_lines:
                         if vl.startswith("CONFIRMED|"):
                             turns = vl.split("|", 1)[1]
-                    return f"PRODUCING|{item_name}|{turns} (bypassed stale CanStartOperation)"
+                    return (
+                        f"PRODUCING|{item_name}|{turns}"
+                        f" (bypassed stale CanStartOperation){placement_note}"
+                    )
                 else:
                     hint = ""
                     if itype == "DISTRICT":
@@ -644,7 +803,7 @@ class GameState:
                     lq.build_verify_production(city_id, item_name)
                 )
                 if any("CONFIRMED" in vl for vl in verify_lines):
-                    return result
+                    return result + placement_note
                 not_set = next(
                     (vl for vl in verify_lines if vl.startswith("NOT_SET|")),
                     "NOT_SET|unknown",
@@ -658,7 +817,74 @@ class GameState:
             except Exception:
                 log.debug("OK-path production verify failed", exc_info=True)
 
+        # The note names a tile the server chose, so it belongs only on a
+        # result that actually started building on it.
+        if result.startswith("PRODUCING|"):
+            return result + placement_note
         return result
+
+    async def _auto_place_district(
+        self, city_id: int, district_type: str
+    ) -> tuple[int, int, str] | str:
+        """Pick the top-adjacency tile for a district.
+
+        Returns ``(x, y, note)`` or an error string for the caller to return
+        verbatim. The advisor call is exempt from the per-turn budget.
+        """
+        placements = await self.get_district_advisor(
+            city_id, district_type, enforce_budget=False
+        )
+        if isinstance(placements, str):
+            return placements
+        if not placements:
+            return (
+                f"Error: NO_PLACEMENT|No valid tile for {district_type} in this"
+                f" city. Use get_district_sites(city_id, '{district_type}') to"
+                f" see why, or pass target_x/target_y yourself."
+            )
+
+        best = placements[0]
+        adjacency_parts = []
+        for yield_type, bonus in best.adjacency.items():
+            adjacency_parts.append(f"{bonus} {yield_type}")
+        adjacency_text = ", ".join(adjacency_parts) if adjacency_parts else "none"
+        note = (
+            f" | auto-placed at ({best.x},{best.y})"
+            f" Adj +{best.total_adjacency} ({adjacency_text})"
+            f" — {len(placements)} tiles considered."
+            f" Pass target_x/target_y to choose a different tile."
+        )
+        return best.x, best.y, note
+
+    async def _auto_place_wonder(
+        self, city_id: int, wonder_type: str
+    ) -> tuple[int, int, str] | str:
+        """Pick the lowest-displacement tile for a wonder.
+
+        Returns ``(x, y, note)`` or an error string for the caller to return
+        verbatim. The advisor call is exempt from the per-turn budget.
+        """
+        placements = await self.get_wonder_advisor(
+            city_id, wonder_type, enforce_budget=False
+        )
+        if isinstance(placements, str):
+            return placements
+        if not placements:
+            return (
+                f"Error: NO_PLACEMENT|No valid tile for {wonder_type} in this"
+                f" city. Use get_wonder_sites(city_id, '{wonder_type}') to see"
+                f" why, or pass target_x/target_y yourself."
+            )
+
+        best = placements[0]
+        note = (
+            f" | auto-placed at ({best.x},{best.y})"
+            f" displacement {best.displacement_score}"
+            f" — {len(placements)} tiles considered."
+            f" A wonder consumes the tile permanently; pass target_x/target_y"
+            f" if you are saving it for a district."
+        )
+        return best.x, best.y, note
 
     async def purchase_item(
         self,
@@ -1180,43 +1406,68 @@ class GameState:
     ADVISOR_BUDGET_SOFT = 10
     ADVISOR_BUDGET_HARD = 20
 
+    def _record_advisor_call(self) -> int:
+        """Count one advisor query and return the running per-turn total.
+
+        Counting is separate from gating because the implicit advisor call
+        behind ``set_city_production`` is exempt from the budget but still
+        belongs in the count (see ``_advisor_budget_check``).
+        """
+        self._advisor_calls_this_turn += 1
+        return self._advisor_calls_this_turn
+
     def _advisor_budget_check(self) -> tuple[str | None, str | None]:
         """Check advisor budget. Returns (hard_error, soft_warning).
 
         - hard_error: short-circuit string if budget exceeded (caller returns it)
         - soft_warning: string to prepend to the result, or None
+
+        Only the explicit advisor tools gate on this. The implicit call that
+        ``set_city_production`` makes when it is given no coordinates counts
+        but never gates: the hard cap short-circuits its caller, so charging
+        the implicit path would fail a *production* call because of a rate
+        limit on a *different* tool it used internally. The cap exists to stop
+        advisor-spam-as-search, and the implicit path is by construction one
+        advisor call per placement — the behaviour the cap was trying to force.
         """
         # Increment unconditionally — the hard-cap path stays sticky until
         # the end-of-turn reset, and reporting the true call count is more
         # honest for logs and telemetry.
-        self._advisor_calls_this_turn += 1
-        n = self._advisor_calls_this_turn
+        n = self._record_advisor_call()
+        # State the limit and the count. No instruction about how to play:
+        # these are Lua-cost guards, not advice, and set_city_production now
+        # calls an advisor for the agent anyway.
         if n > self.ADVISOR_BUDGET_HARD:
             return (
-                f"ERR:ADVISOR_BUDGET_EXCEEDED|You have made {n} advisor calls "
-                f"this turn (limit {self.ADVISOR_BUDGET_HARD}). The advisors "
-                f"rank placements; they are not for brute-forcing every "
-                f"wonder or district. Make a decision with the information "
-                f"you already have, skip this step, or end your turn. Budget "
-                f"resets next turn.",
+                f"ERR:ADVISOR_BUDGET_EXCEEDED|{n} advisor calls this turn, "
+                f"limit {self.ADVISOR_BUDGET_HARD}. Resets next turn. "
+                f"set_city_production picks a tile without an advisor call "
+                f"when you omit target_x/target_y.",
                 None,
             )
         if n >= self.ADVISOR_BUDGET_SOFT:
             return (
                 None,
-                f"ADVISOR BUDGET WARNING: {n}/{self.ADVISOR_BUDGET_HARD} "
-                f"advisor calls this turn. Consolidate your queries — the "
-                f"advisors rank placements, not iterate through options.",
+                f"ADVISOR BUDGET: {n}/{self.ADVISOR_BUDGET_HARD} advisor "
+                f"calls this turn. Resets next turn.",
             )
         return None, None
 
     async def get_district_advisor(
-        self, city_id: int, district_type: str
+        self, city_id: int, district_type: str, enforce_budget: bool = True
     ) -> list[lq.DistrictPlacement] | str:
-        """Returns placements list, or an error string if placement is impossible."""
-        hard_err, soft_warn = self._advisor_budget_check()
-        if hard_err:
-            return hard_err
+        """Returns placements list, or an error string if placement is impossible.
+
+        ``enforce_budget=False`` counts the call but never gates on it — used
+        by the implicit placement path in ``set_city_production``.
+        """
+        soft_warn = None
+        if enforce_budget:
+            hard_err, soft_warn = self._advisor_budget_check()
+            if hard_err:
+                return hard_err
+        else:
+            self._record_advisor_call()
         lua = lq.build_district_advisor_query(city_id, district_type)
         lines = await self.conn.execute_write(lua)
         # Check for error bail lines (parser only looks for DPLOT| and silently
@@ -1231,12 +1482,20 @@ class GameState:
         return lq.parse_district_advisor_response(lines)
 
     async def get_wonder_advisor(
-        self, city_id: int, wonder_name: str
+        self, city_id: int, wonder_name: str, enforce_budget: bool = True
     ) -> list[lq.WonderPlacement] | str:
-        """Returns placements list, or an error string if budget exceeded."""
-        hard_err, soft_warn = self._advisor_budget_check()
-        if hard_err:
-            return hard_err
+        """Returns placements list, or an error string if budget exceeded.
+
+        ``enforce_budget=False`` counts the call but never gates on it — used
+        by the implicit placement path in ``set_city_production``.
+        """
+        soft_warn = None
+        if enforce_budget:
+            hard_err, soft_warn = self._advisor_budget_check()
+            if hard_err:
+                return hard_err
+        else:
+            self._record_advisor_call()
         lua = lq.build_wonder_advisor_query(city_id, wonder_name)
         lines = await self.conn.execute_write(lua)
         # Warning only attaches to the success path (same reason as above)
@@ -1281,16 +1540,51 @@ class GameState:
         return lq.parse_gp_advisor_response(lines)
 
     async def recruit_great_person(self, individual_id: int) -> str:
+        before = await self._unit_roster()
         lua = lq.build_recruit_great_person(individual_id)
         lines = await self.conn.execute_write(lua)
-        return lines[0] if lines else "No response"
+        result = lines[0] if lines else "No response"
+        return result + await self._name_spawned_unit(before, result)
 
     async def patronize_great_person(
         self, individual_id: int, yield_type: str = "YIELD_GOLD"
     ) -> str:
+        before = await self._unit_roster()
         lua = lq.build_patronize_great_person(individual_id, yield_type)
         lines = await self.conn.execute_write(lua)
-        return lines[0] if lines else "No response"
+        result = lines[0] if lines else "No response"
+        return result + await self._name_spawned_unit(before, result)
+
+    async def _unit_roster(self) -> dict[int, str]:
+        """The local player's unit ids and types, or {} if the read fails."""
+        try:
+            lines = await self.conn.execute_read(lq.build_unit_roster_query())
+            return lq.parse_unit_roster(lines)
+        except Exception:
+            log.debug("Unit roster read failed", exc_info=True)
+            return {}
+
+    async def _name_spawned_unit(self, before: dict[int, str], result: str) -> str:
+        """Report the unit id a successful recruit or patronize created.
+
+        A Great Person spawns in the capital, so the agent otherwise has to
+        rescan get_units and work out which unit is new. The operation is
+        fire-and-forget, so the unit can lag the response by a moment; hence
+        the retries. Reports nothing unless exactly one unit appeared, because
+        anything else means this cannot say which one it was.
+        """
+        if not result.startswith("OK:"):
+            return ""
+
+        for attempt in range(3):
+            if attempt:
+                await asyncio.sleep(0.3)
+            after = await self._unit_roster()
+            spawned = set(after) - set(before)
+            if len(spawned) == 1:
+                unit_id = spawned.pop()
+                return f"|unit_id:{unit_id}|{after[unit_id]}"
+        return ""
 
     async def get_religion_status(self) -> lq.ReligionStatus:
         lines = await self.conn.execute_write(lq.build_religion_status_query())
@@ -1751,6 +2045,18 @@ def _action_result(lines: list[str]) -> str:
             return f"Error: {line[4:]}"
     # No OK/ERR found — return all lines for debugging
     return "\n".join(lines)
+
+
+def _is_missing_coords(lines: list[str]) -> bool:
+    """True when the game refused an item because it needs a placement tile.
+
+    Emitted by build_produce_item for a wonder given no coordinates. The bail
+    happens before RequestOperation, so nothing has been mutated.
+    """
+    for line in lines:
+        if line.startswith("ERR:MISSING_COORDS"):
+            return True
+    return False
 
 
 def _format_attack_followup(lines: list[str], attacker_owner: int = 0) -> str:

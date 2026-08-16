@@ -1,7 +1,7 @@
 Trade Routes: 0/3 active
 
 Idle (2):
-  Trader (id:851972) at (45,12) — needs trade_route or teleport
-  Trader (id:1441804) at (45,12) — needs trade_route or teleport
+  Trader (id:4) at (45,12) — needs trade_route or teleport
+  Trader (id:12) at (45,12) — needs trade_route or teleport
 
 3 free route slot(s) — build/buy a Trader to fill.

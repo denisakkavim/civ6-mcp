@@ -14,6 +14,7 @@ from civ_mcp.lua._helpers import (
 )
 from civ_mcp.lua.models import (
     AppointedGovernor,
+    CityStateCity,
     CityStateInfo,
     DedicationChoice,
     DedicationStatus,
@@ -174,7 +175,7 @@ for row in GameInfo.Governors() do
         local turnsLeft = 0
         local assignedCity = g:GetAssignedCity()
         if assignedCity then
-            cityID = assignedCity:GetID()
+            cityID = ((assignedCity:GetID() % 65536) + assignedCity:GetOwner() * 65536 + 16777216)
             cityName = Locale.Lookup(assignedCity:GetName())
             established = g:IsEstablished() and "1" or "0"
             if not g:IsEstablished() then turnsLeft = g:GetTurnsToEstablish() end
@@ -318,7 +319,7 @@ if typeIdx == nil then {_bail("ERR:UNIT_NO_TYPE")} end
 local info = GameInfo.Units[typeIdx]
 local ut = info and info.UnitType or "UNKNOWN"
 local promClass = info and info.PromotionClass or ""
-print("UNIT|" .. {unit_index} .. "|" .. (unit:GetID() % 65536) .. "|" .. ut)
+print("UNIT|" .. ((unit:GetID() % 65536) + unit:GetOwner() * 65536) .. "|" .. (unit:GetID() % 65536) .. "|" .. ut)
 local exp = unit:GetExperience()
 {_LUA_XP_THRESHOLD}
 print("XP|" .. xp .. "|" .. xpNeeded .. "|" .. xpPromoCount)
@@ -441,6 +442,9 @@ for i = 0, 62 do
         end
         local canSend = pInfluence:CanGiveTokensToPlayer(i) and "1" or "0"
         print("CS|" .. i .. "|" .. name:gsub("|","/") .. "|" .. csType .. "|" .. envoys .. "|" .. suzID .. "|" .. suzName:gsub("|","/") .. "|" .. canSend)
+        for _, csc in Players[i]:GetCities():Members() do
+            print("CSCITY|" .. i .. "|" .. ((csc:GetID() % 65536) + csc:GetOwner() * 65536 + 16777216) .. "|" .. Locale.Lookup(csc:GetName()):gsub("|","/"))
+        end
     end
 end
 print("{SENTINEL}")
@@ -827,10 +831,17 @@ def parse_city_states_response(lines: list[str]) -> EnvoyStatus:
     """Parse TOKENS| and CS| lines from build_city_states_query."""
     tokens = 0
     city_states: list[CityStateInfo] = []
+    cs_cities: dict[int, list[CityStateCity]] = {}
 
     for line in lines:
         if line.startswith("TOKENS|"):
             tokens = int(line.split("|")[1])
+        elif line.startswith("CSCITY|"):
+            parts = line.split("|")
+            if len(parts) >= 4:
+                cs_cities.setdefault(int(parts[1]), []).append(
+                    CityStateCity(city_id=int(parts[2]), name=parts[3])
+                )
         elif line.startswith("CS|"):
             parts = line.split("|")
             if len(parts) >= 8:
@@ -845,6 +856,10 @@ def parse_city_states_response(lines: list[str]) -> EnvoyStatus:
                         can_send_envoy=parts[7] == "1",
                     )
                 )
+
+    # CSCITY lines can arrive after their CS line, so attach at the end.
+    for city_state in city_states:
+        city_state.cities = cs_cities.get(city_state.player_id, [])
 
     return EnvoyStatus(tokens_available=tokens, city_states=city_states)
 

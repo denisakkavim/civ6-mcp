@@ -229,7 +229,7 @@ def narrate_units(
                 rs_str = f" RS:{t.ranged_strength}" if t.ranged_strength > 0 else ""
                 lines.append(
                     f"    {t.unit_type} at ({t.x},{t.y}) — CS:{t.combat_strength}{rs_str} "
-                    f"HP:{t.hp}/{t.max_hp} ({t.distance} tiles away)"
+                    f"HP:{t.hp}/{t.max_hp} ({t.distance} tiles away) [id:{t.unit_id}]"
                 )
     return "\n".join(lines)
 
@@ -617,7 +617,18 @@ def narrate_settle_candidates(candidates: list[lq.SettleCandidate]) -> str:
             loy_warn = (
                 f" | !! Loyalty: ~{c.loyalty_pressure:+.0f}/turn (enemy pressure)"
             )
-        header = f"  #{i} ({c.x},{c.y}): Score {c.score:.0f} — F:{c.total_food} P:{c.total_prod} — {water}, defense:{c.defense_score}{loy_warn}"
+        # get_pathing_estimate reports -2 for "no moves left" and any other
+        # negative for "no path". Printing those raw would read as "-1t away".
+        reach = ""
+        if c.turns_to_reach == -2:
+            reach = " — no moves left"
+        elif c.turns_to_reach is not None and c.turns_to_reach < 0:
+            reach = " — unreachable"
+        elif c.turns_to_reach == 0:
+            reach = " — this turn"
+        elif c.turns_to_reach is not None:
+            reach = f" — {c.turns_to_reach}t away"
+        header = f"  #{i} ({c.x},{c.y}): Score {c.score:.0f}{reach} — F:{c.total_food} P:{c.total_prod} — {water}, defense:{c.defense_score}{loy_warn}"
         lines.append(header)
         if c.resources:
             # Format: [S] IRON, [L] DIAMONDS, [B] WHEAT
@@ -725,8 +736,10 @@ def narrate_diplomacy(civs: list[lq.CivInfo]) -> str:
                             f" !! loy {vc.loyalty:.0f} ({vc.loyalty_per_turn:+.1f}/t)"
                         )
                     walls_str = " [walls]" if vc.has_walls else ""
+                    id_str = f" [city:{vc.city_id}]" if vc.city_id is not None else ""
                     city_parts.append(
-                        f"{vc.name} pop {vc.population} ({vc.x},{vc.y}){walls_str}{loy_warn}"
+                        f"{vc.name} pop {vc.population} ({vc.x},{vc.y}){walls_str}"
+                        f"{loy_warn}{id_str}"
                     )
                 hidden = c.num_cities - len(c.visible_cities)
                 fog_str = f" + {hidden} in fog" if hidden > 0 else ""
@@ -1199,6 +1212,11 @@ def narrate_city_states(status: lq.EnvoyStatus) -> str:
             lines.append(
                 f"  {cs.name} ({cs.city_state_type}) — {cs.envoys_sent} envoys{suz}{can} [player {cs.player_id}]"
             )
+            # send_envoy takes the player; anything aimed at the city itself —
+            # spy travel, a trade route — takes one of these. Free Cities can
+            # hold several, or none at all.
+            for city in cs.cities:
+                lines.append(f"    {city.name} [city:{city.city_id}]")
     if status.tokens_available > 0:
         lines.append("\nUse send_envoy(player_id) to send an envoy.")
     return "\n".join(lines)
@@ -1508,7 +1526,8 @@ def narrate_trade_destinations(dests: list[lq.TradeDestination]) -> str:
 
     def _fmt_dest(d: lq.TradeDestination, show_owner: bool = False) -> str:
         owner = f" ({d.owner_name})" if show_owner and d.owner_name else ""
-        parts = [f"  {d.city_name}{owner} at ({d.x},{d.y})"]
+        dest_id = f" [city:{d.city_id}]" if d.city_id is not None else ""
+        parts = [f"  {d.city_name}{owner} at ({d.x},{d.y}){dest_id}"]
         # Yields
         yields = []
         if d.origin_yields:

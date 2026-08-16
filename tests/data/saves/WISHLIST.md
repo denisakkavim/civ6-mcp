@@ -38,7 +38,7 @@ Stage 2 could not verify.
 | A Great Person on its matching district | `unit_action(activate)`, `get_great_person_sites`, `activate_great_person` |
 | A Missionary or an Apostle in or next to a city | `unit_action(spread_religion)`, `spread_religion` |
 | A pillaged improvement | `unit_action(repair)` |
-| A pillaged district | The `type@x,y` output that Stage 3.4d adds |
+| A pillaged district | The `type@x,y` output that Stage 3.4d adds. The code is written; no save can run it |
 | A builder on a removable feature | `unit_action(remove_feature)` |
 | A builder on an intact improvement | `unit_action(remove_improvement)` |
 | A Military Engineer | `unit_action(build_route)` |
@@ -60,12 +60,21 @@ the happy path.
 
 | Game state | It unblocks |
 |---|---|
-| A city with a free district slot, and an available wonder | Stage 3.1. The advisor picks the tile when the agent gives no coordinates |
-| A builder whose task is out of reach this turn | Stage 3.2. The `MOVED_PARTIAL` result |
-| A unit that arrives with no movement left | Stage 3.2. The `ARRIVED_WAITING` result. This case may not exist. A save is how to find out |
 | A city that you can capture this turn | Stage 3.4a. The composite id changes when the owner changes |
+| Free Cities holding at least one revolted city | Stage 3.4b. `CityStateInfo.cities` is a list because player 62 collects revolted cities. Turn 73 has Free Cities with none, so the empty case is covered and the populated one is not |
+| A wonder tile that a district also wants | Stage 3.1. The implicit wonder tile is the risky default. Turn 73 proved the path works, not that the choice is good |
 | An Encampment district | Stage 4.1. Check whether an encampment can attack |
 | An Aerodrome and an Airport | The airlift capability that §6b asks about |
+
+Turn 73 answered three Stage 3 questions. Do not ask for these saves again:
+
+- A builder whose task is out of reach. `MOVED_PARTIAL` was recorded live.
+- A unit that arrives with no movement left. `ARRIVED_WAITING` was recorded
+  live. **The case exists.** The plan expected that it would not. A builder
+  that lands on its target tile with 0 movement is refused. In this save that
+  is the usual outcome, not the rare one.
+- A city with a free district slot. `DISTRICT_HOLY_SITE` in Wanuku and
+  `BUILDING_APADANA` in Qusqu both placed themselves from the advisor.
 
 ## Do not ask for these again
 

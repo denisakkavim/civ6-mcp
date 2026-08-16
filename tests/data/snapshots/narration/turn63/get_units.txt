@@ -1,18 +1,18 @@
 12 units:
-  Scout (UNIT_SCOUT) at (51,9) — CS:10 moves 3/3 [id:1179648]
-  Warrior (UNIT_WARRIOR) at (53,18) — CS:20 moves 3/3 [id:131073]
-  Builder (UNIT_BUILDER) at (45,13) — moves 2/2 charges:3 [id:720898]
-  Archer (UNIT_ARCHER) at (45,12) — CS:15 RS:25 moves 2/2 [id:1114115]
-  Trader (UNIT_TRADER) at (45,11) — moves 2/2 [ON ROUTE: Qusqu -> Antawaylla (Domestic)] [id:851972]
-  Slinger (UNIT_SLINGER) at (41,11) — CS:5 RS:15 moves 2/2 [id:458757]
-  Warrior (UNIT_WARRIOR) at (58,15) — CS:20 moves 2/2 [id:786438]
-  Slinger (UNIT_SLINGER) at (54,15) — CS:5 RS:15 moves 2/2 [id:655367]
-  Warrior (UNIT_WARRIOR) at (44,8) — CS:20 moves 2/2 [id:917512]
-  Settler (UNIT_SETTLER) at (41,11) — moves 2/2 [id:983049]
-  Archer (UNIT_ARCHER) at (47,9) — CS:15 RS:25 moves 2/2 [id:1048586]
-  Builder (UNIT_BUILDER) at (45,8) — moves 2/2 charges:2 [id:1245195]
+  Scout (UNIT_SCOUT) at (51,9) — CS:10 moves 3/3 [id:0]
+  Warrior (UNIT_WARRIOR) at (53,18) — CS:20 moves 3/3 [id:1]
+  Builder (UNIT_BUILDER) at (45,13) — moves 2/2 charges:3 [id:2]
+  Archer (UNIT_ARCHER) at (45,12) — CS:15 RS:25 moves 2/2 [id:3]
+  Trader (UNIT_TRADER) at (45,11) — moves 2/2 [ON ROUTE: Qusqu -> Antawaylla (Domestic)] [id:4]
+  Slinger (UNIT_SLINGER) at (41,11) — CS:5 RS:15 moves 2/2 [id:5]
+  Warrior (UNIT_WARRIOR) at (58,15) — CS:20 moves 2/2 [id:6]
+  Slinger (UNIT_SLINGER) at (54,15) — CS:5 RS:15 moves 2/2 [id:7]
+  Warrior (UNIT_WARRIOR) at (44,8) — CS:20 moves 2/2 [id:8]
+  Settler (UNIT_SETTLER) at (41,11) — moves 2/2 [id:9]
+  Archer (UNIT_ARCHER) at (47,9) — CS:15 RS:25 moves 2/2 [id:10]
+  Builder (UNIT_BUILDER) at (45,8) — moves 2/2 charges:2 [id:11]
 
 Nearby threats (2):
   Georgia (2 units):
-    UNIT_SCOUT at (43,5) — CS:10 HP:100/100 (3 tiles away)
-    UNIT_WARRIOR at (49,11) — CS:20 HP:100/100 (3 tiles away)
+    UNIT_SCOUT at (43,5) — CS:10 HP:100/100 (3 tiles away) [id:65541]
+    UNIT_WARRIOR at (49,11) — CS:20 HP:100/100 (3 tiles away) [id:65542]

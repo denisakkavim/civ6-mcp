@@ -1,35 +1,35 @@
 === BUILDER TASKS (23 tasks, 3 idle builders) ===
 
 URGENT:
-  (43,12): RESOURCE_NITER* — build IMPROVEMENT_MINE [city: Qusqu] — nearest builder id:720898, 1 tile
-  (41,10): RESOURCE_COAL* — build IMPROVEMENT_MINE [city: Wanuku] — nearest builder id:720898, 3 tiles
-  (49,10): RESOURCE_HORSES* — build IMPROVEMENT_PASTURE [city: Antawaylla] — nearest builder id:1507337, 5 tiles
-  (49,9): RESOURCE_HORSES* — build IMPROVEMENT_PASTURE [city: Antawaylla] — nearest builder id:1507337, 6 tiles
+  (43,12): RESOURCE_NITER* — build IMPROVEMENT_MINE [city: Qusqu] — nearest builder id:2, 1 tile
+  (41,10): RESOURCE_COAL* — build IMPROVEMENT_MINE [city: Wanuku] — nearest builder id:2, 3 tiles
+  (49,10): RESOURCE_HORSES* — build IMPROVEMENT_PASTURE [city: Antawaylla] — nearest builder id:9, 5 tiles
+  (49,9): RESOURCE_HORSES* — build IMPROVEMENT_PASTURE [city: Antawaylla] — nearest builder id:9, 6 tiles
 
 HIGH:
-  (43,10): RESOURCE_WHEAT — build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:720898, 1 tile
-  (46,9): RESOURCE_INCENSE+ — build IMPROVEMENT_PLANTATION [city: Qusqu] — nearest builder id:1507337, 3 tiles
-  (42,8): RESOURCE_CATTLE — build IMPROVEMENT_PASTURE [city: Wanuku] — nearest builder id:720898, 3 tiles
-  (45,7): RESOURCE_INCENSE+ — build IMPROVEMENT_PLANTATION [city: Wanuku] — nearest builder id:720898, 4 tiles
-  (44,6): RESOURCE_SALT+ — build IMPROVEMENT_MINE [city: Wanuku] — nearest builder id:720898, 5 tiles
-  (48,8): RESOURCE_DEER — build IMPROVEMENT_CAMP [city: Antawaylla] — nearest builder id:1507337, 5 tiles
+  (43,10): RESOURCE_WHEAT — build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:2, 1 tile
+  (46,9): RESOURCE_INCENSE+ — build IMPROVEMENT_PLANTATION [city: Qusqu] — nearest builder id:9, 3 tiles
+  (42,8): RESOURCE_CATTLE — build IMPROVEMENT_PASTURE [city: Wanuku] — nearest builder id:2, 3 tiles
+  (45,7): RESOURCE_INCENSE+ — build IMPROVEMENT_PLANTATION [city: Wanuku] — nearest builder id:2, 4 tiles
+  (44,6): RESOURCE_SALT+ — build IMPROVEMENT_MINE [city: Wanuku] — nearest builder id:2, 5 tiles
+  (48,8): RESOURCE_DEER — build IMPROVEMENT_CAMP [city: Antawaylla] — nearest builder id:9, 5 tiles
 
 NORMAL:
-  (43,11): build IMPROVEMENT_MINE [city: Qusqu] — nearest builder id:720898, 0 tiles
-  (45,13): build IMPROVEMENT_LUMBER_MILL [city: Qusqu] — nearest builder id:1245195, 0 tiles
-  (44,10): build IMPROVEMENT_LUMBER_MILL [city: Qusqu] — nearest builder id:720898, 1 tile
-  (45,10): build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:1507337, 1 tile
-  (42,11): build IMPROVEMENT_MINE [city: Qusqu] — nearest builder id:720898, 1 tile
-  (43,9): build IMPROVEMENT_LUMBER_MILL [city: Qusqu] — nearest builder id:720898, 2 tiles
-  (42,10): build IMPROVEMENT_MINE [city: Qusqu] — nearest builder id:720898, 2 tiles
-  (46,10): build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:1507337, 2 tiles
-  (46,11): build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:1507337, 2 tiles
-  (47,10): build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:1507337, 3 tiles
-  (48,10): build IMPROVEMENT_MINE [city: Qusqu] — nearest builder id:1507337, 4 tiles
-  (48,11): build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:1507337, 4 tiles
-  (48,9): build IMPROVEMENT_MINE [city: Qusqu] — nearest builder id:1507337, 5 tiles
+  (43,11): build IMPROVEMENT_MINE [city: Qusqu] — nearest builder id:2, 0 tiles
+  (45,13): build IMPROVEMENT_LUMBER_MILL [city: Qusqu] — nearest builder id:11, 0 tiles
+  (44,10): build IMPROVEMENT_LUMBER_MILL [city: Qusqu] — nearest builder id:2, 1 tile
+  (45,10): build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:9, 1 tile
+  (42,11): build IMPROVEMENT_MINE [city: Qusqu] — nearest builder id:2, 1 tile
+  (43,9): build IMPROVEMENT_LUMBER_MILL [city: Qusqu] — nearest builder id:2, 2 tiles
+  (42,10): build IMPROVEMENT_MINE [city: Qusqu] — nearest builder id:2, 2 tiles
+  (46,10): build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:9, 2 tiles
+  (46,11): build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:9, 2 tiles
+  (47,10): build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:9, 3 tiles
+  (48,10): build IMPROVEMENT_MINE [city: Qusqu] — nearest builder id:9, 4 tiles
+  (48,11): build IMPROVEMENT_FARM [city: Qusqu] — nearest builder id:9, 4 tiles
+  (48,9): build IMPROVEMENT_MINE [city: Qusqu] — nearest builder id:9, 5 tiles
 
 IDLE BUILDERS (3):
-  id:720898 at (43,11) — 3 charges, 2 moves
-  id:1507337 at (44,11) — 3 charges, 2 moves
-  id:1245195 at (45,13) — 1 charges, 2 moves
+  id:2 at (43,11) — 3 charges, 2 moves
+  id:9 at (44,11) — 3 charges, 2 moves
+  id:11 at (45,13) — 1 charges, 2 moves

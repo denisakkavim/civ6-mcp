@@ -1,26 +1,26 @@
 19 trade route destinations:
 
 Domestic (food + production to destination):
-  Qusqu at (45,12) | Food:2 Prod:1 Gold:2 | Trading Post Shinto <- 0.5
-  Wanuku at (44,8) | Food:1 Prod:1 Gold:2 | Trading Post
-  Antawaylla at (47,9) | Food:2 Prod:1 Gold:2 | Shinto <- 0.5
+  Qusqu at (45,12) [city:16777216] | Food:2 Prod:1 Gold:2 | Trading Post Shinto <- 0.5
+  Wanuku at (44,8) [city:16777217] | Food:1 Prod:1 Gold:2 | Trading Post
+  Antawaylla at (47,9) [city:16777218] | Food:2 Prod:1 Gold:2 | Shinto <- 0.5
 
 International (gold to origin):
-  Tbilisi (Georgia) at (52,21) | Gold:7 Sci:1 Faith:1 | Eastern Orthodoxy <- 0.5
-  Kutaisi (Georgia) at (55,19) | Gold:7 Faith:1 | Eastern Orthodoxy <- 0.5
-  Rustavi (Georgia) at (56,14) | Gold:7 Sci:1 | Eastern Orthodoxy <- 0.5
-  Gori (Georgia) at (53,25) | Gold:7 | Eastern Orthodoxy <- 0.5
-  Ulundi (Zulu) at (19,20) | Prod:1 Gold:9 Cul:1
-  Kwadukuza (Zulu) at (17,25) | Gold:7 Sci:1
-  Nobamba (Zulu) at (15,18) | Gold:7
-  Aachen (Germany) at (7,26) | Gold:7 Sci:1
-  Cologne (Germany) at (9,30) | Gold:7 Faith:1 | Catholicism <- 0.5
-  Heidelberg (Germany) at (4,28) | Gold:7
-  Wolin (Wolin) at (53,12) | Prod:1 Gold:7 | Eastern Orthodoxy <- 0.5
-  La Venta (La Venta) at (46,23) | Gold:7 Faith:1
-  Preslav (Preslav) at (11,21) | Gold:7
-  Mohenjo-Daro (Mohenjo-Daro) at (14,30) | Gold:7
-  Zanzibar (Zanzibar) at (15,14) | Gold:13
-  Vilnius (Vilnius) at (24,23) | Gold:7 Cul:1
+  Tbilisi (Georgia) at (52,21) [city:16842752] | Gold:7 Sci:1 Faith:1 | Eastern Orthodoxy <- 0.5
+  Kutaisi (Georgia) at (55,19) [city:16842753] | Gold:7 Faith:1 | Eastern Orthodoxy <- 0.5
+  Rustavi (Georgia) at (56,14) [city:16842754] | Gold:7 Sci:1 | Eastern Orthodoxy <- 0.5
+  Gori (Georgia) at (53,25) [city:16842755] | Gold:7 | Eastern Orthodoxy <- 0.5
+  Ulundi (Zulu) at (19,20) [city:16908288] | Prod:1 Gold:9 Cul:1
+  Kwadukuza (Zulu) at (17,25) [city:16908289] | Gold:7 Sci:1
+  Nobamba (Zulu) at (15,18) [city:16908290] | Gold:7
+  Aachen (Germany) at (7,26) [city:16973824] | Gold:7 Sci:1
+  Cologne (Germany) at (9,30) [city:16973825] | Gold:7 Faith:1 | Catholicism <- 0.5
+  Heidelberg (Germany) at (4,28) [city:16973826] | Gold:7
+  Wolin (Wolin) at (53,12) [city:17039360] | Prod:1 Gold:7 | Eastern Orthodoxy <- 0.5
+  La Venta (La Venta) at (46,23) [city:17104896] | Gold:7 Faith:1
+  Preslav (Preslav) at (11,21) [city:17170432] | Gold:7
+  Mohenjo-Daro (Mohenjo-Daro) at (14,30) [city:17235968] | Gold:7
+  Zanzibar (Zanzibar) at (15,14) [city:17301504] | Gold:13
+  Vilnius (Vilnius) at (24,23) [city:17367040] | Gold:7 Cul:1
 
 Use unit_action with action='trade_route', target_x=X, target_y=Y

@@ -1,6 +1,6 @@
 3 civilizations:
   Georgia (Tamar) — FRIENDLY (+12) [player 1]
-    Cities (4): Kutaisi pop 2 (55,19); Rustavi pop 4 (56,14) [walls]; Gori pop 2 (53,25) + 1 in fog
+    Cities (4): Kutaisi pop 2 (55,19) [city:16842753]; Rustavi pop 4 (56,14) [walls] [city:16842754]; Gori pop 2 (53,25) [city:16842755] + 1 in fog
     Military: 128 vs our 145
     Access: they have delegation
     -2 Unknown Reason

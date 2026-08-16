@@ -68,7 +68,7 @@ for i = 0, 62 do
                             end
                         end
                     end)
-                    print("ECITY|" .. i .. "|" .. ecName:gsub("|","/") .. "|" .. ecx .. "," .. ecy .. "|" .. ecPop .. "|" .. string.format("%.0f|%.1f", ecLoy, ecLoyPT) .. "|" .. ecWalls .. "|" .. ecDef)
+                    print("ECITY|" .. i .. "|" .. ecName:gsub("|","/") .. "|" .. ecx .. "," .. ecy .. "|" .. ecPop .. "|" .. string.format("%.0f|%.1f", ecLoy, ecLoyPT) .. "|" .. ecWalls .. "|" .. ecDef .. "|" .. ((ec:GetID() % 65536) + ec:GetOwner() * 65536 + 16777216))
                 end
             end
             print("CIVCITIES|" .. i .. "|" .. nCivCities)
@@ -550,14 +550,14 @@ end
 print("ALLIANCE|" .. (allianceEligible and "1" or "0") .. "|" .. currentAlliance)
 for _, city in Players[me]:GetCities():Members() do
     local cName = Locale.Lookup(city:GetName()):gsub("|", "/")
-    local cid = city:GetID()
+    local cid = ((city:GetID() % 65536) + city:GetOwner() * 65536 + 16777216)
     local pop = city:GetPopulation()
     local isCapital = city:IsCapital() and "1" or "0"
     print("CITY|OURS|" .. cid .. "|" .. cName .. "|" .. pop .. "|" .. isCapital)
 end
 for _, city in Players[target]:GetCities():Members() do
     local cName = Locale.Lookup(city:GetName()):gsub("|", "/")
-    local cid = city:GetID()
+    local cid = ((city:GetID() % 65536) + city:GetOwner() * 65536 + 16777216)
     local pop = city:GetPopulation()
     local isCapital = city:IsCapital() and "1" or "0"
     print("CITY|THEIRS|" .. cid .. "|" .. cName .. "|" .. pop .. "|" .. isCapital)
@@ -1148,6 +1148,7 @@ def parse_diplomacy_response(lines: list[str]) -> list[CivInfo]:
                             loyalty_per_turn=float(parts[6]),
                             has_walls=int(parts[7]) > 0,
                             defense_strength=int(parts[8]),
+                            city_id=int(parts[9]) if len(parts) > 9 else None,
                         )
                         civs[pid].visible_cities.append(vc)
                     except (ValueError, IndexError):

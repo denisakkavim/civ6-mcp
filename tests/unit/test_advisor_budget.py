@@ -25,6 +25,7 @@ def gs():
     stub._advisor_budget_warning = None
     stub.ADVISOR_BUDGET_SOFT = GameState.ADVISOR_BUDGET_SOFT
     stub.ADVISOR_BUDGET_HARD = GameState.ADVISOR_BUDGET_HARD
+    stub._record_advisor_call = types.MethodType(GameState._record_advisor_call, stub)
     stub._advisor_budget_check = types.MethodType(GameState._advisor_budget_check, stub)
     return stub
 
@@ -49,7 +50,7 @@ def test_soft_warning_fires_at_the_limit(gs):
     hard, soft = gs._advisor_budget_check()  # 10th call
     assert hard is None
     assert soft is not None
-    assert "ADVISOR BUDGET WARNING" in soft
+    assert "ADVISOR BUDGET" in soft
     assert "10/20" in soft
 
 
@@ -92,8 +93,8 @@ def test_hard_error_is_actionable(gs):
     for _ in range(20):
         gs._advisor_budget_check()
     hard, _ = gs._advisor_budget_check()  # 21st call trips the cap
-    assert "rank placements" in hard
-    assert "resets next turn" in hard
+    assert "limit 20" in hard
+    assert "Resets next turn" in hard
     assert "ERR:" in hard
 
 
@@ -101,4 +102,5 @@ def test_soft_warning_is_informative(gs):
     for _ in range(9):
         gs._advisor_budget_check()
     _, soft = gs._advisor_budget_check()  # 10th call trips the warning
-    assert "Consolidate your queries" in soft
+    assert "10/20" in soft
+    assert "Resets next turn" in soft

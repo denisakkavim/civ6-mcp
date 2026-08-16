@@ -471,7 +471,7 @@ for i, city in Players[me]:GetCities():Members() do
                     end)
                 end
                 local cn = (Locale.Lookup(city:GetName()):gsub("|", "/"))
-                print("GP_CITY|" .. cn .. "|" .. city:GetID() .. "|" .. dx .. "|" .. dy .. "|" .. tostring(canAct) .. "|" .. dist .. "|" .. cityYield .. "|" .. slotsFree .. "|" .. slotsTotal)
+                print("GP_CITY|" .. cn .. "|" .. ((city:GetID() % 65536) + city:GetOwner() * 65536 + 16777216) .. "|" .. dx .. "|" .. dy .. "|" .. tostring(canAct) .. "|" .. dist .. "|" .. cityYield .. "|" .. slotsFree .. "|" .. slotsTotal)
             end
         end
     end)

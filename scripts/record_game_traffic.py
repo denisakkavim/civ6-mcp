@@ -53,6 +53,9 @@ READ_PLAN: list[tuple[str, dict, bool]] = [
         {"center_x": "$CITY_X", "center_y": "$CITY_Y", "radius": 2},
         False,
     ),
+    # The entity-addressed half of the same read. Stage 3 split the two so
+    # each states its requirement in the schema.
+    ("get_map_around", {"entity_id": "$CITY", "radius": 2}, False),
     ("get_empire_resources", {}, False),
     ("get_builder_tasks", {}, False),
     ("get_exploration_status", {}, False),

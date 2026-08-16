@@ -71,7 +71,7 @@ for i, c in Players[me]:GetCities():Members() do
                         local eInfo = GameInfo.Units[other:GetType()]
                         local eName = eInfo and eInfo.UnitType or "UNKNOWN"
                         local eHP = other:GetMaxDamage() - other:GetDamage()
-                        table.insert(cityTargets, eName .. "@" .. tx .. "," .. ty .. "(" .. eHP .. "hp)")
+                        table.insert(cityTargets, eName .. "@" .. tx .. "," .. ty .. "(" .. eHP .. "hp)[" .. ((other:GetID() % 65536) + other:GetOwner() * 65536) .. "]")
                     end
                 end end
             end
@@ -85,7 +85,7 @@ for i, c in Players[me]:GetCities():Members() do
             table.insert(distLocs, dInfo.DistrictType .. "@" .. d:GetX() .. "," .. d:GetY())
         end
         if d:IsPillaged() then
-            if dInfo then table.insert(pillDistricts, dInfo.DistrictType) end
+            if dInfo then table.insert(pillDistricts, dInfo.DistrictType .. "@" .. d:GetX() .. "," .. d:GetY()) end
         end
     end
     local pillBuildings = {}
@@ -152,12 +152,12 @@ for i, c in Players[me]:GetCities():Members() do
             end
         end
     end
-    print(c:GetID() .. "|" .. nm .. "|" .. c:GetX() .. "," .. c:GetY() .. "|" .. c:GetPopulation() .. "|" .. string.format("%.1f|%.1f|%.1f|%.1f|%.1f|%.1f", c:GetYield(0), c:GetYield(1), c:GetYield(2), c:GetYield(3), c:GetYield(4), c:GetYield(5)) .. "|" .. string.format("%.1f", g:GetHousing()) .. "|" .. amTotal .. "|" .. g:GetTurnsUntilGrowth() .. "|" .. producing .. "|" .. turnsLeft .. "|" .. defStr .. "|" .. garHP .. "/" .. garMax .. "|" .. wallHP .. "/" .. wallMax .. "|" .. table.concat(cityTargets, ";") .. "|" .. table.concat(pillDistricts, ";") .. "|" .. table.concat(distLocs, ";") .. "|" .. string.format("%.1f|%.1f|%.1f|%d", loy, loyMax, loyPT, loyFlip) .. "|" .. string.format("%.1f|%.1f|%d", g:GetFoodSurplus(), g:GetFood(), g:GetGrowthThreshold()) .. "|" .. table.concat(pillBuildings, ";") .. "|" .. garrisonUnit)
+    print(((c:GetID() % 65536) + c:GetOwner() * 65536 + 16777216) .. "|" .. nm .. "|" .. c:GetX() .. "," .. c:GetY() .. "|" .. c:GetPopulation() .. "|" .. string.format("%.1f|%.1f|%.1f|%.1f|%.1f|%.1f", c:GetYield(0), c:GetYield(1), c:GetYield(2), c:GetYield(3), c:GetYield(4), c:GetYield(5)) .. "|" .. string.format("%.1f", g:GetHousing()) .. "|" .. amTotal .. "|" .. g:GetTurnsUntilGrowth() .. "|" .. producing .. "|" .. turnsLeft .. "|" .. defStr .. "|" .. garHP .. "/" .. garMax .. "|" .. wallHP .. "/" .. wallMax .. "|" .. table.concat(cityTargets, ";") .. "|" .. table.concat(pillDistricts, ";") .. "|" .. table.concat(distLocs, ";") .. "|" .. string.format("%.1f|%.1f|%.1f|%d", loy, loyMax, loyPT, loyFlip) .. "|" .. string.format("%.1f|%.1f|%d", g:GetFoodSurplus(), g:GetFood(), g:GetGrowthThreshold()) .. "|" .. table.concat(pillBuildings, ";") .. "|" .. garrisonUnit)
     if #unimproved > 0 or #pillImprov > 0 then
-        print("CITYTILES|" .. c:GetID() .. "|" .. table.concat(unimproved, ",") .. "|" .. table.concat(pillImprov, ","))
+        print("CITYTILES|" .. ((c:GetID() % 65536) + c:GetOwner() * 65536 + 16777216) .. "|" .. table.concat(unimproved, ",") .. "|" .. table.concat(pillImprov, ","))
     end
     if #allBuildings > 0 then
-        print("CITYBLDG|" .. c:GetID() .. "|" .. table.concat(allBuildings, ","))
+        print("CITYBLDG|" .. ((c:GetID() % 65536) + c:GetOwner() * 65536 + 16777216) .. "|" .. table.concat(allBuildings, ","))
     end
 end
 for i = 1, #cityCoords do for j = i + 1, #cityCoords do
@@ -268,7 +268,7 @@ end
 if city == nil then {_bail("ERR:NO_PENDING_CITY|No rebelled or captured city pending decision")} end
 local name = Locale.Lookup(city:GetName())
 local pop = city:GetPopulation()
-local cid = city:GetID()
+local cid = ((city:GetID() % 65536) + city:GetOwner() * 65536 + 16777216)
 local params = {{}}
 params[UnitOperationTypes.PARAM_FLAGS] = {directive}
 local canDo = CityManager.CanStartCommand(city, CityCommandTypes.DESTROY, params)
@@ -523,6 +523,35 @@ print("{SENTINEL}")
 """
 
 
+def build_city_position_query(owner: int, local_id: int) -> str:
+    """GameCore: where a city is, given its owner and per-player id.
+
+    Both halves of the composite are needed. Own-city tools can drop the owner
+    because their Lua assumes the local player, but a foreign city is only
+    findable through the player that holds it — which is exactly the half a
+    blanket ``% 65536`` would throw away.
+    """
+    return f"""
+local p = Players[{owner}]
+if p == nil then print("ERR:NO_PLAYER|{owner}") print("{SENTINEL}") return end
+local c = p:GetCities():FindID({local_id})
+if c == nil then print("ERR:NO_CITY|player {owner} has no city {local_id}") print("{SENTINEL}") return end
+print("CITYPOS|" .. c:GetX() .. "|" .. c:GetY() .. "|" .. Locale.Lookup(c:GetName()):gsub("|","/"))
+print("{SENTINEL}")
+"""
+
+
+def parse_city_position(lines: list[str]) -> tuple[int, int, str] | None:
+    """Parse CITYPOS| into ``(x, y, name)``, or None when the city was not found."""
+    for line in lines:
+        if not line.startswith("CITYPOS|"):
+            continue
+        parts = line.split("|")
+        if len(parts) >= 4:
+            return int(parts[1]), int(parts[2]), parts[3]
+    return None
+
+
 def build_verify_production(city_id: int, item_name: str) -> str:
     """GameCore readback: verify production was set after RequestOperation.
 
@@ -574,7 +603,7 @@ if "{itype}" == "UNIT" then
             if u:GetOwner() == me then
                 local uDef = GameInfo.Units[u:GetType()]
                 if uDef and uDef.FormationClass == targetClass then
-                    local uid = u:GetID() + u:GetOwner() * 65536
+                    local uid = ((u:GetID() % 65536) + u:GetOwner() * 65536)
                     {_bail_lua(f'"ERR:STACKING_CONFLICT|Cannot purchase {item_name} — " .. uDef.UnitType .. " (unit_id=" .. uid .. ") is on the city tile. Move it with unit_action(unit_id=" .. uid .. ", action=\'move\', target_x, target_y) first, then retry the purchase."')}
                 end
             end

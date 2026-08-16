@@ -2,7 +2,7 @@
   "tool": "get_pending_deals",
   "arguments": {},
   "scenario": "turn57",
-  "recorded_at": "2026-08-13T21:35:25+00:00",
+  "recorded_at": "2026-08-16T17:04:59+00:00",
   "notes": null,
   "result": "No pending trade deals.",
   "exchanges": [

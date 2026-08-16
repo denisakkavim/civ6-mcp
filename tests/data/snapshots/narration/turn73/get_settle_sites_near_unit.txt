@@ -1,11 +1,11 @@
 Top 5 settle locations:
-  #1 (50,14): Score 191 — F:64 P:25 — fresh water, defense:4 | !! Loyalty: ~-2/turn (enemy pressure)
+  #1 (50,14): Score 191 — unreachable — F:64 P:25 — fresh water, defense:4 | !! Loyalty: ~-2/turn (enemy pressure)
      [B] RESOURCE_CATTLE, [S] RESOURCE_IRON, [B] RESOURCE_SHEEP, [B] RESOURCE_STONE, [B] RESOURCE_RICE, [B] RESOURCE_SHEEP, [L] RESOURCE_TOBACCO
-  #2 (49,13): Score 184 — F:62 P:25 — no water, defense:4
+  #2 (49,13): Score 184 — 1t away — F:62 P:25 — no water, defense:4
      [S] RESOURCE_HORSES, [B] RESOURCE_SHEEP, [B] RESOURCE_SHEEP, [B] RESOURCE_CATTLE, [S] RESOURCE_IRON, [B] RESOURCE_SHEEP, [B] RESOURCE_STONE, [B] RESOURCE_SHEEP
-  #3 (50,15): Score 170 — F:64 P:23 — fresh water, defense:3 | !! Loyalty: ~-9/turn (enemy pressure)
+  #3 (50,15): Score 170 — 3t away — F:64 P:23 — fresh water, defense:3 | !! Loyalty: ~-9/turn (enemy pressure)
      [S] RESOURCE_IRON, [B] RESOURCE_SHEEP, [B] RESOURCE_STONE, [B] RESOURCE_RICE, [B] RESOURCE_SHEEP, [L] RESOURCE_TOBACCO, [B] RESOURCE_STONE
-  #4 (49,14): Score 167 — F:50 P:24 — fresh water, defense:7
+  #4 (49,14): Score 167 — 2t away — F:50 P:24 — fresh water, defense:7
      [B] RESOURCE_SHEEP, [B] RESOURCE_CATTLE, [S] RESOURCE_IRON, [B] RESOURCE_SHEEP, [B] RESOURCE_STONE, [B] RESOURCE_SHEEP, [L] RESOURCE_TOBACCO
-  #5 (49,15): Score 158 — F:52 P:22 — fresh water, defense:6 | !! Loyalty: ~-4/turn (enemy pressure)
+  #5 (49,15): Score 158 — 2t away — F:52 P:22 — fresh water, defense:6 | !! Loyalty: ~-4/turn (enemy pressure)
      [S] RESOURCE_IRON, [B] RESOURCE_SHEEP, [B] RESOURCE_STONE, [B] RESOURCE_RICE, [B] RESOURCE_SHEEP, [L] RESOURCE_TOBACCO

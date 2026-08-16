@@ -1,13 +1,13 @@
 {
   "tool": "unit_action",
   "arguments": {
-    "unit_id": 1179648,
+    "unit_id": 0,
     "action": "move",
     "target_x": 49,
     "target_y": 10
   },
   "scenario": "turn73",
-  "recorded_at": "2026-08-13T21:30:51+00:00",
+  "recorded_at": "2026-08-16T17:11:59+00:00",
   "notes": null,
   "result": "MOVING_TO|49,10|from:50,11|now_at:49,10|(moved dx:-1 dy:-1)",
   "exchanges": [
@@ -34,9 +34,9 @@
     },
     {
       "context": "read",
-      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal u = Players[me]:GetUnits():FindID(0)\nif u then print(\"POS|\" .. u:GetX() .. \"|\" .. u:GetY()) else print(\"POS|GONE\") end\n\n-- Diagnose blocked move target\npcall(function()\n    local plot = Map.GetPlot(49, 10)\n    if not plot then print(\"DIAG|UNKNOWN|tile does not exist\"); return end\n    if plot:IsWater() then\n        local hasShip = false\n        pcall(function()\n            local tech = GameInfo.Technologies[\"TECH_SHIPBUILDING\"]\n            if tech then hasShip = Players[me]:GetTechs():HasTech(tech.Index) end\n        end)\n        if hasShip then print(\"DIAG|WATER_OK|water tile (can embark)\")\n        else print(\"DIAG|WATER|water tile - land units need Shipbuilding tech to embark\") end\n    elseif plot:IsMountain() then\n        print(\"DIAG|MOUNTAIN|impassable mountain\")\n    elseif plot:IsImpassable() then\n        print(\"DIAG|IMPASSABLE|impassable terrain (ice or natural wonder)\")\n    else\n        local owner = plot:GetOwner()\n        if owner >= 0 and owner ~= me then\n            local atWar = false\n            pcall(function() atWar = Players[me]:GetDiplomacy():IsAtWarWith(owner) end)\n            if atWar then\n                print(\"DIAG|UNKNOWN|tile is enemy territory but movement still blocked - check path\")\n            else\n                local civName = \"player \" .. owner\n                pcall(function()\n                    local cfg = PlayerConfigurations[owner]\n                    civName = cfg and Locale.Lookup(cfg:GetCivilizationShortDescription()) or civName\n                end)\n                local isMajor = true\n                pcall(function() isMajor = Players[owner]:IsMajor() end)\n                if isMajor then\n                    print(\"DIAG|BORDER|foreign territory (\" .. civName .. \") - need Open Borders via propose_deal\")\n                else\n                    print(\"DIAG|BORDER_CS|city-state territory (\" .. civName .. \") - need suzerainty or Open Borders\")\n                end\n            end\n        else\n            print(\"DIAG|UNKNOWN|tile appears passable - path may be blocked by intermediate tiles\")\n        end\n    end\nend)\nprint(\"---END---\")\n",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal u = Players[me]:GetUnits():FindID(0)\nif u then print(\"POS|\" .. u:GetX() .. \"|\" .. u:GetY() .. \"|\" .. u:GetMovesRemaining()) else print(\"POS|GONE\") end\n\n-- Diagnose blocked move target\npcall(function()\n    local plot = Map.GetPlot(49, 10)\n    if not plot then print(\"DIAG|UNKNOWN|tile does not exist\"); return end\n    if plot:IsWater() then\n        local hasShip = false\n        pcall(function()\n            local tech = GameInfo.Technologies[\"TECH_SHIPBUILDING\"]\n            if tech then hasShip = Players[me]:GetTechs():HasTech(tech.Index) end\n        end)\n        if hasShip then print(\"DIAG|WATER_OK|water tile (can embark)\")\n        else print(\"DIAG|WATER|water tile - land units need Shipbuilding tech to embark\") end\n    elseif plot:IsMountain() then\n        print(\"DIAG|MOUNTAIN|impassable mountain\")\n    elseif plot:IsImpassable() then\n        print(\"DIAG|IMPASSABLE|impassable terrain (ice or natural wonder)\")\n    else\n        local owner = plot:GetOwner()\n        if owner >= 0 and owner ~= me then\n            local atWar = false\n            pcall(function() atWar = Players[me]:GetDiplomacy():IsAtWarWith(owner) end)\n            if atWar then\n                print(\"DIAG|UNKNOWN|tile is enemy territory but movement still blocked - check path\")\n            else\n                local civName = \"player \" .. owner\n                pcall(function()\n                    local cfg = PlayerConfigurations[owner]\n                    civName = cfg and Locale.Lookup(cfg:GetCivilizationShortDescription()) or civName\n                end)\n                local isMajor = true\n                pcall(function() isMajor = Players[owner]:IsMajor() end)\n                if isMajor then\n                    print(\"DIAG|BORDER|foreign territory (\" .. civName .. \") - need Open Borders via propose_deal\")\n                else\n                    print(\"DIAG|BORDER_CS|city-state territory (\" .. civName .. \") - need suzerainty or Open Borders\")\n                end\n            end\n        else\n            print(\"DIAG|UNKNOWN|tile appears passable - path may be blocked by intermediate tiles\")\n        end\n    end\nend)\nprint(\"---END---\")\n",
       "lines": [
-        "POS|49|10",
+        "POS|49|10|0",
         "DIAG|UNKNOWN|tile appears passable - path may be blocked by intermediate tiles"
       ]
     },

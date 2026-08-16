@@ -138,7 +138,7 @@ for _, city in Players[me]:GetCities():Members() do
                 -- Yields
                 local oy = fmtY(r.OriginYields)
                 local dy = fmtY(r.DestinationYields)
-                print("ROUTE|" .. tid .. "|" .. origName .. "|" .. destName .. "|" .. ownerName .. "|" .. (isDom and "1" or "0") .. "|" .. (isCS and "1" or "0") .. "|" .. (hasQ and "1" or "0") .. "|" .. (hasTP and "1" or "0") .. "|" .. pOut .. "|" .. relOut .. "|" .. pIn .. "|" .. relIn .. "|" .. oy .. "|" .. dy)
+                print("ROUTE|" .. ((tid % 65536) + me * 65536) .. "|" .. origName .. "|" .. destName .. "|" .. ownerName .. "|" .. (isDom and "1" or "0") .. "|" .. (isCS and "1" or "0") .. "|" .. (hasQ and "1" or "0") .. "|" .. (hasTP and "1" or "0") .. "|" .. pOut .. "|" .. relOut .. "|" .. pIn .. "|" .. relIn .. "|" .. oy .. "|" .. dy)
             end
         end
     end)
@@ -158,7 +158,7 @@ for _, unit in Players[me]:GetUnits():Members() do
             if uInfo and uInfo.MakeTradeRoute then
                 local uid = unit:GetID()
                 if not routedTraders[uid] then
-                    print("IDLE_TRADER|" .. uid .. "|" .. x .. "," .. unit:GetY())
+                    print("IDLE_TRADER|" .. ((uid % 65536) + unit:GetOwner() * 65536) .. "|" .. x .. "," .. unit:GetY())
                 end
             end
         end
@@ -242,7 +242,7 @@ local function enrichDest(i, city, cx, cy, isDom)
         local d3 = tm:CalculateDestinationYieldsFromModifiers(me, origCID, i, city:GetID())
         dy = fmtFlat(sumFlat(d1, d2, d3))
     end)
-    print("TDEST|" .. Locale.Lookup(city:GetName()) .. "|" .. civ .. "|" .. cx .. "," .. cy .. "|" .. (isDom and "1" or "0") .. "|" .. (isCS and "1" or "0") .. "|" .. (hasQ and "1" or "0") .. "|" .. (hasTP and "1" or "0") .. "|" .. pOut .. "|" .. relName .. "|" .. pIn .. "|" .. relIn .. "|" .. oy .. "|" .. dy)
+    print("TDEST|" .. Locale.Lookup(city:GetName()) .. "|" .. civ .. "|" .. cx .. "," .. cy .. "|" .. (isDom and "1" or "0") .. "|" .. (isCS and "1" or "0") .. "|" .. (hasQ and "1" or "0") .. "|" .. (hasTP and "1" or "0") .. "|" .. pOut .. "|" .. relName .. "|" .. pIn .. "|" .. relIn .. "|" .. oy .. "|" .. dy .. "|" .. ((city:GetID() % 65536) + city:GetOwner() * 65536 + 16777216))
 end
 local found = 0
 for i = 0, 62 do
@@ -398,7 +398,7 @@ def parse_trade_routes_response(lines: list[str]) -> TradeRouteStatus:
 def parse_trade_destinations_response(lines: list[str]) -> list[TradeDestination]:
     """Parse TDEST| lines with enriched data.
 
-    Format: TDEST|name|owner|x,y|isDom|isCS|hasQ|hasTP|pOut|relOut|pIn|relIn|origY|destY
+    Format: TDEST|name|owner|x,y|isDom|isCS|hasQ|hasTP|pOut|relOut|pIn|relIn|origY|destY|cityId
     """
     results: list[TradeDestination] = []
     for line in lines:
@@ -422,6 +422,7 @@ def parse_trade_destinations_response(lines: list[str]) -> list[TradeDestination
                         religion_out=parts[9],
                         pressure_in=float(parts[10]) if parts[10] else 0.0,
                         religion_in=parts[11],
+                        city_id=int(parts[14]) if len(parts) > 14 else None,
                     )
                 )
             elif len(parts) >= 5:

@@ -41,8 +41,28 @@ from utils import snapshots
 # save/lifecycle and great-person tools that merged, plus `dismiss_popup`. The
 # largest schema is now `propose_deal` (2,498), which Stage 4 does not touch —
 # it is ten flat scalars, deliberately (see "Considered and rejected").
-MAX_TOOL_SCHEMA_CHARS = 2500
-MAX_SURFACE_CHARS = 40_500
+#
+# Stage 3 raised both, which no earlier stage did. It is the one stage that
+# buys calls with characters rather than the reverse: the implicit placement
+# tile, the move-then-act target and its two partial results, and the batch
+# form of the stance verbs all have to be stated in a schema before an agent
+# will use them. 3.4c then added an id alternative to five tools that took
+# coordinates. Nearly all of the growth lands on `unit_action`, which now
+# carries move-then-act, batching and a destination city id on top of its 20
+# verbs — and which Stage 4 dissolves into six tools with fixed signatures.
+# That is where the reduction comes from, so these constants come down there
+# and not before. Both figures remain under the 44,139-char baseline the
+# review measured, but the margin is now thin: Stage 4 has to deliver.
+#
+# The last 209 chars bought strictness back. 3.4c had made `get_map_area`'s
+# centre optional so a unit or city id could supply it, which left the tool
+# with no required argument at all — the schema could no longer say what it
+# needed. Splitting it into `get_map_area(center_x, center_y)` and
+# `get_map_around(entity_id)` restores that for one more tool's boilerplate,
+# and `get_map_around` needs only one parameter because the 3.4a type tag
+# tells it whether it holds a unit or a city.
+MAX_TOOL_SCHEMA_CHARS = 2900
+MAX_SURFACE_CHARS = 42_700
 
 
 def _tools():

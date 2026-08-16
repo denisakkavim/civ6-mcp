@@ -1078,7 +1078,7 @@ def build_diary_full_query() -> str:
         '    .. "|" .. nCiv .. "|" .. nSup .. "|" .. compStr) '
         # --- PCITY per city ---
         "  for _, c in p:GetCities():Members() do "
-        "    local cID = c:GetID() "
+        "    local cID = ((c:GetID() % 65536) + c:GetOwner() * 65536 + 16777216) "
         "    local cName = Locale.Lookup(c:GetName()) "
         "    local cPop = c:GetPopulation() "
         "    local g = c:GetGrowth() "

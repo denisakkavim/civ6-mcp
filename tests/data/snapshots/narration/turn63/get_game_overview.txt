@@ -1,7 +1,7 @@
 Turn 63 | Inca (Pachacuti) | Score: 138 | Prince
 Gold: 133 (+3/turn) | Income: 8 | Maintenance: -5 (units: 2) | Science: 7.8 | Culture: 8.3 | Faith: 249 | Favor: 26 (+1/turn)
 Research: Sailing | Civic: Theology
-Cities: 3 | Population: 12 | Units: 12 — 3 Warrior, 2 Builder, 2 Slinger, 2 Archer, 1 Trader, 1 Settler, 1 Scout
+Cities: 3 | Population: 12 | Units: 12 — 3 Warrior, 2 Builder, 2 Archer, 2 Slinger, 1 Scout, 1 Trader, 1 Settler
 Explored: 36% of land (286/790 tiles)
 Religion: Shinto (3/3 slots)
 Era: Medieval Era | Score: 34 (Dark: 40, Golden: 51) !! 6 short of avoiding Dark Age

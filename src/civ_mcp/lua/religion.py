@@ -329,7 +329,7 @@ for pid = 0, 62 do
                         end
                         followers = table.concat(parts, ",")
                     end
-                    print("RCITY|" .. pid .. "|" .. civName .. "|" .. cityName .. "|" .. relName .. "|" .. pop .. "|" .. followers .. "|" .. relType)
+                    print("RCITY|" .. pid .. "|" .. civName .. "|" .. cityName .. "|" .. relName .. "|" .. pop .. "|" .. followers .. "|" .. relType .. "|" .. ((c:GetID() % 65536) + c:GetOwner() * 65536 + 16777216))
                 end
             end
         end
@@ -386,6 +386,7 @@ def parse_religion_status_response(lines: list[str]) -> ReligionStatus:
                         population=int(parts[5]),
                         followers=followers,
                         religion_type=parts[7] if len(parts) > 7 else "",
+                        city_id=int(parts[8]) if len(parts) > 8 else None,
                     )
                 )
         elif line.startswith("RSUMMARY|"):

@@ -1,12 +1,12 @@
 {
   "tool": "get_pathing_estimate",
   "arguments": {
-    "unit_id": 131073,
+    "unit_id": 1,
     "target_x": 45,
     "target_y": 12
   },
   "scenario": "turn57",
-  "recorded_at": "2026-08-13T21:35:34+00:00",
+  "recorded_at": "2026-08-16T17:05:09+00:00",
   "notes": null,
   "result": "Unreachable \u2014 no path found. Destination may be in fog, behind foreign borders, or blocked by impassable terrain.",
   "exchanges": [

@@ -1,11 +1,11 @@
 {
   "tool": "unit_action",
   "arguments": {
-    "unit_id": 655367,
+    "unit_id": 7,
     "action": "automate"
   },
   "scenario": "turn57",
-  "recorded_at": "2026-08-13T21:35:42+00:00",
+  "recorded_at": "2026-08-16T17:05:17+00:00",
   "notes": null,
   "result": "AUTOMATED|54,15",
   "exchanges": [

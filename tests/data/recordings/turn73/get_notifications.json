@@ -2,7 +2,7 @@
   "tool": "get_notifications",
   "arguments": {},
   "scenario": "turn73",
-  "recorded_at": "2026-08-13T21:30:29+00:00",
+  "recorded_at": "2026-08-16T17:11:35+00:00",
   "notes": null,
   "result": "== Notifications (7) ==\n  - Wonder Completed\n  - Wonder Completed\n  - Production Salvaged [Inca] (City Center) at (45,12)\n  - Megacolossal Volcano Erupts! at (48,20)\n  - City Starving!\n  - Need More Housing\n  - Command Units  -> Units have moves remaining \u2014 move them or use skip_remaining_units()",
   "exchanges": [

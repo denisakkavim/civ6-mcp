@@ -1,11 +1,11 @@
 {
   "tool": "unit_action",
   "arguments": {
-    "unit_id": 327683,
+    "unit_id": 3,
     "action": "skip"
   },
   "scenario": "turn37",
-  "recorded_at": "2026-08-13T20:57:52+00:00",
+  "recorded_at": "2026-08-16T17:18:41+00:00",
   "notes": null,
   "result": "SKIPPED",
   "exchanges": [

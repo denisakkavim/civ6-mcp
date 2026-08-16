@@ -1,11 +1,11 @@
 {
   "tool": "unit_action",
   "arguments": {
-    "unit_id": 458757,
+    "unit_id": 5,
     "action": "alert"
   },
   "scenario": "turn37",
-  "recorded_at": "2026-08-13T20:57:53+00:00",
+  "recorded_at": "2026-08-16T17:18:42+00:00",
   "notes": null,
   "result": "ALERT|44,8",
   "exchanges": [

@@ -10,6 +10,7 @@ from __future__ import annotations
 import pytest
 
 import civ_mcp.server as server
+from civ_mcp import ids
 from civ_mcp.connection import LuaError
 
 
@@ -148,10 +149,26 @@ def test_wrong_typed_argument_is_rejected_before_the_tool_runs(civ_server):
     )
 
 
-def test_missing_required_argument_is_rejected(civ_server):
+@pytest.mark.parametrize("tool", ["get_map_area", "get_map_around"])
+def test_missing_required_argument_is_rejected(civ_server, tool):
+    """Both halves of the map read keep their requirement in the schema.
+
+    3.4c first made the centre optional so a unit or city id could supply it,
+    which moved this check out of the schema and into the tool body. Splitting
+    the tool put it back: a tile read requires coordinates, an entity read
+    requires an id, and neither can be called empty.
+    """
     conn = RecordingConnection()
-    result = civ_server(conn).call_raw("get_map_area", {})
+    result = civ_server(conn).call_raw(tool, {})
     assert result.isError is True
+    assert not conn.reads and not conn.writes
+
+
+def test_an_id_of_the_wrong_shape_is_refused_without_asking_the_game(civ_server):
+    """`get_map_around` reads the type tag rather than a caller-supplied flag."""
+    conn = RecordingConnection()
+    text = civ_server(conn).call("get_map_around", {"entity_id": 1 << 30})
+    assert "UNKNOWN_ID_TYPE" in text
     assert not conn.reads and not conn.writes
 
 
@@ -198,7 +215,8 @@ def test_an_unrecognised_item_prefix_never_reaches_the_game(civ_server):
     """
     conn = RecordingConnection()
     text = civ_server(conn).call(
-        "set_city_production", {"city_id": 1, "item_type": "CAMPUS"}
+        "set_city_production",
+        {"city_id": ids.encode(ids.CITY, 0, 1), "item_type": "CAMPUS"},
     )
     assert text.startswith("Error:"), text
     assert "CAMPUS" in text and "DISTRICT_" in text
@@ -210,7 +228,12 @@ def test_an_inferred_category_reaches_the_lua(civ_server):
     conn = RecordingConnection(write_lines=["OK:PRODUCING|DISTRICT_CAMPUS|6 turns"])
     civ_server(conn).call(
         "set_city_production",
-        {"city_id": 1, "item_type": "DISTRICT_CAMPUS", "target_x": 4, "target_y": 5},
+        {
+            "city_id": ids.encode(ids.CITY, 0, 1),
+            "item_type": "DISTRICT_CAMPUS",
+            "target_x": 4,
+            "target_y": 5,
+        },
     )
     issued = "\n".join(conn.reads + conn.writes)
     assert "DISTRICT" in issued, "the inferred category never reached the game"

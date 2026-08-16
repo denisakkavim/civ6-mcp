@@ -1,9 +1,9 @@
 Top 4 settle locations:
-  #1 (52,16): Score 153 — F:72 P:22 — no water, defense:1 | !! Loyalty: ~-20/turn (enemy pressure)
+  #1 (52,16): Score 153 — this turn — F:72 P:22 — no water, defense:1 | !! Loyalty: ~-20/turn (enemy pressure)
      [B] RESOURCE_STONE, [B] RESOURCE_STONE, [B] RESOURCE_RICE, [B] RESOURCE_SHEEP, [B] RESOURCE_STONE, [L] RESOURCE_TOBACCO, [B] RESOURCE_STONE
-  #2 (51,17): Score 140 — F:64 P:21 — no water, defense:2 | !! Loyalty: ~-20/turn (enemy pressure)
+  #2 (51,17): Score 140 — this turn — F:64 P:21 — no water, defense:2 | !! Loyalty: ~-20/turn (enemy pressure)
      [B] RESOURCE_STONE, [B] RESOURCE_RICE, [B] RESOURCE_SHEEP, [B] RESOURCE_STONE, [L] RESOURCE_TOBACCO, [B] RESOURCE_STONE, [L] RESOURCE_SPICES
-  #3 (53,16): Score 140 — F:72 P:18 — no water, defense:0 | !! Loyalty: ~-20/turn (enemy pressure)
+  #3 (53,16): Score 140 — this turn — F:72 P:18 — no water, defense:0 | !! Loyalty: ~-20/turn (enemy pressure)
      [B] RESOURCE_STONE, [B] RESOURCE_RICE, [B] RESOURCE_RICE, [B] RESOURCE_SHEEP, [B] RESOURCE_STONE, [B] RESOURCE_STONE
-  #4 (52,17): Score 138 — F:66 P:19 — no water, defense:0 | !! Loyalty: ~-20/turn (enemy pressure)
+  #4 (52,17): Score 138 — this turn — F:66 P:19 — no water, defense:0 | !! Loyalty: ~-20/turn (enemy pressure)
      [B] RESOURCE_RICE, [B] RESOURCE_SHEEP, [B] RESOURCE_STONE, [L] RESOURCE_TOBACCO, [B] RESOURCE_STONE, [L] RESOURCE_SPICES

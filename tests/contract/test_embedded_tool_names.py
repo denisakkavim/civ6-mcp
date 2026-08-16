@@ -78,6 +78,18 @@ INTERNAL_IDENTIFIERS = frozenset(
         "build_notifications_query",
         "blocking_type",
         "test_deal",
+        # Stage 3.1: a keyword on the internal advisor methods, and the query
+        # builder whose bail `_is_missing_coords` reads. Both are named in
+        # docstrings that explain the implicit placement path; neither is
+        # callable surface.
+        "enforce_budget",
+        "build_produce_item",
+        # Stage 3.2: a field of the tuple `read_unit_position` returns, named
+        # in the docstring that explains what 0 means.
+        "moves_remaining",
+        # Stage 3.3: a SettleCandidate field, named in the docstring of the
+        # helper that fills it in.
+        "turns_to_reach",
     }
 )
 

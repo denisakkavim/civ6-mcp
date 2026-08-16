@@ -1,21 +1,21 @@
 14 units:
-  Scout (UNIT_SCOUT) at (50,11) — CS:10 moves 3/3 [id:1179648]
-  Warrior (UNIT_WARRIOR) at (53,18) — CS:20 moves 3/3 [id:131073]
-  Builder (UNIT_BUILDER) at (43,11) — moves 2/2 charges:3 [id:720898]
+  Scout (UNIT_SCOUT) at (50,11) — CS:10 moves 3/3 [id:0]
+  Warrior (UNIT_WARRIOR) at (53,18) — CS:20 moves 3/3 [id:1]
+  Builder (UNIT_BUILDER) at (43,11) — moves 2/2 charges:3 [id:2]
     >> Can build: IMPROVEMENT_MINE
-  Archer (UNIT_ARCHER) at (45,12) — CS:15 RS:25 moves 2/2 [id:1114115]
-  Trader (UNIT_TRADER) at (45,12) — moves 2/2 [id:851972]
-  Slinger (UNIT_SLINGER) at (41,11) — CS:5 RS:15 moves 2/2 **CAN UPGRADE to UNIT_ARCHER (30g)** [id:458757]
-  Warrior (UNIT_WARRIOR) at (51,14) — CS:20 moves 2/2 [id:786438]
-  Slinger (UNIT_SLINGER) at (50,14) — CS:5 RS:15 moves 2/2 [id:655367]
-  Warrior (UNIT_WARRIOR) at (44,8) — CS:20 moves 2/2 **CAN UPGRADE to UNIT_SWORDSMAN (55g)** [id:917512]
-  Builder (UNIT_BUILDER) at (44,11) — moves 2/2 charges:3 [id:1507337]
-  Archer (UNIT_ARCHER) at (47,9) — CS:15 RS:25 moves 2/2 [id:1048586]
-  Builder (UNIT_BUILDER) at (45,13) — moves 2/2 charges:1 [id:1245195]
-  Trader (UNIT_TRADER) at (45,12) — moves 2/2 [id:1441804]
-  Missionary (UNIT_MISSIONARY) at (46,7) — moves 4/4 charges:3 [RELIGION_SHINTO] [id:1376269]
+  Archer (UNIT_ARCHER) at (45,12) — CS:15 RS:25 moves 2/2 [id:3]
+  Trader (UNIT_TRADER) at (45,12) — moves 2/2 [id:4]
+  Slinger (UNIT_SLINGER) at (41,11) — CS:5 RS:15 moves 2/2 **CAN UPGRADE to UNIT_ARCHER (30g)** [id:5]
+  Warrior (UNIT_WARRIOR) at (51,14) — CS:20 moves 2/2 [id:6]
+  Slinger (UNIT_SLINGER) at (50,14) — CS:5 RS:15 moves 2/2 [id:7]
+  Warrior (UNIT_WARRIOR) at (44,8) — CS:20 moves 2/2 **CAN UPGRADE to UNIT_SWORDSMAN (55g)** [id:8]
+  Builder (UNIT_BUILDER) at (44,11) — moves 2/2 charges:3 [id:9]
+  Archer (UNIT_ARCHER) at (47,9) — CS:15 RS:25 moves 2/2 [id:10]
+  Builder (UNIT_BUILDER) at (45,13) — moves 2/2 charges:1 [id:11]
+  Trader (UNIT_TRADER) at (45,12) — moves 2/2 [id:12]
+  Missionary (UNIT_MISSIONARY) at (46,7) — moves 4/4 charges:3 [RELIGION_SHINTO] [id:13]
 
 Nearby threats (2):
   Georgia (2 units):
-    UNIT_SPEARMAN at (54,20) — CS:25 HP:100/100 (2 tiles away)
-    UNIT_SCOUT at (43,5) — CS:10 HP:100/100 (3 tiles away)
+    UNIT_SPEARMAN at (54,20) — CS:25 HP:100/100 (2 tiles away) [id:65546]
+    UNIT_SCOUT at (43,5) — CS:10 HP:100/100 (3 tiles away) [id:65541]

@@ -1,12 +1,12 @@
 {
   "tool": "unit_action",
   "arguments": {
-    "unit_id": 720898,
+    "unit_id": 2,
     "action": "improve",
     "improvement_type": "IMPROVEMENT_MINE"
   },
   "scenario": "turn73",
-  "recorded_at": "2026-08-13T21:30:58+00:00",
+  "recorded_at": "2026-08-16T17:12:06+00:00",
   "notes": null,
   "result": "IMPROVING|IMPROVEMENT_MINE|43,11",
   "exchanges": [

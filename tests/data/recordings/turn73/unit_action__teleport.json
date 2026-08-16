@@ -1,13 +1,13 @@
 {
   "tool": "unit_action",
   "arguments": {
-    "unit_id": 851972,
+    "unit_id": 4,
     "action": "teleport",
     "target_x": 44,
     "target_y": 8
   },
   "scenario": "turn73",
-  "recorded_at": "2026-08-13T21:31:48+00:00",
+  "recorded_at": "2026-08-16T17:12:56+00:00",
   "notes": null,
   "result": "TELEPORTED|to Wanuku at (44,8)",
   "exchanges": [

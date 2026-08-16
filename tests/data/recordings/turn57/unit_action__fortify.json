@@ -1,11 +1,11 @@
 {
   "tool": "unit_action",
   "arguments": {
-    "unit_id": 1114115,
+    "unit_id": 3,
     "action": "fortify"
   },
   "scenario": "turn57",
-  "recorded_at": "2026-08-13T21:35:38+00:00",
+  "recorded_at": "2026-08-16T17:05:13+00:00",
   "notes": null,
   "result": "ALREADY_FORTIFIED|Fortify turns: 1",
   "exchanges": [

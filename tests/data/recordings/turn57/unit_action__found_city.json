@@ -1,11 +1,11 @@
 {
   "tool": "unit_action",
   "arguments": {
-    "unit_id": 983049,
+    "unit_id": 9,
     "action": "found_city"
   },
   "scenario": "turn57",
-  "recorded_at": "2026-08-13T21:35:44+00:00",
+  "recorded_at": "2026-08-16T17:05:18+00:00",
   "notes": null,
   "result": "FOUNDED|41,11",
   "exchanges": [

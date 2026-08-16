@@ -1,4 +1,4 @@
 Trade Routes: 1/1 active
 
 On route (1):
-  Trader (id:851972) Qusqu -> Antawaylla (Domestic) | Food:2 Prod:1 Gold:2
+  Trader (id:4) Qusqu -> Antawaylla (Domestic) | Food:2 Prod:1 Gold:2
