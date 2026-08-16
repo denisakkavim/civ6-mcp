@@ -2,7 +2,7 @@
   "tool": "get_units",
   "arguments": {},
   "scenario": "turn63",
-  "recorded_at": "2026-08-16T17:07:53+00:00",
+  "recorded_at": "2026-08-16T18:36:49+00:00",
   "notes": null,
   "result": "12 units:\n  Scout (UNIT_SCOUT) at (51,9) \u2014 CS:10 moves 3/3 [id:0]\n  Warrior (UNIT_WARRIOR) at (53,18) \u2014 CS:20 moves 3/3 [id:1]\n  Builder (UNIT_BUILDER) at (45,13) \u2014 moves 2/2 charges:3 [id:2]\n  Archer (UNIT_ARCHER) at (45,12) \u2014 CS:15 RS:25 moves 2/2 [id:3]\n  Trader (UNIT_TRADER) at (45,11) \u2014 moves 2/2 [ON ROUTE: Qusqu -> Antawaylla (Domestic)] [id:4]\n  Slinger (UNIT_SLINGER) at (41,11) \u2014 CS:5 RS:15 moves 2/2 [id:5]\n  Warrior (UNIT_WARRIOR) at (58,15) \u2014 CS:20 moves 2/2 [id:6]\n  Slinger (UNIT_SLINGER) at (54,15) \u2014 CS:5 RS:15 moves 2/2 [id:7]\n  Warrior (UNIT_WARRIOR) at (44,8) \u2014 CS:20 moves 2/2 [id:8]\n  Settler (UNIT_SETTLER) at (41,11) \u2014 moves 2/2 [id:9]\n  Archer (UNIT_ARCHER) at (47,9) \u2014 CS:15 RS:25 moves 2/2 [id:10]\n  Builder (UNIT_BUILDER) at (45,8) \u2014 moves 2/2 charges:2 [id:11]\n\nNearby threats (2):\n  Georgia (2 units):\n    UNIT_SCOUT at (43,5) \u2014 CS:10 HP:100/100 (3 tiles away) [id:65541]\n    UNIT_WARRIOR at (49,11) \u2014 CS:20 HP:100/100 (3 tiles away) [id:65542]",
   "exchanges": [

@@ -83,6 +83,12 @@ READ_PLAN: list[tuple[str, dict, bool]] = [
     # without a settler should still record the read.
     ("get_settle_sites_near_unit", {"unit_id": "$UNIT"}, False),
     ("get_settle_sites_on_map", {}, False),
+    ("get_deal_options", {"player_id": "$MET_PLAYER"}, False),
+    (
+        "run_lua",
+        {"code": 'print("RECORDED|" .. Game.GetCurrentGameTurn())', "context": "gamecore"},
+        False,
+    ),
     ("get_unit_promotions", {"unit_id": "$UNIT"}, False),
     (
         "get_pathing_estimate",
@@ -115,6 +121,14 @@ DISPATCHER_PLAN: list[tuple[str, dict, bool]] = [
             "target_x": "$MOVE_X",
             "target_y": "$MOVE_Y",
         },
+        True,
+    ),
+    # Before the stance verbs: `skip_remaining_units` ends the turn of every
+    # unit that still has moves, and a trader with no moves cannot start a
+    # route.
+    (
+        "unit_action",
+        {"unit_id": "$IDLE_TRADER", "action": "trade_route", "city_id": "$TRADE_DEST"},
         True,
     ),
     ("unit_action", {"unit_id": "$UNIT_1", "action": "fortify"}, True),
@@ -170,6 +184,17 @@ DISPATCHER_PLAN: list[tuple[str, dict, bool]] = [
         },
         True,
     ),
+    (
+        "unit_action",
+        {
+            "unit_id": "$UNIT_2",
+            "action": "attack",
+            "target_x": "$ATTACK_X",
+            "target_y": "$ATTACK_Y",
+        },
+        True,
+    ),
+    ("unit_action", {"unit_id": "$RELIGIOUS_UNIT", "action": "spread_religion"}, True),
     # Founding reshapes ownership and city lists, so it follows every read-like
     # verb above.
     ("unit_action", {"unit_id": "$SETTLER", "action": "found_city"}, True),
@@ -183,7 +208,29 @@ DISPATCHER_PLAN: list[tuple[str, dict, bool]] = [
 WRITE_PLAN: list[tuple[str, dict, bool]] = [
     ("set_city_production", {"city_id": "$CITY", "item_type": "$UNIT_TYPE"}, True),
     ("set_tech", {"tech_type": "$TECH"}, True),
+    ("set_civic", {"civic_type": "$CIVIC"}, True),
     ("set_city_focus", {"city_id": "$CITY", "focus": "production"}, True),
+    ("set_policies", {"assignments": {"$POLICY_SLOT": "$POLICY"}}, True),
+    # These four compete for the same gold, and a mid-game empire cannot
+    # afford all of them. Cheapest first, so the most calls land per scenario;
+    # a richer save (turn 37 holds 275 gold) then covers the rest.
+    ("diplomacy_action", {"player_id": "$MET_PLAYER", "action": "DIPLOMATIC_DELEGATION"}, True),
+    ("upgrade_unit", {"unit_id": "$UPGRADEABLE"}, True),
+    ("purchase_item", {"city_id": "$CITY", "item_type": "$PURCHASABLE_UNIT"}, True),
+    ("purchase_tile", {"city_id": "$CITY", "target_x": "$TILE_X", "target_y": "$TILE_Y"}, True),
+    ("promote_governor", {"governor_type": "$GOVERNOR", "promotion_type": "$GOVERNOR_PROMOTION"}, True),
+    ("assign_governor", {"governor_type": "$GOVERNOR", "city_id": "$OTHER_CITY"}, True),
+    # Faith, not gold: the empire usually has faith banked, and `recruit`
+    # needs Great Person points that no save holds.
+    (
+        "great_person_action",
+        {"individual_id": "$GP_CANDIDATE", "action": "patronize", "yield_type": "YIELD_FAITH"},
+        True,
+    ),
+    ("city_attack", {"city_id": "$ATTACKING_CITY", "target_x": "$ATTACK_X", "target_y": "$ATTACK_Y"}, True),
+    # `test` mode asks the game what it would accept without committing, so a
+    # recording of it does not reshape the diplomatic state of the save.
+    ("propose_deal", {"player_id": "$MET_PLAYER", "mode": "test", "offer_gold": 50}, True),
     ("end_turn", {}, True),
 ]
 
@@ -212,6 +259,12 @@ async def _resolve(client, plan):
 
     units_text = await _call(client, "get_units", {})
     cities_text = await _call(client, "get_cities", {})
+
+    # Stage 3.4d gave enemy units in the threat scan an id of their own, and
+    # that section is part of get_units output. Every placeholder below picks a
+    # unit to act on, so parse only the part that lists units we own —
+    # otherwise `delete` aims at a Georgian warrior.
+    units_text = units_text.split("Nearby threats")[0]
 
     unit_ids = _ids(units_text, r"id[=: ](\d+)")
     city_ids = _ids(cities_text, r"id[=: ](\d+)")
@@ -308,6 +361,52 @@ async def _resolve(client, plan):
 
     research = await _call(client, "get_research_options", {})
     context["$TECH"] = _researchable_tech(research) or "TECH_MINING"
+    context["$CIVIC"] = _researchable_civic(research)
+
+    overview = await _call(client, "get_game_overview", {})
+    gold, faith = _gold(overview), _faith(overview)
+
+    context["$PURCHASABLE_UNIT"] = _affordable_unit(production, gold)
+
+    tiles = await _call(client, "get_purchasable_tiles", {"city_id": context["$CITY"]})
+    tile = _purchasable_tile(tiles)
+    context["$TILE_X"], context["$TILE_Y"] = tile if tile else (None, None)
+
+    diplomacy = await _call(client, "get_diplomacy", {})
+    context["$MET_PLAYER"] = _met_major_player(diplomacy)
+
+    great_people = await _call(client, "get_great_people", {})
+    context["$GP_CANDIDATE"] = _affordable_great_person(great_people, faith)
+
+    policies = await _call(client, "get_policies", {})
+    policy = _slottable_policy(policies)
+    context["$POLICY_SLOT"], context["$POLICY"] = policy if policy else (None, None)
+
+    governors = await _call(client, "get_governors", {})
+    governor = _governor_with_promotion(governors)
+    context["$GOVERNOR"], context["$GOVERNOR_PROMOTION"] = (
+        governor if governor else (None, None)
+    )
+
+    context["$UPGRADEABLE"] = _upgradeable_unit(units_text)
+
+    attack = _attack_target(cities_text)
+    if attack:
+        context["$ATTACKING_CITY"], context["$ATTACK_X"], context["$ATTACK_Y"] = attack
+    else:
+        context["$ATTACKING_CITY"] = None
+        context["$ATTACK_X"], context["$ATTACK_Y"] = None, None
+
+    # A second city, so assign_governor moves a governor somewhere new.
+    context["$OTHER_CITY"] = city_ids[1] if len(city_ids) > 1 else None
+
+    if context["$IDLE_TRADER"] is not None:
+        destinations = await _call(
+            client, "get_trade_destinations", {"unit_id": context["$IDLE_TRADER"]}
+        )
+        context["$TRADE_DEST"] = _trade_destination(destinations)
+    else:
+        context["$TRADE_DEST"] = None
 
     print("Resolved:", {k: v for k, v in context.items() if v is not None})
 
@@ -317,14 +416,21 @@ async def _resolve(client, plan):
         filled = {}
         missing = []
         for key, value in arguments.items():
-            if not isinstance(value, str) or not value.startswith("$"):
-                filled[key] = value
+            # `set_policies` takes a {slot: policy} mapping, so a placeholder
+            # can sit in a key as well as a value.
+            if isinstance(value, dict):
+                mapping = {}
+                for inner_key, inner_value in value.items():
+                    resolved_key = _substitute(inner_key, context, missing)
+                    resolved_value = _substitute(inner_value, context, missing)
+                    if resolved_key is not None and resolved_value is not None:
+                        mapping[resolved_key] = resolved_value
+                filled[key] = mapping
                 continue
-            substituted = context.get(value, value)
+            substituted = _substitute(value, context, missing)
             if substituted is None:
-                missing.append(value)
-            else:
-                filled[key] = substituted
+                continue
+            filled[key] = substituted
         if missing:
             skipped.append((tool, arguments, missing))
             continue
@@ -335,6 +441,17 @@ async def _resolve(client, plan):
         label = f"{tool}({verb})" if verb else tool
         print(f"  skip {label}: this save has no {', '.join(missing)}")
 
+    return resolved
+
+
+def _substitute(value, context: dict, missing: list):
+    """Replace one $PLACEHOLDER, recording it in `missing` when unresolved."""
+    if not isinstance(value, str) or not value.startswith("$"):
+        return value
+    resolved = context.get(value, value)
+    if resolved is None:
+        missing.append(value)
+        return None
     return resolved
 
 
@@ -530,6 +647,176 @@ def _first_wonder(production: str) -> str | None:
     if len(section) < 2:
         return None
     return _first_token(section[1], "BUILDING_")
+
+
+def _researchable_civic(research: str) -> str | None:
+    """A civic from the Available list that is not the one already running.
+
+    Same shape and same trap as `_researchable_tech`: the current civic heads
+    the available list, and setting it records ALREADY_COMPLETED.
+    """
+    import re
+
+    running = re.search(r"^Civic:\s*(.+?)\s*\(", research, flags=re.M)
+    running_name = running.group(1).strip() if running else ""
+
+    section = re.split(r"^Available civics:", research, flags=re.M)
+    if len(section) < 2:
+        return None
+    for line in section[1].splitlines():
+        if not line.strip():
+            continue
+        if not line.startswith("  "):
+            break
+        match = re.match(r"\s*(.+?)\s*\(([A-Z_]+)\)", line)
+        if not match:
+            continue
+        display_name, civic_type = match.group(1), match.group(2)
+        if display_name == running_name or not civic_type.startswith("CIVIC_"):
+            continue
+        return civic_type
+    return None
+
+
+def _slottable_policy(policies: str) -> tuple[int, str] | None:
+    """(slot index, policy type) for a policy the government can actually hold.
+
+    Takes the slot from the existing layout rather than assuming slot 0, and
+    the policy from the Available list. A wildcard slot accepts anything, so
+    prefer one when the output offers it.
+    """
+    import re
+
+    slots = re.findall(r"^  Slot (\d+) \((\w+)\):", policies, flags=re.M)
+    if not slots:
+        return None
+    wildcard = [int(i) for i, kind in slots if kind.lower() == "wildcard"]
+    slot = wildcard[0] if wildcard else int(slots[0][0])
+
+    section = re.split(r"^Available policies:", policies, flags=re.M)
+    if len(section) < 2:
+        return None
+    match = re.search(r"\((POLICY_[A-Z_]+)\)", section[1])
+    return (slot, match.group(1)) if match else None
+
+
+def _purchasable_tile(tiles: str) -> tuple[int, int] | None:
+    """The first tile the city can buy, as (x, y)."""
+    import re
+
+    match = re.search(r"^\s*\((\d+),(\d+)\):\s*\d+g", tiles, flags=re.M)
+    return (int(match.group(1)), int(match.group(2))) if match else None
+
+
+def _met_major_player(diplomacy: str) -> int | None:
+    """A major civ we have met, by player id."""
+    import re
+
+    for line in diplomacy.splitlines():
+        if "not met" in line:
+            continue
+        match = re.search(r"\[player (\d+)\]", line)
+        if match:
+            return int(match.group(1))
+    return None
+
+
+def _affordable_great_person(great_people: str, faith: int) -> int | None:
+    """An individual we can patronize with faith we already hold.
+
+    Faith rather than gold: a mid-game empire usually has enough faith banked
+    and rarely enough gold, and `recruit` needs Great Person points that no
+    save has.
+    """
+    import re
+
+    blocks = re.split(r"\n(?=  \w)", great_people)
+    for block in blocks:
+        cost = re.search(r"Patronize:\s*\d+g\s*/\s*(\d+)f", block)
+        individual = re.search(r"individual_id:\s*(\d+)", block)
+        if cost and individual and int(cost.group(1)) <= faith:
+            return int(individual.group(1))
+    return None
+
+
+def _faith(overview: str) -> int:
+    import re
+
+    match = re.search(r"Faith:\s*(\d+)", overview)
+    return int(match.group(1)) if match else 0
+
+
+def _governor_with_promotion(governors: str) -> tuple[str, str] | None:
+    """(governor type, promotion type) for an appointed governor that can promote."""
+    import re
+
+    current = None
+    for line in governors.splitlines():
+        appointed = re.search(r"\((GOVERNOR_[A-Z_]+)\)", line)
+        if appointed and "—" in line:
+            current = appointed.group(1)
+            continue
+        promotion = re.search(r"\((GOVERNOR_PROMOTION_[A-Z_]+)\)", line)
+        if promotion and current:
+            return current, promotion.group(1)
+    return None
+
+
+def _upgradeable_unit(units: str) -> int | None:
+    """A unit the game says can upgrade right now."""
+    import re
+
+    for line in units.splitlines():
+        if "CAN UPGRADE" not in line:
+            continue
+        match = re.search(r"id:(\d+)", line)
+        if match:
+            return int(match.group(1))
+    return None
+
+
+def _attack_target(cities: str) -> tuple[int, int, int] | None:
+    """(attacking city id, target x, target y) from a CAN ATTACK line.
+
+    The city id comes from the city block the line sits under, so the attack
+    is issued by a city that can actually reach the target.
+    """
+    import re
+
+    city_id = None
+    for line in cities.splitlines():
+        city = re.search(r"\[id:(\d+)\]", line)
+        if city:
+            city_id = int(city.group(1))
+        target = re.search(r"CAN ATTACK:\s*\S+@(\d+),(\d+)", line)
+        if target and city_id is not None:
+            return city_id, int(target.group(1)), int(target.group(2))
+    return None
+
+
+def _trade_destination(destinations: str) -> int | None:
+    """A destination city id a trader can start a route to."""
+    import re
+
+    match = re.search(r"\[city:(\d+)\]", destinations)
+    return int(match.group(1)) if match else None
+
+
+def _affordable_unit(production: str, gold: int) -> str | None:
+    """A unit the city can buy outright with the gold we hold."""
+    import re
+
+    for match in re.finditer(r"(UNIT_[A-Z_]+)\s*\(cost \d+, \d+ turns, buy: (\d+)g\)", production):
+        if int(match.group(2)) <= gold:
+            return match.group(1)
+    return None
+
+
+def _gold(overview: str) -> int:
+    import re
+
+    match = re.search(r"Gold:\s*(\d+)", overview)
+    return int(match.group(1)) if match else 0
 
 
 async def _call(client, tool: str, arguments: dict) -> str:

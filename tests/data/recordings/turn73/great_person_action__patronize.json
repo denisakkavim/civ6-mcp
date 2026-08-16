@@ -1,0 +1,67 @@
+{
+  "tool": "great_person_action",
+  "arguments": {
+    "individual_id": 76,
+    "action": "patronize",
+    "yield_type": "YIELD_FAITH"
+  },
+  "scenario": "turn73",
+  "recorded_at": "2026-08-16T18:42:47+00:00",
+  "notes": null,
+  "result": "OK:PATRONIZED|Marcus Licinius Crassus|cost:320 faith|unit_id:10|UNIT_GREAT_MERCHANT",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CRITICAL"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nfor _, u in Players[me]:GetUnits():Members() do\n    print(\"UID|\" .. ((u:GetID() % 65536) + u:GetOwner() * 65536) .. \"|\" .. GameInfo.Units[u:GetType()].UnitType)\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "UID|0|UNIT_SCOUT",
+        "UID|1|UNIT_WARRIOR",
+        "UID|2|UNIT_BUILDER",
+        "UID|3|UNIT_ARCHER",
+        "UID|4|UNIT_TRADER",
+        "UID|5|UNIT_SLINGER",
+        "UID|6|UNIT_WARRIOR",
+        "UID|7|UNIT_SLINGER",
+        "UID|8|UNIT_WARRIOR",
+        "UID|9|UNIT_BUILDER",
+        "UID|11|UNIT_BUILDER",
+        "UID|12|UNIT_TRADER",
+        "UID|13|UNIT_MISSIONARY"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal gp = Game.GetGreatPeople()\nif not gp:CanPatronizePerson(me, 76, 5) then\n    local ind = GameInfo.GreatPersonIndividuals[76]\n    local name = ind and Locale.Lookup(ind.Name) or \"unknown\"\n    local cost = gp:GetPatronizeCost(me, 76, 5)\n    print(\"ERR:CANNOT_PATRONIZE|Cannot buy \" .. name .. \" (cost: \" .. cost .. \" faith)\"); print(\"---END---\"); return\nend\nlocal kParams = {}\nkParams[PlayerOperations.PARAM_GREAT_PERSON_INDIVIDUAL_TYPE] = 76\nkParams[PlayerOperations.PARAM_YIELD_TYPE] = 5\nUI.RequestPlayerOperation(me, PlayerOperations.PATRONIZE_GREAT_PERSON, kParams)\nlocal ind = GameInfo.GreatPersonIndividuals[76]\nlocal name = ind and Locale.Lookup(ind.Name) or \"unknown\"\nlocal cost = gp:GetPatronizeCost(me, 76, 5)\nprint(\"OK:PATRONIZED|\" .. name .. \"|cost:\" .. cost .. \" faith\")\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:PATRONIZED|Marcus Licinius Crassus|cost:320 faith"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nfor _, u in Players[me]:GetUnits():Members() do\n    print(\"UID|\" .. ((u:GetID() % 65536) + u:GetOwner() * 65536) .. \"|\" .. GameInfo.Units[u:GetType()].UnitType)\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "UID|0|UNIT_SCOUT",
+        "UID|1|UNIT_WARRIOR",
+        "UID|2|UNIT_BUILDER",
+        "UID|3|UNIT_ARCHER",
+        "UID|4|UNIT_TRADER",
+        "UID|5|UNIT_SLINGER",
+        "UID|6|UNIT_WARRIOR",
+        "UID|7|UNIT_SLINGER",
+        "UID|8|UNIT_WARRIOR",
+        "UID|9|UNIT_BUILDER",
+        "UID|10|UNIT_GREAT_MERCHANT",
+        "UID|11|UNIT_BUILDER",
+        "UID|12|UNIT_TRADER",
+        "UID|13|UNIT_MISSIONARY"
+      ]
+    }
+  ]
+}

@@ -5,11 +5,10 @@ recording for every tool on the surface that Stage 4 leaves behind.
 
 Read `README.md` first. It says what the four saves hold today.
 
-Coverage now: **39 of 70 tools have a recording.**
+Coverage now: **48 of 70 tools have a recording.**
 
-Two tools will never have one. `load_game` and `restart_game` kill and relaunch
-the game. The destructive live test covers them instead. That leaves 68 tools
-to reach today, and about 75 after Stage 4 splits the dispatchers.
+Three tools will never have one — see below. That leaves 67 tools to reach
+today, and about 74 after Stage 4 splits the dispatchers.
 
 ## Read this before you make a save
 
@@ -21,16 +20,33 @@ second reason needs you.
 | `scripts/record_game_traffic.py` never calls the tool | Me. I add the call to a plan and record it against a save we already have |
 | No save meets the tool's precondition | You. Play to that state and save |
 
-31 tools have no recording. They split three ways:
+21 tools have no recording. They split three ways:
 
-- **18 are mine.** The four saves already meet their preconditions. Do not play
-  for these: `assign_governor`, `city_attack`, `diplomacy_action`,
-  `get_deal_options`, `get_great_person_sites`, `get_saves`,
-  `great_person_action`, `promote_governor`, `propose_deal`, `purchase_item`,
-  `purchase_tile`, `queue_world_congress_votes`, `respond_to_deal`, `run_lua`,
-  `set_civic`, `set_government`, `set_policies`, `upgrade_unit`.
-- **11 need a save.** They are the three lists below.
-- **2 never get one.** `load_game` and `restart_game`.
+- **6 are mine, and still open.** `get_great_person_sites` needs the Great
+  Person that `great_person_action(patronize)` now creates, so it wants a
+  second resolution pass. `purchase_item`, `purchase_tile` and `upgrade_unit`
+  compete for gold that a mid-game empire does not have; a richer save covers
+  them, and turn 37 already covers some. `queue_world_congress_votes` needs a
+  session that is actually open. `set_government` needs an alternative
+  government unlocked.
+- **13 need a save.** They are the lists below.
+- **3 never get one.** `load_game` and `restart_game` kill and relaunch the
+  game. `get_saves` scans the save directory, so its output changes every time
+  the game writes an autosave — a fixture that fails for reasons unrelated to
+  the code is worse than no fixture.
+
+**Three claims in an earlier version of this file were wrong, and recording
+against a live game is what disproved them.** They are corrected below:
+
+- `promote_governor` needs a spare **governor point**, not just an appointed
+  governor with promotions listed. `CANNOT_PROMOTE|No governor points
+  available` in all four scenarios.
+- `attack` and `city_attack` need a **war**. Turn 73 holds an enemy scout in
+  range, but `NOT_AT_WAR|Cannot attack UNIT_SCOUT — you are at peace`. Range
+  matters too: the same scout was `OUT_OF_RANGE|Target is 3 tiles away (city
+  attack range is 2)`.
+- `spread_religion` needs the Missionary **in or adjacent to a city**. Turn 73
+  has one, at (46,7), two tiles from the nearest city.
 
 Four `unit_action` verbs are also missing and are also mine: `attack`,
 `trade_route`, `activate` and `spread_religion`. Turn 73 holds an enemy in
@@ -68,6 +84,9 @@ The largest unlock. Aim for turn 140 or later, at war with a major civ.
 | A unit with a promotion available | `promote_unit`, and the eligibility marker in Stage 4.9 |
 | Past the peace cooldown | `propose_peace` |
 | An Encampment district of your own | Stage 4.1 asks whether an encampment can attack. Nothing can answer it today |
+| An enemy unit within 2 tiles of one of your cities, while at war | `attack` and `city_attack`, and so the general `attack` tool that Stage 4 merges them into. Both are refused at peace, and the city range is 2 |
+| A Missionary standing in or next to a city | `spread_religion` |
+| A spare governor point | `promote_governor`, and `appoint_governor(city_id=…)` which appoints and assigns in one call |
 | An enemy city you can capture on the next turn | Stage 3.4a. A city id encodes its owner, so capturing changes it. No save has ever shown that happen |
 
 A war produces most of this by itself. The last row is the one to plan for:
@@ -108,7 +127,6 @@ game you are already playing. Any of the three saves above can carry one.
 
 | Condition | It unblocks |
 |---|---|
-| A spare governor point, unspent | `appoint_governor(city_id=…)`, which appoints and assigns in one call. Stage 2 added that path and never ran it |
 | Envoy tokens available | `send_envoy` |
 | An incoming diplomacy session from an AI | `respond_to_diplomacy` |
 | An era about to turn, with a dedication to choose | `choose_dedication` |

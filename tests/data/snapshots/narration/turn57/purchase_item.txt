@@ -1,0 +1,1 @@
+PURCHASED|UNIT_SETTLER|cost=340g (had 361g)

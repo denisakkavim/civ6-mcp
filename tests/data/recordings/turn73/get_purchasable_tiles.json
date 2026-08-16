@@ -4,7 +4,7 @@
     "city_id": 16777216
   },
   "scenario": "turn73",
-  "recorded_at": "2026-08-16T17:11:49+00:00",
+  "recorded_at": "2026-08-16T18:41:09+00:00",
   "notes": null,
   "result": "9 purchasable tiles:\n  (47,11): 60g \u2014 Grassland (Hills) Hills [Sheep]\n  (43,14): 60g \u2014 Plains [Wheat]\n  (46,14): 40g \u2014 Plains (Mountain)\n  (44,14): 40g \u2014 Plains (Mountain)\n  (47,12): 40g \u2014 Grassland (Mountain)\n  (45,14): 40g \u2014 Plains (Mountain)\n  (46,13): 40g \u2014 Plains (Mountain)\n  (45,9): 60g \u2014 Plains\n  (42,13): 60g \u2014 Plains",
   "exchanges": [

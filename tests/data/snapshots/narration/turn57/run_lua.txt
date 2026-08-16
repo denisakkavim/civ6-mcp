@@ -1,0 +1,4 @@
+Error executing tool run_lua: 1 validation error for run_luaArguments
+code
+  Field required [type=missing, input_value={'context': 'gamecore'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing

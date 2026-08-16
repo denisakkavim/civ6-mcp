@@ -33,9 +33,18 @@ CORPUS = recordings.available()
 # machine. Replayed, it desynchronises after the first poll and then blocks in
 # the sleep ladder. Its recording is still kept and still checked for a
 # clean result below — only the narration replay is skipped.
+# A recording stores the parameters `_logged` was given, which is a log record
+# rather than the call's arguments. For almost every tool the two are the same
+# dict. Where they are not, the recording still proves the call succeeded, but
+# it cannot be replayed, because replaying it means calling the tool with the
+# log record instead of the arguments.
 NOT_REPLAYABLE = {
     "end_turn": "polls the AI turn on a wall clock; query count is not "
     "determined by game state",
+    "run_lua": "logs its context but not its code, so a replay would call it "
+    "with no Lua to run",
+    "test_deal": "propose_deal(mode='test') logs under this label with the "
+    "deal expanded into items, not the arguments it was called with",
 }
 
 

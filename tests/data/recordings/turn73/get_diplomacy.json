@@ -2,7 +2,7 @@
   "tool": "get_diplomacy",
   "arguments": {},
   "scenario": "turn73",
-  "recorded_at": "2026-08-16T17:11:32+00:00",
+  "recorded_at": "2026-08-16T18:40:51+00:00",
   "notes": null,
   "result": "3 civilizations:\n  Georgia (Tamar) \u2014 FRIENDLY (+7) [player 1]\n    Cities (4): Kutaisi pop 5 (55,19) [walls] [city:16842753]; Rustavi pop 5 (56,14) [walls] [city:16842754]; Gori pop 6 (53,25) [walls] [city:16842755] + 1 in fog\n    Military: 136 vs our 157\n    Access: they have delegation\n    -6 Unknown Reason\n    -1 Unknown Reason\n    +8 Tamar is happy you are fortifying your cities\n    +6 Unknown Reason\n    Agenda: Narikala Fortress \u2014 Tries to put high-level walls around her cities and respects civilizations who follow her lead. Does not like civilizations who fail to fortify their cities.\n    Agenda: [Hidden] \u2014 Requires Secret diplomatic visibility (spy or alliance)\n    Can: Diplomatic Delegation, Declare Friendship, Denounce, Open Borders (Via Propose Deal), Declare War\n  Unmet Civilization (Unknown Leader) \u2014 not met\n  Unmet Civilization (Unknown Leader) \u2014 not met",
   "exchanges": [

@@ -2,7 +2,7 @@
   "tool": "get_notifications",
   "arguments": {},
   "scenario": "turn63",
-  "recorded_at": "2026-08-16T17:08:05+00:00",
+  "recorded_at": "2026-08-16T18:37:00+00:00",
   "notes": null,
   "result": "== Notifications (9) ==\n  - Wonder Completed\n  - Wonder Completed\n  - Production Salvaged [Inca] (City Center) at (45,12)\n  - Your Pledge Broken\n  - Need More Housing\n  - Command Units  -> Units have moves remaining \u2014 move them or use skip_remaining_units()\n  - Religion Founded\n  - Civic Boost\n  - City-State Quest Complete at (46,23)",
   "exchanges": [

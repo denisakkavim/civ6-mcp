@@ -1,0 +1,40 @@
+{
+  "tool": "set_civic",
+  "arguments": {
+    "civic_type": "CIVIC_GAMES_RECREATION"
+  },
+  "scenario": "turn57",
+  "recorded_at": "2026-08-16T18:34:02+00:00",
+  "notes": null,
+  "result": "PROGRESSING_GC|CIVIC_GAMES_RECREATION",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CLEAR"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal id = Game.GetLocalPlayer()\nlocal idx = nil\nfor row in GameInfo.Civics() do\n    if row.CivicType == \"CIVIC_GAMES_RECREATION\" then idx = row.Index; break end\nend\nif idx == nil then print(\"ERR:CIVIC_NOT_FOUND|CIVIC_GAMES_RECREATION\"); print(\"---END---\"); return end\nif Players[id]:GetCulture():HasCivic(idx) then\n    print(\"ERR:ALREADY_COMPLETED|CIVIC_GAMES_RECREATION is already researched\"); print(\"---END---\"); return\nend\nlocal params = {}\nparams[PlayerOperations.PARAM_CIVIC_TYPE] = idx\nUI.RequestPlayerOperation(id, PlayerOperations.PROGRESS_CIVIC, params)\nlocal list = NotificationManager.GetList(id)\nif list then\n    for _, nid in ipairs(list) do\n        local e = NotificationManager.Find(id, nid)\n        if e and not e:IsDismissed() then\n            local bt = e:GetEndTurnBlocking()\n            if bt and bt == EndTurnBlockingTypes.ENDTURN_BLOCKING_CIVIC then\n                pcall(function() NotificationManager.SendActivated(id, nid) end)\n                pcall(function() NotificationManager.Dismiss(id, nid) end)\n            end\n        end\n    end\nend\nprint(\"OK:PROGRESSING|CIVIC_GAMES_RECREATION\")\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:PROGRESSING|CIVIC_GAMES_RECREATION"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "local me = Game.GetLocalPlayer(); local idx = nil; for row in GameInfo.Civics() do if row.CivicType == \"CIVIC_GAMES_RECREATION\" then idx = row.Index; break end end; local cur = Players[me]:GetCulture():GetProgressingCivic(); print(cur == idx and 'MATCH' or 'MISMATCH:'..tostring(cur)..'~='..tostring(idx)); print(\"---END---\")",
+      "lines": [
+        "MISMATCH:9~=7"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "\nlocal id = Game.GetLocalPlayer()\nlocal idx = nil\nfor row in GameInfo.Civics() do\n    if row.CivicType == \"CIVIC_GAMES_RECREATION\" then idx = row.Index; break end\nend\nif idx == nil then print(\"ERR:CIVIC_NOT_FOUND|CIVIC_GAMES_RECREATION\"); print(\"---END---\"); return end\nif Players[id]:GetCulture():HasCivic(idx) then\n    print(\"ERR:ALREADY_COMPLETED|CIVIC_GAMES_RECREATION is already researched\"); print(\"---END---\"); return\nend\nPlayers[id]:GetCulture():SetProgressingCivic(idx)\nprint(\"OK:PROGRESSING_GC|CIVIC_GAMES_RECREATION\")\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:PROGRESSING_GC|CIVIC_GAMES_RECREATION"
+      ]
+    }
+  ]
+}

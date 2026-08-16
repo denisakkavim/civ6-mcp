@@ -2,7 +2,7 @@
   "tool": "get_city_states",
   "arguments": {},
   "scenario": "turn37",
-  "recorded_at": "2026-08-16T17:18:16+00:00",
+  "recorded_at": "2026-08-16T18:29:46+00:00",
   "notes": null,
   "result": "Envoy tokens available: 0\n\n1 known city-states:\n  Free Cities (Unknown) \u2014 0 envoys [player 62]",
   "exchanges": [

@@ -6,7 +6,7 @@
     "target_y": 12
   },
   "scenario": "turn63",
-  "recorded_at": "2026-08-16T17:08:27+00:00",
+  "recorded_at": "2026-08-16T18:37:27+00:00",
   "notes": null,
   "result": "Unreachable \u2014 no path found. Destination may be in fog, behind foreign borders, or blocked by impassable terrain.",
   "exchanges": [

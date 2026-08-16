@@ -2,7 +2,7 @@
   "tool": "get_cities",
   "arguments": {},
   "scenario": "turn57",
-  "recorded_at": "2026-08-16T17:04:37+00:00",
+  "recorded_at": "2026-08-16T18:33:07+00:00",
   "notes": null,
   "result": "3 cities:\n  Qusqu (pop 5) at (45,12) \u2014 Food 12 Prod 16 Gold 8 Sci 4 Cul 4 | Housing 8 Amenities 6 | Growth: 2/27 food (13t, +2.0/t) | Building: nothing | Walls 100/100 Garrison 200/200 Def:21 Gar:UNIT_ARCHER [id:16777216]\n    Buildings: BUILDING_MONUMENT, BUILDING_PALACE, BUILDING_GRANARY, BUILDING_WALLS\n    Needs builder: RESOURCE_INCENSE, 9, RESOURCE_WHEAT, 10 (unimproved)\n  Wanuku (pop 3) at (44,8) \u2014 Food 10 Prod 4 Gold 0 Sci 1 Cul 3 | Housing 4 Amenities 3 | Growth: 14/16 food (2t, +4.0/t) | Building: UNIT_BUILDER (4 turns) | HP:200/200 Def:20 Gar:UNIT_WARRIOR [id:16777217]\n    Buildings: BUILDING_MONUMENT, BUILDING_GRANARY\n    Needs builder: RESOURCE_SALT, 6, RESOURCE_WHEAT, 8, RESOURCE_INCENSE, 9, RESOURCE_WHEAT, 10 (unimproved)\n  Antawaylla (pop 2) at (47,9) \u2014 Food 6 Prod 6 Gold 0 Sci 1 Cul 1 | Housing 3 Amenities 3 | Growth: 4/12 food (8t, +2.0/t) | Building: PROJECT_ENHANCE_DISTRICT_HOLY_SITE (5 turns) | HP:200/200 Def:17 Gar:UNIT_ARCHER [id:16777218]\n    Districts: DISTRICT_HOLY_SITE(46,7)\n    Buildings: BUILDING_SHRINE\n    Needs builder: RESOURCE_SALT, 6, RESOURCE_WHEAT, 8, RESOURCE_DEER, 8, RESOURCE_INCENSE, 9, RESOURCE_HORSES, 10 (unimproved)\n\nCity Distances:\n  Qusqu <-> Wanuku: 4 tiles\n  Qusqu <-> Antawaylla: 4 tiles\n  Wanuku <-> Antawaylla: 4 tiles",
   "exchanges": [

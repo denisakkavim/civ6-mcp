@@ -5,7 +5,7 @@
     "district_type": "DISTRICT_HOLY_SITE"
   },
   "scenario": "turn57",
-  "recorded_at": "2026-08-16T17:05:03+00:00",
+  "recorded_at": "2026-08-16T18:33:32+00:00",
   "notes": null,
   "result": "DISTRICT_HOLY_SITE placement options (10 tiles):\n  #1 (45,13) Adj: +3 (3 faith) \u2014 Plains Woods\n  #2 (46,12) Adj: +2 (2 faith) \u2014 Grassland\n  #3 (43,13) Adj: +1 (1 faith) \u2014 Plains Plains Floodplains\n  #4 (46,11) Adj: +1 (1 faith) \u2014 Grassland\n  #5 (44,10) Adj: +0 (no adjacency) \u2014 Plains Woods\n  #6 (43,11) Adj: +0 (no adjacency) \u2014 Plains (Hills) Hills\n  #7 (44,12) Adj: +0 (no adjacency) \u2014 Plains Plains Floodplains\n  #8 (44,11) Adj: +0 (no adjacency) \u2014 Plains\n  #9 (46,10) Adj: +0 (no adjacency) \u2014 Plains\n  #10 (45,10) Adj: +0 (no adjacency) \u2014 Plains",
   "exchanges": [

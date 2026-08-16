@@ -2,7 +2,7 @@
   "tool": "get_units",
   "arguments": {},
   "scenario": "turn57",
-  "recorded_at": "2026-08-16T17:04:36+00:00",
+  "recorded_at": "2026-08-16T18:33:06+00:00",
   "notes": null,
   "result": "10 units:\n  Warrior (UNIT_WARRIOR) at (53,18) \u2014 CS:20 moves 3/3 [id:1]\n  Builder (UNIT_BUILDER) at (45,13) \u2014 moves 2/2 charges:3 [id:2]\n  Archer (UNIT_ARCHER) at (45,12) \u2014 CS:15 RS:25 moves 2/2 [id:3]\n  Trader (UNIT_TRADER) at (45,11) \u2014 moves 2/2 [ON ROUTE: Qusqu -> Antawaylla (Domestic)] [id:4]\n  Slinger (UNIT_SLINGER) at (41,11) \u2014 CS:5 RS:15 moves 2/2 [id:5]\n  Warrior (UNIT_WARRIOR) at (59,10) \u2014 CS:20 moves 0/2 (no moves) [id:6]\n  Slinger (UNIT_SLINGER) at (54,15) \u2014 CS:5 RS:15 moves 2/2 [id:7]\n  Warrior (UNIT_WARRIOR) at (44,8) \u2014 CS:20 moves 2/2 [id:8]\n  Settler (UNIT_SETTLER) at (41,11) \u2014 moves 2/2 [id:9]\n  Archer (UNIT_ARCHER) at (47,9) \u2014 CS:15 RS:25 moves 2/2 [id:10]\n\nNearby threats (1):\n  Georgia (1 unit):\n    UNIT_SCOUT at (42,7) \u2014 CS:10 HP:72/100 (2 tiles away) [id:65541]",
   "exchanges": [

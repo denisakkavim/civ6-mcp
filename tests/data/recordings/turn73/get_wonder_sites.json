@@ -5,7 +5,7 @@
     "wonder_type": "BUILDING_PYRAMIDS"
   },
   "scenario": "turn73",
-  "recorded_at": "2026-08-16T17:11:51+00:00",
+  "recorded_at": "2026-08-16T18:41:11+00:00",
   "notes": null,
   "result": "BUILDING_PYRAMIDS placement options (1 tiles):\n   #1 (0,0) ocean ice \u2014 score:2\n\nRecommended: (0,0) \u2014 lowest displacement\nUse: set_city_production(city_id=<id>, item_type=\"BUILDING_PYRAMIDS\", target_x=0, target_y=0)",
   "exchanges": [

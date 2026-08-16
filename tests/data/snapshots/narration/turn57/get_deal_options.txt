@@ -1,0 +1,27 @@
+Trade options with Georgia (player 1):
+
+Economy:
+  Our gold: 371 (+4/turn) | Favor: 20
+  Their gold: 39 (+5/turn) | Favor: 38
+
+Our tradeable resources:
+  Luxuries: Salt
+  Strategics: Horses x25
+
+Their tradeable resources:
+  Luxuries: Spices
+
+Our cities (3):
+  Qusqu (id=16777216, pop 5) (CAPITAL)
+  Wanuku (id=16777217, pop 3)
+  Antawaylla (id=16777218, pop 2)
+
+Their cities (4):
+  Tbilisi (id=16842752, pop 9) (CAPITAL)
+  Kutaisi (id=16842753, pop 2)
+  Rustavi (id=16842754, pop 4)
+  Gori (id=16842755, pop 2)
+
+Agreements:
+  Open borders: not active (available)
+  Alliance: not eligible (requires declared friendship + Diplomatic Service civic)

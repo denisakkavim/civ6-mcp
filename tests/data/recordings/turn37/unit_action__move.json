@@ -7,7 +7,7 @@
     "target_y": 13
   },
   "scenario": "turn37",
-  "recorded_at": "2026-08-16T17:18:38+00:00",
+  "recorded_at": "2026-08-16T18:30:12+00:00",
   "notes": null,
   "result": "MOVING_TO|42,13|from:43,14|now_at:42,13|(moved dx:-1 dy:-1)\nRevealed 2 new tiles (no notable features)",
   "exchanges": [

@@ -568,7 +568,7 @@ print("{SENTINEL}")
 
 def parse_deal_options_response(lines: list[str]) -> DealOptions:
     """Parse the deal options query response."""
-    opts = DealOptions(player_id=0, other_civ_name="")
+    opts = DealOptions(other_player_id=0, other_civ_name="")
     for line in lines:
         if line.startswith("CIV|"):
             parts = line.split("|")
@@ -928,7 +928,7 @@ print("{SENTINEL}")
 def parse_test_trade_response(lines: list[str]) -> TestTradeResult:
     """Parse the test trade response."""
     result = TestTradeResult(
-        player_id=0,
+        other_player_id=0,
         other_civ_name="",
         proposed=[],
         counter=[],
@@ -1207,7 +1207,7 @@ def parse_diplomacy_sessions(lines: list[str]) -> list[DiplomacySession]:
                 sessions.append(
                     DiplomacySession(
                         session_id=int(parts[1]),
-                        player_id=int(parts[2]),
+                        other_player_id=int(parts[2]),
                         other_civ_name=parts[3],
                         other_leader_name=parts[4],
                         choices=[],
@@ -1244,7 +1244,7 @@ def parse_pending_deals_response(lines: list[str]) -> list[PendingDeal]:
             if len(parts) >= 4:
                 pid = int(parts[1])
                 deals[pid] = PendingDeal(
-                    player_id=pid,
+                    other_player_id=pid,
                     other_player_name=parts[2],
                     other_leader_name=parts[3],
                 )

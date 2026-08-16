@@ -1,0 +1,36 @@
+{
+  "tool": "get_deal_options",
+  "arguments": {
+    "player_id": 1
+  },
+  "scenario": "turn63",
+  "recorded_at": "2026-08-16T18:37:21+00:00",
+  "notes": null,
+  "result": "Trade options with Georgia (player 1):\n\nEconomy:\n  Our gold: 133 (+3/turn) | Favor: 26\n  Their gold: 83 (+3/turn) | Favor: 17\n\nOur tradeable resources:\n  Luxuries: Salt\n  Strategics: Horses x25\n\nTheir tradeable resources:\n  Luxuries: Spices\n\nOur cities (3):\n  Qusqu (id=16777216, pop 5) (CAPITAL)\n  Wanuku (id=16777217, pop 4)\n  Antawaylla (id=16777218, pop 3)\n\nTheir cities (4):\n  Tbilisi (id=16842752, pop 10) (CAPITAL)\n  Kutaisi (id=16842753, pop 3)\n  Rustavi (id=16842754, pop 5)\n  Gori (id=16842755, pop 4)\n\nAgreements:\n  Open borders: not active (available)\n  Alliance: not eligible (requires declared friendship + Diplomatic Service civic)",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal target = 1\nlocal pDiplo = Players[me]:GetDiplomacy()\nif not Players[target] or not Players[target]:IsAlive() then print(\"ERR:INVALID_PLAYER|Player 1 not found\"); print(\"---END---\"); return end\nif not pDiplo:HasMet(target) then print(\"ERR:NOT_MET|Have not met player 1\"); print(\"---END---\"); return end\nlocal name = Locale.Lookup(PlayerConfigurations[target]:GetCivilizationShortDescription())\nprint(\"CIV|\" .. target .. \"|\" .. name:gsub(\"|\",\"/\"))\nlocal ourGold = math.floor(Players[me]:GetTreasury():GetGoldBalance())\nlocal ourGPT = math.floor(Players[me]:GetTreasury():GetGoldYield() - Players[me]:GetTreasury():GetTotalMaintenance())\nlocal ourFavor = 0\npcall(function() ourFavor = math.floor(Players[me]:GetFavor() or 0) end)\nlocal theirGold = math.floor(Players[target]:GetTreasury():GetGoldBalance())\nlocal theirGPT = math.floor(Players[target]:GetTreasury():GetGoldYield() - Players[target]:GetTreasury():GetTotalMaintenance())\nlocal theirFavor = 0\npcall(function() theirFavor = math.floor(Players[target]:GetFavor() or 0) end)\nprint(\"ECON|\" .. ourGold .. \"|\" .. ourGPT .. \"|\" .. ourFavor .. \"|\" .. theirGold .. \"|\" .. theirGPT .. \"|\" .. theirFavor)\nfor row in GameInfo.Resources() do\n    local ourAmt = Players[me]:GetResources():GetResourceAmount(row.Index)\n    local theirAmt = Players[target]:GetResources():GetResourceAmount(row.Index)\n    if ourAmt > 0 or theirAmt > 0 then\n        local rClass = row.ResourceClassType or \"\"\n        local rName = Locale.Lookup(row.Name)\n        print(\"RES|\" .. rName:gsub(\"|\",\"/\") .. \"|\" .. row.ResourceType .. \"|\" .. rClass .. \"|\" .. ourAmt .. \"|\" .. theirAmt)\n    end\nend\nlocal hasOB = false\npcall(function() hasOB = pDiplo:HasOpenBordersFrom(target) end)\nif not hasOB then pcall(function() hasOB = pDiplo:GetVisibilityOn(target) >= 2 end) end\nprint(\"OB|\" .. (hasOB and \"1\" or \"0\"))\nlocal ai = Players[target]:GetDiplomaticAI()\nlocal stateIdx = ai:GetDiplomaticStateIndex(me)\nlocal hasDiploService = false\npcall(function()\n    local civic = GameInfo.Civics[\"CIVIC_DIPLOMATIC_SERVICE\"]\n    if civic then hasDiploService = Players[me]:GetCulture():HasCivic(civic.Index) end\nend)\nlocal allianceEligible = (stateIdx == 1 and hasDiploService)\nlocal currentAlliance = \"\"\nif stateIdx == 0 then\n    local ok3, aType = pcall(function() return pDiplo:GetAllianceType(target) end)\n    if ok3 and aType and aType >= 0 then\n        local aNames = {\"RESEARCH\",\"CULTURAL\",\"ECONOMIC\",\"MILITARY\",\"RELIGIOUS\"}\n        currentAlliance = aNames[aType+1] or \"\"\n    end\nend\nprint(\"ALLIANCE|\" .. (allianceEligible and \"1\" or \"0\") .. \"|\" .. currentAlliance)\nfor _, city in Players[me]:GetCities():Members() do\n    local cName = Locale.Lookup(city:GetName()):gsub(\"|\", \"/\")\n    local cid = ((city:GetID() % 65536) + city:GetOwner() * 65536 + 16777216)\n    local pop = city:GetPopulation()\n    local isCapital = city:IsCapital() and \"1\" or \"0\"\n    print(\"CITY|OURS|\" .. cid .. \"|\" .. cName .. \"|\" .. pop .. \"|\" .. isCapital)\nend\nfor _, city in Players[target]:GetCities():Members() do\n    local cName = Locale.Lookup(city:GetName()):gsub(\"|\", \"/\")\n    local cid = ((city:GetID() % 65536) + city:GetOwner() * 65536 + 16777216)\n    local pop = city:GetPopulation()\n    local isCapital = city:IsCapital() and \"1\" or \"0\"\n    print(\"CITY|THEIRS|\" .. cid .. \"|\" .. cName .. \"|\" .. pop .. \"|\" .. isCapital)\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "CIV|1|Georgia",
+        "ECON|133|3|26|83|3|17",
+        "RES|Fish|RESOURCE_FISH|RESOURCECLASS_BONUS|0|1",
+        "RES|Rice|RESOURCE_RICE|RESOURCECLASS_BONUS|0|1",
+        "RES|Stone|RESOURCE_STONE|RESOURCECLASS_BONUS|0|1",
+        "RES|Wheat|RESOURCE_WHEAT|RESOURCECLASS_BONUS|2|2",
+        "RES|Salt|RESOURCE_SALT|RESOURCECLASS_LUXURY|1|0",
+        "RES|Spices|RESOURCE_SPICES|RESOURCECLASS_LUXURY|0|1",
+        "RES|Horses|RESOURCE_HORSES|RESOURCECLASS_STRATEGIC|25|0",
+        "OB|0",
+        "ALLIANCE|0|",
+        "CITY|OURS|16777216|Qusqu|5|1",
+        "CITY|OURS|16777217|Wanuku|4|0",
+        "CITY|OURS|16777218|Antawaylla|3|0",
+        "CITY|THEIRS|16842752|Tbilisi|10|1",
+        "CITY|THEIRS|16842753|Kutaisi|3|0",
+        "CITY|THEIRS|16842754|Rustavi|5|0",
+        "CITY|THEIRS|16842755|Gori|4|0"
+      ]
+    }
+  ]
+}
