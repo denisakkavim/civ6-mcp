@@ -5,7 +5,7 @@ recording for every tool on the surface that Stage 4 leaves behind.
 
 Read `README.md` first. It says what the four saves hold today.
 
-Coverage now: **48 of 70 tools have a recording.**
+Coverage now: **52 of 70 tools, and 11 of 20 `unit_action` verbs.**
 
 Three tools will never have one — see below. That leaves 67 tools to reach
 today, and about 74 after Stage 4 splits the dispatchers.
@@ -22,18 +22,21 @@ second reason needs you.
 
 21 tools have no recording. They split three ways:
 
-- **6 are mine, and still open.** `get_great_person_sites` needs the Great
-  Person that `great_person_action(patronize)` now creates, so it wants a
-  second resolution pass. `purchase_item`, `purchase_tile` and `upgrade_unit`
-  compete for gold that a mid-game empire does not have; a richer save covers
-  them, and turn 37 already covers some. `queue_world_congress_votes` needs a
-  session that is actually open. `set_government` needs an alternative
-  government unlocked.
+- **2 are mine, and still open.** `purchase_tile` needs more gold than the
+  poorer saves hold once the other purchases have run; it lands where gold
+  allows. `propose_deal` is recorded, but under the label `test_deal`, because
+  `_logged` renames it in test mode — recording it under its own name means
+  `mode="send"`, which commits a real deal and reshapes the save.
 - **13 need a save.** They are the lists below.
 - **3 never get one.** `load_game` and `restart_game` kill and relaunch the
   game. `get_saves` scans the save directory, so its output changes every time
   the game writes an autosave — a fixture that fails for reasons unrelated to
   the code is worse than no fixture.
+
+**`respond_to_diplomacy` no longer needs a save.** Recording
+`diplomacy_action(DIPLOMATIC_DELEGATION)` opens an encounter with that player,
+which is the precondition. It also blocks `end_turn` until answered, so the
+two belong together in the same run.
 
 **Three claims in an earlier version of this file were wrong, and recording
 against a live game is what disproved them.** They are corrected below:
@@ -85,6 +88,7 @@ The largest unlock. Aim for turn 140 or later, at war with a major civ.
 | Past the peace cooldown | `propose_peace` |
 | An Encampment district of your own | Stage 4.1 asks whether an encampment can attack. Nothing can answer it today |
 | An enemy unit within 2 tiles of one of your cities, while at war | `attack` and `city_attack`, and so the general `attack` tool that Stage 4 merges them into. Both are refused at peace, and the city range is 2 |
+| A Great Person standing on its matching district | `unit_action(activate)` and `activate_great_person`. Note first: `get_great_person_sites` answered "Could not get GP advisor info. Is this a Great Person unit?" for a Great Merchant that `great_person_action(patronize)` had just created, in a save whose capital holds a Commercial Hub. That may be a defect in the advisor rather than a missing save |
 | A Missionary standing in or next to a city | `spread_religion` |
 | A spare governor point | `promote_governor`, and `appoint_governor(city_id=…)` which appoints and assigns in one call |
 | An enemy city you can capture on the next turn | Stage 3.4a. A city id encodes its owner, so capturing changes it. No save has ever shown that happen |
@@ -128,7 +132,6 @@ game you are already playing. Any of the three saves above can carry one.
 | Condition | It unblocks |
 |---|---|
 | Envoy tokens available | `send_envoy` |
-| An incoming diplomacy session from an AI | `respond_to_diplomacy` |
 | An era about to turn, with a dedication to choose | `choose_dedication` |
 | A declared friendship, so an alliance is legal | `form_alliance` |
 | Enough Great Person points to recruit | `great_person_action(action="recruit")` |

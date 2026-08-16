@@ -1,13 +1,13 @@
-Researching: Apprenticeship (5 turns) | Completed: 13 techs, 11 civics
-Civic: Defensive Tactics (5 turns)
+Researching: Wheel (2 turns) | Completed: 14 techs, 11 civics
+Civic: Military Training (5 turns)
 
 Available techs:
   Wheel (TECH_THE_WHEEL) [ANCIENT] — 37%, 2 turns BOOSTED [Boost: Mine a resource.] -> Heavy Chariot, Maryannu Chariot Archer, Water Mill (needs: TECH_MINING) !! GRAB THIS
   Celestial Navigation (TECH_CELESTIAL_NAVIGATION) [CLASSICAL] — 0%, 5 turns [Boost: Improve 2 sea resources.] -> Lighthouse, Great Lighthouse, Harbor, Royal Navy Dockyard, Cothon (needs: TECH_SAILING,TECH_ASTROLOGY)
-  Apprenticeship (TECH_APPRENTICESHIP) [MEDIEVAL] — 65%, 5 turns [Boost: Build 3 Mines.] -> Man-At-Arms, Workshop, Industrial Zone, Hansa (needs: TECH_CURRENCY,TECH_HORSEBACK_RIDING)
   Shipbuilding (TECH_SHIPBUILDING) [CLASSICAL] — 0%, 8 turns [Boost: Own 2 Galleys.] -> Quadrireme, Colossus, Kampung (needs: TECH_SAILING)
   Mathematics (TECH_MATHEMATICS) [CLASSICAL] — 0%, 8 turns [Boost: Build 3 different specialty districts.] -> Petra (needs: TECH_CURRENCY)
   Construction (TECH_CONSTRUCTION) [CLASSICAL] — 0%, 8 turns [Boost: Build a Water Mill.] -> Toa, Terracotta Army, Lumber Mill (needs: TECH_MASONRY,TECH_HORSEBACK_RIDING)
+  Stirrups (TECH_STIRRUPS) [MEDIEVAL] — 0%, 18 turns [Boost: Have the Feudalism civic.] -> Knight, Mamluk, Keshig, Mandekalu Cavalry (needs: TECH_HORSEBACK_RIDING,TECH_APPRENTICESHIP)
 
 Available civics:
   Military Training (CIVIC_MILITARY_TRAINING) [CLASSICAL] — 0%, 5 turns [Boost: Build an Encampment.] (needs: CIVIC_MILITARY_TRADITION,CIVIC_GAMES_RECREATION)
@@ -19,9 +19,8 @@ Locked techs (prerequisites missing):
   Engineering (TECH_ENGINEERING) — needs: Wheel BOOSTED [Boost: Build Ancient Walls.]
   -- MEDIEVAL --
   Military Tactics (TECH_MILITARY_TACTICS) — needs: Mathematics [Boost: Kill a unit with a Spearman.]
-  Machinery (TECH_MACHINERY) — needs: Engineering [Boost: Own 3 Archers.]
-  Education (TECH_EDUCATION) — needs: Mathematics, Apprenticeship [Boost: Earn a Great Scientist.]
-  Stirrups (TECH_STIRRUPS) — needs: Apprenticeship [Boost: Have the Feudalism civic.]
+  Machinery (TECH_MACHINERY) — needs: Engineering BOOSTED [Boost: Own 3 Archers.]
+  Education (TECH_EDUCATION) — needs: Mathematics [Boost: Earn a Great Scientist.]
   Military Engineering (TECH_MILITARY_ENGINEERING) — needs: Construction [Boost: Build an Aqueduct.]
   Castles (TECH_CASTLES) — needs: Construction [Boost: Adopt a government with 6 inherent policy slots.]
   Buttress (TECH_BUTTRESS) — needs: Shipbuilding, Mathematics [Boost: Build a Classical era or later wonder]
@@ -29,7 +28,7 @@ Locked techs (prerequisites missing):
   Cartography (TECH_CARTOGRAPHY) — needs: Buttress [Boost: Build 2 Harbors.]
   Mass Production (TECH_MASS_PRODUCTION) — needs: Education, Buttress, Military Tactics [Boost: Build a Lumber Mill.]
   Banking (TECH_BANKING) — needs: Education, Stirrups [Boost: Have the Guilds civic.]
-  Gunpowder (TECH_GUNPOWDER) — needs: Apprenticeship, Stirrups, Military Engineering [Boost: Build an Armory.]
+  Gunpowder (TECH_GUNPOWDER) — needs: Stirrups, Military Engineering [Boost: Build an Armory.]
   Printing (TECH_PRINTING) — needs: Machinery [Boost: Build 2 Universities.]
   Square Rigging (TECH_SQUARE_RIGGING) — needs: Cartography [Boost: Kill a unit with a Musketman.]
   Astronomy (TECH_ASTRONOMY) — needs: Education [Boost: Build a University adjacent to a Mountain.]
@@ -59,7 +58,7 @@ Locked civics (prerequisites missing):
   Humanism (CIVIC_HUMANISM) — needs: Medieval Faires, Guilds [Boost: Earn a Great Artist.]
   Diplomatic Service (CIVIC_DIPLOMATIC_SERVICE) — needs: Guilds [Boost: Have an alliance with another civilization.]
   Reformed Church (CIVIC_REFORMED_CHURCH) — needs: Guilds, Divine Right [Boost: Have 6 cities following your Religion.]
-  Mercantilism (CIVIC_MERCANTILISM) — needs: Humanism [Boost: Earn a Great Merchant.]
+  Mercantilism (CIVIC_MERCANTILISM) — needs: Humanism BOOSTED [Boost: Earn a Great Merchant.]
   The Enlightenment (CIVIC_THE_ENLIGHTENMENT) — needs: Humanism, Diplomatic Service [Boost: Earn 3 Great People.]
   -- INDUSTRIAL --
   Colonialism (CIVIC_COLONIALISM) — needs: Mercantilism [Boost: Research the Astronomy technology.]

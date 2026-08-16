@@ -1,0 +1,26 @@
+{
+  "tool": "set_government",
+  "arguments": {
+    "government_type": "GOVERNMENT_OLIGARCHY"
+  },
+  "scenario": "turn63",
+  "recorded_at": "2026-08-16T19:58:39+00:00",
+  "notes": null,
+  "result": "GOVERNMENT_CHANGED|GOVERNMENT_OLIGARCHY|Oligarchy",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CRITICAL"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pCulture = Players[me]:GetCulture()\nlocal row = GameInfo.Governments[\"GOVERNMENT_OLIGARCHY\"]\nif row == nil then print(\"ERR:GOV_NOT_FOUND|GOVERNMENT_OLIGARCHY\"); print(\"---END---\"); return end\nif not pCulture:IsGovernmentUnlocked(row.Index) then print(\"ERR:GOV_LOCKED|GOVERNMENT_OLIGARCHY is not unlocked\"); print(\"---END---\"); return end\nif row.Index == pCulture:GetCurrentGovernment() then print(\"ERR:ALREADY_CURRENT|GOVERNMENT_OLIGARCHY is already your government\"); print(\"---END---\"); return end\npCulture:SetGovernmentChangeConsidered(true)\npCulture:RequestChangeGovernment(row.Index)\nprint(\"OK:GOVERNMENT_CHANGED|GOVERNMENT_OLIGARCHY|\" .. Locale.Lookup(row.Name))\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:GOVERNMENT_CHANGED|GOVERNMENT_OLIGARCHY|Oligarchy"
+      ]
+    }
+  ]
+}

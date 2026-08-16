@@ -4,7 +4,7 @@
     "unit_id": 0
   },
   "scenario": "turn63",
-  "recorded_at": "2026-08-16T18:37:19+00:00",
+  "recorded_at": "2026-08-16T19:57:54+00:00",
   "notes": null,
   "result": "Top 4 settle locations:\n  #1 (51,8): Score 179 \u2014 this turn \u2014 F:48 P:28 \u2014 no water, defense:2\n     [L] RESOURCE_SPICES, [B] RESOURCE_COPPER, [B] RESOURCE_DEER, [L] RESOURCE_SPICES, [S] RESOURCE_HORSES, [L] RESOURCE_SPICES, [S] RESOURCE_HORSES, [B] RESOURCE_SHEEP, [B] RESOURCE_CATTLE\n  #2 (52,8): Score 150 \u2014 this turn \u2014 F:42 P:19 \u2014 coast, defense:3\n     [L] RESOURCE_SPICES, [B] RESOURCE_COPPER, [L] RESOURCE_SPICES, [S] RESOURCE_HORSES, [L] RESOURCE_SPICES, [B] RESOURCE_SHEEP, [B] RESOURCE_CATTLE\n  #3 (51,7): Score 140 \u2014 this turn \u2014 F:37 P:19 \u2014 coast, defense:3\n     [L] RESOURCE_SPICES, [B] RESOURCE_COPPER, [L] RESOURCE_SPICES, [S] RESOURCE_HORSES, [L] RESOURCE_SPICES, [B] RESOURCE_SHEEP\n  #4 (52,7): Score 124 \u2014 this turn \u2014 F:33 P:16 \u2014 coast, defense:3\n     [L] RESOURCE_SPICES, [B] RESOURCE_COPPER, [B] RESOURCE_FISH, [L] RESOURCE_SPICES, [L] RESOURCE_SPICES, [B] RESOURCE_SHEEP",
   "exchanges": [

@@ -1,12 +1,11 @@
-11 purchasable tiles:
-  (43,10): 45g — Plains [Wheat]
+10 purchasable tiles:
   (45,14): 30g — Plains (Mountain)
   (44,14): 30g — Plains (Mountain)
+  (43,12): 30g — Plains
   (43,13): 30g — Plains
   (46,14): 30g — Plains (Mountain)
-  (47,12): 30g — Grassland (Mountain)
   (46,13): 30g — Plains (Mountain)
-  (43,12): 30g — Plains
   (46,11): 30g — Grassland
-  (45,9): 45g — Plains
+  (47,12): 30g — Grassland (Mountain)
   (42,11): 45g — Desert (Hills) Hills
+  (45,9): 45g — Plains

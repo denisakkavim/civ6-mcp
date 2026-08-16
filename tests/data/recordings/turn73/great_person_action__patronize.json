@@ -6,9 +6,9 @@
     "yield_type": "YIELD_FAITH"
   },
   "scenario": "turn73",
-  "recorded_at": "2026-08-16T18:42:47+00:00",
+  "recorded_at": "2026-08-16T20:03:22+00:00",
   "notes": null,
-  "result": "OK:PATRONIZED|Marcus Licinius Crassus|cost:320 faith|unit_id:10|UNIT_GREAT_MERCHANT",
+  "result": "OK:PATRONIZED|Marcus Licinius Crassus|cost:320 faith|unit_id:15|UNIT_GREAT_MERCHANT",
   "exchanges": [
     {
       "context": "write",
@@ -31,9 +31,11 @@
         "UID|7|UNIT_SLINGER",
         "UID|8|UNIT_WARRIOR",
         "UID|9|UNIT_BUILDER",
+        "UID|10|UNIT_ARCHER",
         "UID|11|UNIT_BUILDER",
         "UID|12|UNIT_TRADER",
-        "UID|13|UNIT_MISSIONARY"
+        "UID|13|UNIT_MISSIONARY",
+        "UID|14|UNIT_ARCHER"
       ]
     },
     {
@@ -57,10 +59,12 @@
         "UID|7|UNIT_SLINGER",
         "UID|8|UNIT_WARRIOR",
         "UID|9|UNIT_BUILDER",
-        "UID|10|UNIT_GREAT_MERCHANT",
+        "UID|10|UNIT_ARCHER",
         "UID|11|UNIT_BUILDER",
         "UID|12|UNIT_TRADER",
-        "UID|13|UNIT_MISSIONARY"
+        "UID|13|UNIT_MISSIONARY",
+        "UID|14|UNIT_ARCHER",
+        "UID|15|UNIT_GREAT_MERCHANT"
       ]
     }
   ]

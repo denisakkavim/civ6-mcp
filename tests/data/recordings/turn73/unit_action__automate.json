@@ -1,13 +1,13 @@
 {
   "tool": "unit_action",
   "arguments": {
-    "unit_id": 6,
+    "unit_id": 7,
     "action": "automate"
   },
   "scenario": "turn73",
-  "recorded_at": "2026-08-16T18:41:29+00:00",
+  "recorded_at": "2026-08-16T20:02:08+00:00",
   "notes": null,
-  "result": "AUTOMATED|51,14",
+  "result": "AUTOMATED|50,14",
   "exchanges": [
     {
       "context": "write",
@@ -18,9 +18,9 @@
     },
     {
       "context": "write",
-      "lua": "\nlocal me = Game.GetLocalPlayer() local unit = UnitManager.GetUnit(me, 6) if unit == nil then print(\"ERR:UNIT_NOT_FOUND\"); print(\"---END---\"); return end\nlocal hash = GameInfo.UnitOperations[\"UNITOPERATION_AUTOMATE_EXPLORE\"].Hash\nif not UnitManager.CanStartOperation(unit, hash, nil, nil) then\n    print(\"ERR:CANNOT_AUTOMATE|Unit cannot auto-explore\"); print(\"---END---\"); return\nend\nUnitManager.RequestOperation(unit, hash, {})\nprint(\"OK:AUTOMATED|\" .. unit:GetX() .. \",\" .. unit:GetY())\nprint(\"---END---\")\n",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local unit = UnitManager.GetUnit(me, 7) if unit == nil then print(\"ERR:UNIT_NOT_FOUND\"); print(\"---END---\"); return end\nlocal hash = GameInfo.UnitOperations[\"UNITOPERATION_AUTOMATE_EXPLORE\"].Hash\nif not UnitManager.CanStartOperation(unit, hash, nil, nil) then\n    print(\"ERR:CANNOT_AUTOMATE|Unit cannot auto-explore\"); print(\"---END---\"); return\nend\nUnitManager.RequestOperation(unit, hash, {})\nprint(\"OK:AUTOMATED|\" .. unit:GetX() .. \",\" .. unit:GetY())\nprint(\"---END---\")\n",
       "lines": [
-        "OK:AUTOMATED|51,14"
+        "OK:AUTOMATED|50,14"
       ]
     }
   ]

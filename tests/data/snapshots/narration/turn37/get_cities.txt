@@ -1,10 +1,10 @@
 3 cities:
-  Qusqu (pop 4) at (45,12) — Food 9 Prod 12 Gold 7 Sci 4 Cul 4 | Housing 8 Amenities 5 | Growth: 2/22 food (20t, +1.0/t) | Building: nothing | HP:200/200 Def:13 Gar:UNIT_SLINGER [id:16777216]
+  Qusqu (pop 4) at (45,12) — Food 9 Prod 12 Gold 7 Sci 4 Cul 4 | Housing 8 Amenities 5 | Growth: 2/22 food (20t, +1.0/t) | Building: UNIT_SETTLER (6 turns) | HP:200/200 Def:13 Gar:none [id:16777216]
     !! SLOW GROWTH: 20 turns to next pop — needs farm, granary, or trade route
     Buildings: BUILDING_MONUMENT, BUILDING_PALACE, BUILDING_GRANARY
-    Needs builder: RESOURCE_INCENSE, 9 (unimproved)
+    Needs builder: RESOURCE_INCENSE, 9, RESOURCE_WHEAT, 10 (unimproved)
   Wanuku (pop 1) at (44,8) — Food 5 Prod 2 Gold 0 Sci 0 Cul 0 | Housing 2 Amenities 2 | Growth: 6/7 food (1t, +3.0/t) | Building: UNIT_WARRIOR (6 turns) | HP:200/200 Def:10 Gar:UNIT_SLINGER [id:16777217]
-    Needs builder: RESOURCE_WHEAT, 8, RESOURCE_INCENSE, 9 (unimproved)
+    Needs builder: RESOURCE_WHEAT, 8, RESOURCE_INCENSE, 9, RESOURCE_WHEAT, 10 (unimproved)
   Antawaylla (pop 1) at (47,9) — Food 3 Prod 4 Gold 0 Sci 0 Cul 0 | Housing 2 Amenities 2 | Growth: 2/7 food (11t, +1.0/t) | Building: UNIT_WARRIOR (2 turns) | HP:200/200 Def:10 Gar:none [id:16777218]
     Needs builder: RESOURCE_WHEAT, 8, RESOURCE_DEER, 8, RESOURCE_INCENSE, 9 (unimproved)
 

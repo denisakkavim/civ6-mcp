@@ -2,7 +2,7 @@
   "tool": "get_trade_routes",
   "arguments": {},
   "scenario": "turn73",
-  "recorded_at": "2026-08-16T18:40:58+00:00",
+  "recorded_at": "2026-08-16T20:01:38+00:00",
   "notes": null,
   "result": "Trade Routes: 0/3 active\n\nIdle (2):\n  Trader (id:4) at (45,12) \u2014 needs trade_route or teleport\n  Trader (id:12) at (45,12) \u2014 needs trade_route or teleport\n\n3 free route slot(s) \u2014 build/buy a Trader to fill.",
   "exchanges": [

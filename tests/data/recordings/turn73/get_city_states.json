@@ -2,7 +2,7 @@
   "tool": "get_city_states",
   "arguments": {},
   "scenario": "turn73",
-  "recorded_at": "2026-08-16T18:40:56+00:00",
+  "recorded_at": "2026-08-16T20:01:36+00:00",
   "notes": null,
   "result": "Envoy tokens available: 0\n\n3 known city-states:\n  Wolin (Militaristic) \u2014 3 envoys [player 4]\n    Wolin [city:17039360]\n  La Venta (Religious) \u2014 2 envoys (Suzerain: Georgia) [player 5]\n    La Venta [city:17104896]\n  Free Cities (Unknown) \u2014 0 envoys [player 62]",
   "exchanges": [

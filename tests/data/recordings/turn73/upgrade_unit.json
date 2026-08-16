@@ -1,0 +1,26 @@
+{
+  "tool": "upgrade_unit",
+  "arguments": {
+    "unit_id": 5
+  },
+  "scenario": "turn73",
+  "recorded_at": "2026-08-16T20:03:16+00:00",
+  "notes": null,
+  "result": "UPGRADED|UNIT_SLINGER -> UNIT_ARCHER",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CRITICAL"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local unit = UnitManager.GetUnit(me, 5) if unit == nil then print(\"ERR:UNIT_NOT_FOUND\"); print(\"---END---\"); return end\nlocal info = GameInfo.Units[unit:GetType()]\nlocal ut = info and info.UnitType or \"UNKNOWN\"\nlocal upgCol = info and info.UpgradeUnitCollection\nlocal upType = (upgCol and #upgCol > 0) and upgCol[1].UpgradeUnit or \"\"\nlocal params = {}\nlocal canUpgrade, upgradeResult = UnitManager.CanStartCommand(unit, UnitCommandTypes.UPGRADE, params, true)\nif not canUpgrade then\n    local cost = 0\n    pcall(function() cost = unit:GetUpgradeCost() end)\n    local gold = Players[me]:GetTreasury():GetGoldBalance()\n    local detail = ut\n    if upType ~= \"\" then detail = detail .. \" -> \" .. upType end\n    detail = detail .. \" | cost:\" .. math.floor(cost) .. \"g have:\" .. math.floor(gold) .. \"g\"\n    if upgradeResult then\n        for _, v in pairs(upgradeResult) do\n            if type(v) == \"table\" then\n                for _, reason in pairs(v) do\n                    if type(reason) == \"string\" then\n                        local clean = reason:gsub(\"%[ICON_[^%]]*%]\", \"\"):gsub(\"%s+\", \" \")\n                        detail = detail .. \" | \" .. clean\n                    end\n                end\n            end\n        end\n    end\n    print(\"ERR:CANNOT_UPGRADE|\" .. detail); print(\"---END---\"); return\nend\nif upType == \"\" then upType = \"UNKNOWN\" end\nUnitManager.RequestCommand(unit, UnitCommandTypes.UPGRADE, params)\nprint(\"OK:UPGRADED|\" .. ut .. \" -> \" .. upType)\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:UPGRADED|UNIT_SLINGER -> UNIT_ARCHER"
+      ]
+    }
+  ]
+}

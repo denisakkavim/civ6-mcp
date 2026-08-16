@@ -1,0 +1,2 @@
+OK:RESPONDED|POSITIVE|SESSION_CONTINUES
+Leader says: "It pains me to agree, but I must."

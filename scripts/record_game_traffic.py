@@ -123,14 +123,6 @@ DISPATCHER_PLAN: list[tuple[str, dict, bool]] = [
         },
         True,
     ),
-    # Before the stance verbs: `skip_remaining_units` ends the turn of every
-    # unit that still has moves, and a trader with no moves cannot start a
-    # route.
-    (
-        "unit_action",
-        {"unit_id": "$IDLE_TRADER", "action": "trade_route", "city_id": "$TRADE_DEST"},
-        True,
-    ),
     ("unit_action", {"unit_id": "$UNIT_1", "action": "fortify"}, True),
     ("unit_action", {"unit_id": "$UNIT_2", "action": "skip"}, True),
     ("unit_action", {"unit_id": "$UNIT_3", "action": "alert"}, True),
@@ -174,6 +166,12 @@ DISPATCHER_PLAN: list[tuple[str, dict, bool]] = [
         },
         True,
     ),
+    # A different trader: teleport spends the first one's moves.
+    (
+        "unit_action",
+        {"unit_id": "$SECOND_TRADER", "action": "trade_route", "city_id": "$TRADE_DEST"},
+        True,
+    ),
     (
         "spy_action",
         {
@@ -198,11 +196,6 @@ DISPATCHER_PLAN: list[tuple[str, dict, bool]] = [
     # Founding reshapes ownership and city lists, so it follows every read-like
     # verb above.
     ("unit_action", {"unit_id": "$SETTLER", "action": "found_city"}, True),
-    # Last: it acts on whatever is still unmoved, so it has to follow the rest.
-    ("skip_remaining_units", {}, True),
-    # After skip_remaining_units, because it destroys its unit. Harmless to the
-    # fixture — every session reloads the save first.
-    ("unit_action", {"unit_id": "$EXPENDABLE", "action": "delete"}, True),
 ]
 
 WRITE_PLAN: list[tuple[str, dict, bool]] = [
@@ -216,8 +209,8 @@ WRITE_PLAN: list[tuple[str, dict, bool]] = [
     # a richer save (turn 37 holds 275 gold) then covers the rest.
     ("diplomacy_action", {"player_id": "$MET_PLAYER", "action": "DIPLOMATIC_DELEGATION"}, True),
     ("upgrade_unit", {"unit_id": "$UPGRADEABLE"}, True),
-    ("purchase_item", {"city_id": "$CITY", "item_type": "$PURCHASABLE_UNIT"}, True),
     ("purchase_tile", {"city_id": "$CITY", "target_x": "$TILE_X", "target_y": "$TILE_Y"}, True),
+    ("purchase_item", {"city_id": "$CITY", "item_type": "$PURCHASABLE_BUILDING"}, True),
     ("promote_governor", {"governor_type": "$GOVERNOR", "promotion_type": "$GOVERNOR_PROMOTION"}, True),
     ("assign_governor", {"governor_type": "$GOVERNOR", "city_id": "$OTHER_CITY"}, True),
     # Faith, not gold: the empire usually has faith banked, and `recruit`
@@ -231,6 +224,47 @@ WRITE_PLAN: list[tuple[str, dict, bool]] = [
     # `test` mode asks the game what it would accept without committing, so a
     # recording of it does not reshape the diplomatic state of the save.
     ("propose_deal", {"player_id": "$MET_PLAYER", "mode": "test", "offer_gold": 50}, True),
+    ("set_government", {"government_type": "$GOVERNMENT"}, True),
+    # Only legal while a session is open. Turn 37 is the one save that reports
+    # "World Congress: FIRES THIS TURN"; everywhere else this skips.
+    (
+        "queue_world_congress_votes",
+        {"votes": [{"hash": "$WC_HASH", "option": 1, "target": 0, "votes": 1}]},
+        True,
+    ),
+]
+
+
+# Runs after WRITE_PLAN, against a second resolution pass. Everything here
+# acts on a unit that did not exist when the first pass ran — the Great Person
+# that `great_person_action(patronize)` creates. A single up-front resolution
+# cannot name it.
+LATE_PLAN: list[tuple[str, dict, bool]] = [
+    ("get_great_person_sites", {"unit_id": "$GREAT_PERSON"}, False),
+    # A Great Person activates on its own district, and it spawns on the city
+    # centre — so this uses Stage 3.2's move-then-act form rather than acting
+    # in place, which was refused with CANNOT_ACTIVATE.
+    (
+        "unit_action",
+        {
+            "unit_id": "$GREAT_PERSON",
+            "action": "activate",
+            "target_x": "$GP_DISTRICT_X",
+            "target_y": "$GP_DISTRICT_Y",
+        },
+        True,
+    ),
+    # These two end other units' turns, so they run after every write that
+    # needs a unit with moves left. `skip_remaining_units` sat in the
+    # dispatcher plan and silently starved `upgrade_unit`, which then failed
+    # with a message that read like a gold problem: "cost:30g have:58g".
+    ("skip_remaining_units", {}, True),
+    ("unit_action", {"unit_id": "$EXPENDABLE", "action": "delete"}, True),
+    # `diplomacy_action` earlier in the run opens an encounter with that
+    # player. That is the only way any save reaches this tool, and it also
+    # unblocks `end_turn`, which refuses to run while one is pending.
+    ("respond_to_diplomacy", {"player_id": "$MET_PLAYER", "response": "POSITIVE"}, True),
+    # Last, because it ends the turn everything above was recorded in.
     ("end_turn", {}, True),
 ]
 
@@ -294,7 +328,13 @@ async def _resolve(client, plan):
     context["$RELIGIOUS_UNIT"] = _first_matching(
         units_text, "UNIT_MISSIONARY"
     ) or _first_matching(units_text, "UNIT_APOSTLE")
+    idle_traders = _all_matching(units_text, "UNIT_TRADER")
     context["$IDLE_TRADER"] = _idle_trader(units_text)
+    # A second trader for the route, because `teleport` spends the first one's
+    # moves and a trader with none cannot start a route.
+    context["$SECOND_TRADER"] = next(
+        (uid for uid in idle_traders if uid != context["$IDLE_TRADER"]), None
+    )
 
     # `improve` acts where the builder stands, so the unit and the improvement
     # have to come from the same `Can build` line.
@@ -315,6 +355,14 @@ async def _resolve(client, plan):
     for key, value in context.items():
         if key in ROLE_PLACEHOLDERS and isinstance(value, int):
             claimed.add(value)
+
+    # `upgrade_unit` needs the unit to still have its turn. A first cut let
+    # $UPGRADEABLE and $UNIT_3 resolve to the same Slinger, so `alert` spent
+    # its turn and the upgrade was then refused with a message that read like
+    # a gold problem: "cost:30g have:58g".
+    context["$UPGRADEABLE"] = _upgradeable_unit(units_text)
+    if isinstance(context["$UPGRADEABLE"], int):
+        claimed.add(context["$UPGRADEABLE"])
 
     military = [uid for uid in _military_units(units_text) if uid not in claimed]
     for slot in range(5):
@@ -366,7 +414,10 @@ async def _resolve(client, plan):
     overview = await _call(client, "get_game_overview", {})
     gold, faith = _gold(overview), _faith(overview)
 
-    context["$PURCHASABLE_UNIT"] = _affordable_unit(production, gold)
+    # A building rather than a unit: buying a unit into a city whose centre
+    # tile already holds one is refused with STACKING_CONFLICT, and a city
+    # centre almost always holds a garrison.
+    context["$PURCHASABLE_BUILDING"] = _affordable_building(production, gold)
 
     tiles = await _call(client, "get_purchasable_tiles", {"city_id": context["$CITY"]})
     tile = _purchasable_tile(tiles)
@@ -379,6 +430,22 @@ async def _resolve(client, plan):
     context["$GP_CANDIDATE"] = _affordable_great_person(great_people, faith)
 
     policies = await _call(client, "get_policies", {})
+    context["$GOVERNMENT"] = _other_government(policies)
+
+    # Only resolvable once a Great Person exists, so this reads as None on the
+    # first pass and fills in on the second.
+    great_person = context.get("$GREAT_PERSON")
+    if isinstance(great_person, int):
+        sites = await _call(client, "get_great_person_sites", {"unit_id": great_person})
+        district = _activation_district(sites)
+    else:
+        district = None
+    context["$GP_DISTRICT_X"], context["$GP_DISTRICT_Y"] = (
+        district if district else (None, None)
+    )
+
+    congress = await _call(client, "get_world_congress", {})
+    context["$WC_HASH"] = _congress_resolution_hash(congress)
     policy = _slottable_policy(policies)
     context["$POLICY_SLOT"], context["$POLICY"] = policy if policy else (None, None)
 
@@ -387,8 +454,6 @@ async def _resolve(client, plan):
     context["$GOVERNOR"], context["$GOVERNOR_PROMOTION"] = (
         governor if governor else (None, None)
     )
-
-    context["$UPGRADEABLE"] = _upgradeable_unit(units_text)
 
     attack = _attack_target(cities_text)
     if attack:
@@ -416,17 +481,6 @@ async def _resolve(client, plan):
         filled = {}
         missing = []
         for key, value in arguments.items():
-            # `set_policies` takes a {slot: policy} mapping, so a placeholder
-            # can sit in a key as well as a value.
-            if isinstance(value, dict):
-                mapping = {}
-                for inner_key, inner_value in value.items():
-                    resolved_key = _substitute(inner_key, context, missing)
-                    resolved_value = _substitute(inner_value, context, missing)
-                    if resolved_key is not None and resolved_value is not None:
-                        mapping[resolved_key] = resolved_value
-                filled[key] = mapping
-                continue
             substituted = _substitute(value, context, missing)
             if substituted is None:
                 continue
@@ -444,8 +498,91 @@ async def _resolve(client, plan):
     return resolved
 
 
+def _other_government(policies: str) -> str | None:
+    """A government we could switch to, that is not the one we hold.
+
+    No tool lists the available governments, so this picks from the classical
+    tier, which Political Philosophy unlocks as a set. A save in a later era
+    holds one of these anyway, so the swap is legal; a save that somehow holds
+    none of them resolves to None and the entry is skipped rather than
+    recording a refusal.
+    """
+    import re
+
+    current = re.search(r"\((GOVERNMENT_[A-Z_]+)\)", policies)
+    current_type = current.group(1) if current else ""
+    for candidate in (
+        "GOVERNMENT_OLIGARCHY",
+        "GOVERNMENT_CLASSICAL_REPUBLIC",
+        "GOVERNMENT_AUTOCRACY",
+    ):
+        if candidate != current_type:
+            return candidate
+    return None
+
+
+def _affordable_building(production: str, gold: int) -> str | None:
+    """A building the city can buy outright with the gold we hold.
+
+    Buildings, not units: a unit purchased into a city centre that already
+    holds one is refused with STACKING_CONFLICT, and a city centre almost
+    always holds a garrison.
+    """
+    import re
+
+    for match in re.finditer(
+        r"(BUILDING_[A-Z_]+)\s*\(cost \d+, \d+ turns, buy: (\d+)g\)", production
+    ):
+        if int(match.group(2)) <= gold:
+            return match.group(1)
+    return None
+
+
+def _congress_resolution_hash(congress: str) -> int | None:
+    """A resolution hash to vote on, when a session is actually open.
+
+    The hash reaches the agent only while the congress is in session; between
+    sessions the read lists upcoming policies without one. So this resolves on
+    the saves that catch a session and skips everywhere else.
+    """
+    import re
+
+    match = re.search(r"hash:\s*(-?\d+)", congress)
+    return int(match.group(1)) if match else None
+
+
+def _activation_district(sites: str) -> tuple[int, int] | None:
+    """The tile of a district this Great Person can actually activate on.
+
+    `get_great_person_sites` marks each city CAN ACTIVATE or "needs move", and
+    prints the district's own coordinates rather than the city centre — which
+    is where the unit spawns, and why activating in place is refused.
+    """
+    import re
+
+    for line in sites.splitlines():
+        if "CAN ACTIVATE" not in line:
+            continue
+        match = re.search(r"\((\d+),(\d+)\)", line)
+        if match:
+            return int(match.group(1)), int(match.group(2))
+    return None
+
+
 def _substitute(value, context: dict, missing: list):
-    """Replace one $PLACEHOLDER, recording it in `missing` when unresolved."""
+    """Replace $PLACEHOLDERs, descending into the containers a tool may take.
+
+    `set_policies` takes a {slot: policy} mapping and
+    `queue_world_congress_votes` a list of vote dicts, so a placeholder can sit
+    at any depth rather than only at the top level.
+    """
+    if isinstance(value, dict):
+        return {
+            _substitute(k, context, missing): _substitute(v, context, missing)
+            for k, v in value.items()
+        }
+    if isinstance(value, list):
+        return [_substitute(item, context, missing) for item in value]
     if not isinstance(value, str) or not value.startswith("$"):
         return value
     resolved = context.get(value, value)
@@ -838,6 +975,44 @@ async def _clear_popups(conn) -> None:
         print(f"  ! could not clear popups: {exc}")
 
 
+async def _run_plan(client, live, recorder, resolved) -> int:
+    """Record each call in `resolved`. Returns how many the game refused."""
+    discarded = 0
+    for tool, arguments, _ in resolved:
+        # Clear the UI before recording, outside the recording bracket. Every
+        # mutating tool polls for popups first, and when that poll finds one it
+        # runs the full dismissal — which probes each Lua state individually,
+        # driven by `conn.lua_states`. A replay has no state table to drive
+        # that loop, so those probes are recorded and never re-issued, and the
+        # call replays out of step. Starting clean keeps each recording to the
+        # traffic the tool itself issues. The dismissal path is covered live,
+        # in `tests/e2e/`, which is where it can be covered honestly.
+        if live.get("conn") is not None:
+            await _clear_popups(live["conn"])
+
+        before = len(recorder.written)
+        text = await _call(client, tool, arguments)
+        first = text.split("\n", 1)[0][:90]
+
+        # A failed call is not a fixture. `_resolve` skips the verbs it can
+        # predict, but some preconditions are not visible in any tool's output
+        # — whether a Missionary is next to a city, whether a Great Person
+        # stands on its district. Rather than guess at those, keep the call and
+        # throw the recording away when the game refuses it.
+        if text.startswith("Error"):
+            for path in recorder.written[before:]:
+                path.unlink(missing_ok=True)
+            del recorder.written[before:]
+            discarded += 1
+            print(f" ! {tool}({_short(arguments)}) -> {first}")
+            print("     discarded — the game refused this call")
+            continue
+
+        print(f"   {tool}({_short(arguments)}) -> {first}")
+
+    return discarded
+
+
 async def _record(scenario: str, plan, dry_run: bool) -> None:
     from mcp.shared.memory import create_connected_server_and_client_session
 
@@ -884,41 +1059,17 @@ async def _record(scenario: str, plan, dry_run: bool) -> None:
                 return
 
             recorder = recording.enable(RECORDING_DIR, scenario)
-            discarded = 0
-            for tool, arguments, _ in resolved:
-                # Clear the UI before recording, outside the recording bracket.
-                # Every mutating tool polls for popups first, and when that poll
-                # finds one it runs the full dismissal — which probes each Lua
-                # state individually, driven by `conn.lua_states`. A replay has
-                # no state table to drive that loop, so those probes are
-                # recorded and never re-issued, and the call replays out of
-                # step. Starting clean keeps each recording to the traffic the
-                # tool itself issues. The dismissal path is covered live, in
-                # `tests/e2e/`, which is where it can be covered honestly.
-                if live.get("conn") is not None:
-                    await _clear_popups(live["conn"])
+            discarded = await _run_plan(client, live, recorder, resolved)
 
-                before = len(recorder.written)
-                text = await _call(client, tool, arguments)
-                first = text.split("\n", 1)[0][:90]
-
-                # A failed call is not a fixture. `_resolve` skips the verbs it
-                # can predict, but some preconditions are not visible in any
-                # tool's output — whether a Missionary is next to a city,
-                # whether a Great Person stands on its district. Rather than
-                # guess at those, keep the call and throw the recording away
-                # when the game refuses it.
-                if text.startswith("Error"):
-                    for path in recorder.written[before:]:
-                        path.unlink(missing_ok=True)
-                    del recorder.written[before:]
-                    discarded += 1
-                    print(f" ! {tool}({_short(arguments)}) -> {first}")
-                    print("     discarded — the game refused this call")
-                    continue
-
-                print(f"   {tool}({_short(arguments)}) -> {first}")
-
+            # A second pass, for tools that act on something the first pass
+            # created. `great_person_action(patronize)` spawns a Great Person,
+            # and nothing can name that unit until it exists — so resolve
+            # again, now that it does.
+            if plan is not READ_PLAN:
+                late = await _resolve(client, LATE_PLAN)
+                if late:
+                    print("\n-- second pass --")
+                    discarded += await _run_plan(client, live, recorder, late)
             print(
                 f"\nWrote {len(recorder.written)} recordings to {RECORDING_DIR / scenario}"
             )

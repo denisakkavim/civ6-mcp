@@ -1,7 +1,7 @@
 Governor Points: 0 available, 2 spent
 
 Appointed (2):
-  Moksha (GOVERNOR_THE_CARDINAL) — Antawaylla (established)
+  Moksha (GOVERNOR_THE_CARDINAL) — Wanuku (5 turns to establish)
     Available promotions:
       Grand Inquisitor (GOVERNOR_PROMOTION_CARDINAL_GRAND_INQUISITOR): +10 [ICON_Religion] Religious Strength in theological combat in tiles of this city.
       Laying On Of Hands (GOVERNOR_PROMOTION_CARDINAL_LAYING_ON_OF_HANDS): All [ICON_Governor] Governor's units heal fully in one turn in tiles of this city.

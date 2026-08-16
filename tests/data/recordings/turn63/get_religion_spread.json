@@ -2,9 +2,9 @@
   "tool": "get_religion_spread",
   "arguments": {},
   "scenario": "turn63",
-  "recorded_at": "2026-08-16T18:37:07+00:00",
+  "recorded_at": "2026-08-16T19:57:43+00:00",
   "notes": null,
-  "result": "Religious Victory Tracker:\n  RELIGION_ORTHODOXY: majority in 1/4 civilizations\n  RELIGION_SHINTO: majority in 1/4 civilizations\n\nInca:\n  Qusqu (pop 5) \u2014 RELIGION_SHINTO (Shinto:4)\n  Wanuku (pop 4) \u2014 none (Eastern Orthodoxy:0)\n  Antawaylla (pop 3) \u2014 RELIGION_SHINTO (Shinto:3)\nGeorgia:\n  Kutaisi (pop 3) \u2014 RELIGION_ORTHODOXY (Eastern Orthodoxy:3)\n  Rustavi (pop 5) \u2014 RELIGION_ORTHODOXY (Eastern Orthodoxy:3)\n  Gori (pop 4) \u2014 RELIGION_ORTHODOXY (Eastern Orthodoxy:3)",
+  "result": "Religious Victory Tracker:\n  RELIGION_SHINTO: majority in 1/4 civilizations\n  RELIGION_ORTHODOXY: majority in 1/4 civilizations\n\nInca:\n  Qusqu (pop 5) \u2014 RELIGION_SHINTO (Shinto:4)\n  Wanuku (pop 4) \u2014 none (Eastern Orthodoxy:0)\n  Antawaylla (pop 3) \u2014 RELIGION_SHINTO (Shinto:3)\nGeorgia:\n  Kutaisi (pop 3) \u2014 RELIGION_ORTHODOXY (Eastern Orthodoxy:3)\n  Rustavi (pop 5) \u2014 RELIGION_ORTHODOXY (Eastern Orthodoxy:3)\n  Gori (pop 4) \u2014 RELIGION_ORTHODOXY (Eastern Orthodoxy:3)",
   "exchanges": [
     {
       "context": "write",
@@ -16,8 +16,8 @@
         "RCITY|1|Georgia|Kutaisi|Eastern Orthodoxy|3|Eastern Orthodoxy:3|RELIGION_ORTHODOXY|16842753",
         "RCITY|1|Georgia|Rustavi|Eastern Orthodoxy|5|Eastern Orthodoxy:3|RELIGION_ORTHODOXY|16842754",
         "RCITY|1|Georgia|Gori|Eastern Orthodoxy|4|Eastern Orthodoxy:3|RELIGION_ORTHODOXY|16842755",
-        "RSUMMARY|Eastern Orthodoxy|1|4|RELIGION_ORTHODOXY",
-        "RSUMMARY|Shinto|1|4|RELIGION_SHINTO"
+        "RSUMMARY|Shinto|1|4|RELIGION_SHINTO",
+        "RSUMMARY|Eastern Orthodoxy|1|4|RELIGION_ORTHODOXY"
       ]
     }
   ]

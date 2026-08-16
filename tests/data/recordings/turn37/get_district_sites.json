@@ -5,7 +5,7 @@
     "district_type": "DISTRICT_ENCAMPMENT"
   },
   "scenario": "turn37",
-  "recorded_at": "2026-08-16T18:29:59+00:00",
+  "recorded_at": "2026-08-16T19:50:36+00:00",
   "notes": null,
   "result": "DISTRICT_ENCAMPMENT placement options (4 tiles):\n  #1 (45,10) Adj: +0 (no adjacency) \u2014 Plains\n  #2 (44,10) Adj: +0 (no adjacency) \u2014 Plains Woods\n  #3 (46,10) Adj: +0 (no adjacency) \u2014 Plains\n  #4 (43,11) Adj: +0 (no adjacency) \u2014 Plains (Hills) Hills",
   "exchanges": [

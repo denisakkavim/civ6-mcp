@@ -4,7 +4,7 @@
     "unit_id": 1
   },
   "scenario": "turn57",
-  "recorded_at": "2026-08-16T18:33:22+00:00",
+  "recorded_at": "2026-08-16T19:54:01+00:00",
   "notes": null,
   "result": "19 trade route destinations:\n\nDomestic (food + production to destination):\n  Qusqu at (45,12) [city:16777216] | Food:1 Prod:1 Gold:2 | Trading Post\n  Wanuku at (44,8) [city:16777217] | Food:1 Prod:1 Gold:2 | Trading Post\n  Antawaylla at (47,9) [city:16777218] | Food:2 Prod:1 Gold:2\n\nInternational (gold to origin):\n  Tbilisi (Georgia) at (52,21) [city:16842752] | Gold:5 Faith:1 | Eastern Orthodoxy <- 0.5\n  Kutaisi (Georgia) at (55,19) [city:16842753] | Gold:5 Faith:1 | Eastern Orthodoxy <- 0.5\n  Rustavi (Georgia) at (56,14) [city:16842754] | Gold:5 | Eastern Orthodoxy <- 0.5\n  Gori (Georgia) at (53,25) [city:16842755] | Gold:5 | Eastern Orthodoxy <- 0.5\n  Ulundi (Zulu) at (19,20) [city:16908288] | Prod:1 Gold:7 Cul:1\n  Kwadukuza (Zulu) at (17,25) [city:16908289] | Gold:5\n  Nobamba (Zulu) at (15,18) [city:16908290] | Gold:5\n  Aachen (Germany) at (7,26) [city:16973824] | Gold:5 Sci:1\n  Cologne (Germany) at (9,30) [city:16973825] | Gold:5 Faith:1\n  Heidelberg (Germany) at (4,28) [city:16973826] | Gold:5\n  Wolin (Wolin) at (53,12) [city:17039360] | Gold:5\n  La Venta (La Venta) at (46,23) [city:17104896] | Gold:5 Faith:1\n  Preslav (Preslav) at (11,21) [city:17170432] | Gold:5\n  Mohenjo-Daro (Mohenjo-Daro) at (14,30) [city:17235968] | Gold:5\n  Zanzibar (Zanzibar) at (15,14) [city:17301504] | Gold:8\n  Vilnius (Vilnius) at (24,23) [city:17367040] | Gold:5 Cul:1\n\nUse unit_action with action='trade_route', target_x=X, target_y=Y",
   "exchanges": [

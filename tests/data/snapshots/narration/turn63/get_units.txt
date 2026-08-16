@@ -1,14 +1,13 @@
-12 units:
-  Scout (UNIT_SCOUT) at (51,9) — CS:10 moves 3/3 [id:0]
+11 units:
+  Scout (UNIT_SCOUT) at (50,8) — CS:10 moves 0/3 (no moves) [id:0]
   Warrior (UNIT_WARRIOR) at (53,18) — CS:20 moves 3/3 [id:1]
   Builder (UNIT_BUILDER) at (45,13) — moves 2/2 charges:3 [id:2]
-  Archer (UNIT_ARCHER) at (45,12) — CS:15 RS:25 moves 2/2 [id:3]
+  Archer (UNIT_ARCHER) at (45,12) — CS:15 RS:25 moves 0/2 (no moves) [id:3]
   Trader (UNIT_TRADER) at (45,11) — moves 2/2 [ON ROUTE: Qusqu -> Antawaylla (Domestic)] [id:4]
   Slinger (UNIT_SLINGER) at (41,11) — CS:5 RS:15 moves 2/2 [id:5]
-  Warrior (UNIT_WARRIOR) at (58,15) — CS:20 moves 2/2 [id:6]
+  Warrior (UNIT_WARRIOR) at (58,16) — CS:20 moves 0/2 (no moves) [id:6]
   Slinger (UNIT_SLINGER) at (54,15) — CS:5 RS:15 moves 2/2 [id:7]
   Warrior (UNIT_WARRIOR) at (44,8) — CS:20 moves 2/2 [id:8]
-  Settler (UNIT_SETTLER) at (41,11) — moves 2/2 [id:9]
   Archer (UNIT_ARCHER) at (47,9) — CS:15 RS:25 moves 2/2 [id:10]
   Builder (UNIT_BUILDER) at (45,8) — moves 2/2 charges:2 [id:11]
 
