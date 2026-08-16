@@ -43,7 +43,7 @@ the verb that each state unblocks. Read it before you make a save. It also says
 when a new save is the wrong fix.
 
 These verbs still have no recording. Each one needs a unit or a tile state that
-none of the three saves holds:
+none of the four saves holds, except where noted:
 
 | Verb | What it needs |
 |---|---|
@@ -54,7 +54,7 @@ none of the three saves holds:
 | `activate` | a Great Person on its matching district |
 | `spread_religion` | a Missionary or an Apostle next to a city |
 | `trade_route` | a Trader that is not on a route |
-| `attack`, `city_action` | an enemy unit in range |
+| `attack`, `city_attack` | an enemy unit in range. Turn 73 holds one, so these need a plan entry, not a save |
 | `spy_action` | a Spy |
 | `sacrifice_charges` | the Royal Society card |
 

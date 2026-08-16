@@ -36,7 +36,7 @@ If a test needs more than its folder allows, move the test down one level.
 | Folder | The test needs | The tests check |
 |---|---|---|
 | `unit/` | nothing | the logic in one function or method |
-| `contract/` | nothing | tool names, schemas, and annotations |
+| `contract/` | nothing | that the tool surface can be called correctly |
 | `integration/` | recorded traffic | the full stack, from MCP call to text |
 | `e2e/` | a running Civ 6 | that the Lua code is correct |
 
@@ -100,14 +100,18 @@ this. CI fails if you update a snapshot and do not commit it.
 
 ## Recordings
 
-`data/recordings/turn37/` holds 44 recordings from a live game:
-
-- 33 read calls.
-- 7 dispatcher calls. Stage 4 deletes these tools.
-- 4 write calls.
+`data/recordings/` holds 181 recordings across four scenarios: 43 at turn 37,
+45 at turn 57, 46 at turn 63, and 47 at turn 73. Each scenario came from the
+save of the same name in `data/saves/`. One save cannot hold every game state,
+so the corpus collects tools and verbs across the four.
 
 A replay drives the real tool and supplies the recorded responses instead of
 the game. To make more recordings, read `data/recordings/README.md`.
+
+Re-record a scenario when the Lua changes what it prints. Stage 3 did this
+twice. **Verify the loaded turn before you record.** The OCR load fails
+sometimes, leaves the previous game running, and the recorder will then record
+that game under the new scenario's name.
 
 The replay matches responses by position within each context. It does not
 match on the Lua text. A recording therefore survives a change to the Lua that
@@ -117,22 +121,28 @@ changes.
 `end_turn` is recorded but not replayed. It polls for the AI turn on a wall
 clock. Its query count depends on elapsed time, not on game state.
 
-## How `xfail(strict=True)` tracks the refactor
+## What the contract tests are for
 
-The tests in `contract/` check rules that the code does not follow yet. Each
-such test carries an `xfail(strict=True)` marker.
+The goal of the refactor is that the agent picks the right tool and calls it
+correctly the first time. The tests in `contract/` are the closest the suite
+gets to measuring that. Each one closes a way to call a tool wrongly:
 
-1. While the work is open, the test fails as expected. The suite is green.
-2. When the stage lands, the test passes. `strict=True` turns this into a
-   failure.
-3. The failure tells you to delete the marker.
+- A closed set of values must appear as an `enum` in the schema. Otherwise the
+  agent finds the legal values by calling the tool wrongly.
+- A tool with parameters must mark at least one as required. Otherwise an
+  empty call is well formed, and the agent learns the requirement by failing.
+- A read must print type strings that a write accepts.
+- Every `get_*` tool must carry `readOnlyHint`.
+- Every tool name inside agent-facing text must exist.
 
-A stage therefore cannot land without notice, and the list cannot go out of
-date.
+Size is checked too, but it is a symptom and not the goal. A tool over the
+per-tool ceiling usually holds a rule in prose that belongs in its schema. A
+change that grows the surface and removes a way to call a tool wrongly is a
+good change: raise the constant and write down why. Do not cut a real
+precondition to meet a number.
 
-The current markers track Stage 1.2 (`readOnlyHint`), Stage 1.3 (`Literal`
-types), Stage 1b (prefix stripping), and Stage 2.4 (`list_saves` becomes
-`get_saves`).
+No `xfail(strict=True)` markers remain. They tracked open stages of the
+refactor, and every stage they tracked has landed.
 
 ## Saves
 

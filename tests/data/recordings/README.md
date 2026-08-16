@@ -4,31 +4,33 @@ A recording holds the FireTuner traffic from one tool call. It contains the
 Lua exchanges that the tool made, in order, and the text that the tool
 returned.
 
+A recording is evidence about the code that wrote it. It shows that a tool
+still says what it said. It cannot show that two tools agree with each other:
+during Stage 3 four tools printed raw game ids while the rest printed
+composite ids, and every recording still replayed clean, because each one
+agreed with itself.
+
 A hand-written response line states a belief about what the game sends. If the
 belief is wrong, the test passes and the game fails. A recording removes the
 belief.
 
 ## What is in this folder
 
-`turn37/` holds 44 recordings from a live game. The game was Inca
-(Pachacuti) at turn 37, with 3 cities and 6 units. The recordings were made on
-2026-08-10 from the `0T_TURN37_INCA` save. The folder contains:
+There are four scenarios, one per save in `tests/data/saves/`:
 
-- 33 read calls.
-- 7 dispatcher calls. Stage 4 deletes these tools.
-- 4 write calls.
+| Scenario | Save | Recordings |
+|---|---|---|
+| `turn37/` | `0T_TURN37_INCA` | 43 |
+| `turn57/` | `0T_TURN57_INCA` | 45 |
+| `turn63/` | `0T_TURN63_INCA` | 46 |
+| `turn73/` | `0T_TURN73_INCA` | 47 |
 
-Every recording holds a successful call.
+Every recording holds a successful call. The recorder deletes a recording when
+the game refuses the call, and prints the reason.
 
-Three tools have no recording, because that save has no unit or city that can
-run them:
-
-- `unit_action(heal)` needs a damaged unit.
-- `spy_action` needs a spy.
-- `city_action` needs a city capture or a ranged attack.
-
-Record these tools from a later-game save. Do not add recordings of failed
-calls.
+One save cannot hold every game state, so the corpus collects tools and verbs
+across the four scenarios. `tests/data/saves/WISHLIST.md` lists the states that
+no save holds, and names the tool or the verb that each state blocks.
 
 ## How to make recordings
 
@@ -56,14 +58,20 @@ Record the dispatcher calls first:
 uv run python scripts/record_game_traffic.py --subset dispatchers --scenario turn37
 ```
 
-Stage 4 of the tool surface refactor deletes `unit_action`, `city_action`,
+Stage 4 of the tool surface refactor deletes `unit_action`, `city_attack`,
 `spy_action`, and `skip_remaining_units`. After the deletion you cannot show
 that the eleven new tools behave like the tools they replace.
 
-The `turn37` recordings came from `tests/data/saves/0T_TURN37_INCA.Civ6Save`.
-Record against the same save, or the recordings will not agree with each
-other. `tests/integration/test_recorded_tool_calls.py` maps each scenario to
-its save. The test fails if the save is missing.
+The Each scenario must be recorded against its own save.
+`tests/integration/test_recorded_tool_calls.py` maps each scenario to its save,
+and fails if the save is missing.
+
+**Verify the loaded turn before you record.** The OCR load fails sometimes. It
+reports `FAILED: Could not find 'Load Game' button` and leaves the previous
+game running. The recorder does not check, so it will record the wrong game
+under the new scenario's name. Call `get_game_overview` after the load and
+compare the turn number. This happened during Stage 3 and produced 36
+recordings of a turn-74 game inside `turn37/`.
 
 Write calls change the game. Reload the save between runs to keep the
 scenarios comparable. The full plan records the reads first, then the
