@@ -25,8 +25,30 @@ import pytest
 from civ_mcp.server import mcp
 from utils import snapshots
 
-# A tool schema past this size is almost always prose that belongs in the
-# schema itself. Ratchet these down as the refactor lands; never up.
+# Size is a symptom, not the goal.
+#
+# The goal is that the agent picks the right tool and calls it correctly the
+# first time. Schema size matters twice over, and the second reason is the
+# important one:
+#
+# 1. The agent pays every character on every call, hundreds of turns per game.
+# 2. A long docstring is usually a *rule that belongs in the schema*. The
+#    review's example is `unit_action` at 2,610 chars, "almost entirely
+#    because of this prose" — twenty verbs whose parameter rules JSON Schema
+#    cannot express, each one duplicated as a runtime error the agent
+#    discovers by failing.
+#
+# So these ceilings are a detector for (2), and a tax meter for (1). They are
+# not the objective. Shrinking a tool by deleting a real precondition makes
+# the number better and the surface worse.
+#
+# **When a change grows the surface and makes the tool easier to call
+# correctly, take the change and raise the constant.** Say why in this comment
+# and in the plan. What must not happen is a silent raise, or a cut that
+# removes something the agent needed in order to hit a number. The properties
+# below are the real bar; this is the smoke alarm.
+#
+# History, kept because each entry says what moved and why:
 #
 # Stage 1.3 is close to size-neutral by construction: an enum states its values
 # in the schema at roughly the length the docstring stated them in prose, so
@@ -42,25 +64,20 @@ from utils import snapshots
 # largest schema is now `propose_deal` (2,498), which Stage 4 does not touch —
 # it is ten flat scalars, deliberately (see "Considered and rejected").
 #
-# Stage 3 raised both, which no earlier stage did. It is the one stage that
-# buys calls with characters rather than the reverse: the implicit placement
-# tile, the move-then-act target and its two partial results, and the batch
-# form of the stance verbs all have to be stated in a schema before an agent
-# will use them. 3.4c then added an id alternative to five tools that took
-# coordinates. Nearly all of the growth lands on `unit_action`, which now
-# carries move-then-act, batching and a destination city id on top of its 20
-# verbs — and which Stage 4 dissolves into six tools with fixed signatures.
-# That is where the reduction comes from, so these constants come down there
-# and not before. Both figures remain under the 44,139-char baseline the
-# review measured, but the margin is now thin: Stage 4 has to deliver.
+# Stage 3 raised both, the first stage to do so, and the raises were correct.
+# It bought calls with characters: an implicit placement tile, a move-then-act
+# target with two distinct partial results, batched stance verbs, and an id
+# accepted where coordinates were. An agent will not use any of those unless
+# the schema says they exist. Splitting `get_map_area` into
+# `get_map_area(center_x, center_y)` and `get_map_around(entity_id)` cost 209
+# chars and one tool, and put a required argument back where the agent reads
+# it — the single clearest case of the trade being worth it.
 #
-# The last 209 chars bought strictness back. 3.4c had made `get_map_area`'s
-# centre optional so a unit or city id could supply it, which left the tool
-# with no required argument at all — the schema could no longer say what it
-# needed. Splitting it into `get_map_area(center_x, center_y)` and
-# `get_map_around(entity_id)` restores that for one more tool's boilerplate,
-# and `get_map_around` needs only one parameter because the 3.4a type tag
-# tells it whether it holds a unit or a city.
+# Stage 3 also shows the failure mode. Trimming `unit_action`'s docstring to
+# fit 2,500 cut real preconditions ("not on a route", "must stand on the
+# district") to satisfy a number. That was the proxy winning. Most of Stage 3's
+# growth sits in `unit_action`, which Stage 4 dissolves into six tools with
+# fixed signatures; that is where the reduction should come from.
 MAX_TOOL_SCHEMA_CHARS = 2900
 MAX_SURFACE_CHARS = 42_700
 
@@ -102,11 +119,12 @@ def test_tool_surface_matches_snapshot():
 
 
 # ---------------------------------------------------------------------------
-# Size budget — the review's actual metric
+# Size — a smoke alarm, not the objective. See the note on the constants.
 # ---------------------------------------------------------------------------
 
 
 def test_no_single_tool_schema_is_oversized():
+    """A big tool is usually a tool whose rules the schema does not state."""
     oversized = {
         tool.name: _tool_size(tool)
         for tool in _tools()
@@ -114,25 +132,36 @@ def test_no_single_tool_schema_is_oversized():
     }
     assert not oversized, (
         f"Tool schemas over {MAX_TOOL_SCHEMA_CHARS} chars: {oversized}. "
-        f"Move the rules out of the docstring and into the schema."
+        f"Usually this means prose is carrying a rule the schema should state "
+        f"— move it into the schema, or split the tool by signature. If the "
+        f"size buys the agent something it needs, raise the constant and say "
+        f"why. Do not cut a real precondition to fit."
     )
 
 
-def test_total_surface_size_does_not_grow():
-    """A ratchet, not an exact figure.
+def test_total_surface_size_stays_within_budget():
+    """The tax meter. Every character is paid on every call.
 
-    The review's goal is a smaller surface at roughly flat tool count, so the
-    direction that matters is growth. Lower this constant when a stage lands.
+    Not a ratchet. A stage that makes tools easier to call correctly may cost
+    characters — Stage 3 did, deliberately. Raise the constant with a reason
+    rather than trimming something the agent needs.
     """
     total = sum(_tool_size(tool) for tool in _tools())
     assert total <= MAX_SURFACE_CHARS, (
         f"Tool surface grew to {total} chars (budget {MAX_SURFACE_CHARS}, "
-        f"~{total // 4} tokens). The agent pays this on every call."
+        f"~{total // 4} tokens). If the growth buys correct calls, raise the "
+        f"budget and record why. If it is prose restating a schema rule, move "
+        f"it into the schema instead."
     )
 
 
 # ---------------------------------------------------------------------------
-# Contract assertions — properties, not names
+# Can the agent call it correctly? — the properties that are the actual bar.
+#
+# Each one closes a way to get a call wrong: not knowing the legal values, not
+# knowing which arguments are needed, reading a value that the write side will
+# not accept, or being unable to tell two tools apart. These survive renames,
+# which the size checks and the snapshot do not.
 # ---------------------------------------------------------------------------
 
 
@@ -299,4 +328,45 @@ def test_closed_set_parameters_are_enums(tool_name, parameter):
     assert has_enum, (
         f"{tool_name}.{parameter} is a closed set typed as a bare value; the "
         f"agent can only discover the legal values by calling it wrong."
+    )
+
+
+# Tools whose every parameter is genuinely optional. Keep this short and
+# justified: a tool that lands here because two of its arguments are
+# alternatives is a tool that should have been split.
+OPTIONAL_ONLY_TOOLS = frozenset(
+    {
+        # Defaults to the most recent autosave, which is the common case and
+        # the one you want when the game has hung.
+        "restart_game",
+    }
+)
+
+
+def test_every_tool_states_what_it_needs():
+    """A tool that requires something must say so in its schema.
+
+    Stage 3.4c broke this and nothing caught it. Letting an id stand in for
+    coordinates meant making both optional, because JSON Schema cannot express
+    "exactly one of these groups" — which left `get_map_area` with no required
+    argument at all, so an empty call was well-formed and failed at runtime.
+    Splitting it into a tile form and an entity form fixed it. The lesson
+    generalises: an either/or parameter pair is a tool wanting to be two tools.
+    """
+    silent = []
+    for tool in _tools():
+        schema = tool.inputSchema or {}
+        if not schema.get("properties"):
+            continue  # genuinely takes nothing
+        if schema.get("required"):
+            continue
+        if tool.name in OPTIONAL_ONLY_TOOLS:
+            continue
+        silent.append(tool.name)
+
+    assert not silent, (
+        f"Tools with parameters but nothing required: {silent}. An empty call "
+        f"is well-formed, so the agent discovers the requirement by failing. "
+        f"If two arguments are alternatives, split the tool so each states its "
+        f"own requirement (see get_map_area / get_map_around)."
     )
