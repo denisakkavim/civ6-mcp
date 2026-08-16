@@ -4,9 +4,9 @@
     "city_id": 16777216
   },
   "scenario": "turn63",
-  "recorded_at": "2026-08-16T19:58:42+00:00",
+  "recorded_at": "2026-08-16T20:34:44+00:00",
   "notes": null,
-  "result": "10 purchasable tiles:\n  (47,11): 60g \u2014 Grassland (Hills) Hills [Sheep]\n  (43,14): 60g \u2014 Plains [Wheat]\n  (45,14): 40g \u2014 Plains (Mountain)\n  (46,14): 40g \u2014 Plains (Mountain)\n  (46,13): 40g \u2014 Plains (Mountain)\n  (43,12): 40g \u2014 Plains\n  (47,12): 40g \u2014 Grassland (Mountain)\n  (44,14): 40g \u2014 Plains (Mountain)\n  (42,13): 60g \u2014 Plains\n  (45,9): 60g \u2014 Plains",
+  "result": "11 purchasable tiles:\n  (47,11): 60g \u2014 Grassland (Hills) Hills [Sheep]\n  (43,14): 60g \u2014 Plains [Wheat]\n  (46,14): 40g \u2014 Plains (Mountain)\n  (44,14): 40g \u2014 Plains (Mountain)\n  (43,12): 40g \u2014 Plains\n  (45,14): 40g \u2014 Plains (Mountain)\n  (46,13): 40g \u2014 Plains (Mountain)\n  (47,12): 40g \u2014 Grassland (Mountain)\n  (42,13): 60g \u2014 Plains\n  (45,9): 60g \u2014 Plains\n  (42,11): 60g \u2014 Desert (Hills) Hills",
   "exchanges": [
     {
       "context": "write",
@@ -14,14 +14,15 @@
       "lines": [
         "PTILE|47,11|60|Grassland (Hills) Hills|Sheep|bonus",
         "PTILE|43,14|60|Plains|Wheat|bonus",
-        "PTILE|45,14|40|Plains (Mountain)||",
         "PTILE|46,14|40|Plains (Mountain)||",
-        "PTILE|46,13|40|Plains (Mountain)||",
-        "PTILE|43,12|40|Plains||",
-        "PTILE|47,12|40|Grassland (Mountain)||",
         "PTILE|44,14|40|Plains (Mountain)||",
+        "PTILE|43,12|40|Plains||",
+        "PTILE|45,14|40|Plains (Mountain)||",
+        "PTILE|46,13|40|Plains (Mountain)||",
+        "PTILE|47,12|40|Grassland (Mountain)||",
         "PTILE|42,13|60|Plains||",
-        "PTILE|45,9|60|Plains||"
+        "PTILE|45,9|60|Plains||",
+        "PTILE|42,11|60|Desert (Hills) Hills||"
       ]
     }
   ]

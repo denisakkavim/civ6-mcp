@@ -1,28 +1,29 @@
-21 trade route destinations:
+22 trade route destinations:
 
 Domestic (food + production to destination):
-  Qusqu at (45,12) [city:16777216] | Food:2 Prod:2 | Trading Post Eastern Orthodoxy -> 1.0 Shinto <- 0.5
-  Antawaylla at (47,9) [city:16777218] | Food:2 Prod:1 | Trading Post Eastern Orthodoxy -> 1.0 Shinto <- 0.5
-  Ollantaytambo at (41,11) [city:16777219] | Food:1 Prod:1 | Eastern Orthodoxy -> 1.0 Eastern Orthodoxy <- 0.5
+  Qusqu at (45,12) [city:16777216] | Food:2 Prod:2 Gold:2 | Trading Post Shinto <- 0.5
+  Wanuku at (44,8) [city:16777217] | Food:1 Prod:1 Gold:2 | Trading Post Eastern Orthodoxy <- 0.5
+  Antawaylla at (47,9) [city:16777218] | Food:2 Prod:1 Gold:2 | Trading Post Shinto <- 0.5
+  Ollantaytambo at (41,11) [city:16777219] | Food:1 Prod:1 Gold:2 | Eastern Orthodoxy <- 0.5
 
 International (gold to origin):
-  Tbilisi (Georgia) at (52,21) [city:16842752] | Gold:3 Sci:1 Cul:1 Faith:1 | Eastern Orthodoxy -> 1.0 Eastern Orthodoxy <- 0.5
-  Kutaisi (Georgia) at (55,19) [city:16842753] | Gold:3 Faith:1 | Eastern Orthodoxy -> 1.0 Eastern Orthodoxy <- 0.5
-  Rustavi (Georgia) at (56,14) [city:16842754] | Gold:3 Sci:1 | Eastern Orthodoxy -> 1.0 Eastern Orthodoxy <- 0.5
-  Gori (Georgia) at (53,25) [city:16842755] | Gold:3 | Eastern Orthodoxy -> 1.0 Eastern Orthodoxy <- 0.5
-  Ulundi (Zulu) at (19,20) [city:16908288] | Prod:1 Gold:5 Sci:1 Cul:1 | Eastern Orthodoxy -> 1.0
-  Kwadukuza (Zulu) at (17,25) [city:16908289] | Gold:3 Sci:1 | Eastern Orthodoxy -> 1.0
-  Nobamba (Zulu) at (15,18) [city:16908290] | Gold:3 Sci:1 | Eastern Orthodoxy -> 1.0
-  Ndondakusuka (Zulu) at (23,18) [city:16908291] | Gold:3 | Eastern Orthodoxy -> 1.0
-  Aachen (Germany) at (7,26) [city:16973824] | Gold:3 Sci:1 | Eastern Orthodoxy -> 1.0 Catholicism <- 0.5
-  Cologne (Germany) at (9,30) [city:16973825] | Gold:3 Faith:1 | Eastern Orthodoxy -> 1.0 Catholicism <- 0.5
-  Heidelberg (Germany) at (4,28) [city:16973826] | Gold:3 | Eastern Orthodoxy -> 1.0
-  Frankfurt (Germany) at (4,24) [city:16973827] | Gold:3 | Eastern Orthodoxy -> 1.0
-  Wolin (Wolin) at (53,12) [city:17039360] | Prod:1 Gold:3 | Eastern Orthodoxy -> 1.0 Eastern Orthodoxy <- 0.5
-  La Venta (La Venta) at (46,23) [city:17104896] | Gold:3 Faith:1 | Eastern Orthodoxy -> 1.0 Eastern Orthodoxy <- 0.5
-  Preslav (Preslav) at (11,21) [city:17170432] | Gold:3 | Eastern Orthodoxy -> 1.0
-  Mohenjo-Daro (Mohenjo-Daro) at (14,30) [city:17235968] | Gold:3 Cul:1 | Eastern Orthodoxy -> 1.0
-  Zanzibar (Zanzibar) at (15,14) [city:17301504] | Gold:9 | Eastern Orthodoxy -> 1.0
-  Vilnius (Vilnius) at (24,23) [city:17367040] | Gold:3 Cul:1 | Eastern Orthodoxy -> 1.0
+  Tbilisi (Georgia) at (52,21) [city:16842752] | Gold:7 Sci:1 Cul:1 Faith:1 | Eastern Orthodoxy <- 0.5
+  Kutaisi (Georgia) at (55,19) [city:16842753] | Gold:7 Faith:1 | Eastern Orthodoxy <- 0.5
+  Rustavi (Georgia) at (56,14) [city:16842754] | Gold:7 Sci:1 | Eastern Orthodoxy <- 0.5
+  Gori (Georgia) at (53,25) [city:16842755] | Gold:7 | Eastern Orthodoxy <- 0.5
+  Ulundi (Zulu) at (19,20) [city:16908288] | Prod:1 Gold:9 Sci:1 Cul:1
+  Kwadukuza (Zulu) at (17,25) [city:16908289] | Gold:7 Sci:1
+  Nobamba (Zulu) at (15,18) [city:16908290] | Gold:7 Sci:1
+  Ndondakusuka (Zulu) at (23,18) [city:16908291] | Gold:7
+  Aachen (Germany) at (7,26) [city:16973824] | Gold:7 Sci:1 | Catholicism <- 0.5
+  Cologne (Germany) at (9,30) [city:16973825] | Gold:7 Faith:1 | Catholicism <- 0.5
+  Heidelberg (Germany) at (4,28) [city:16973826] | Gold:7
+  Frankfurt (Germany) at (4,24) [city:16973827] | Gold:7
+  Wolin (Wolin) at (53,12) [city:17039360] | Prod:1 Gold:7 | Eastern Orthodoxy <- 0.5
+  La Venta (La Venta) at (46,23) [city:17104896] | Gold:7 Faith:1 | Eastern Orthodoxy <- 0.5
+  Preslav (Preslav) at (11,21) [city:17170432] | Gold:7
+  Mohenjo-Daro (Mohenjo-Daro) at (14,30) [city:17235968] | Gold:7 Cul:1
+  Zanzibar (Zanzibar) at (15,14) [city:17301504] | Gold:13
+  Vilnius (Vilnius) at (24,23) [city:17367040] | Gold:7 Cul:1
 
 Use unit_action with action='trade_route', target_x=X, target_y=Y

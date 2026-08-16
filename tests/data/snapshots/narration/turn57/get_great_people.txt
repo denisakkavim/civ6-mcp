@@ -5,7 +5,6 @@
     (individual_id: 59)
   Great Admiral: Artemisia (Classical Era) — Unclaimed — your points: 0/30
     Ability: Grants 1 promotion level to a military naval unit.
-    Patronize: 650g / 450f
     (individual_id: 0)
   Great Engineer: Bi Sheng (Medieval Era) — Unclaimed — your points: 0/60
     Ability: SINGLE_CITY_EXTRA_DISTRICT (amount=1), GRANT_SPECIFIC_TECH_BOOST

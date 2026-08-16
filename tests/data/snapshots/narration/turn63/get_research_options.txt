@@ -1,13 +1,12 @@
-Researching: Wheel (3 turns) | Completed: 13 techs, 9 civics
-Civic: Games and Recreation (6 turns)
+Researching: Sailing (1 turns) | Completed: 12 techs, 9 civics
+Civic: Theology (3 turns)
 
 Available techs:
+  Sailing (TECH_SAILING) [ANCIENT] — 76%, 1 turns [Boost: Found a city on the Coast.] -> Galley, Viking Longship, Bireme, Fishing Boats, Fishery !! GRAB THIS
   Wheel (TECH_THE_WHEEL) [ANCIENT] — 37%, 3 turns BOOSTED [Boost: Mine a resource.] -> Heavy Chariot, Maryannu Chariot Archer, Water Mill (needs: TECH_MINING)
-  Celestial Navigation (TECH_CELESTIAL_NAVIGATION) [CLASSICAL] — 0%, 6 turns [Boost: Improve 2 sea resources.] -> Lighthouse, Great Lighthouse, Harbor, Royal Navy Dockyard, Cothon (needs: TECH_SAILING,TECH_ASTROLOGY)
-  Shipbuilding (TECH_SHIPBUILDING) [CLASSICAL] — 0%, 10 turns [Boost: Own 2 Galleys.] -> Quadrireme, Colossus, Kampung (needs: TECH_SAILING)
-  Mathematics (TECH_MATHEMATICS) [CLASSICAL] — 0%, 10 turns [Boost: Build 3 different specialty districts.] -> Petra (needs: TECH_CURRENCY)
-  Construction (TECH_CONSTRUCTION) [CLASSICAL] — 0%, 10 turns [Boost: Build a Water Mill.] -> Toa, Terracotta Army, Lumber Mill (needs: TECH_MASONRY,TECH_HORSEBACK_RIDING)
-  Apprenticeship (TECH_APPRENTICESHIP) [MEDIEVAL] — 0%, 19 turns [Boost: Build 3 Mines.] -> Man-At-Arms, Workshop, Industrial Zone, Hansa (needs: TECH_CURRENCY,TECH_HORSEBACK_RIDING)
+  Mathematics (TECH_MATHEMATICS) [CLASSICAL] — 0%, 11 turns [Boost: Build 3 different specialty districts.] -> Petra (needs: TECH_CURRENCY)
+  Construction (TECH_CONSTRUCTION) [CLASSICAL] — 0%, 11 turns [Boost: Build a Water Mill.] -> Toa, Terracotta Army, Lumber Mill (needs: TECH_MASONRY,TECH_HORSEBACK_RIDING)
+  Apprenticeship (TECH_APPRENTICESHIP) [MEDIEVAL] — 0%, 20 turns [Boost: Build 3 Mines.] -> Man-At-Arms, Workshop, Industrial Zone, Hansa (needs: TECH_CURRENCY,TECH_HORSEBACK_RIDING)
 
 Available civics:
   Games and Recreation (CIVIC_GAMES_RECREATION) [CLASSICAL] — 0%, 6 turns [Boost: Research the Construction technology.] (needs: CIVIC_STATE_WORKFORCE)
@@ -16,6 +15,8 @@ Available civics:
 
 Locked techs (prerequisites missing):
   -- CLASSICAL --
+  Celestial Navigation (TECH_CELESTIAL_NAVIGATION) — needs: Sailing [Boost: Improve 2 sea resources.]
+  Shipbuilding (TECH_SHIPBUILDING) — needs: Sailing [Boost: Own 2 Galleys.]
   Engineering (TECH_ENGINEERING) — needs: Wheel BOOSTED [Boost: Build Ancient Walls.]
   -- MEDIEVAL --
   Military Tactics (TECH_MILITARY_TACTICS) — needs: Mathematics [Boost: Kill a unit with a Spearman.]

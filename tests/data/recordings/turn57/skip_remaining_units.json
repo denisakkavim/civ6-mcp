@@ -2,7 +2,7 @@
   "tool": "skip_remaining_units",
   "arguments": {},
   "scenario": "turn57",
-  "recorded_at": "2026-08-16T19:54:55+00:00",
+  "recorded_at": "2026-08-16T20:59:27+00:00",
   "notes": null,
   "result": "FORTIFIED|2 fortified, 0 healing\nSKIPPED|6 units",
   "exchanges": [

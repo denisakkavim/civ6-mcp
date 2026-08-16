@@ -1,7 +1,7 @@
 Turn 37 | Inca (Pachacuti) | Score: 60 | Prince
-Gold: 215 (+7/turn) | Income: 7 | Maintenance: -0 (units: 0) | Science: 5.0 | Culture: 4.8 | Faith: 42 | Favor: 20 (+0/turn)
-Research: Irrigation | Civic: Mysticism
-Cities: 3 | Population: 6 | Units: 6 — 3 Slinger, 1 Builder, 1 Scout, 1 Warrior
-Explored: 11% of land (92/790 tiles)
+Gold: 275 (+7/turn) | Income: 7 | Maintenance: -0 (units: 0) | Science: 5.0 | Culture: 4.8 | Faith: 42 | Favor: 20 (+0/turn)
+Research: Astrology | Civic: Early Empire
+Cities: 3 | Population: 6 | Units: 6 — 3 Slinger, 1 Warrior, 1 Scout, 1 Builder
+Explored: 11% of land (91/790 tiles)
 Religion: none yet (3/3 slots remaining — Great Prophet needed)
 Era: Classical Era | Score: 14 (Dark: 19, Golden: 30) !! 5 short of avoiding Dark Age

@@ -1,16 +1,16 @@
-Researching: Irrigation (2 turns) | Completed: 10 techs, 8 civics
-Civic: Games and Recreation (7 turns)
+Researching: Horseback Riding (3 turns) | Completed: 10 techs, 8 civics
+Civic: Drama and Poetry (7 turns)
 
 Available techs:
-  Sailing (TECH_SAILING) [ANCIENT] — 35%, 2 turns BOOSTED [Boost: Found a city on the Coast.] -> Galley, Viking Longship, Bireme, Fishing Boats, Fishery !! GRAB THIS
   Irrigation (TECH_IRRIGATION) [ANCIENT] — 35%, 2 turns BOOSTED [Boost: Farm a resource.] -> Hanging Gardens, Palgum, Plantation, Stepwell (needs: TECH_POTTERY) !! GRAB THIS
+  Sailing (TECH_SAILING) [ANCIENT] — 0%, 3 turns [Boost: Found a city on the Coast.] -> Galley, Viking Longship, Bireme, Fishing Boats, Fishery
   Wheel (TECH_THE_WHEEL) [ANCIENT] — 37%, 3 turns BOOSTED [Boost: Mine a resource.] -> Heavy Chariot, Maryannu Chariot Archer, Water Mill (needs: TECH_MINING)
   Horseback Riding (TECH_HORSEBACK_RIDING) [CLASSICAL] — 74%, 3 turns BOOSTED [Boost: Build a Pasture.] -> Horseman, Saka Horse Archer, Varu, Hetairoi, Stable, Ordu (needs: TECH_ARCHERY)
-  Mathematics (TECH_MATHEMATICS) [CLASSICAL] — 0%, 14 turns [Boost: Build 3 different specialty districts.] -> Petra (needs: TECH_CURRENCY)
+  Mathematics (TECH_MATHEMATICS) [CLASSICAL] — 0%, 15 turns [Boost: Build 3 different specialty districts.] -> Petra (needs: TECH_CURRENCY)
 
 Available civics:
-  Games and Recreation (CIVIC_GAMES_RECREATION) [CLASSICAL] — 0%, 7 turns [Boost: Research the Construction technology.] (needs: CIVIC_STATE_WORKFORCE)
-  Drama and Poetry (CIVIC_DRAMA_POETRY) [CLASSICAL] — 0%, 7 turns [Boost: Build a wonder.] (needs: CIVIC_EARLY_EMPIRE)
+  Games and Recreation (CIVIC_GAMES_RECREATION) [CLASSICAL] — 0%, 8 turns [Boost: Research the Construction technology.] (needs: CIVIC_STATE_WORKFORCE)
+  Drama and Poetry (CIVIC_DRAMA_POETRY) [CLASSICAL] — 0%, 8 turns [Boost: Build a wonder.] (needs: CIVIC_EARLY_EMPIRE)
 
 Locked techs (prerequisites missing):
   -- CLASSICAL --

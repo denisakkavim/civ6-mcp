@@ -1,12 +1,12 @@
 Government: Chiefdom (GOVERNMENT_CHIEFDOM)
 
 2 policy slots:
-  Slot 0 (Military): Survey (POLICY_SURVEY)
+  Slot 0 (Military): Discipline (POLICY_DISCIPLINE)
   Slot 1 (Economic): God King (POLICY_GOD_KING)
 
 Available policies:
   Military:
-    Discipline (POLICY_DISCIPLINE): +5 [ICON_Strength] Unit Combat Strength when fighting Barbarians.
+    Survey (POLICY_SURVEY): Double experience for recon units.
     Agoge (POLICY_AGOGE): +50% [ICON_Production] Production toward Ancient and Classical era melee, anti-cavalry, and ranged units.
     Maritime Industries (POLICY_MARITIME_INDUSTRIES): +100% [ICON_Production] Production toward Ancient and Classical era naval units.
     Maneuver (POLICY_MANEUVER): +50% [ICON_Production] Production toward Ancient and Classical era heavy and light cavalry units.

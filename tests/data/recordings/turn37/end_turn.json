@@ -2,7 +2,7 @@
   "tool": "end_turn",
   "arguments": {},
   "scenario": "turn37",
-  "recorded_at": "2026-08-16T19:51:22+00:00",
+  "recorded_at": "2026-08-16T20:28:17+00:00",
   "notes": null,
   "result": "Turn 37 -> 38 | Score: 60\nResources: RESOURCE_HORSES 25/25 (+2/t)\n\n== Events ==\n  >> IDLE TRADE ROUTE: 1 unused route capacity (0/1 active). Build a Trader or assign an idle one.\n  -- Wanuku grew to population 2.\n  -- SLOW GROWTH: Qusqu (19t to next pop, +1.0/t)\n  -- SLOW GROWTH: Wanuku (24t to next pop, +2.0/t)\n  -- RESOURCE CAP: RESOURCE_HORSES 25/25 (+2/t) \u2014 excess is wasted. Trade surplus or spend it.\n\n== Notifications ==\n  - Command Units",
   "exchanges": [
@@ -66,7 +66,7 @@
         "ERA|Classical Era|14|19|30",
         "MAXTURNS|0",
         "DIFFICULTY|Prince",
-        "UNITBREAKDOWN|Slinger:3,Builder:1,Scout:1,Warrior:1|0"
+        "UNITBREAKDOWN|Slinger:3,Warrior:1,Scout:1,Builder:1|0"
       ]
     },
     {
@@ -123,6 +123,13 @@
       "context": "read",
       "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
       "lines": [
+        "37"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
         "38"
       ]
     },
@@ -136,7 +143,7 @@
         "ERA|Classical Era|14|19|30",
         "MAXTURNS|0",
         "DIFFICULTY|Prince",
-        "UNITBREAKDOWN|Slinger:3,Builder:1,Scout:1,Warrior:1|0"
+        "UNITBREAKDOWN|Slinger:3,Warrior:1,Scout:1,Builder:1|0"
       ]
     },
     {
@@ -224,7 +231,7 @@
         "ERA|Classical Era|14|19|30",
         "MAXTURNS|0",
         "DIFFICULTY|Prince",
-        "UNITBREAKDOWN|Slinger:3,Builder:1,Scout:1,Warrior:1|0"
+        "UNITBREAKDOWN|Slinger:3,Warrior:1,Scout:1,Builder:1|0"
       ]
     },
     {

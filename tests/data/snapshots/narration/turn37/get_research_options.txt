@@ -1,5 +1,5 @@
-Researching: Irrigation (3 turns) | Completed: 5 techs, 4 civics
-Civic: Mysticism (3 turns)
+Researching: Astrology (2 turns) | Completed: 5 techs, 4 civics
+Civic: Early Empire (3 turns)
 
 Available techs:
   Astrology (TECH_ASTROLOGY) [ANCIENT] — 72%, 2 turns BOOSTED [Boost: Find a natural wonder.] -> Shrine, Stonehenge, Holy Site, Lavra !! GRAB THIS

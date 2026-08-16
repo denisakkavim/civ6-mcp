@@ -5,7 +5,7 @@
     "radius": 2
   },
   "scenario": "turn73",
-  "recorded_at": "2026-08-16T20:14:08+00:00",
+  "recorded_at": "2026-08-16T21:02:11+00:00",
   "notes": null,
   "result": "24 tiles:\n  (43,10): PLAINS [RESOURCE_WHEAT] {F:2 P:1} (owned by Inca)\n  (44,10): PLAINS FOREST River {F:1 P:2} (owned by Inca) [mv:2]\n  (45,10): PLAINS River (Road) {F:1 P:1} (owned by Inca)\n  (46,10): PLAINS River {F:1 P:1} (owned by Inca)\n  (47,10): PLAINS River (Road) {F:1 P:1} (owned by Inca)\n  (43,11): PLAINS_HILLS Hills River (Road) {F:1 P:2} (owned by Inca) [my: UNIT_BUILDER]\n  (44,11): PLAINS River (Road) [COMMERCIAL_HUB] {F:0 P:0} (owned by Inca) [my: UNIT_BUILDER]\n  (45,11): PLAINS [RESOURCE_SALT+] River (IMPROVEMENT_MINE) (Road) {F:2 P:1 G:1} (owned by Inca)\n  (46,11): GRASS River (Road) {F:2 P:0} (owned by Inca) **[Georgia UNIT_MISSIONARY]**\n  (47,11): GRASS_HILLS Hills [RESOURCE_SHEEP] {F:3 P:1} [mv:2]\n  (43,12): PLAINS FLOODPLAINS_PLAINS River {F:1 P:1} (owned by Inca)\n  (44,12): PLAINS FLOODPLAINS_PLAINS River {F:1 P:1} (owned by Inca)\n  (45,12): PLAINS River (Road) [CITY_CENTER] {F:1 P:1} (owned by Inca) [my: UNIT_ARCHER, UNIT_TRADER, UNIT_TRADER]\n  (46,12): GRASS River (Road) [HOLY_SITE] {F:0 P:0} (owned by Inca)\n  (47,12): GRASS_MOUNTAIN {F:0 P:0}\n  (43,13): PLAINS FLOODPLAINS_PLAINS River {F:1 P:1} (owned by Inca)\n  (44,13): PLAINS [RESOURCE_HORSES*] (IMPROVEMENT_PASTURE) {F:2 P:2} (owned by Inca)\n  (45,13): PLAINS FOREST {F:1 P:2} (owned by Inca) [mv:2] [my: UNIT_BUILDER]\n  (46,13): PLAINS_MOUNTAIN {F:0 P:0}\n  (47,13): GRASS_MOUNTAIN [fog]\n  (43,14): PLAINS FLOODPLAINS_PLAINS [RESOURCE_WHEAT] River {F:2 P:1}\n  (44,14): PLAINS_MOUNTAIN {F:0 P:0}\n  (45,14): PLAINS_MOUNTAIN {F:0 P:0}\n  (46,14): PLAINS_MOUNTAIN {F:0 P:0}",
   "exchanges": [

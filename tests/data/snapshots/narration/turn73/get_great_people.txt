@@ -11,10 +11,10 @@
     Ability: SINGLE_CITY_EXTRA_DISTRICT (amount=1), GRANT_SPECIFIC_TECH_BOOST
     Patronize: 1100g / 750f
     (individual_id: 38)
-  Great Merchant: Marco Polo (Medieval Era) — Unclaimed — your points: 0/60
-    Ability: Grants a free Trader unit in this city, and increases [ICON_TradeRoute] Trade Route capacity by 1. Foreign [ICON_TradeRoute] Trade Routes to this city provide +2 [ICON_Gold] Gold to both cities.
-    Patronize: 1100g / 750f
-    (individual_id: 78)
+  Great Merchant: Marcus Licinius Crassus (Classical Era) — Unclaimed — your points: 13/30
+    Ability: UNIT_GRANT_PLOT, +60 GOLD
+    Patronize: 455g / 320f
+    (individual_id: 76)
   Great Scientist: Hildegard of Bingen (Medieval Era) — Unclaimed — your points: 25/60
     Ability: DISTRICT_ADJUST_YIELD_BASED_ON_ADJACENCY_BONUS, +100 FAITH
     Patronize: 725g / 500f

@@ -2,7 +2,7 @@
   "tool": "get_trade_routes",
   "arguments": {},
   "scenario": "turn57",
-  "recorded_at": "2026-08-16T19:54:00+00:00",
+  "recorded_at": "2026-08-16T20:58:31+00:00",
   "notes": null,
   "result": "Trade Routes: 1/1 active\n\nOn route (1):\n  Trader (id:4) Qusqu -> Antawaylla (Domestic) | Food:2 Prod:1 Gold:2",
   "exchanges": [

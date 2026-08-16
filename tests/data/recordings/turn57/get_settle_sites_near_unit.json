@@ -4,7 +4,7 @@
     "unit_id": 1
   },
   "scenario": "turn57",
-  "recorded_at": "2026-08-16T19:54:15+00:00",
+  "recorded_at": "2026-08-16T20:58:46+00:00",
   "notes": null,
   "result": "Top 4 settle locations:\n  #1 (52,16): Score 153 \u2014 this turn \u2014 F:72 P:22 \u2014 no water, defense:1 | !! Loyalty: ~-20/turn (enemy pressure)\n     [B] RESOURCE_STONE, [B] RESOURCE_STONE, [B] RESOURCE_RICE, [B] RESOURCE_SHEEP, [B] RESOURCE_STONE, [L] RESOURCE_TOBACCO, [B] RESOURCE_STONE\n  #2 (51,17): Score 140 \u2014 this turn \u2014 F:64 P:21 \u2014 no water, defense:2 | !! Loyalty: ~-20/turn (enemy pressure)\n     [B] RESOURCE_STONE, [B] RESOURCE_RICE, [B] RESOURCE_SHEEP, [B] RESOURCE_STONE, [L] RESOURCE_TOBACCO, [B] RESOURCE_STONE, [L] RESOURCE_SPICES\n  #3 (53,16): Score 140 \u2014 this turn \u2014 F:72 P:18 \u2014 no water, defense:0 | !! Loyalty: ~-20/turn (enemy pressure)\n     [B] RESOURCE_STONE, [B] RESOURCE_RICE, [B] RESOURCE_RICE, [B] RESOURCE_SHEEP, [B] RESOURCE_STONE, [B] RESOURCE_STONE\n  #4 (52,17): Score 138 \u2014 this turn \u2014 F:66 P:19 \u2014 no water, defense:0 | !! Loyalty: ~-20/turn (enemy pressure)\n     [B] RESOURCE_RICE, [B] RESOURCE_SHEEP, [B] RESOURCE_STONE, [L] RESOURCE_TOBACCO, [B] RESOURCE_STONE, [L] RESOURCE_SPICES",
   "exchanges": [

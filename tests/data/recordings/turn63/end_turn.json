@@ -2,7 +2,7 @@
   "tool": "end_turn",
   "arguments": {},
   "scenario": "turn63",
-  "recorded_at": "2026-08-16T19:59:03+00:00",
+  "recorded_at": "2026-08-16T20:35:57+00:00",
   "notes": null,
   "result": "Turn 63 -> 64 | Score: 146\nResources: RESOURCE_HORSES 25/25 (+2/t)\n\n== Events ==\n  !!! LOST CONTACT: Georgia UNIT_WARRIOR HP:100/100 last seen at (49,11) \u2014 likely moved NE/E/NW into fog\n  >> THREAT: Georgia UNIT_SCOUT CS:10 HP:100/100 spotted 3 tiles away at (43,5)\n  >> IDLE TRADE ROUTE: 1 unused route capacity (1/2 active). Build a Trader or assign an idle one.\n  -- SLOW GROWTH: Antawaylla (23t to next pop, +2.0/t)\n  -- RESOURCE CAP: RESOURCE_HORSES 25/25 (+2/t) \u2014 excess is wasted. Trade surplus or spend it.\n\n== Action Required ==\n  * Choose Production  -> Use: set_city_production(city_id=..., item_type=...)\n  * Fill Policy Slot  -> Use: get_policies() then set_policies(assignments={...})\n\n== Notifications ==\n  - Need More Amenities\n  - Command Units",
   "exchanges": [
@@ -102,7 +102,7 @@
         "ERA|Medieval Era|34|40|51",
         "MAXTURNS|0",
         "DIFFICULTY|Prince",
-        "UNITBREAKDOWN|Warrior:3,Builder:2,Slinger:2,Scout:1,Trader:1,Archer:1|1"
+        "UNITBREAKDOWN|Warrior:3,Slinger:2,Builder:2,Trader:1,Archer:1,Scout:1|1"
       ]
     },
     {
@@ -201,7 +201,7 @@
         "ERA|Medieval Era|34|40|51",
         "MAXTURNS|0",
         "DIFFICULTY|Prince",
-        "UNITBREAKDOWN|Warrior:3,Builder:2,Slinger:2,Scout:1,Trader:1,Archer:1|1"
+        "UNITBREAKDOWN|Warrior:3,Slinger:2,Builder:2,Trader:1,Archer:1,Scout:1|1"
       ]
     },
     {
@@ -316,7 +316,7 @@
         "ERA|Medieval Era|34|40|51",
         "MAXTURNS|0",
         "DIFFICULTY|Prince",
-        "UNITBREAKDOWN|Warrior:3,Builder:2,Slinger:2,Scout:1,Trader:1,Archer:1|1"
+        "UNITBREAKDOWN|Warrior:3,Slinger:2,Builder:2,Trader:1,Archer:1,Scout:1|1"
       ]
     },
     {

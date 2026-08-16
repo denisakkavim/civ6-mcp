@@ -207,10 +207,19 @@ WRITE_PLAN: list[tuple[str, dict, bool]] = [
     # These four compete for the same gold, and a mid-game empire cannot
     # afford all of them. Cheapest first, so the most calls land per scenario;
     # a richer save (turn 37 holds 275 gold) then covers the rest.
+    # These four compete for one treasury, so the order is by what each one
+    # buys rather than by cost.
+    #
+    # `diplomacy_action` first: a delegation is cheap, and it opens the
+    # encounter that `respond_to_diplomacy` in the late plan needs. Starving it
+    # costs two tools, not one.
     ("diplomacy_action", {"player_id": "$MET_PLAYER", "action": "DIPLOMATIC_DELEGATION"}, True),
+    # Then `purchase_item`, the most expensive and the hardest to place: only
+    # turn 57 has ever afforded it. The two below are covered elsewhere in the
+    # corpus, so they are the right ones to lose when the gold runs out.
+    ("purchase_item", {"city_id": "$CITY", "item_type": "$PURCHASABLE_ITEM"}, True),
     ("upgrade_unit", {"unit_id": "$UPGRADEABLE"}, True),
     ("purchase_tile", {"city_id": "$CITY", "target_x": "$TILE_X", "target_y": "$TILE_Y"}, True),
-    ("purchase_item", {"city_id": "$CITY", "item_type": "$PURCHASABLE_BUILDING"}, True),
     ("promote_governor", {"governor_type": "$GOVERNOR", "promotion_type": "$GOVERNOR_PROMOTION"}, True),
     ("assign_governor", {"governor_type": "$GOVERNOR", "city_id": "$OTHER_CITY"}, True),
     # Faith, not gold: the empire usually has faith banked, and `recruit`
@@ -414,10 +423,14 @@ async def _resolve(client, plan):
     overview = await _call(client, "get_game_overview", {})
     gold, faith = _gold(overview), _faith(overview)
 
-    # A building rather than a unit: buying a unit into a city whose centre
-    # tile already holds one is refused with STACKING_CONFLICT, and a city
-    # centre almost always holds a garrison.
-    context["$PURCHASABLE_BUILDING"] = _affordable_building(production, gold)
+    # A building first: buying a unit into a city whose centre tile already
+    # holds one is refused with STACKING_CONFLICT, and a city centre almost
+    # always holds a garrison. A unit is the fallback, because a poor empire
+    # can often afford one when it cannot afford any building — turn 57 buys
+    # a Settler for 340g and has no building it can reach.
+    context["$PURCHASABLE_ITEM"] = _affordable_building(
+        production, gold
+    ) or _affordable_unit(production, gold)
 
     tiles = await _call(client, "get_purchasable_tiles", {"city_id": context["$CITY"]})
     tile = _purchasable_tile(tiles)
@@ -1066,10 +1079,35 @@ async def _record(scenario: str, plan, dry_run: bool) -> None:
             # and nothing can name that unit until it exists — so resolve
             # again, now that it does.
             if plan is not READ_PLAN:
-                late = await _resolve(client, LATE_PLAN)
+                # Not recorded. `_resolve` calls real tools to find live ids,
+                # and recording is already on by now — so without this every
+                # probe overwrites the deliberate recording of that same tool
+                # with whatever state the game is in part-way through the run.
+                # The first pass gets this for free by resolving before
+                # `enable`; this one has to ask.
+                with recording.paused():
+                    late = await _resolve(client, LATE_PLAN)
                 if late:
                     print("\n-- second pass --")
                     discarded += await _run_plan(client, live, recorder, late)
+            written = {path.name for path in recorder.written}
+            stale = sorted(
+                path.name
+                for path in (RECORDING_DIR / scenario).glob("*.json")
+                if path.name not in written
+            )
+            if stale:
+                print(
+                    f"\n! {len(stale)} recording(s) this run did not write: "
+                    f"{', '.join(stale)}"
+                )
+                print(
+                    "  They are from an earlier plan. Either the call was "
+                    "refused this time, or the plan no longer makes it. A "
+                    "recording nothing can regenerate cannot be refreshed "
+                    "when it breaks."
+                )
+
             print(
                 f"\nWrote {len(recorder.written)} recordings to {RECORDING_DIR / scenario}"
             )

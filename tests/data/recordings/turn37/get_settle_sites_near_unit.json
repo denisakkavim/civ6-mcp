@@ -4,7 +4,7 @@
     "unit_id": 0
   },
   "scenario": "turn37",
-  "recorded_at": "2026-08-16T19:50:40+00:00",
+  "recorded_at": "2026-08-16T20:27:33+00:00",
   "notes": null,
   "result": "Top 5 settle locations:\n  #1 (43,16): Score 154 \u2014 this turn \u2014 F:40 P:27 \u2014 coast, defense:2\n     [S] RESOURCE_HORSES, [B] RESOURCE_COPPER, [B] RESOURCE_WHEAT, [B] RESOURCE_BANANAS, [B] RESOURCE_FISH, [B] RESOURCE_FISH\n  #2 (42,15): Score 152 \u2014 this turn \u2014 F:38 P:27 \u2014 fresh water, defense:2\n     [S] RESOURCE_HORSES, [B] RESOURCE_COPPER, [B] RESOURCE_WHEAT, [B] RESOURCE_BANANAS, [B] RESOURCE_FISH, [B] RESOURCE_FISH\n  #3 (42,14): Score 135 \u2014 this turn \u2014 F:29 P:29 \u2014 fresh water, defense:2\n     [S] RESOURCE_HORSES, [B] RESOURCE_COPPER, [B] RESOURCE_WHEAT, [B] RESOURCE_BANANAS\n  #4 (42,16): Score 125 \u2014 this turn \u2014 F:33 P:22 \u2014 coast, defense:0\n     [B] RESOURCE_COPPER, [B] RESOURCE_WHEAT, [B] RESOURCE_BANANAS, [B] RESOURCE_FISH, [B] RESOURCE_FISH\n  #5 (41,13): Score 121 \u2014 1t away \u2014 F:26 P:28 \u2014 coast, defense:1\n     [B] RESOURCE_WHEAT, [S] RESOURCE_HORSES, [B] RESOURCE_COPPER, [B] RESOURCE_WHEAT, [B] RESOURCE_BANANAS",
   "exchanges": [

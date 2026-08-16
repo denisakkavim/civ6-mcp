@@ -2,7 +2,7 @@
   "tool": "get_exploration_status",
   "arguments": {},
   "scenario": "turn73",
-  "recorded_at": "2026-08-16T20:14:11+00:00",
+  "recorded_at": "2026-08-16T21:02:14+00:00",
   "notes": null,
   "result": "=== STRATEGIC MAP ===\n\nFOG BOUNDARIES (distance to unexplored, -1 = fully explored):\n  Qusqu (45,12): N:9 NE:7 SE:9 S:12 SW:6 NW:6\n  Wanuku (44,8): N:6 NE:4 SE:12 S:12 SW:6 NW:4 <- EXPLORE NE/NW!\n  Antawaylla (47,9): N:5 NE:4 SE:11 S:5 SW:8 NW:7 <- EXPLORE N/NE/S!\n  Ollantaytambo (41,11): N:9 NE:7 SE:6 S:8 SW:3 NW:3 <- EXPLORE SW/NW!\n\nUNCLAIMED RESOURCES (revealed, unowned):\n  RESOURCE_SPICES+ at (49,7) \u2014 luxury\n  RESOURCE_SPICES+ at (51,8) \u2014 luxury\n  RESOURCE_TURTLES+ at (58,8) \u2014 luxury\n  RESOURCE_SPICES+ at (53,9) \u2014 luxury\n  RESOURCE_TOBACCO+ at (49,17) \u2014 luxury\n  RESOURCE_SPICES+ at (47,19) \u2014 luxury\n  RESOURCE_INCENSE+ at (51,24) \u2014 luxury\n  RESOURCE_SALT+ at (47,27) \u2014 luxury\n  RESOURCE_SALT+ at (57,27) \u2014 luxury\n  RESOURCE_SALT+ at (57,28) \u2014 luxury\n  RESOURCE_TOBACCO+ at (51,29) \u2014 luxury\n  RESOURCE_TOBACCO+ at (49,30) \u2014 luxury\n  RESOURCE_TURTLES+ at (56,30) \u2014 luxury\n  RESOURCE_IRON* at (55,9) \u2014 strategic",
   "exchanges": [

@@ -2,7 +2,7 @@
   "tool": "end_turn",
   "arguments": {},
   "scenario": "turn73",
-  "recorded_at": "2026-08-16T20:16:31+00:00",
+  "recorded_at": "2026-08-16T21:04:36+00:00",
   "notes": null,
   "result": "Turn 73 -> 74 | Score: 176\nResources: RESOURCE_HORSES 25/25 (+2/t), RESOURCE_IRON 12/25 (+2/t)\n\n== Events ==\n  !!! LOST CONTACT: Georgia UNIT_SPEARMAN HP:100/100 last seen at (54,20) \u2014 likely moved NE/E/NW into fog\n  >> THREAT: Georgia UNIT_ARCHER CS:15 RS:25 HP:100/100 spotted 2 tiles away at (54,19)\n  >> THREAT: Georgia UNIT_SCOUT CS:10 HP:100/100 spotted 1 tiles away at (46,6)\n  >> THREAT: Georgia UNIT_HEAVY_CHARIOT CS:28 HP:100/100 spotted 1 tiles away at (52,17)\n  >> STAGNANT: Qusqu (0 food surplus) \u2014 needs farm, granary, or trade route\n  >> IDLE TRADE ROUTE: 2 unused route capacities (1/3 active). Build a Trader or assign an idle one.\n  -- SLOW GROWTH: Wanuku (21t to next pop, +5.0/t)\n  -- RESOURCE CAP: RESOURCE_HORSES 25/25 (+2/t) \u2014 excess is wasted. Trade surplus or spend it.\n\n== Action Required ==\n  * Fill Policy Slot  -> Use: get_policies() then set_policies(assignments={...})\n\n== Notifications ==\n  - Need More Amenities\n  - Command Units",
   "exchanges": [
@@ -87,7 +87,7 @@
         "ERA|Medieval Era|41|40|51",
         "MAXTURNS|0",
         "DIFFICULTY|Prince",
-        "UNITBREAKDOWN|Warrior:3,Builder:3,Trader:2,Archer:2,Scout:1,Great Merchant:1,Missionary:1,Slinger:1|2"
+        "UNITBREAKDOWN|Warrior:3,Builder:3,Trader:2,Archer:2,Missionary:1,Great Merchant:1,Slinger:1,Scout:1|2"
       ]
     },
     {
@@ -190,7 +190,7 @@
         "ERA|Medieval Era|41|40|51",
         "MAXTURNS|0",
         "DIFFICULTY|Prince",
-        "UNITBREAKDOWN|Warrior:3,Builder:3,Trader:2,Archer:2,Scout:1,Great Merchant:1,Missionary:1,Slinger:1|2"
+        "UNITBREAKDOWN|Warrior:3,Builder:3,Trader:2,Archer:2,Missionary:1,Great Merchant:1,Slinger:1,Scout:1|2"
       ]
     },
     {
@@ -310,7 +310,7 @@
         "ERA|Medieval Era|41|40|51",
         "MAXTURNS|0",
         "DIFFICULTY|Prince",
-        "UNITBREAKDOWN|Warrior:3,Builder:3,Trader:2,Archer:2,Scout:1,Great Merchant:1,Missionary:1,Slinger:1|2"
+        "UNITBREAKDOWN|Warrior:3,Builder:3,Trader:2,Archer:2,Missionary:1,Great Merchant:1,Slinger:1,Scout:1|2"
       ]
     },
     {

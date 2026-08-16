@@ -15,6 +15,8 @@ Nothing here may break a tool call: every failure is swallowed, exactly as in
 
 from __future__ import annotations
 
+from contextlib import contextmanager
+
 import json
 import logging
 import os
@@ -131,6 +133,27 @@ def enable(directory: Path, scenario: str = "unknown") -> Recorder:
 def disable() -> None:
     global _active
     _active = None
+
+
+@contextmanager
+def paused():
+    """Stop recording for the duration of the block, then resume the same run.
+
+    `enable()` starts a *new* Recorder and forgets what the previous one
+    wrote, so it cannot be used to switch recording back on. A caller that
+    needs a gap — a resolver probing the game between recorded calls — needs
+    the original recorder back afterwards.
+
+    Without this, a probe overwrites the deliberate recording of the same tool
+    with whatever state the game happens to be in mid-run.
+    """
+    global _active
+    previous = _active
+    _active = None
+    try:
+        yield
+    finally:
+        _active = previous
 
 
 def is_recording() -> bool:

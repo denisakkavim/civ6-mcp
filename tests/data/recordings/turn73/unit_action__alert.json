@@ -5,7 +5,7 @@
     "action": "alert"
   },
   "scenario": "turn73",
-  "recorded_at": "2026-08-16T20:14:48+00:00",
+  "recorded_at": "2026-08-16T21:02:51+00:00",
   "notes": null,
   "result": "ALERT|51,14",
   "exchanges": [
