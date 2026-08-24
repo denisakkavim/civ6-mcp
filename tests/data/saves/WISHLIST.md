@@ -40,6 +40,37 @@ Nine `unit_action` verbs are also missing: `activate`, `attack`, `build_route`,
 and `spread_religion`. Every one needs a save. Stage 4 turns each into a tool
 of its own, so a recording made now also gives that split a before-picture.
 
+### Most of what looks like a missing save is a missing plan entry
+
+Checked against the recorded reads rather than against a probe, because a
+probe that reads the wrong signal reports whatever that signal is wired to
+say. The saves already hold the preconditions for:
+
+| Tool or verb | Where |
+|---|---|
+| `promote_unit` | `barbpantheon` — its Scout has Ranger and Alpine waiting |
+| `promote_governor`, `appoint_governor` | `barbdedication` — a governor point is unspent |
+| `city_attack` | seven scenarios have an enemy in range while at war |
+| `build_route` | `barb355`, `barbunits`, `barbwarspies` hold a Military Engineer |
+| `spread_religion` | `turn73` — the Missionary needs one move first |
+
+None of these needs a save. They need the recorder to call them, or to call
+them correctly, which is mine to fix.
+
+**`promote_unit` is the cautionary one.** The resolver looked for the
+NEEDS PROMOTION marker in `get_units`, and that marker is hardcoded off:
+`lua/units.py` sets `promo = "0"` deliberately, because an XP-based check
+fires a turn early and double-promotes. So the marker can never appear, the
+resolver could never find a promotable unit, and the absence read as "no save
+has one". It now asks `get_unit_promotions`, which uses the GameCore
+`CanPromote` check — the only correct one.
+
+That also leaves **Stage 4.9 blocked on a real constraint**: it asks
+`get_units` to mark promotion eligibility so the agent stops querying
+speculatively per unit, and the only correct source is a GameCore check the
+in-game unit scan cannot make. The marker exists in `narrate.py` today and is
+unreachable.
+
 ### Claims in earlier versions of this file that were wrong
 
 Recording against a live game disproved them. They are corrected in the tables
@@ -62,12 +93,32 @@ below, and listed here so that nobody reinstates them:
   (`ACCEPTED|Georgia accepted your delegation`) and the follow-up was refused
   with `NO_SESSION`. The pending encounter in that run came from the AI's own
   initiative, which cannot be produced on demand.
+- `form_alliance` **does** need a save. A first scan said thirteen scenarios
+  had it, from a pattern that matched the word "alliance" anywhere in
+  `get_diplomacy` — every hit was the same line of prose, "Requires Secret
+  diplomatic visibility (spy or alliance)". Eligibility needs a declared
+  friendship, which no save holds.
 - A **claimable Great Person** needs no save for `patronize`. Turn 73 holds
   349 faith against a 290-faith cost, and the unit that creates covers
   `get_great_person_sites`. Only `recruit` still needs a save, because it
   spends Great Person points rather than faith.
 
 ## The saves I need
+
+Five conditions, and only five, are not in any save today:
+
+- an **idle** Spy (`barbwarspies` has one, mid-mission on FOMENT_UNREST)
+- a **Great Prophet**, for `found_religion`
+- the **Royal Society** card slotted, for `disband_unit(sacrifice_charges)`
+- a **dedication choice** open at an era turn
+- a **declared friendship**, for `form_alliance`
+
+plus two nobody can force: a deal the AI offers (`respond_to_deal`) and a
+diplomacy encounter it opens (`respond_to_diplomacy`, already captured once by
+luck).
+
+The tables below keep the fuller lists, because a save that happens to carry
+more than one of these is worth more than a save made for exactly one.
 
 Four saves close every remaining gap. Each is a checklist. Check the conditions
 in the game before you save: several are cleared by ending a turn.
@@ -129,7 +180,7 @@ upcoming policies without one, so the tool cannot be called at all.
 
 | Condition | It unblocks |
 |---|---|
-| The World Congress in session, with a resolution to vote on | `queue_world_congress_votes` |
+| The World Congress in session, with a resolution to vote on | `queue_world_congress_votes` (now covered from `barbcongress`; kept here because it took a save made for it) |
 
 Turn 37 reports "World Congress: FIRES THIS TURN", which is not the same thing:
 the session opens as that turn ends. Save during the session itself.

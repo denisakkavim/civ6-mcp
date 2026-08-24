@@ -406,7 +406,7 @@ async def _resolve(client, plan):
         claimed.add(context["$UPGRADEABLE"])
 
     # A promotable unit must also keep its turn, for the same reason.
-    context["$PROMOTABLE"] = _promotable(units_text)
+    context["$PROMOTABLE"], context["$PROMOTION"] = await _promotable(client, unit_ids)
     if isinstance(context["$PROMOTABLE"], int):
         claimed.add(context["$PROMOTABLE"])
 
@@ -491,12 +491,7 @@ async def _resolve(client, plan):
     context["$PANTHEON_BELIEF"] = _pantheon_belief(
         await _call(client, "get_belief_options", {})
     )
-    if isinstance(context["$PROMOTABLE"], int):
-        context["$PROMOTION"] = _promotion_for(
-            await _call(client, "get_unit_promotions", {"unit_id": context["$PROMOTABLE"]})
-        )
-    else:
-        context["$PROMOTION"] = None
+
 
     great_people = await _call(client, "get_great_people", {})
     context["$GP_CANDIDATE"] = _affordable_great_person(great_people, faith)
@@ -695,25 +690,25 @@ def _pantheon_belief(beliefs: str) -> str | None:
     return match.group(1) if match else None
 
 
-def _promotable(units: str) -> int | None:
-    """A unit the game says has a promotion waiting."""
+async def _promotable(client, unit_ids: list[int]) -> tuple[int | None, str | None]:
+    """(unit, promotion) for the first unit that can actually promote.
+
+    Asks `get_unit_promotions` rather than reading `get_units`. The
+    NEEDS PROMOTION marker there is hardcoded off — `lua/units.py` sets
+    `promo = "0"` on purpose, because an XP-based check fires a turn early and
+    double-promotes. So the marker can never appear, and a resolver that reads
+    it can never find a promotable unit, however many the save holds.
+    """
     import re
 
-    for line in units.splitlines():
-        if "PROMOT" not in line.upper():
+    for unit_id in unit_ids[:8]:
+        text = await _call(client, "get_unit_promotions", {"unit_id": unit_id})
+        if not text.startswith("Promotions for"):
             continue
-        match = re.search(r"id:(\d+)", line)
+        match = re.search(r"\((PROMOTION_[A-Z_]+)\)", text)
         if match:
-            return int(match.group(1))
-    return None
-
-
-def _promotion_for(promotions: str) -> str | None:
-    """A promotion type from get_unit_promotions output."""
-    import re
-
-    match = re.search(r"\((PROMOTION_[A-Z_]+)\)", promotions)
-    return match.group(1) if match else None
+            return unit_id, match.group(1)
+    return None, None
 
 
 def _appointable_governor(governors: str) -> str | None:
