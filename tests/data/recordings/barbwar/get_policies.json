@@ -1,0 +1,35 @@
+{
+  "tool": "get_policies",
+  "arguments": {},
+  "scenario": "barbwar",
+  "recorded_at": "2026-08-24T17:42:38+00:00",
+  "notes": null,
+  "result": "Government: Oligarchy (GOVERNMENT_OLIGARCHY)\n\n5 policy slots:\n  Slot 0 (Military): Conscription (POLICY_CONSCRIPTION)\n  Slot 1 (Military): Maneuver (POLICY_MANEUVER)\n  Slot 2 (Economic): Urban Planning (POLICY_URBAN_PLANNING)\n  Slot 3 (Wildcard): Charismatic Leader (POLICY_CHARISMATIC_LEADER)\n  Slot 4 (Military): Discipline (POLICY_DISCIPLINE)\n\nAvailable policies:\n  Military:\n    Survey (POLICY_SURVEY): Double experience for recon units.\n    Agoge (POLICY_AGOGE): +50% [ICON_Production] Production toward Ancient and Classical era melee, anti-cavalry, and ranged units.\n    Maritime Industries (POLICY_MARITIME_INDUSTRIES): +100% [ICON_Production] Production toward Ancient and Classical era naval units.\n    Limitanei (POLICY_LIMITANEI): +2 Loyalty per turn for cities with a garrisoned unit.\n  Economic:\n    God King (POLICY_GOD_KING): +1 [ICON_Faith] Faith and +1 [ICON_Gold] Gold in the [ICON_Capital] Capital.\n    Ilkum (POLICY_ILKUM): +30% [ICON_Production] Production toward Builders.\n    Caravansaries (POLICY_CARAVANSARIES): +2 [ICON_Gold] Gold from all [ICON_TradeRoute] Trade Routes.\n    Corv\u00e9e (POLICY_CORVEE): +15% [ICON_Production] Production toward Ancient and Classical wonders.\n    Land Surveyors (POLICY_LAND_SURVEYORS): Reduces the cost of purchasing a tile by 20%.\n    Colonization (POLICY_COLONIZATION): +50% [ICON_Production] Production toward Settlers.\n    Insulae (POLICY_INSULAE): +1 [ICON_Housing] Housing in all cities with at least 2 specialty districts.\n  Diplomatic:\n    Diplomatic League (POLICY_DIPLOMATIC_LEAGUE): The first [ICON_Envoy] Envoy you send to each city-state counts as two [ICON_Envoy] Envoys.\n\nUse set_policies with slot assignments, e.g. {0: \"POLICY_AGOGE\", 1: \"POLICY_URBAN_PLANNING\"}\nWildcard slots can accept any policy type.",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pCulture = Players[me]:GetCulture()\nlocal govIdx = pCulture:GetCurrentGovernment()\nlocal govName = \"None\"\nlocal govType = \"NONE\"\nif govIdx and govIdx >= 0 then\n    local govEntry = GameInfo.Governments[govIdx]\n    if govEntry then\n        govName = Locale.Lookup(govEntry.Name)\n        govType = govEntry.GovernmentType\n    end\nend\nlocal numSlots = pCulture:GetNumPolicySlots()\nprint(\"GOV|\" .. govType .. \"|\" .. govName:gsub(\"|\",\"/\") .. \"|\" .. numSlots)\nlocal slotNames = {[0]=\"SLOT_ECONOMIC\", [1]=\"SLOT_MILITARY\", [2]=\"SLOT_DIPLOMATIC\", [3]=\"SLOT_WILDCARD\", [4]=\"SLOT_WILDCARD\"}\nfor s = 0, numSlots - 1 do\n    local slotType = slotNames[pCulture:GetSlotType(s)] or (\"SLOT_\" .. pCulture:GetSlotType(s))\n    local policyIdx = pCulture:GetSlotPolicy(s)\n    local policyType = \"NONE\"\n    local policyName = \"Empty\"\n    if policyIdx >= 0 then\n        local pe = GameInfo.Policies[policyIdx]\n        if pe then\n            policyType = pe.PolicyType\n            policyName = Locale.Lookup(pe.Name)\n        end\n    end\n    print(\"SLOT|\" .. s .. \"|\" .. slotType .. \"|\" .. policyType .. \"|\" .. policyName:gsub(\"|\",\"/\"))\nend\nfor policy in GameInfo.Policies() do\n    if pCulture:IsPolicyUnlocked(policy.Index) then\n        local canSlot = false\n        for s = 0, numSlots - 1 do\n            if pCulture:CanSlotPolicy(policy.Index, s) then\n                canSlot = true\n                break\n            end\n        end\n        if canSlot then\n            local slotType = \"SLOT_WILDCARD\"\n            if policy.GovernmentSlotType then slotType = policy.GovernmentSlotType end\n            local name = Locale.Lookup(policy.Name)\n            local desc = Locale.Lookup(policy.Description):gsub(\"|\", \"/\"):gsub(\"\\n\", \" \")\n            print(\"AVAIL|\" .. policy.PolicyType .. \"|\" .. name:gsub(\"|\",\"/\") .. \"|\" .. desc .. \"|\" .. slotType)\n        end\n    end\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "GOV|GOVERNMENT_OLIGARCHY|Oligarchy|5",
+        "SLOT|0|SLOT_MILITARY|POLICY_CONSCRIPTION|Conscription",
+        "SLOT|1|SLOT_MILITARY|POLICY_MANEUVER|Maneuver",
+        "SLOT|2|SLOT_ECONOMIC|POLICY_URBAN_PLANNING|Urban Planning",
+        "SLOT|3|SLOT_WILDCARD|POLICY_CHARISMATIC_LEADER|Charismatic Leader",
+        "SLOT|4|SLOT_MILITARY|POLICY_DISCIPLINE|Discipline",
+        "AVAIL|POLICY_SURVEY|Survey|Double experience for recon units.|SLOT_MILITARY",
+        "AVAIL|POLICY_GOD_KING|God King|+1 [ICON_Faith] Faith and +1 [ICON_Gold] Gold in the [ICON_Capital] Capital.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_ILKUM|Ilkum|+30% [ICON_Production] Production toward Builders.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_AGOGE|Agoge|+50% [ICON_Production] Production toward Ancient and Classical era melee, anti-cavalry, and ranged units.|SLOT_MILITARY",
+        "AVAIL|POLICY_CARAVANSARIES|Caravansaries|+2 [ICON_Gold] Gold from all [ICON_TradeRoute] Trade Routes.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_MARITIME_INDUSTRIES|Maritime Industries|+100% [ICON_Production] Production toward Ancient and Classical era naval units.|SLOT_MILITARY",
+        "AVAIL|POLICY_STRATEGOS|Strategos|+2 [ICON_GreatGeneral] Great General points per turn.|SLOT_GREAT_PERSON",
+        "AVAIL|POLICY_CORVEE|Corv\u00e9e|+15% [ICON_Production] Production toward Ancient and Classical wonders.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_LAND_SURVEYORS|Land Surveyors|Reduces the cost of purchasing a tile by 20%.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_COLONIZATION|Colonization|+50% [ICON_Production] Production toward Settlers.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_INSULAE|Insulae|+1 [ICON_Housing] Housing in all cities with at least 2 specialty districts.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_DIPLOMATIC_LEAGUE|Diplomatic League|The first [ICON_Envoy] Envoy you send to each city-state counts as two [ICON_Envoy] Envoys.|SLOT_DIPLOMATIC",
+        "AVAIL|POLICY_LIMITANEI|Limitanei|+2 Loyalty per turn for cities with a garrisoned unit.|SLOT_MILITARY"
+      ]
+    }
+  ]
+}

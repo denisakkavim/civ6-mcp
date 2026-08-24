@@ -1,0 +1,6 @@
+Envoy tokens available: 0
+
+2 known city-states:
+  Mexico City (Industrial) — 0 envoys [player 9]
+    Mexico City [city:17367040]
+  Free Cities (Unknown) — 0 envoys [player 62]

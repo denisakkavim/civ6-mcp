@@ -1,0 +1,16 @@
+15 purchasable tiles:
+  (12,10): 120g — Grassland [Tobacco+]
+  (16,7): 120g — Tundra (Hills) Hills [Sheep]
+  (14,5): 120g — Tundra [Deer]
+  (14,10): 80g — Grassland
+  (15,9): 80g — Grassland
+  (13,10): 80g — Coast and Lake
+  (15,7): 80g — Tundra
+  (15,6): 80g — Tundra
+  (12,8): 80g — Grassland
+  (11,9): 120g — Grassland
+  (11,7): 120g — Coast and Lake
+  (12,5): 120g — Snow
+  (12,6): 120g — Tundra
+  (17,8): 120g — Tundra (Hills) Hills
+  (15,11): 120g — Grassland

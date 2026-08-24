@@ -1,0 +1,8 @@
+Turn 121 | Germany (Frederick Barbarossa) | Score: 179 | Prince
+Gold: 118 (+4/turn) | Income: 10 | Maintenance: -6 (units: 6) | Science: 22.6 | Culture: 10.1 | Faith: 371 | Favor: 73 (+3/turn)
+Research: Apprenticeship | Civic: Feudalism
+Cities: 5 | Population: 23 | Units: 5 — 3 Archer, 1 Spearman, 1 Swordsman
+Explored: 42% of land (499/1161 tiles)
+Religion: none yet (3/4 slots remaining — Great Prophet needed)
+Era: Medieval Era | Score: 49 (Dark: 65, Golden: 79) !! 16 short of avoiding Dark Age
+Rankings: Kongo 193 > Germany 179 > Macedon 76

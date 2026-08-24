@@ -1,0 +1,55 @@
+No technology being researched! | Completed: 14 techs, 10 civics
+Civic: Feudalism (34 turns)
+
+Available techs:
+  Sailing (TECH_SAILING) [ANCIENT] — 0%, 2 turns [Boost: Found a city on the Coast.] -> Galley, Viking Longship, Bireme, Fishing Boats, Fishery !! GRAB THIS
+  Currency (TECH_CURRENCY) [CLASSICAL] — 46%, 3 turns BOOSTED [Boost: Make a [ICON_TradeRoute] Trade Route.] -> Market, Sukiennice, Commercial Hub, Suguba (needs: TECH_WRITING)
+  Construction (TECH_CONSTRUCTION) [CLASSICAL] — 0%, 9 turns [Boost: Build a Water Mill.] -> Toa, Terracotta Army, Lumber Mill (needs: TECH_MASONRY,TECH_HORSEBACK_RIDING)
+  Printing (TECH_PRINTING) [RENAISSANCE] — 0%, 32 turns [Boost: Build 2 Universities.] -> Forbidden City (needs: TECH_MACHINERY)
+
+Available civics:
+  Mysticism (CIVIC_MYSTICISM) [ANCIENT] — 0%, 4 turns BOOSTED [Boost: Found a pantheon.] (needs: CIVIC_FOREIGN_TRADE)
+  Drama and Poetry (CIVIC_DRAMA_POETRY) [CLASSICAL] — 0%, 11 turns [Boost: Build a wonder.] (needs: CIVIC_EARLY_EMPIRE)
+  Naval Tradition (CIVIC_NAVAL_TRADITION) [MEDIEVAL] — 0%, 27 turns [Boost: Kill a unit with a Quadrireme.] (needs: CIVIC_DEFENSIVE_TACTICS)
+  Feudalism (CIVIC_FEUDALISM) [MEDIEVAL] — 0%, 36 turns [Boost: Build 6 Farms.] (needs: CIVIC_DEFENSIVE_TACTICS)
+
+Locked techs (prerequisites missing):
+  -- CLASSICAL --
+  Celestial Navigation (TECH_CELESTIAL_NAVIGATION) — needs: Sailing [Boost: Improve 2 sea resources.]
+  Shipbuilding (TECH_SHIPBUILDING) — needs: Sailing [Boost: Own 2 Galleys.]
+  Mathematics (TECH_MATHEMATICS) — needs: Currency [Boost: Build 3 different specialty districts.]
+  -- MEDIEVAL --
+  Military Tactics (TECH_MILITARY_TACTICS) — needs: Mathematics BOOSTED [Boost: Kill a unit with a Spearman.]
+  Apprenticeship (TECH_APPRENTICESHIP) — needs: Currency BOOSTED [Boost: Build 3 Mines.]
+  Education (TECH_EDUCATION) — needs: Mathematics, Apprenticeship BOOSTED [Boost: Earn a Great Scientist.]
+  Stirrups (TECH_STIRRUPS) — needs: Apprenticeship [Boost: Have the Feudalism civic.]
+  Military Engineering (TECH_MILITARY_ENGINEERING) — needs: Construction [Boost: Build an Aqueduct.]
+  Castles (TECH_CASTLES) — needs: Construction [Boost: Adopt a government with 6 inherent policy slots.]
+  Buttress (TECH_BUTTRESS) — needs: Shipbuilding, Mathematics [Boost: Build a Classical era or later wonder]
+  -- RENAISSANCE --
+  Cartography (TECH_CARTOGRAPHY) — needs: Buttress [Boost: Build 2 Harbors.]
+  Mass Production (TECH_MASS_PRODUCTION) — needs: Education, Buttress, Military Tactics [Boost: Build a Lumber Mill.]
+  Banking (TECH_BANKING) — needs: Education, Stirrups [Boost: Have the Guilds civic.]
+  Gunpowder (TECH_GUNPOWDER) — needs: Apprenticeship, Stirrups, Military Engineering [Boost: Build an Armory.]
+  Square Rigging (TECH_SQUARE_RIGGING) — needs: Cartography [Boost: Kill a unit with a Musketman.]
+  Astronomy (TECH_ASTRONOMY) — needs: Education [Boost: Build a University adjacent to a Mountain.]
+  Metal Casting (TECH_METAL_CASTING) — needs: Gunpowder [Boost: Own 2 Crossbowman.]
+  Siege Tactics (TECH_SIEGE_TACTICS) — needs: Castles [Boost: Own 2 Trebuchets.]
+
+Locked civics (prerequisites missing):
+  -- CLASSICAL --
+  Recorded History (CIVIC_RECORDED_HISTORY) — needs: Drama and Poetry BOOSTED [Boost: Build 2 Campus districts.]
+  Theology (CIVIC_THEOLOGY) — needs: Drama and Poetry, Mysticism [Boost: Found a Religion.]
+  -- MEDIEVAL --
+  Civil Service (CIVIC_CIVIL_SERVICE) — needs: Recorded History [Boost: Grow a city to 10 population.]
+  Mercenaries (CIVIC_MERCENARIES) — needs: Feudalism [Boost: Have 8 land combat units in your military.]
+  Medieval Faires (CIVIC_MEDIEVAL_FAIRES) — needs: Feudalism [Boost: Maintain 4 Trade Routes.]
+  Guilds (CIVIC_GUILDS) — needs: Feudalism, Civil Service [Boost: Build 2 Markets.]
+  Divine Right (CIVIC_DIVINE_RIGHT) — needs: Civil Service, Theology [Boost: Build 2 Temples.]
+  -- RENAISSANCE --
+  Exploration (CIVIC_EXPLORATION) — needs: Mercenaries, Medieval Faires [Boost: Build 2 Caravels.]
+  Humanism (CIVIC_HUMANISM) — needs: Medieval Faires, Guilds [Boost: Earn a Great Artist.]
+  Diplomatic Service (CIVIC_DIPLOMATIC_SERVICE) — needs: Guilds [Boost: Have an alliance with another civilization.]
+  Reformed Church (CIVIC_REFORMED_CHURCH) — needs: Guilds, Divine Right [Boost: Have 6 cities following your Religion.]
+  Mercantilism (CIVIC_MERCANTILISM) — needs: Humanism [Boost: Earn a Great Merchant.]
+  The Enlightenment (CIVIC_THE_ENLIGHTENMENT) — needs: Humanism, Diplomatic Service [Boost: Earn 3 Great People.]

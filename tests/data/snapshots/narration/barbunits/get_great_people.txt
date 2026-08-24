@@ -1,0 +1,36 @@
+9 Great People:
+  Great General: José de San Martín (Industrial Era) — Unclaimed — your points: 343/545
+    Ability: Grants +4 Loyalty per turn for this city.
+    Patronize: 3230g / 2170f
+    (individual_id: 66)
+  Great Admiral: Horatio Nelson (Industrial Era) — Unclaimed — your points: 34/420
+    Ability: +50% flanking bonus for all naval units.
+    Patronize: 5990g / 4010f
+    (individual_id: 10)
+  Great Engineer: James Watt (Industrial Era) — Unclaimed — your points: 54/420
+    Ability: Instantly builds a Factory and Workshop in this district. Factories provide +2 [ICON_Production] Production.
+    Patronize: 5690g / 3810f
+    (individual_id: 46)
+  Great Merchant: John Spilsbury (Industrial Era) — Unclaimed — your points: 195/420
+    Ability: +1 RESOURCE_TOYS
+    Patronize: 3575g / 2400f
+    (individual_id: 85)
+  Great Prophet: O no Yasumaro (Medieval Era) — Unclaimed — your points: 0/120
+    Patronize: 2000g / 1350f
+    (individual_id: 121)
+  Great Scientist: Alan Turing (Modern Era) — Unclaimed — your points: 184/855
+    Ability: Triggers the [ICON_TechBoosted] Eureka moment for Computers and 1 random technology from the Modern era.
+    Patronize: 10265g / 6860f
+    (individual_id: 140)
+  Great Writer: Johann Wolfgang von Goethe (Industrial Era) — Unclaimed — your points: 0/420
+    Ability: creates 2 Great Works
+    Patronize: 6500g / 4350f
+    (individual_id: 164)
+  Great Artist: Titian (Industrial Era) — Unclaimed — your points: 0/420
+    Ability: creates 3 Great Works
+    Patronize: 6500g / 4350f
+    (individual_id: 23)
+  Great Musician: Ludwig van Beethoven (Industrial Era) — Unclaimed — your points: 0/420
+    Ability: creates 2 Great Works
+    Patronize: 6500g / 4350f
+    (individual_id: 98)

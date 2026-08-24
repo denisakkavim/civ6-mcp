@@ -1,0 +1,45 @@
+Trade options with Mapuche (player 2):
+
+Economy:
+  Our gold: 4352 (+418/turn) | Favor: 10
+  Their gold: 351 (+48/turn) | Favor: 290
+
+Our tradeable resources:
+  Luxuries: Cocoa x3, Diamonds x2, Pearls x2, Tobacco x2, Cosmetics x2, Toys, Amber x2
+  Strategics: Coal x104, Horses x170, Iron x170, Niter x170, Oil x170, Uranium x72
+
+Their tradeable resources:
+  Luxuries: Cocoa, Coffee, Dyes x3, Silk x2, Truffles x2, Turtles
+  Strategics: Horses x110, Iron x104, Niter x110, Oil x110
+
+Our cities (15):
+  Aachen (id=16777216, pop 13) (CAPITAL)
+  Frankfurt (id=16777217, pop 7)
+  Trier (id=16777218, pop 10)
+  Methone (id=16777219, pop 11)
+  Heidelberg (id=16777220, pop 11)
+  Berlin (id=16777221, pop 15)
+  Hamburg (id=16777222, pop 6)
+  Pella (id=16777223, pop 14)
+  Ulm (id=16777224, pop 8)
+  Cologne (id=16777225, pop 6)
+  Zanzibar (id=16777226, pop 11)
+  Ayutthaya (id=16777227, pop 8)
+  Hull (id=16777228, pop 2)
+  Plymouth (id=16777229, pop 5)
+  Magdeburg (id=16777230, pop 1)
+
+Their cities (9):
+  Ngulu Mapu (id=16908288, pop 11) (CAPITAL)
+  Ina Pire Mapu (id=16908289, pop 15)
+  Wente Mapu (id=16908290, pop 2)
+  Mamüll Mapu (id=16908291, pop 2)
+  Willi Mapu (id=16908292, pop 10)
+  Huilli Mapu (id=16908293, pop 9)
+  Nag Mapu (id=16908294, pop 5)
+  Pehuen Mapu (id=16908295, pop 3)
+  Puel Willi Mapu (id=16908296, pop 1)
+
+Agreements:
+  Open borders: not active (available)
+  Alliance: not eligible (requires declared friendship + Diplomatic Service civic)

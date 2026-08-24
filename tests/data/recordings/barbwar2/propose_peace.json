@@ -1,0 +1,34 @@
+{
+  "tool": "propose_peace",
+  "arguments": {
+    "player_id": 1
+  },
+  "scenario": "barbwar2",
+  "recorded_at": "2026-08-24T17:48:25+00:00",
+  "notes": null,
+  "result": "ACCEPTED|Peace established with Macedon",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CLEAR"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal target = 1\nlocal pDiplo = Players[me]:GetDiplomacy()\nif not pDiplo:IsAtWarWith(target) then print(\"ERR:NOT_AT_WAR|Not at war with player 1\"); print(\"---END---\"); return end\nlocal canPeace = pDiplo:CanMakePeaceWith(target)\nif not canPeace then print(\"ERR:CANNOT_MAKE_PEACE|10-turn war cooldown or other restriction\"); print(\"---END---\"); return end\nlocal name = Locale.Lookup(PlayerConfigurations[target]:GetCivilizationShortDescription())\nDiplomacyManager.RequestSession(me, target, \"MAKE_PEACE\")\nlocal sid = DiplomacyManager.FindOpenSessionID(me, target)\nif not sid or sid < 0 then print(\"ERR:NO_SESSION|Failed to open peace deal session\"); print(\"---END---\"); return end\nDealManager.ClearWorkingDeal(DealDirection.OUTGOING, me, target)\nDealManager.SendWorkingDeal(DealProposalAction.PROPOSED, me, target)\nfor r = 1, 5 do sid = DiplomacyManager.FindOpenSessionID(me, target) if not sid or sid < 0 then break end DiplomacyManager.AddResponse(sid, me, \"NEGATIVE\") sid = DiplomacyManager.FindOpenSessionID(me, target) if not sid or sid < 0 then break end DiplomacyManager.CloseSession(sid) end LuaEvents.DiplomacyActionView_ShowIngameUI() pcall(function() Events.HideLeaderScreen() end)\nprint(\"OK:PROPOSED|\" .. name)\nprint(\"---END---\")\n",
+      "lines": [
+        "Request to BulkHide( false, Diplomacy ), Show on 0 = -1",
+        "OK:PROPOSED|Macedon"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal atWar = Players[me]:GetDiplomacy():IsAtWarWith(1)\nprint(atWar and \"AT_WAR\" or \"AT_PEACE\")\nprint(\"---END---\")\n",
+      "lines": [
+        "AT_PEACE"
+      ]
+    }
+  ]
+}

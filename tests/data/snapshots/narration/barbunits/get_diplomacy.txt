@@ -1,0 +1,36 @@
+4 civilizations:
+  Mapuche (Lautaro) — FRIENDLY (+2) [player 2]
+    Cities (6): Huilli Mapu pop 7 (66,35) [city:16908293]; Nag Mapu pop 3 (69,37) [city:16908294] + 4 in fog
+    Military: 29 vs our 440 (0.1x)
+    +2 Trade routes between our nations
+    Agenda: Spirit of Tucapel — Tries to create and maintain a high degree of cultural loyalty. Dislikes civilizations that lose cities by failing to maintain the loyalty of their people, likes those that gain cities through loyalty.
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Can: Declare Friendship, Denounce, Resident Embassy, Open Borders (Via Propose Deal), Declare War
+  England (Victoria) — FRIENDLY (-5) [player 3]
+    Cities: 7 (all in fog)
+    Military: 386 vs our 440
+    Access: they have embassy
+    -2 Unknown Reason
+    +2 Unknown Reason
+    -5 Victoria wants to expand to a continent you occupy
+    Agenda: Sun Never Sets — Likes civilizations from her home continent, and wants to expand to all continents. Doesn’t like civilizations on continents where England has no city.
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Can: Declare Friendship, Denounce, Resident Embassy, Open Borders (Via Propose Deal), Declare War
+  Georgia (Tamar) — FRIENDLY (+8) [player 4]
+    Cities (8): Tskhumi pop 7 (57,13) [city:17039366] + 7 in fog
+    Military: 345 vs our 440 (0.8x)
+    +8 Tamar is happy you are fortifying your cities
+    Agenda: Narikala Fortress — Tries to put high-level walls around her cities and respects civilizations who follow her lead. Does not like civilizations who fail to fortify their cities.
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Can: Declare Friendship, Denounce, Resident Embassy, Open Borders (Via Propose Deal), Declare War
+  Kongo (Mvemba a Nzinga) — UNFRIENDLY (+2) [player 5]
+    Cities (7): Mbanza Kongo pop 13 (24,29) [walls] [city:17104896]; Mbumbi pop 13 (21,28) [city:17104898]; Kwango pop 10 (26,25) [city:17104899]; Mbanza Nsundi pop 9 (19,23) [city:17104900]; Mbanza Mbata pop 7 (23,23) [city:17104901]; Mbamba pop 2 (11,26) [city:17104902] + 1 in fog
+    Military: 315 vs our 440 (0.7x)
+    +2 Trade routes between our nations
+    Agenda: Enthusiastic Disciple — Likes civilizations that bring Religion to the Kongo. Dislikes civilizations that have founded a Religion but not brought it to a Kongolese city.
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Can: Declare Friendship, Denounce, Resident Embassy, Open Borders (Via Propose Deal), Declare War

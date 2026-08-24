@@ -1,0 +1,117 @@
+{
+  "tool": "great_person_action",
+  "arguments": {
+    "individual_id": 16,
+    "action": "patronize",
+    "yield_type": "YIELD_FAITH"
+  },
+  "scenario": "barb355",
+  "recorded_at": "2026-08-24T17:33:20+00:00",
+  "notes": null,
+  "result": "OK:PATRONIZED|Sergei Gorshkov|cost:940 faith|unit_id:18|UNIT_GREAT_ADMIRAL",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CLEAR"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nfor _, u in Players[me]:GetUnits():Members() do\n    print(\"UID|\" .. ((u:GetID() % 65536) + u:GetOwner() * 65536) .. \"|\" .. GameInfo.Units[u:GetType()].UnitType)\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "UID|2|UNIT_TRADER",
+        "UID|4|UNIT_MILITARY_ENGINEER",
+        "UID|5|UNIT_TRADER",
+        "UID|7|UNIT_ANTIAIR_GUN",
+        "UID|8|UNIT_TRADER",
+        "UID|9|UNIT_TRADER",
+        "UID|10|UNIT_TRADER",
+        "UID|11|UNIT_TRADER",
+        "UID|12|UNIT_TRADER",
+        "UID|13|UNIT_TRADER",
+        "UID|15|UNIT_MILITARY_ENGINEER",
+        "UID|16|UNIT_TRADER",
+        "UID|17|UNIT_GREAT_GENERAL",
+        "UID|19|UNIT_MACHINE_GUN",
+        "UID|20|UNIT_BOMBER",
+        "UID|21|UNIT_BOMBER",
+        "UID|22|UNIT_FIELD_CANNON",
+        "UID|23|UNIT_BUILDER",
+        "UID|24|UNIT_FIELD_CANNON",
+        "UID|25|UNIT_BUILDER",
+        "UID|26|UNIT_GREAT_MERCHANT",
+        "UID|27|UNIT_TRADER",
+        "UID|29|UNIT_ANTIAIR_GUN",
+        "UID|30|UNIT_FIGHTER",
+        "UID|31|UNIT_FIGHTER",
+        "UID|32|UNIT_BOMBER",
+        "UID|33|UNIT_BUILDER",
+        "UID|34|UNIT_AIRCRAFT_CARRIER",
+        "UID|35|UNIT_AIRCRAFT_CARRIER",
+        "UID|36|UNIT_DESTROYER",
+        "UID|37|UNIT_DESTROYER",
+        "UID|38|UNIT_TANK",
+        "UID|39|UNIT_INFANTRY",
+        "UID|40|UNIT_MACHINE_GUN",
+        "UID|41|UNIT_ARTILLERY",
+        "UID|42|UNIT_TANK",
+        "UID|43|UNIT_TANK",
+        "UID|44|UNIT_INFANTRY"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal gp = Game.GetGreatPeople()\nif not gp:CanPatronizePerson(me, 16, 5) then\n    local ind = GameInfo.GreatPersonIndividuals[16]\n    local name = ind and Locale.Lookup(ind.Name) or \"unknown\"\n    local cost = gp:GetPatronizeCost(me, 16, 5)\n    print(\"ERR:CANNOT_PATRONIZE|Cannot buy \" .. name .. \" (cost: \" .. cost .. \" faith)\"); print(\"---END---\"); return\nend\nlocal kParams = {}\nkParams[PlayerOperations.PARAM_GREAT_PERSON_INDIVIDUAL_TYPE] = 16\nkParams[PlayerOperations.PARAM_YIELD_TYPE] = 5\nUI.RequestPlayerOperation(me, PlayerOperations.PATRONIZE_GREAT_PERSON, kParams)\nlocal ind = GameInfo.GreatPersonIndividuals[16]\nlocal name = ind and Locale.Lookup(ind.Name) or \"unknown\"\nlocal cost = gp:GetPatronizeCost(me, 16, 5)\nprint(\"OK:PATRONIZED|\" .. name .. \"|cost:\" .. cost .. \" faith\")\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:PATRONIZED|Sergei Gorshkov|cost:940 faith"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nfor _, u in Players[me]:GetUnits():Members() do\n    print(\"UID|\" .. ((u:GetID() % 65536) + u:GetOwner() * 65536) .. \"|\" .. GameInfo.Units[u:GetType()].UnitType)\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "UID|2|UNIT_TRADER",
+        "UID|4|UNIT_MILITARY_ENGINEER",
+        "UID|5|UNIT_TRADER",
+        "UID|7|UNIT_ANTIAIR_GUN",
+        "UID|8|UNIT_TRADER",
+        "UID|9|UNIT_TRADER",
+        "UID|10|UNIT_TRADER",
+        "UID|11|UNIT_TRADER",
+        "UID|12|UNIT_TRADER",
+        "UID|13|UNIT_TRADER",
+        "UID|15|UNIT_MILITARY_ENGINEER",
+        "UID|16|UNIT_TRADER",
+        "UID|17|UNIT_GREAT_GENERAL",
+        "UID|18|UNIT_GREAT_ADMIRAL",
+        "UID|19|UNIT_MACHINE_GUN",
+        "UID|20|UNIT_BOMBER",
+        "UID|21|UNIT_BOMBER",
+        "UID|22|UNIT_FIELD_CANNON",
+        "UID|23|UNIT_BUILDER",
+        "UID|24|UNIT_FIELD_CANNON",
+        "UID|25|UNIT_BUILDER",
+        "UID|26|UNIT_GREAT_MERCHANT",
+        "UID|27|UNIT_TRADER",
+        "UID|29|UNIT_ANTIAIR_GUN",
+        "UID|30|UNIT_FIGHTER",
+        "UID|31|UNIT_FIGHTER",
+        "UID|32|UNIT_BOMBER",
+        "UID|33|UNIT_BUILDER",
+        "UID|34|UNIT_AIRCRAFT_CARRIER",
+        "UID|35|UNIT_AIRCRAFT_CARRIER",
+        "UID|36|UNIT_DESTROYER",
+        "UID|37|UNIT_DESTROYER",
+        "UID|38|UNIT_TANK",
+        "UID|39|UNIT_INFANTRY",
+        "UID|40|UNIT_MACHINE_GUN",
+        "UID|41|UNIT_ARTILLERY",
+        "UID|42|UNIT_TANK",
+        "UID|43|UNIT_TANK",
+        "UID|44|UNIT_INFANTRY"
+      ]
+    }
+  ]
+}

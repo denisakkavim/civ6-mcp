@@ -2,7 +2,7 @@
   "tool": "get_world_congress",
   "arguments": {},
   "scenario": "turn37",
-  "recorded_at": "2026-08-16T20:27:25+00:00",
+  "recorded_at": "2026-08-24T17:15:32+00:00",
   "notes": null,
   "result": "World Congress: FIRES THIS TURN \u2014 use queue_world_congress_votes() before end_turn()!\nFavor: 20 | Vote costs (cumulative): 1 vote=free, 2=4, 3=12, 4=24",
   "exchanges": [

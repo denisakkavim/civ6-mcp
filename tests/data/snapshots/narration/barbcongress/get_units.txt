@@ -1,0 +1,15 @@
+5 units:
+  Swordsman (UNIT_SWORDSMAN) at (16,14) — CS:35 moves 2/2 [HP: 80/100] [id:3]
+  Spearman (UNIT_SPEARMAN) at (22,10) — CS:25 moves 1/2 [HP: 5/100] [id:5]
+  Archer (UNIT_ARCHER) at (17,14) — CS:15 RS:25 moves 2/2 [id:6]
+  Archer (UNIT_ARCHER) at (22,11) — CS:15 RS:25 moves 0/2 (no moves) [id:7]
+  Archer (UNIT_ARCHER) at (16,10) — CS:15 RS:25 moves 0/2 [HP: 68/100] (no moves) [id:8]
+
+Nearby threats (5):
+  Barbarian (2 units):
+    UNIT_SWORDSMAN at (15,8) — CS:35 HP:10/100 (1 tiles away) [id:4128792]
+    UNIT_HORSEMAN at (28,14) — CS:36 HP:100/100 (7 tiles away) [id:4128796]
+  Macedon (3 units):
+    UNIT_ARCHER at (19,14) — CS:15 RS:25 HP:100/100 (2 tiles away) [id:65537]
+    UNIT_ARCHER at (19,15) — CS:15 RS:25 HP:100/100 (3 tiles away) [id:65536]
+    UNIT_ARCHER at (16,17) — CS:15 RS:25 HP:100/100 (3 tiles away) [id:65543]

@@ -1,0 +1,19 @@
+== Action Required (4) ==
+  * Choose Production  -> Use: set_city_production(city_id=..., item_type=...)
+  * Choose Production  -> Use: set_city_production(city_id=..., item_type=...)
+  * Choose Production  -> Use: set_city_production(city_id=..., item_type=...)
+  * Choose Production  -> Use: set_city_production(city_id=..., item_type=...)
+
+== Notifications (12) ==
+  - Wonder Completed
+  - Wonder Completed
+  - Wonder Completed
+  - Wonder Completed
+  - Defeated! at (51,16)
+  - Defeated! at (12,20)
+  - Storm Rages On at (70,32)
+  - Gentle Volcanic Eruption at (17,26)
+  - Negotiated Peace
+  - Negotiated Peace
+  - Negotiated Peace
+  - Command Units  -> Units have moves remaining — move them or use skip_remaining_units()

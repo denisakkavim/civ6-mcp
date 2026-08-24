@@ -1,0 +1,27 @@
+{
+  "tool": "assign_governor",
+  "arguments": {
+    "governor_type": "GOVERNOR_THE_DEFENDER",
+    "city_id": 16777217
+  },
+  "scenario": "barbunits",
+  "recorded_at": "2026-08-24T17:53:17+00:00",
+  "notes": null,
+  "result": "ASSIGNED|Victor to Frankfurt",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CLEAR"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local pCity = CityManager.GetCity(me, 16777217 % 65536) if pCity == nil then print(\"ERR:CITY_NOT_FOUND\"); print(\"---END---\"); return end\nlocal gov = GameInfo.Governors[\"GOVERNOR_THE_DEFENDER\"]\nif gov == nil then print(\"ERR:GOVERNOR_NOT_FOUND|GOVERNOR_THE_DEFENDER\"); print(\"---END---\"); return end\nif PlayerOperations.ASSIGN_GOVERNOR == nil then print(\"ERR:API_MISSING|PlayerOperations.ASSIGN_GOVERNOR is nil\"); print(\"---END---\"); return end\nlocal params = {}\nparams[PlayerOperations.PARAM_GOVERNOR_TYPE] = gov.Index\nparams[PlayerOperations.PARAM_CITY_DEST] = pCity:GetID()\nparams[PlayerOperations.PARAM_PLAYER_ONE] = me\nUI.RequestPlayerOperation(me, PlayerOperations.ASSIGN_GOVERNOR, params)\nprint(\"OK:ASSIGNED|\" .. Locale.Lookup(gov.Name) .. \" to \" .. Locale.Lookup(pCity:GetName()))\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:ASSIGNED|Victor to Frankfurt"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+== Action Required (1) ==
+  * Choose Pantheon  -> Use: get_belief_options() then choose_pantheon(belief_type=...)
+
+== Notifications (1) ==
+  - Command Units  -> Units have moves remaining — move them or use skip_remaining_units()

@@ -1,0 +1,15 @@
+5 civilizations:
+  Macedon (Alexander) — NEUTRAL (-5) [player 1]
+    Cities: 1 (all in fog)
+    Military: 32 vs our 60 (0.5x)
+    Access: they have delegation
+    -1 Unknown Reason
+    +2 Unknown Reason
+    -6 Alexander is not happy to see your civilization is currently at peace.
+    Agenda: Short Life of Glory — Likes civilizations at war with major powers other than Macedon. Has disdain for civilizations at peace.  Grievances against this leader decay at twice the usual rate.
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Can: Diplomatic Delegation, Declare Friendship, Denounce, Declare War
+  Unmet Civilization (Unknown Leader) — not met
+  Unmet Civilization (Unknown Leader) — not met
+  Unmet Civilization (Unknown Leader) — not met
+  Unmet Civilization (Unknown Leader) — not met

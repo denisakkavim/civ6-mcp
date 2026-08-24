@@ -192,7 +192,24 @@ DISPATCHER_PLAN: list[tuple[str, dict, bool]] = [
         },
         True,
     ),
-    ("unit_action", {"unit_id": "$RELIGIOUS_UNIT", "action": "spread_religion"}, True),
+    # The rest of the builder verbs. Each acts where the unit stands, so each
+    # is refused unless the tile suits — which is what the specialist saves
+    # were made to provide. A refusal costs nothing: the recorder discards it
+    # and prints the reason.
+    (
+        "unit_action",
+        {
+            "unit_id": "$BUILDER_2",
+            "action": "repair",
+            "target_x": "$PILLAGED_X",
+            "target_y": "$PILLAGED_Y",
+        },
+        True,
+    ),
+    ("unit_action", {"unit_id": "$BUILDER_2", "action": "remove_feature"}, True),
+    ("unit_action", {"unit_id": "$BUILDER_2", "action": "remove_improvement"}, True),
+    ("unit_action", {"unit_id": "$ENGINEER", "action": "build_route"}, True),
+    ("unit_action", {"unit_id": "$BUILDER_2", "action": "sacrifice_charges"}, True),
     # Founding reshapes ownership and city lists, so it follows every read-like
     # verb above.
     ("unit_action", {"unit_id": "$SETTLER", "action": "found_city"}, True),
@@ -233,6 +250,17 @@ WRITE_PLAN: list[tuple[str, dict, bool]] = [
     # `test` mode asks the game what it would accept without committing, so a
     # recording of it does not reshape the diplomatic state of the save.
     ("propose_deal", {"player_id": "$MET_PLAYER", "mode": "test", "offer_gold": 50}, True),
+    # Each of these needs a game state the Inca saves never reach. The
+    # Barbarossa saves were made for them, one condition per save.
+    ("propose_peace", {"player_id": "$ENEMY_PLAYER"}, True),
+    ("send_envoy", {"player_id": "$ENVOY_TARGET"}, True),
+    ("choose_dedication", {"dedication_index": "$DEDICATION_INDEX"}, True),
+    ("choose_pantheon", {"belief_type": "$PANTHEON_BELIEF"}, True),
+    ("promote_unit", {"unit_id": "$PROMOTABLE", "promotion_type": "$PROMOTION"}, True),
+    ("appoint_governor", {"governor_type": "$APPOINTABLE_GOVERNOR", "city_id": "$CITY"}, True),
+    # Takes no city id: the game holds exactly one city awaiting a decision.
+    # Refused by name when there is none, so it costs a scenario nothing.
+    ("resolve_city_capture", {"action": "keep"}, True),
     ("set_government", {"government_type": "$GOVERNMENT"}, True),
     # Only legal while a session is open. Turn 37 is the one save that reports
     # "World Congress: FIRES THIS TURN"; everywhere else this skips.
@@ -353,6 +381,10 @@ async def _resolve(client, plan):
 
     builders = _all_matching(units_text, "UNIT_BUILDER")
     context["$BUILDER"] = builders[0] if builders else None
+    context["$ENGINEER"] = _first_matching(units_text, "UNIT_MILITARY_ENGINEER")
+    # A second builder for the charge-consuming verbs, so they do not compete
+    # with `improve` for the one builder a save may hold.
+    context["$BUILDER_2"] = builders[1] if len(builders) > 1 else None
     context["$SLEEPER"] = builders[1] if len(builders) > 1 else None
 
     # The numbered slots feed fortify / alert / automate, which a civilian
@@ -372,6 +404,17 @@ async def _resolve(client, plan):
     context["$UPGRADEABLE"] = _upgradeable_unit(units_text)
     if isinstance(context["$UPGRADEABLE"], int):
         claimed.add(context["$UPGRADEABLE"])
+
+    # A promotable unit must also keep its turn, for the same reason.
+    context["$PROMOTABLE"] = _promotable(units_text)
+    if isinstance(context["$PROMOTABLE"], int):
+        claimed.add(context["$PROMOTABLE"])
+
+    # `build_route` needs the engineer to still have its turn, so reserve it
+    # too. Unreserved it landed in a numbered slot, a stance verb spent its
+    # turn, and build_route was refused with NO_MOVES.
+    if isinstance(context.get("$ENGINEER"), int):
+        claimed.add(context["$ENGINEER"])
 
     military = [uid for uid in _military_units(units_text) if uid not in claimed]
     for slot in range(5):
@@ -438,6 +481,22 @@ async def _resolve(client, plan):
 
     diplomacy = await _call(client, "get_diplomacy", {})
     context["$MET_PLAYER"] = _met_major_player(diplomacy)
+    context["$ENEMY_PLAYER"] = _enemy_player(diplomacy)
+    context["$ENVOY_TARGET"] = _envoy_city_state(
+        await _call(client, "get_city_states", {})
+    )
+    context["$DEDICATION_INDEX"] = _dedication_index(
+        await _call(client, "get_dedications", {})
+    )
+    context["$PANTHEON_BELIEF"] = _pantheon_belief(
+        await _call(client, "get_belief_options", {})
+    )
+    if isinstance(context["$PROMOTABLE"], int):
+        context["$PROMOTION"] = _promotion_for(
+            await _call(client, "get_unit_promotions", {"unit_id": context["$PROMOTABLE"]})
+        )
+    else:
+        context["$PROMOTION"] = None
 
     great_people = await _call(client, "get_great_people", {})
     context["$GP_CANDIDATE"] = _affordable_great_person(great_people, faith)
@@ -463,10 +522,16 @@ async def _resolve(client, plan):
     context["$POLICY_SLOT"], context["$POLICY"] = policy if policy else (None, None)
 
     governors = await _call(client, "get_governors", {})
+    context["$APPOINTABLE_GOVERNOR"] = _appointable_governor(governors)
     governor = _governor_with_promotion(governors)
     context["$GOVERNOR"], context["$GOVERNOR_PROMOTION"] = (
         governor if governor else (None, None)
     )
+
+    # Repair acts on the tile the builder stands on, so it needs somewhere
+    # pillaged to go. Stage 3.2's move-then-act carries it there.
+    pillaged = _pillaged_tile(cities_text)
+    context["$PILLAGED_X"], context["$PILLAGED_Y"] = pillaged if pillaged else (None, None)
 
     attack = _attack_target(cities_text)
     if attack:
@@ -580,6 +645,97 @@ def _activation_district(sites: str) -> tuple[int, int] | None:
         if match:
             return int(match.group(1)), int(match.group(2))
     return None
+
+
+def _enemy_player(diplomacy: str) -> int | None:
+    """A major civ we are at war with."""
+    import re
+
+    for line in diplomacy.splitlines():
+        if "WAR" not in line.upper():
+            continue
+        match = re.search(r"\[player (\d+)\]", line)
+        if match:
+            return int(match.group(1))
+    return None
+
+
+def _envoy_city_state(city_states: str) -> int | None:
+    """A city-state we can send an envoy to right now.
+
+    `get_city_states` marks these `[can send]`, and only does so when tokens
+    are actually available — so this resolves to None between envoy grants.
+    """
+    import re
+
+    for line in city_states.splitlines():
+        if "[can send]" not in line:
+            continue
+        match = re.search(r"\[player (\d+)\]", line)
+        if match:
+            return int(match.group(1))
+    return None
+
+
+def _dedication_index(dedications: str) -> int | None:
+    """The index of a dedication offered this era, if one is being offered."""
+    import re
+
+    match = re.search(r"^\s*(\d+)[.):]\s", dedications, flags=re.M)
+    return int(match.group(1)) if match else None
+
+
+def _pantheon_belief(beliefs: str) -> str | None:
+    """A pantheon belief to choose, when no pantheon has been chosen yet."""
+    import re
+
+    if "Pantheon:" in beliefs and "index" in beliefs:
+        return None  # already has one
+    match = re.search(r"\((BELIEF_[A-Z_]+)\)", beliefs)
+    return match.group(1) if match else None
+
+
+def _promotable(units: str) -> int | None:
+    """A unit the game says has a promotion waiting."""
+    import re
+
+    for line in units.splitlines():
+        if "PROMOT" not in line.upper():
+            continue
+        match = re.search(r"id:(\d+)", line)
+        if match:
+            return int(match.group(1))
+    return None
+
+
+def _promotion_for(promotions: str) -> str | None:
+    """A promotion type from get_unit_promotions output."""
+    import re
+
+    match = re.search(r"\((PROMOTION_[A-Z_]+)\)", promotions)
+    return match.group(1) if match else None
+
+
+def _appointable_governor(governors: str) -> str | None:
+    """A governor we could appoint, when a point is available."""
+    import re
+
+    points = re.search(r"Governor Points:\s*(\d+) available", governors)
+    if not points or int(points.group(1)) == 0:
+        return None
+    section = governors.split("Available to appoint")
+    if len(section) < 2:
+        return None
+    match = re.search(r"\((GOVERNOR_[A-Z_]+)\)", section[1])
+    return match.group(1) if match else None
+
+
+def _pillaged_tile(cities: str) -> tuple[int, int] | None:
+    """A pillaged tile a builder could be sent to repair."""
+    import re
+
+    match = re.search(r"PILLAGED TILES:[^\n]*?@(\d+),(\d+)", cities)
+    return (int(match.group(1)), int(match.group(2))) if match else None
 
 
 def _substitute(value, context: dict, missing: list):

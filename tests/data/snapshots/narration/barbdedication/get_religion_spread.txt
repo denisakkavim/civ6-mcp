@@ -1,0 +1,12 @@
+Religious Victory Tracker:
+  RELIGION_PROTESTANTISM: majority in 1/6 civilizations
+
+Germany:
+  Aachen (pop 3) — none
+  Frankfurt (pop 3) — none
+  Trier (pop 3) — none
+Macedon:
+  Pella (pop 2) — none
+  Methone (pop 2) — none
+Kongo:
+  Mbanza Kongo (pop 6) — none

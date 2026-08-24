@@ -1,0 +1,10 @@
+Envoy tokens available: 0
+
+4 known city-states:
+  La Venta (Religious) — 0 envoys (Suzerain: Macedon) [player 7]
+    La Venta [city:17235968]
+  Mexico City (Industrial) — 3 envoys (Suzerain: Germany) [player 9]
+    Mexico City [city:17367040]
+  Ayutthaya (Cultural) — 3 envoys (Suzerain: Germany) [player 10]
+    Ayutthaya [city:17432576]
+  Free Cities (Unknown) — 0 envoys [player 62]

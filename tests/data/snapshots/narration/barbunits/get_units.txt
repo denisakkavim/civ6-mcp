@@ -1,0 +1,22 @@
+15 units:
+  Man-At-Arms (UNIT_MAN_AT_ARMS) at (21,10) — CS:45 moves 2/2 [HP: 6/100] **CAN UPGRADE to UNIT_MUSKETMAN (85g)** [id:0]
+  Man-At-Arms (UNIT_MAN_AT_ARMS) at (16,4) — CS:45 moves 2/2 **CAN UPGRADE to UNIT_MUSKETMAN (85g)** [id:1]
+  Trader (UNIT_TRADER) at (23,19) — moves 2/2 [ON ROUTE: Methone -> Mexico City (International)] [id:2]
+  Military Engineer (UNIT_MILITARY_ENGINEER) at (17,11) — moves 0/2 charges:2 (no moves) [id:4]
+  Trader (UNIT_TRADER) at (8,16) — moves 5/5 [ON ROUTE: Berlin -> Nag Mapu (International)] [id:5]
+  Bombard (UNIT_BOMBARD) at (17,14) — CS:45 moves 2/2 [id:6]
+  Frigate (UNIT_FRIGATE) at (1,12) — CS:45 RS:55 moves 5/5 [id:7]
+  Crossbowman (UNIT_CROSSBOWMAN) at (11,16) — CS:30 RS:40 moves 2/2 [id:8]
+  Trader (UNIT_TRADER) at (15,7) — moves 2/2 [ON ROUTE: Hamburg -> Methone (Domestic)] [id:9]
+  Crossbowman (UNIT_CROSSBOWMAN) at (23,10) — CS:30 RS:40 moves 0/2 [HP: 45/100] (no moves) [id:10]
+  Pikeman (UNIT_PIKEMAN) at (23,9) — CS:45 moves 2/2 [id:11]
+  Crossbowman (UNIT_CROSSBOWMAN) at (14,8) — CS:30 RS:40 moves 2/2 [id:12]
+  Trader (UNIT_TRADER) at (19,20) — moves 2/2 [ON ROUTE: Heidelberg -> Mbanza Nsundi (International)] [id:13]
+  Military Engineer (UNIT_MILITARY_ENGINEER) at (21,10) — moves 0/2 charges:2 (no moves) [id:15]
+  Settler (UNIT_SETTLER) at (23,10) — moves 0/2 (no moves) [id:17]
+
+Nearby threats (2):
+  Barbarian (1 unit):
+    UNIT_GALLEY at (5,24) — CS:30 HP:45/100 (8 tiles away) [id:4128782]
+  Kongo (1 unit):
+    UNIT_TREBUCHET at (18,21) — CS:35 HP:100/100 (1 tiles away) [id:327684]

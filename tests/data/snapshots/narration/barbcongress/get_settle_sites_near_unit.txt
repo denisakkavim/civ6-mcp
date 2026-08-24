@@ -1,0 +1,11 @@
+Top 5 settle locations:
+  #1 (14,16): Score 219 — 1t away — F:78 P:19 — fresh water, defense:2
+     [S] RESOURCE_HORSES, [L] RESOURCE_AMBER, [B] RESOURCE_RICE, [L] RESOURCE_AMBER, [L] RESOURCE_COCOA
+  #2 (15,18): Score 217 — 1t away — F:67 P:29 — fresh water, defense:1
+     [L] RESOURCE_AMBER, [B] RESOURCE_RICE, [L] RESOURCE_AMBER, [L] RESOURCE_COCOA, [B] RESOURCE_WHEAT, [S] RESOURCE_HORSES
+  #3 (16,19): Score 213 — 2t away — F:56 P:33 — fresh water, defense:2
+     [L] RESOURCE_AMBER, [L] RESOURCE_COCOA, [L] RESOURCE_PEARLS, [S] RESOURCE_HORSES, [L] RESOURCE_DIAMONDS
+  #4 (14,17): Score 210 — 1t away — F:72 P:22 — fresh water, defense:2
+     [L] RESOURCE_AMBER, [B] RESOURCE_RICE, [L] RESOURCE_AMBER, [L] RESOURCE_COCOA, [B] RESOURCE_WHEAT
+  #5 (16,18): Score 203 — unreachable — F:57 P:29 — fresh water, defense:1
+     [L] RESOURCE_AMBER, [B] RESOURCE_WHEAT, [L] RESOURCE_AMBER, [L] RESOURCE_COCOA, [L] RESOURCE_PEARLS, [S] RESOURCE_HORSES

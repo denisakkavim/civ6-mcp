@@ -2,9 +2,9 @@
   "tool": "get_game_overview",
   "arguments": {},
   "scenario": "turn57",
-  "recorded_at": "2026-08-16T20:58:14+00:00",
+  "recorded_at": "2026-08-24T17:18:51+00:00",
   "notes": null,
-  "result": "Turn 57 | Inca (Pachacuti) | Score: 105 | Prince\nGold: 371 (+4/turn) | Income: 8 | Maintenance: -4 (units: 2) | Science: 6.9 | Culture: 7.7 | Faith: 151 | Favor: 20 (+1/turn)\nResearch: Horseback Riding | Civic: Drama and Poetry\nCities: 3 | Population: 10 | Units: 10 \u2014 3 Warrior, 2 Archer, 2 Slinger, 1 Settler, 1 Trader, 1 Builder\nExplored: 33% of land (268/790 tiles)\nReligion: none yet (2/3 slots remaining \u2014 Great Prophet needed)\nEra: Classical Era | Score: 27 (Dark: 19, Golden: 30)\nRankings: Georgia 162 > Inca 105",
+  "result": "Turn 57 | Inca (Pachacuti) | Score: 105 | Prince\nGold: 371 (+4/turn) | Income: 8 | Maintenance: -4 (units: 2) | Science: 6.9 | Culture: 7.7 | Faith: 151 | Favor: 20 (+1/turn)\nResearch: Horseback Riding | Civic: Drama and Poetry\nCities: 3 | Population: 10 | Units: 10 \u2014 3 Warrior, 2 Archer, 2 Slinger, 1 Builder, 1 Settler, 1 Trader\nExplored: 33% of land (268/790 tiles)\nReligion: none yet (2/3 slots remaining \u2014 Great Prophet needed)\nEra: Classical Era | Score: 27 (Dark: 19, Golden: 30)\nRankings: Georgia 162 > Inca 105",
   "exchanges": [
     {
       "context": "write",
@@ -18,7 +18,7 @@
         "ERA|Classical Era|27|19|30",
         "MAXTURNS|0",
         "DIFFICULTY|Prince",
-        "UNITBREAKDOWN|Warrior:3,Archer:2,Slinger:2,Settler:1,Trader:1,Builder:1|2"
+        "UNITBREAKDOWN|Warrior:3,Archer:2,Slinger:2,Builder:1,Settler:1,Trader:1|2"
       ]
     },
     {

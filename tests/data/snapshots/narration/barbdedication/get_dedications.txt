@@ -1,0 +1,10 @@
+Normal Age — Classical Era
+Era Score: 24 (Dark: 40, Golden: 54)
+
+1 dedication(s) to choose:
+  [0] COMMEMORATION_SCIENTIFIC: Free Inquiry Dedication Bonus:[NEWLINE]Gain +1 Era Score each time you trigger a [ICON_TechBoosted] Eureka. +1 Era Score for constructing a building that provides Science as a base yield.
+  [1] COMMEMORATION_CULTURAL: Pen, Brush, and Voice Dedication Bonus:[NEWLINE]Gain +1 Era Score each time you trigger an [ICON_CivicBoosted] Inspiration. +1 Era Score for constructing a building with a Great Work Slot.
+  [2] COMMEMORATION_INFRASTRUCTURE: Monumentality Dedication Bonus:[NEWLINE]Gain +1 Era Score each time you construct a new specialty District.
+  [3] COMMEMORATION_RELIGIOUS: Exodus of the Evangelists Dedication Bonus:[NEWLINE]Gain +2 Era Score each time you convert a city to your founded Religion for the first time.
+
+Use choose_dedication(dedication_index=N) to select.

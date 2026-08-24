@@ -2,7 +2,7 @@
   "tool": "get_notifications",
   "arguments": {},
   "scenario": "turn57",
-  "recorded_at": "2026-08-16T20:58:27+00:00",
+  "recorded_at": "2026-08-24T17:19:04+00:00",
   "notes": null,
   "result": "== Action Required (1) ==\n  * Choose Production  -> Use: set_city_production(city_id=..., item_type=...)\n\n== Notifications (8) ==\n  - Wonder Completed\n  - Wonder Completed\n  - Production Salvaged [Inca] (City Center) at (45,12)\n  - Major River Flooding at (56,28)\n  - First Civic of New Era\n  - Discovered Political Philosophy\n  - First Tier 1 Government\n  - Tribal Village Discovered at (0,12)",
   "exchanges": [

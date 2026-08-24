@@ -1,0 +1,33 @@
+{
+  "tool": "get_purchasable_tiles",
+  "arguments": {
+    "city_id": 16777216
+  },
+  "scenario": "barbwar2",
+  "recorded_at": "2026-08-24T17:47:44+00:00",
+  "notes": null,
+  "result": "15 purchasable tiles:\n  (12,10): 125g \u2014 Grassland [Tobacco+]\n  (16,7): 125g \u2014 Tundra (Hills) Hills [Sheep]\n  (14,5): 125g \u2014 Tundra [Deer]\n  (14,10): 85g \u2014 Grassland\n  (15,9): 85g \u2014 Grassland\n  (15,7): 85g \u2014 Tundra\n  (15,6): 85g \u2014 Tundra\n  (13,10): 85g \u2014 Coast and Lake\n  (12,8): 85g \u2014 Grassland\n  (11,7): 125g \u2014 Coast and Lake\n  (12,6): 125g \u2014 Tundra\n  (11,9): 125g \u2014 Grassland\n  (17,8): 125g \u2014 Tundra (Hills) Hills\n  (16,9): 125g \u2014 Grassland\n  (12,5): 125g \u2014 Snow",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local pCity = CityManager.GetCity(me, 16777216 % 65536) if pCity == nil then print(\"ERR:CITY_NOT_FOUND\"); print(\"---END---\"); return end\nlocal pTech = Players[me]:GetTechs()\nlocal targets = CityManager.GetCommandTargets(pCity, CityCommandTypes.PURCHASE, {[CityCommandTypes.PARAM_PLOT_PURCHASE] = 1})\nif targets == nil then print(\"ERR:NO_TARGETS|No purchasable tiles found\"); print(\"---END---\"); return end\nlocal plotIndices = {}\nfor k, v in pairs(targets) do\n    if type(v) == \"table\" then\n        for _, idx in ipairs(v) do table.insert(plotIndices, idx) end\n    end\nend\nif #plotIndices == 0 then print(\"ERR:NO_TILES|No purchasable tiles\"); print(\"---END---\"); return end\nlocal results = {}\nfor _, pIdx in ipairs(plotIndices) do\n    local plot = Map.GetPlotByIndex(pIdx)\n    if plot then\n        local px, py = plot:GetX(), plot:GetY()\n        local cost = pCity:GetGold():GetPlotPurchaseCost(px, py)\n        if cost > 0 then\n            local terrain = \"\"\n            local tInfo = GameInfo.Terrains[plot:GetTerrainType()]\n            if tInfo then terrain = Locale.Lookup(tInfo.Name) end\n            if plot:IsHills() then terrain = terrain .. \" Hills\" end\n            local resName, resClass = \"\", \"\"\n            local res = plot:GetResourceType()\n            if res >= 0 then\n                local rInfo = GameInfo.Resources[res]\n                if rInfo then\n                    local rTechOk = true\n                    if rInfo.PrereqTech then\n                        local rt = GameInfo.Technologies[rInfo.PrereqTech]\n                        if rt and not pTech:HasTech(rt.Index) then rTechOk = false end\n                    end\n                    if rTechOk then\n                        resName = Locale.Lookup(rInfo.Name)\n                        local rc = rInfo.ResourceClassType\n                        if rc == \"RESOURCECLASS_STRATEGIC\" then resClass = \"strategic\"\n                        elseif rc == \"RESOURCECLASS_LUXURY\" then resClass = \"luxury\"\n                        else resClass = \"bonus\" end\n                    end\n                end\n            end\n            local sortKey = 0\n            if resClass == \"luxury\" then sortKey = 3\n            elseif resClass == \"strategic\" then sortKey = 2\n            elseif resClass == \"bonus\" then sortKey = 1 end\n            table.insert(results, {x=px, y=py, cost=cost, terrain=terrain, res=resName, cls=resClass, sk=sortKey})\n        end\n    end\nend\ntable.sort(results, function(a, b)\n    if a.sk ~= b.sk then return a.sk > b.sk end\n    return a.cost < b.cost\nend)\nfor i = 1, math.min(#results, 15) do\n    local r = results[i]\n    print(\"PTILE|\" .. r.x .. \",\" .. r.y .. \"|\" .. r.cost .. \"|\" .. r.terrain .. \"|\" .. r.res .. \"|\" .. r.cls)\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "PTILE|12,10|125|Grassland|Tobacco|luxury",
+        "PTILE|16,7|125|Tundra (Hills) Hills|Sheep|bonus",
+        "PTILE|14,5|125|Tundra|Deer|bonus",
+        "PTILE|14,10|85|Grassland||",
+        "PTILE|15,9|85|Grassland||",
+        "PTILE|15,7|85|Tundra||",
+        "PTILE|15,6|85|Tundra||",
+        "PTILE|13,10|85|Coast and Lake||",
+        "PTILE|12,8|85|Grassland||",
+        "PTILE|11,7|125|Coast and Lake||",
+        "PTILE|12,6|125|Tundra||",
+        "PTILE|11,9|125|Grassland||",
+        "PTILE|17,8|125|Tundra (Hills) Hills||",
+        "PTILE|16,9|125|Grassland||",
+        "PTILE|12,5|125|Snow||"
+      ]
+    }
+  ]
+}

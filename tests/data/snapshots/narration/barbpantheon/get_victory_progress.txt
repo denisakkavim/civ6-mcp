@@ -1,0 +1,52 @@
+=== VICTORY PROGRESS ===
+
+Enabled: Science, Domination, Culture, Religious, Diplomatic
+
+SCIENCE VICTORY (launch 4 space projects = 50 VP)
+  Germany: 0/50 VP | 2 techs | 0 spaceport(s) [0/50] <--
+  Macedon: 0/50 VP | 2 techs | 0 spaceport(s) [0/50]
+
+  YOUR SPACE PROJECT CHAIN:
+    [LOCKED] Launch Earth Satellite -- requires TECH_ROCKETRY (NEED)
+    [LOCKED] Launch Moon Landing -- requires TECH_SATELLITES (NEED)
+    [LOCKED] Launch Exoplanet Expedition -- requires TECH_OFFWORLD_MISSION (NEED)
+
+DOMINATION (own all original capitals)
+  Germany: holds own capital | military 60 <--
+  Macedon: holds own capital | military 32
+
+CULTURE (your tourists > every civ's domestic tourists)
+  Our domestic tourists: 0
+  vs Macedon: 0/0 tourists (DOMINANT)
+
+RELIGION (your religion majority in all civs — slots: 0/4)
+  Germany: majority=none | 0 cities converted <--
+  Macedon: majority=none | 0 cities converted
+
+DIPLOMATIC (20 VP from World Congress)
+  Germany: 0/20 VP <--
+  Macedon: 0/20 VP
+
+SCORE (highest at turn 500)
+  Germany: 24 <--
+  Macedon: 20
+
+RIVAL INTELLIGENCE (met civilizations)
+  Germany: 1 cities | Sci 3 Cul 2 Gold +8 | Mil 60 <--
+  Macedon: 1 cities | Sci 3 Cul 4 Gold +6 | Mil 32
+
+DEMOGRAPHICS (all civilizations)
+  Population   Rank 6 | Ours: 2 | Best: 4 | Avg: 3.0 | Worst: 2
+  Soldiers     Rank 2 | Ours: 60 | Best: 74 | Avg: 51.0 | Worst: 30
+  Crop Yield   Rank 6 | Ours: 5 | Best: 13 | Avg: 9.0 | Worst: 5
+  GNP          Rank 3 | Ours: 8 | Best: 13 | Avg: 8.7 | Worst: 6
+  Land         Rank 5 | Ours: 9 | Best: 17 | Avg: 11.0 | Worst: 9
+  Goods        Rank 6 | Ours: 6 | Best: 15 | Avg: 11.1 | Worst: 6
+
+VICTORY ASSESSMENT
+  Culture      [#########-] 95% — CULTURALLY DOMINANT over all civs! ** RECOMMENDED **
+  Science      [######----] 60% — Near tech lead (0 behind best known: Germany (2))
+  Domination   [####------] 40% — Strong military (60 vs best 74), 1 known capitals to capture
+  Score        [##--------] 25% — Rank #6 by population (proxy for score)
+  Diplomatic   [##--------] 20% — 0/20 VP — slow accumulation
+  Religion     [----------] 0% — No founded religion — path closed

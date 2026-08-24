@@ -1,0 +1,1 @@
+OK:PATRONIZED|Sergei Gorshkov|cost:1450 faith|unit_id:1|UNIT_GREAT_ADMIRAL

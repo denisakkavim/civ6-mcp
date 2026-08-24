@@ -1,0 +1,1 @@
+MOVING_TO|14,8|from:22,10|now_at:20,10|(moved dx:-2 dy:+0)|STOPPED_MID_PATH (moves exhausted)

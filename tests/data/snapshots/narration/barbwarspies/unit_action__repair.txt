@@ -1,0 +1,1 @@
+MOVED_PARTIAL|at=(47,15)|target=(18,8)|remaining=0|Re-issue repair with the same target next turn. Move detail: MOVING_TO|18,8|from:51,16

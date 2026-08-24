@@ -1,0 +1,59 @@
+Empire Resources:
+
+Strategic Stockpiles:
+  RESOURCE_HORSES: 50/50 (+2/turn) [income 2]
+  RESOURCE_IRON: 8/50 (+6/turn) [income 6]
+
+Luxury Resources:
+  RESOURCE_DIAMONDS: 1
+
+Strategic Tiles:
+  !! RESOURCE_HORSES — UNIMPROVED at (12,12) — needs builder!
+  !! RESOURCE_HORSES — UNIMPROVED at (14,13) — needs builder!
+  RESOURCE_HORSES — improved at (18,11)
+  RESOURCE_IRON — improved at (20,11)
+  RESOURCE_IRON — improved at (21,10)
+  RESOURCE_IRON — improved at (22,11)
+
+Luxury Tiles:
+  RESOURCE_DIAMONDS — improved at (14,7)
+  !! RESOURCE_TOBACCO — UNIMPROVED at (14,9) — needs builder!
+  !! RESOURCE_AMBER — UNIMPROVED at (15,15) — needs builder!
+  !! RESOURCE_COCOA — UNIMPROVED at (15,18) — needs builder!
+  RESOURCE_DIAMONDS — improved at (18,8)
+
+Bonus Tiles:
+  RESOURCE_DEER — UNIMPROVED at (13,6)
+  RESOURCE_STONE — improved at (13,9)
+  RESOURCE_RICE — UNIMPROVED at (13,16)
+  RESOURCE_STONE — improved at (15,10)
+  RESOURCE_RICE — UNIMPROVED at (16,11)
+  RESOURCE_WHEAT — improved at (17,15)
+
+Nearby Unclaimed:
+  [B] RESOURCE_DEER at (15,4) — 4 tiles from Aachen
+  [B] RESOURCE_DEER at (14,5) — 3 tiles from Aachen
+  [B] RESOURCE_DEER at (18,5) — 6 tiles from Aachen
+  [B] RESOURCE_FISH at (11,6) — 4 tiles from Aachen
+  [B] RESOURCE_SHEEP at (16,7) — 3 tiles from Aachen
+  [B] RESOURCE_FISH at (10,10) — 5 tiles from Aachen
+  [L] RESOURCE_TOBACCO at (12,10) — 3 tiles from Aachen
+  [B] RESOURCE_FISH at (10,11) — 5 tiles from Aachen
+  [B] RESOURCE_COPPER at (22,13) — 6 tiles from Frankfurt
+  [B] RESOURCE_WHEAT at (21,14) — 5 tiles from Frankfurt
+  [B] RESOURCE_WHEAT at (21,15) — 6 tiles from Frankfurt
+  [B] RESOURCE_COPPER at (23,15) — 8 tiles from Frankfurt
+  [L] RESOURCE_AMBER at (16,17) — 5 tiles from Trier
+  [L] RESOURCE_PEARLS at (18,19) — 5 tiles from Methone
+  [B] RESOURCE_DEER at (20,19) — 6 tiles from Methone
+  [S] RESOURCE_IRON at (24,7) — 4 tiles from Heidelberg
+  [B] RESOURCE_WHEAT at (24,9) — 3 tiles from Heidelberg
+  [B] RESOURCE_WHEAT at (24,10) — 2 tiles from Heidelberg
+  [B] RESOURCE_RICE at (26,10) — 4 tiles from Heidelberg
+  [B] RESOURCE_RICE at (25,11) — 4 tiles from Heidelberg
+  [B] RESOURCE_WHEAT at (24,12) — 3 tiles from Heidelberg
+  [S] RESOURCE_HORSES at (27,12) — 6 tiles from Heidelberg
+  [B] RESOURCE_COPPER at (25,13) — 5 tiles from Heidelberg
+  [B] RESOURCE_SHEEP at (25,15) — 6 tiles from Heidelberg
+  [B] RESOURCE_WHEAT at (13,20) — 4 tiles from Alexandria
+  [S] RESOURCE_HORSES at (17,20) — 5 tiles from Alexandria

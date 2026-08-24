@@ -1,0 +1,33 @@
+{
+  "tool": "queue_world_congress_votes",
+  "arguments": {
+    "votes": [
+      {
+        "hash": -1934671345,
+        "option": 1,
+        "target": 0,
+        "votes": 1
+      }
+    ]
+  },
+  "scenario": "barbcongress",
+  "recorded_at": "2026-08-24T17:57:20+00:00",
+  "notes": null,
+  "result": "WC_VOTER_REGISTERED",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CRITICAL"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\n-- Clean up any stale handler\nif __civmcp_wc_handler then\n    pcall(function() Events.WorldCongressStage1.Remove(__civmcp_wc_handler) end)\n    __civmcp_wc_handler = nil\nend\n\n__civmcp_wc_votes = {[\"-1934671345\"] = {o=1, t=0, v=1}}\n\nlocal function handler()\n    local me = Game.GetLocalPlayer()\n    local wc = Game.GetWorldCongress()\n    if not wc or not wc:IsInSession() then return end\n\n    local favor = Players[me]:GetFavor()\n    local costs = wc:GetVotesandFavorCost()\n    local maxV = costs.MaxVotes or 5\n    local ress = wc:GetResolutions()\n    if not ress or #ress == 0 then\n        UI.RequestPlayerOperation(me, PlayerOperations.WORLD_CONGRESS_SUBMIT_TURN, {})\n        __civmcp_wc_votes = nil\n        pcall(function() Events.WorldCongressStage1.Remove(__civmcp_wc_handler) end)\n        __civmcp_wc_handler = nil\n        return\n    end\n\n    local prefs = __civmcp_wc_votes\n    local nRes = #ress\n\n    for ri, res in ipairs(ress) do\n        local rHash = res.Type\n        local pref = prefs and prefs[tostring(rHash)]\n        local option = pref and pref.o or 1\n        local maxWanted = pref and pref.v or maxV\n\n        -- Resolve target: pref.t is a player ID (for PlayerType) or raw value\n        -- Find the matching 0-based index in PossibleTargets\n        local targetIdx = 0\n        if pref and pref.t and res.PossibleTargets then\n            local isPlayerType = (res.TargetType == \"PlayerType\")\n            for ti, tgt in ipairs(res.PossibleTargets) do\n                if isPlayerType then\n                    if tonumber(tgt) == pref.t then targetIdx = ti - 1 end\n                else\n                    if tostring(tgt) == tostring(pref.t) then targetIdx = ti - 1 end\n                end\n            end\n        end\n\n        local votesForThis = 1\n        local costForThis = 0\n\n        -- costs[i] is CUMULATIVE cost for (i+1) total votes\n        -- So for v total votes, total cost = costs[v-1]\n        if prefs then\n            for v = 2, math.min(maxWanted, maxV) do\n                local totalCost = costs[v - 1] or 99999\n                if totalCost <= favor then\n                    costForThis = totalCost\n                    votesForThis = v\n                else break end\n            end\n        else\n            local resLeft = nRes - ri\n            local budgetPerRes = math.floor(favor / (resLeft + 1))\n            for v = 2, maxV do\n                local totalCost = costs[v - 1] or 99999\n                if totalCost <= budgetPerRes then\n                    costForThis = totalCost\n                    votesForThis = v\n                else break end\n            end\n        end\n\n        favor = favor - costForThis\n\n        local kParams = {}\n        kParams[PlayerOperations.PARAM_RESOLUTION_TYPE] = rHash\n        kParams[PlayerOperations.PARAM_WORLD_CONGRESS_VOTES] = votesForThis\n        kParams[PlayerOperations.PARAM_RESOLUTION_OPTION] = option\n        kParams[PlayerOperations.PARAM_RESOLUTION_SELECTION] = targetIdx\n        UI.RequestPlayerOperation(me, PlayerOperations.WORLD_CONGRESS_RESOLUTION_VOTE, kParams)\n    end\n\n    UI.RequestPlayerOperation(me, PlayerOperations.WORLD_CONGRESS_SUBMIT_TURN, {})\n\n    __civmcp_wc_votes = nil\n    pcall(function() Events.WorldCongressStage1.Remove(__civmcp_wc_handler) end)\n    __civmcp_wc_handler = nil\nend\n\n__civmcp_wc_handler = handler\nEvents.WorldCongressStage1.Add(handler)\nprint(\"OK:WC_VOTER_REGISTERED\")\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:WC_VOTER_REGISTERED"
+      ]
+    }
+  ]
+}

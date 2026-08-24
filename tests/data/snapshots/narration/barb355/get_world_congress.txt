@@ -1,0 +1,6 @@
+World Congress: Next session in 6 turns
+Favor: 0
+
+  Mercenary Companies — Outcome A (Production): Producing, or purchasing military units using the chosen currency type, is +100% of the cost until the next World Congress.
+  Global Energy Treaty — Outcome ? (Oil Power Plant): 
+  Diplomatic Victory — Outcome A (Kongo): Chosen Player gains 2 Diplomatic Victory points.

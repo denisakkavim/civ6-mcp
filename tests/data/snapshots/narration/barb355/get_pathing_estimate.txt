@@ -1,0 +1,2 @@
+~2 turns (19 tiles total, 7 reachable this turn)
+  Path: (4,20) -> ... -> (14,8)

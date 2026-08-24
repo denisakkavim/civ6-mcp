@@ -1,0 +1,26 @@
+{
+  "tool": "send_envoy",
+  "arguments": {
+    "player_id": 7
+  },
+  "scenario": "barbenvoy",
+  "recorded_at": "2026-08-24T18:01:05+00:00",
+  "notes": null,
+  "result": "ENVOY_SENT|La Venta",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CRITICAL"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pInfluence = Players[me]:GetInfluence()\nif pInfluence:GetTokensToGive() <= 0 then print(\"ERR:NO_ENVOYS|No envoy tokens available\"); print(\"---END---\"); return end\nif not pInfluence:CanGiveTokensToPlayer(7) then\n    print(\"ERR:CANNOT_SEND|Cannot send envoy to player 7\"); print(\"---END---\"); return\nend\nlocal params = {}\nparams[PlayerOperations.PARAM_PLAYER_ONE] = 7\nparams[PlayerOperations.PARAM_FLAGS] = 0\nUI.RequestPlayerOperation(me, PlayerOperations.GIVE_INFLUENCE_TOKEN, params)\nlocal cfg = PlayerConfigurations[7]\nlocal name = cfg and Locale.Lookup(cfg:GetPlayerName()) or \"Unknown\"\nprint(\"OK:ENVOY_SENT|\" .. name)\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:ENVOY_SENT|La Venta"
+      ]
+    }
+  ]
+}

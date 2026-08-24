@@ -1,0 +1,54 @@
+45 trade route destinations:
+
+Domestic (food + production to destination):
+  Aachen at (14,8) [city:16777216] | Food:2 Prod:4 Gold:2 | Trading Post Protestantism <- 0.5
+  Frankfurt at (18,10) [city:16777217] | Food:2 Prod:3 Gold:2
+  Trier at (14,12) [city:16777218] | Food:2 Prod:2 Gold:2
+  Methone at (17,14) [city:16777219] | Food:3 Prod:4 Gold:2 | Trading Post
+  Heidelberg at (22,10) [city:16777220] | Food:2 Prod:3 Gold:2
+  Berlin at (11,16) [city:16777221] | Food:1 Prod:3 Gold:2 | Trading Post
+  Hamburg at (16,4) [city:16777222] | Food:1 Prod:2 Gold:2
+  Pella at (19,17) [city:16777223] | Food:2 Prod:2 Gold:2
+
+International (gold to origin):
+  Ngulu Mapu (Mapuche) at (63,33) [city:16908288] | Prod:2 Gold:8 Sci:1 | Zoroastrianism <- 0.5
+  Ina Pire Mapu (Mapuche) at (63,37) [city:16908289] | Prod:1 Gold:6 Sci:1 Cul:1 | Zoroastrianism <- 0.5
+  Wente Mapu (Mapuche) at (66,39) [city:16908290] | Food:1 Gold:5 | Zoroastrianism <- 0.5
+  Willi Mapu (Mapuche) at (60,39) [city:16908292] | Gold:5 Cul:1 Faith:1 | Zoroastrianism <- 0.5
+  Huilli Mapu (Mapuche) at (66,35) [city:16908293] | Gold:8 | Zoroastrianism <- 0.5
+  Nag Mapu (Mapuche) at (69,37) [city:16908294] | Gold:10 Cul:1 | Zoroastrianism <- 0.5
+  London (England) at (52,26) [city:16973824] | Prod:1 Gold:13 Sci:1 Cul:1 Faith:1 -> dest: Gold:2 | Protestantism <- 0.5
+  Newcastle upon Tyne (England) at (55,27) [city:16973825] | Prod:1 Gold:7 Sci:1 Faith:1 | Protestantism <- 0.5
+  Leeds (England) at (57,23) [city:16973826] | Prod:1 Gold:7 Sci:1 Faith:1 | Protestantism <- 0.5
+  Liverpool (England) at (53,30) [city:16973827] | Food:1 Gold:10 Sci:1 | Protestantism <- 0.5
+  Manchester (England) at (55,33) [city:16973828] | Prod:1 Gold:6 Sci:1 | Protestantism <- 0.5
+  Bradford (England) at (58,30) [city:16973829] | Gold:6 Cul:1 | Protestantism <- 0.5
+  Rangkül Mapu (England) at (60,27) [city:16973830] | Prod:1 Gold:5 Sci:1 | Protestantism <- 0.5
+  Tbilisi (Georgia) at (59,17) [city:17039360] | Food:1 Prod:2 Gold:6 Sci:1 Cul:1 Faith:1 | Protestantism <- 0.5
+  Kutaisi (Georgia) at (55,16) [city:17039361] | Gold:8 Sci:1 Faith:1 | Protestantism <- 0.5
+  Zugdidi (Georgia) at (54,20) [city:17039362] | Prod:1 Gold:8 Sci:1 | Protestantism <- 0.5
+  Telavi (Georgia) at (62,19) [city:17039363] | Gold:7 Sci:1 Faith:1 | Eastern Orthodoxy <- 0.5
+  Batumi (Georgia) at (66,19) [city:17039364] | Gold:6 Cul:1 Faith:1 | Protestantism <- 0.5
+  Gori (Georgia) at (69,22) [city:17039365] | Gold:9 | Protestantism <- 0.5
+  Tskhumi (Georgia) at (57,13) [city:17039366] | Prod:1 Gold:5 | Eastern Orthodoxy <- 0.5
+  Tsageri (Georgia) at (53,12) [city:17039367] | Gold:6 | Eastern Orthodoxy <- 0.5
+  Mbanza Kongo (Kongo) at (24,29) [city:17104896] | Prod:1 Gold:11 Sci:1 Cul:1
+  Kinchassa (Kongo) at (22,33) [city:17104897] | Food:1 Gold:6 Sci:1
+  Mbumbi (Kongo) at (21,28) [city:17104898] | Prod:2 Gold:7 Sci:1 Cul:1
+  Kwango (Kongo) at (26,25) [city:17104899] | Prod:1 Gold:8.81640625 Sci:1 Cul:1
+  Mbanza Nsundi (Kongo) at (19,23) [city:17104900] | Prod:1 Gold:11.203125 Sci:1 Cul:1 | Trading Post
+  Mbanza Mbata (Kongo) at (23,23) [city:17104901] | Gold:9.203125 Sci:1 Cul:1
+  Mbamba (Kongo) at (11,26) [city:17104902] | Gold:6.67578125
+  Anshan (Anshan) at (68,26) [city:17170432] | Gold:6 Sci:1 | [QUEST] Eastern Orthodoxy <- 0.5
+  La Venta (La Venta) at (16,24) [city:17235968] | Gold:6 Faith:1 | [QUEST]
+  Venice (Venice) at (7,26) [city:17301504] | Gold:12.6328125
+  Mexico City (Mexico City) at (27,18) [city:17367040] | Prod:1 Gold:7.8984375
+  Ayutthaya (Ayutthaya) at (12,20) [city:17432576] | Gold:7.765625 Cul:1
+  Zanzibar (Zanzibar) at (51,16) [city:17498112] | Gold:11 | Protestantism <- 0.5
+  Bandar Brunei (Bandar Brunei) at (63,23) [city:17563648] | Gold:11 | Protestantism <- 0.5
+  Preslav (Preslav) at (58,36) [city:17629184] | Gold:5
+  Kumasi (Kumasi) at (56,9) [city:17694720] | Gold:5 | Eastern Orthodoxy <- 0.5
+
+City-state quests (send trade route for envoy): Anshan, La Venta
+
+Use unit_action with action='trade_route', target_x=X, target_y=Y

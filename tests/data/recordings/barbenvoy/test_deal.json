@@ -1,0 +1,34 @@
+{
+  "tool": "test_deal",
+  "arguments": {
+    "player_id": 1,
+    "offer_items": [
+      {
+        "type": "GOLD",
+        "amount": 50,
+        "duration": 0
+      }
+    ],
+    "request_items": []
+  },
+  "scenario": "barbenvoy",
+  "recorded_at": "2026-08-24T18:01:02+00:00",
+  "notes": null,
+  "result": "Trade test with  (player 0):\n\nYour proposal:\n\nAI response: ACCEPTABLE \u2014 this deal would be accepted as-is",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CLEAR"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal target = 1\nlocal pDiplo = Players[me]:GetDiplomacy()\nif not pDiplo:HasMet(target) then print(\"ERR:NOT_MET|Have not met player 1\"); print(\"---END---\"); return end\nif pDiplo:IsAtWarWith(target) then print(\"ERR:AT_WAR|Cannot trade while at war\"); print(\"---END---\"); return end\nlocal name = Locale.Lookup(PlayerConfigurations[target]:GetCivilizationShortDescription())\nprint(\"CIV|\" .. target .. \"|\" .. name:gsub(\"|\",\"/\"))\npcall(function()\n    local sid = DiplomacyManager.FindOpenSessionID(me, target)\n    if sid and sid >= 0 then DiplomacyManager.CloseSession(sid) end\nend)\nDiplomacyManager.RequestSession(me, target, \"MAKE_DEAL\")\nDealManager.ClearWorkingDeal(DealDirection.OUTGOING, me, target)\nlocal deal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, me, target)\nif not deal then print(\"ERR:NO_DEAL_OBJECT|Failed to get working deal\"); print(\"---END---\"); return end\ndo local gi = deal:AddItemOfType(DealItemTypes.GOLD, me) if gi then gi:SetAmount(50) gi:SetDuration(0) end end\n\nprint(\"PROPOSED_ITEMS\")\nfor item in deal:Items() do\n    local fromTag = item:GetFromPlayerID() == me and \"US\" or \"THEM\"\n    local itype = item:GetType()\n    local typeName = \"UNKNOWN\"\n    local ok3, vid = pcall(function() return item:GetValueTypeID() end); vid = (ok3 and vid) and tostring(vid) or \"\"\n    local ok4, sid2 = pcall(function() return item:GetSubTypeID() end); sid2 = (ok4 and sid2) and tostring(sid2) or \"\"\n    local amount = item:GetAmount() or 0\n    local duration = item:GetDuration() or 0\n    if itype == DealItemTypes.GOLD then typeName = \"GOLD\"\n    elseif itype == DealItemTypes.RESOURCES then typeName = \"RESOURCE\"\n    elseif itype == DealItemTypes.AGREEMENTS then typeName = \"AGREEMENT\"\n    elseif itype == DealItemTypes.FAVOR then typeName = \"FAVOR\"\n    elseif itype == DealItemTypes.CITIES then typeName = \"CITY\"\n    elseif itype == DealItemTypes.GREATWORK then typeName = \"GREAT_WORK\"\n    end\n    print(\"ITEM|\" .. fromTag .. \"|\" .. typeName .. \"|\" .. amount .. \"|\" .. duration .. \"|\" .. vid .. \"|\" .. sid2)\nend\nDealManager.SendWorkingDeal(DealProposalAction.EQUALIZE, me, target)\nlocal inDeal = DealManager.GetWorkingDeal(DealDirection.INCOMING, me, target)\nif inDeal and inDeal:GetItemCount() and inDeal:GetItemCount() > 0 then\n    print(\"AI_COUNTER\")\n    for item in inDeal:Items() do\n        local fromTag = item:GetFromPlayerID() == me and \"US\" or \"THEM\"\n        local itype = item:GetType()\n        local typeName = \"UNKNOWN\"\n        local ok3, vid = pcall(function() return item:GetValueTypeID() end); vid = (ok3 and vid) and tostring(vid) or \"\"\n        local ok4, sid2 = pcall(function() return item:GetSubTypeID() end); sid2 = (ok4 and sid2) and tostring(sid2) or \"\"\n        local amount = item:GetAmount() or 0\n        local duration = item:GetDuration() or 0\n        if itype == DealItemTypes.GOLD then typeName = \"GOLD\"\n        elseif itype == DealItemTypes.RESOURCES then typeName = \"RESOURCE\"\n        elseif itype == DealItemTypes.AGREEMENTS then typeName = \"AGREEMENT\"\n        elseif itype == DealItemTypes.FAVOR then typeName = \"FAVOR\"\n        elseif itype == DealItemTypes.CITIES then typeName = \"CITY\"\n        elseif itype == DealItemTypes.GREATWORK then typeName = \"GREAT_WORK\"\n        end\n        print(\"ITEM|\" .. fromTag .. \"|\" .. typeName .. \"|\" .. amount .. \"|\" .. duration .. \"|\" .. vid .. \"|\" .. sid2)\n    end\nelse\n    print(\"AI_COUNTER\")\n    print(\"REJECTED\")\nend\npcall(function()\n    local sid = DiplomacyManager.FindOpenSessionID(me, target)\n    if sid and sid >= 0 then DiplomacyManager.CloseSession(sid) end\nend)\nprint(\"---END---\")\n",
+      "lines": [
+        "ERR:AT_WAR|Cannot trade while at war"
+      ]
+    }
+  ]
+}

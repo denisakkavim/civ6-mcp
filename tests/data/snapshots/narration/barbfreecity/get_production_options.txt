@@ -1,0 +1,21 @@
+Units:
+  UNIT_SETTLER (cost 80, 17 turns, buy: 680g)
+  UNIT_BUILDER (cost 50, 7 turns, buy: 245g)
+  UNIT_TRADER (cost 40, 4 turns, buy: 210g)
+  UNIT_SCOUT (cost 30, 3 turns, buy: 120g)
+  UNIT_WARRIOR (cost 40, 4 turns, buy: 160g)
+  UNIT_ARCHER (cost 60, 6 turns, buy: 240g)
+  UNIT_SPEARMAN (cost 65, 7 turns, buy: 260g)
+  UNIT_BATTERING_RAM (cost 65, 7 turns, buy: 260g)
+  UNIT_HORSEMAN (cost 80, 6 turns, buy: 320g)
+Buildings:
+  BUILDING_MONUMENT (cost 60, 5 turns, buy: 240g)
+  BUILDING_LIBRARY (cost 90, 8 turns, buy: 360g)
+  BUILDING_WALLS (cost 80, 7 turns, buy: 320g)
+  BUILDING_APADANA (cost 400, 34 turns)
+Districts:
+  DISTRICT_HOLY_SITE (cost 54, 9 turns)
+  DISTRICT_ENCAMPMENT (cost 54, 9 turns)
+  DISTRICT_GOVERNMENT (cost 30, 5 turns)
+Projects:
+  PROJECT_ENHANCE_DISTRICT_CAMPUS (cost 25, 7 turns)

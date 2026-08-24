@@ -1,0 +1,27 @@
+=== STRATEGIC MAP ===
+
+FOG BOUNDARIES (distance to unexplored, -1 = fully explored):
+  Aachen (14,8): N:9 NE:6 SE:8 S:12 SW:4 NW:3 <- EXPLORE SW/NW!
+  Frankfurt (18,10): N:9 NE:3 SE:7 S:10 SW:10 NW:6 <- EXPLORE NE!
+  Trier (14,12): N:13 NE:6 SE:7 S:8 SW:6 NW:5 <- EXPLORE NW!
+
+UNCLAIMED RESOURCES (revealed, unowned):
+  RESOURCE_TOBACCO+ at (12,10) — luxury
+  RESOURCE_TURTLES+ at (30,13) — luxury
+  RESOURCE_AMBER+ at (15,15) — luxury
+  RESOURCE_AMBER+ at (29,15) — luxury
+  RESOURCE_AMBER+ at (16,17) — luxury
+  RESOURCE_COCOA+ at (15,18) — luxury
+  RESOURCE_TOBACCO+ at (29,19) — luxury
+  RESOURCE_COCOA+ at (6,21) — luxury
+  RESOURCE_AMBER+ at (7,23) — luxury
+  RESOURCE_COCOA+ at (10,23) — luxury
+  RESOURCE_DIAMONDS+ at (28,24) — luxury
+  RESOURCE_PEARLS+ at (21,27) — luxury
+  RESOURCE_FURS+ at (20,29) — luxury
+  RESOURCE_IRON* at (24,7) — strategic
+  RESOURCE_IRON* at (21,10) — strategic
+  RESOURCE_IRON* at (20,11) — strategic
+  RESOURCE_IRON* at (22,11) — strategic
+  RESOURCE_HORSES* at (12,12) — strategic
+  RESOURCE_HORSES* at (27,12) — strategic

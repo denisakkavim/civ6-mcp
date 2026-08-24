@@ -1,0 +1,16 @@
+15 purchasable tiles:
+  (13,10): 50g — Coast and Lake
+  (15,9): 50g — Grassland
+  (12,9): 50g — Grassland
+  (14,10): 50g — Grassland
+  (12,8): 50g — Grassland
+  (12,7): 50g — Tundra (Hills) Hills
+  (15,7): 50g — Tundra
+  (16,8): 50g — Tundra (Hills) Hills
+  (14,6): 50g — Tundra
+  (15,6): 50g — Tundra
+  (12,5): 80g — Snow
+  (12,6): 80g — Tundra
+  (13,5): 80g — Tundra
+  (14,11): 80g — Grassland
+  (16,10): 80g — Grassland

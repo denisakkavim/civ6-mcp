@@ -1,0 +1,27 @@
+Government: Oligarchy (GOVERNMENT_OLIGARCHY)
+
+5 policy slots:
+  Slot 0 (Military): Conscription (POLICY_CONSCRIPTION)
+  Slot 1 (Military): Maneuver (POLICY_MANEUVER)
+  Slot 2 (Economic): Urban Planning (POLICY_URBAN_PLANNING)
+  Slot 3 (Wildcard): Charismatic Leader (POLICY_CHARISMATIC_LEADER)
+  Slot 4 (Military): Discipline (POLICY_DISCIPLINE)
+
+Available policies:
+  Military:
+    Survey (POLICY_SURVEY): Double experience for recon units.
+    Agoge (POLICY_AGOGE): +50% [ICON_Production] Production toward Ancient and Classical era melee, anti-cavalry, and ranged units.
+    Maritime Industries (POLICY_MARITIME_INDUSTRIES): +100% [ICON_Production] Production toward Ancient and Classical era naval units.
+    Limitanei (POLICY_LIMITANEI): +2 Loyalty per turn for cities with a garrisoned unit.
+  Economic:
+    God King (POLICY_GOD_KING): +1 [ICON_Faith] Faith and +1 [ICON_Gold] Gold in the [ICON_Capital] Capital.
+    Ilkum (POLICY_ILKUM): +30% [ICON_Production] Production toward Builders.
+    Caravansaries (POLICY_CARAVANSARIES): +2 [ICON_Gold] Gold from all [ICON_TradeRoute] Trade Routes.
+    Corvée (POLICY_CORVEE): +15% [ICON_Production] Production toward Ancient and Classical wonders.
+    Land Surveyors (POLICY_LAND_SURVEYORS): Reduces the cost of purchasing a tile by 20%.
+    Colonization (POLICY_COLONIZATION): +50% [ICON_Production] Production toward Settlers.
+  Diplomatic:
+    Diplomatic League (POLICY_DIPLOMATIC_LEAGUE): The first [ICON_Envoy] Envoy you send to each city-state counts as two [ICON_Envoy] Envoys.
+
+Use set_policies with slot assignments, e.g. {0: "POLICY_AGOGE", 1: "POLICY_URBAN_PLANNING"}
+Wildcard slots can accept any policy type.

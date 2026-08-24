@@ -1,0 +1,182 @@
+15 cities:
+  Aachen (pop 13) at (14,8) — Food 36 Prod 59 Gold 115 Sci 48 Cul 17 | Housing 23 Amenities 13 | Growth: 67/152 food (11t, +10.0/t) | Building: PROJECT_ENHANCE_DISTRICT_CAMPUS (3 turns) | Walls 400/400 Garrison 200/200 Def:111 Gar:UNIT_FIELD_CANNON [id:16777216]
+    Districts: DISTRICT_CAMPUS(13,7) DISTRICT_ENCAMPMENT(16,10) DISTRICT_COMMERCIAL_HUB(13,8) DISTRICT_HANSA(12,9) DISTRICT_AQUEDUCT(15,8) DISTRICT_HARBOR(13,10) DISTRICT_NEIGHBORHOOD(15,6) DISTRICT_THEATER(14,6)
+    Buildings: BUILDING_MONUMENT, BUILDING_PALACE, BUILDING_BARRACKS, BUILDING_GRANARY, BUILDING_LIBRARY, BUILDING_WALLS, BUILDING_WATER_MILL, BUILDING_LIGHTHOUSE, BUILDING_MARKET, BUILDING_AMPHITHEATER, BUILDING_CASTLE, BUILDING_UNIVERSITY, BUILDING_WORKSHOP, BUILDING_ARMORY, BUILDING_SHIPYARD, BUILDING_BANK, BUILDING_STAR_FORT, BUILDING_FACTORY, BUILDING_STOCK_EXCHANGE, BUILDING_MILITARY_ACADEMY, BUILDING_SEWER, BUILDING_SEAPORT, BUILDING_FOOD_MARKET, BUILDING_COAL_POWER_PLANT
+    Needs builder: RESOURCE_DEER@14,5, RESOURCE_SHEEP@16,7, RESOURCE_OIL@11,8, RESOURCE_ANTIQUITY_SITE@11,9, RESOURCE_RICE@16,11 (unimproved)
+  Frankfurt (pop 7) at (18,10) — Food 14 Prod 48 Gold 39 Sci 13 Cul 6 | Housing 15 Amenities 7 | Growth: STAGNANT (+0.0 food/t) | Building: BUILDING_EIFFEL_TOWER (31 turns) | Walls 400/400 Garrison 200/200 Def:99 Gar:none [id:16777217]
+    !! STAGNANT: 0 food surplus — needs farm, granary, or trade route
+    Districts: DISTRICT_CAMPUS(19,9) DISTRICT_AQUEDUCT(19,10) DISTRICT_COMMERCIAL_HUB(17,10) DISTRICT_HANSA(19,11) DISTRICT_DAM(17,9) DISTRICT_WONDER(19,12) DISTRICT_AERODROME(18,9) DISTRICT_WONDER(17,11)
+    Buildings: BUILDING_GRANARY, BUILDING_LIBRARY, BUILDING_WALLS, BUILDING_WATER_MILL, BUILDING_MARKET, BUILDING_CASTLE, BUILDING_UNIVERSITY, BUILDING_WORKSHOP, BUILDING_BANK, BUILDING_FACTORY, BUILDING_STOCK_EXCHANGE, BUILDING_SEWER, BUILDING_HANGAR, BUILDING_AIRPORT, BUILDING_RUHR_VALLEY, BUILDING_HYDROELECTRIC_DAM, BUILDING_COAL_POWER_PLANT
+    !! PILLAGED TILES: IMPROVEMENT_MINE@18,8 (send builder to repair)
+    Needs builder: RESOURCE_SHEEP@16,7, RESOURCE_RICE@16,11, RESOURCE_IRON@20,11, RESOURCE_COAL@16,13 (unimproved)
+  Trier (pop 10) at (14,12) — Food 29 Prod 14 Gold 1 Sci 8 Cul 6 | Housing 8 Amenities 10 | Growth: 111/114 food (2t, +9.0/t) | Building: PROJECT_ENHANCE_DISTRICT_CAMPUS (6 turns) | Walls 400/400 Garrison 200/200 Def:89 Gar:UNIT_INFANTRY [id:16777218]
+    Districts: DISTRICT_COMMERCIAL_HUB(15,13) DISTRICT_ENTERTAINMENT_COMPLEX(15,11) DISTRICT_DAM(13,14) DISTRICT_HANSA(15,12) DISTRICT_CANAL(12,11) DISTRICT_CAMPUS(13,12)
+    Buildings: BUILDING_GRANARY, BUILDING_ARENA, BUILDING_MARKET, BUILDING_WORKSHOP, BUILDING_BANK, BUILDING_STOCK_EXCHANGE
+    !! PILLAGED: DISTRICT_COMMERCIAL_HUB@15,13, DISTRICT_DAM@13,14, DISTRICT_HANSA@15,12, BUILDING_MARKET, BUILDING_WORKSHOP, BUILDING_BANK, BUILDING_STOCK_EXCHANGE (repair via set_city_production)
+    !! PILLAGED TILES: IMPROVEMENT_MINE@11,15 (send builder to repair)
+    Needs builder: RESOURCE_ANTIQUITY_SITE@11,9, RESOURCE_RICE@16,11, RESOURCE_HORSES@14,13, RESOURCE_COAL@16,13, RESOURCE_ANTIQUITY_SITE@12,14, RESOURCE_WHEAT@17,15 (unimproved)
+  Methone (pop 11) at (17,14) — Food 18 Prod 38 Gold 73 Sci 19 Cul 8 | Housing 23 Amenities 10 | Growth: STAGNANT (-4.0 food/t) | Building: BUILDING_WORKSHOP (1 turns) | Walls 400/400 Garrison 200/200 Def:106 Gar:UNIT_ARTILLERY [id:16777219]
+    !! STARVING: -4.0 food/t — city will lose population!
+    >> CAN ATTACK: UNIT_ROCK_BAND@19,14(100hp)[327705]
+    Districts: DISTRICT_ENCAMPMENT(18,15) DISTRICT_CAMPUS(18,14) DISTRICT_HANSA(16,14) DISTRICT_ENTERTAINMENT_COMPLEX(17,12) DISTRICT_AQUEDUCT(16,13) DISTRICT_COMMERCIAL_HUB(16,12) DISTRICT_WONDER(18,12) DISTRICT_WONDER(19,14) DISTRICT_NEIGHBORHOOD(18,13) DISTRICT_NEIGHBORHOOD(19,13) DISTRICT_NEIGHBORHOOD(15,17)
+    Buildings: BUILDING_MONUMENT, BUILDING_BARRACKS, BUILDING_GRANARY, BUILDING_LIBRARY, BUILDING_WALLS, BUILDING_WATER_MILL, BUILDING_ARENA, BUILDING_MARKET, BUILDING_CASTLE, BUILDING_UNIVERSITY, BUILDING_WORKSHOP, BUILDING_ARMORY, BUILDING_BANK, BUILDING_STAR_FORT, BUILDING_FACTORY, BUILDING_STOCK_EXCHANGE, BUILDING_MILITARY_ACADEMY, BUILDING_SEWER, BUILDING_ZOO, BUILDING_COLOSSEUM, BUILDING_OXFORD_UNIVERSITY, BUILDING_FOOD_MARKET, BUILDING_COAL_POWER_PLANT
+    !! PILLAGED: DISTRICT_ENTERTAINMENT_COMPLEX@17,12, DISTRICT_NEIGHBORHOOD@19,13, BUILDING_ARENA, BUILDING_WORKSHOP, BUILDING_FACTORY, BUILDING_ZOO, BUILDING_FOOD_MARKET, BUILDING_COAL_POWER_PLANT (repair via set_city_production)
+    !! PILLAGED TILES: IMPROVEMENT_FARM@17,16, IMPROVEMENT_FARM@19,16, IMPROVEMENT_FARM@17,17 (send builder to repair)
+    Needs builder: RESOURCE_RICE@16,11, RESOURCE_IRON@20,11, RESOURCE_HORSES@14,13, RESOURCE_COAL@16,13, RESOURCE_ALUMINUM@19,14, RESOURCE_WHEAT@17,15 (unimproved)
+  Heidelberg (pop 11) at (22,10) — Food 30 Prod 53 Gold 62 Sci 19 Cul 10 | Housing 27 Amenities 10 | Growth: 45/126 food (10t, +8.0/t) | Building: nothing | Walls 400/400 Garrison 200/200 Def:108 Gar:none [id:16777220]
+    Districts: DISTRICT_CAMPUS(21,9) DISTRICT_HANSA(20,10) DISTRICT_AQUEDUCT(22,9) DISTRICT_COMMERCIAL_HUB(22,8) DISTRICT_WONDER(23,8) DISTRICT_AERODROME(23,9) DISTRICT_NEIGHBORHOOD(21,8) DISTRICT_NEIGHBORHOOD(21,13) DISTRICT_NEIGHBORHOOD(23,12)
+    Buildings: BUILDING_MONUMENT, BUILDING_GRANARY, BUILDING_LIBRARY, BUILDING_WALLS, BUILDING_WATER_MILL, BUILDING_MARKET, BUILDING_CASTLE, BUILDING_UNIVERSITY, BUILDING_WORKSHOP, BUILDING_BANK, BUILDING_STAR_FORT, BUILDING_FACTORY, BUILDING_STOCK_EXCHANGE, BUILDING_SEWER, BUILDING_HANGAR, BUILDING_AIRPORT, BUILDING_BIG_BEN, BUILDING_FOOD_MARKET, BUILDING_COAL_POWER_PLANT
+    Needs builder: RESOURCE_OIL@23,8, RESOURCE_ANTIQUITY_SITE@23,9, RESOURCE_WHEAT@24,9, RESOURCE_ANTIQUITY_SITE@25,10, RESOURCE_IRON@20,11, RESOURCE_WHEAT@24,12, RESOURCE_COPPER@25,13 (unimproved)
+  Berlin (pop 15) at (11,16) — Food 50 Prod 32 Gold 94 Sci 8 Cul 5 | Housing 16 Amenities 14 | Growth: 75/179 food (13t, +20.0/t) | Building: BUILDING_HYDROELECTRIC_DAM (13 turns) | Walls 400/400 Garrison 200/200 Def:99 Gar:UNIT_INFANTRY [id:16777221]
+    Districts: DISTRICT_HARBOR(10,15) DISTRICT_COMMERCIAL_HUB(11,14) DISTRICT_HANSA(12,14) DISTRICT_DAM(12,16) DISTRICT_AERODROME(9,18)
+    Buildings: BUILDING_GRANARY, BUILDING_WALLS, BUILDING_WATER_MILL, BUILDING_LIGHTHOUSE, BUILDING_MARKET, BUILDING_CASTLE, BUILDING_SHIPYARD, BUILDING_BANK, BUILDING_STOCK_EXCHANGE, BUILDING_SEWER
+    !! PILLAGED TILES: IMPROVEMENT_MINE@11,15, IMPROVEMENT_FARM@13,16, IMPROVEMENT_FARM@11,18, IMPROVEMENT_FARM@10,19 (send builder to repair)
+    Needs builder: RESOURCE_HORSES@14,13, RESOURCE_ANTIQUITY_SITE@12,14, RESOURCE_ALUMINUM@8,18, RESOURCE_ANTIQUITY_SITE@10,18 (unimproved)
+  Hamburg (pop 6) at (16,4) — Food 12 Prod 39 Gold 43 Sci 12 Cul 6 | Housing 10 Amenities 5 | Growth: STAGNANT (+0.0 food/t) | Building: PROJECT_ENHANCE_DISTRICT_COMMERCIAL_HUB (2 turns) | Walls 400/400 Garrison 200/200 Def:91 Gar:none [id:16777222]
+    !! STAGNANT: 0 food surplus — needs farm, granary, or trade route
+    Districts: DISTRICT_HANSA(16,6) DISTRICT_COMMERCIAL_HUB(17,4) DISTRICT_CAMPUS(18,5) DISTRICT_NEIGHBORHOOD(17,2)
+    Buildings: BUILDING_MONUMENT, BUILDING_GRANARY, BUILDING_LIBRARY, BUILDING_WATER_MILL, BUILDING_MARKET, BUILDING_UNIVERSITY, BUILDING_WORKSHOP, BUILDING_BANK, BUILDING_FACTORY, BUILDING_STOCK_EXCHANGE, BUILDING_SEWER, BUILDING_COAL_POWER_PLANT
+    Needs builder: RESOURCE_DEER@14,5, RESOURCE_SHEEP@16,7 (unimproved)
+  Pella (pop 14) at (19,17) — Food 35 Prod 56 Gold 44 Sci 18 Cul 10 | Housing 17 Amenities 12 | Growth: 121/165 food (8t, +7.0/t) | Building: BUILDING_GOV_CONQUEST (2 turns) | Walls 400/400 Garrison 200/200 Def:104 Gar:none [id:16777223]
+    >> CAN ATTACK: UNIT_ROCK_BAND@19,14(100hp)[327705]
+    Districts: DISTRICT_ENCAMPMENT(18,16) DISTRICT_CAMPUS(21,17) DISTRICT_COMMERCIAL_HUB(20,16) DISTRICT_AQUEDUCT(20,18) DISTRICT_HANSA(21,18) DISTRICT_GOVERNMENT(18,17)
+    Buildings: BUILDING_MONUMENT, BUILDING_BARRACKS, BUILDING_GRANARY, BUILDING_LIBRARY, BUILDING_WALLS, BUILDING_MARKET, BUILDING_CASTLE, BUILDING_UNIVERSITY, BUILDING_WORKSHOP, BUILDING_ARMORY, BUILDING_BANK, BUILDING_STAR_FORT, BUILDING_FACTORY, BUILDING_STOCK_EXCHANGE, BUILDING_MILITARY_ACADEMY, BUILDING_SEWER, BUILDING_COAL_POWER_PLANT
+    !! PILLAGED TILES: IMPROVEMENT_FARM@17,16, IMPROVEMENT_FARM@19,16, IMPROVEMENT_FARM@17,17 (send builder to repair)
+    Needs builder: RESOURCE_ALUMINUM@19,14, RESOURCE_WHEAT@17,15 (unimproved)
+  Ulm (pop 8) at (27,13) — Food 24 Prod 26 Gold 42 Sci 13 Cul 4 | Housing 12 Amenities 6 | Growth: 82/89 food (2t, +8.0/t) | Building: DISTRICT_COMMERCIAL_HUB (8 turns) | Walls 400/400 Garrison 200/200 Def:94 Gar:none [id:16777224]
+    Districts: DISTRICT_HARBOR(28,12) DISTRICT_CAMPUS(26,13) DISTRICT_AERODROME(27,14) DISTRICT_COMMERCIAL_HUB(26,14)
+    Buildings: BUILDING_GRANARY, BUILDING_LIBRARY, BUILDING_WALLS, BUILDING_LIGHTHOUSE, BUILDING_UNIVERSITY, BUILDING_SHIPYARD, BUILDING_SEWER
+    Needs builder: RESOURCE_ANTIQUITY_SITE@25,10, RESOURCE_WHEAT@24,12, RESOURCE_FISH@29,12, RESOURCE_COPPER@25,13 (unimproved)
+  Cologne (pop 6) at (47,14) — Food 15 Prod 27 Gold 37 Sci 4 Cul 3 | Housing 11 Amenities 5 | Growth: 4/66 food (25t, +3.0/t) | Building: BUILDING_SHIPYARD (9 turns) | Walls 400/400 Garrison 200/200 Def:94 Gar:UNIT_TANK [id:16777225]
+    !! SLOW GROWTH: 25 turns to next pop — needs farm, granary, or trade route
+    Districts: DISTRICT_AERODROME(48,15) DISTRICT_ENCAMPMENT(49,14) DISTRICT_HARBOR(46,13)
+    Buildings: BUILDING_MONUMENT, BUILDING_BARRACKS, BUILDING_GRANARY, BUILDING_WALLS, BUILDING_LIGHTHOUSE, BUILDING_ARMORY, BUILDING_MILITARY_ACADEMY, BUILDING_HANGAR, BUILDING_AIRPORT
+    Needs builder: RESOURCE_CRABS@46,12, RESOURCE_HORSES@50,13 (unimproved)
+  Zanzibar (pop 11) at (51,16) — Food 34 Prod 39 Gold 48 Sci 5 Cul 4 | Housing 12 Amenities 10 | Growth: 94/126 food (7t, +12.0/t) | Building: PROJECT_ENHANCE_DISTRICT_COMMERCIAL_HUB (3 turns) | Walls 400/400 Garrison 200/200 Def:96 Gar:none | !! Loyalty: 83/100 (-6.0/turn, flips in 41 turns) [id:16777226]
+    Districts: DISTRICT_HARBOR(50,17) DISTRICT_COMMERCIAL_HUB(51,17) DISTRICT_AERODROME(51,14)
+    Buildings: BUILDING_MONUMENT, BUILDING_GRANARY, BUILDING_WATER_MILL, BUILDING_LIGHTHOUSE, BUILDING_MARKET, BUILDING_SHIPYARD, BUILDING_SEAPORT
+    !! PILLAGED: BUILDING_MARKET (repair via set_city_production)
+    Needs builder: RESOURCE_HORSES@50,13, RESOURCE_WHEAT@52,15, RESOURCE_WHEAT@52,17, RESOURCE_PEARLS@49,18 (unimproved)
+  Ayutthaya (pop 8) at (12,20) — Food 28 Prod 19 Gold 0 Sci 4 Cul 8 | Housing 9 Amenities 6 | Growth: 43/89 food (9t, +12.0/t) | Building: DISTRICT_HANSA (4 turns) | Walls 400/400 Garrison 200/200 Def:87 Gar:none [id:16777227]
+    Districts: DISTRICT_THEATER(11,19) DISTRICT_HANSA(11,22)
+    Buildings: BUILDING_MONUMENT, BUILDING_GRANARY, BUILDING_WATER_MILL, BUILDING_AMPHITHEATER, BUILDING_MUSEUM_ART
+    !! PILLAGED TILES: IMPROVEMENT_FARM@11,18, IMPROVEMENT_FARM@10,19 (send builder to repair)
+    Needs builder: RESOURCE_ANTIQUITY_SITE@10,18 (unimproved)
+  Hull (pop 2) at (35,10) — Food 7 Prod 2 Gold 2 Sci 1 Cul 0 | Housing 3 Amenities 1 | Growth: 6/24 food (14t, +3.0/t) | Building: BUILDING_GRANARY (25 turns) | Walls 400/400 Garrison 200/200 Def:85 Gar:none [id:16777228]
+    Needs builder: RESOURCE_FISH@35,12 (unimproved)
+  Plymouth (pop 5) at (4,21) — Food 14 Prod 8 Gold 8 Sci 2 Cul 3 | Housing 3 Amenities 5 | Growth: 7/55 food (57t, +4.0/t) | Building: BUILDING_LIGHTHOUSE (8 turns) | Walls 400/400 Garrison 200/200 Def:87 Gar:UNIT_TANK [id:16777229]
+    !! SLOW GROWTH: 57 turns to next pop — needs farm, granary, or trade route
+    Districts: DISTRICT_HARBOR(4,22)
+    Buildings: BUILDING_MONUMENT
+    Needs builder: RESOURCE_CRABS@5,18, RESOURCE_CRABS@3,19, RESOURCE_BANANAS@5,20, RESOURCE_BANANAS@4,21, RESOURCE_ANTIQUITY_SITE@5,21, RESOURCE_FISH@3,23, RESOURCE_FISH@4,23 (unimproved)
+  Magdeburg (pop 1) at (8,18) — Food 3 Prod 9 Gold 1 Sci 1 Cul 0 | Housing 3 Amenities 1 | Growth: 2/15 food (16t, +1.0/t) | Building: BUILDING_GRANARY (6 turns) | Walls 400/400 Garrison 200/200 Def:85 Gar:none [id:16777230]
+    !! SLOW GROWTH: 16 turns to next pop — needs farm, granary, or trade route
+    !! PILLAGED TILES: IMPROVEMENT_MINE@11,15, IMPROVEMENT_FARM@11,18, IMPROVEMENT_FARM@10,19 (send builder to repair)
+    Needs builder: RESOURCE_OIL@6,17, RESOURCE_CRABS@5,18, RESOURCE_ALUMINUM@8,18, RESOURCE_ANTIQUITY_SITE@10,18, RESOURCE_BANANAS@5,20, RESOURCE_ANTIQUITY_SITE@5,21 (unimproved)
+
+City Distances:
+  Aachen <-> Frankfurt: 5 tiles
+  Aachen <-> Trier: 4 tiles
+  Aachen <-> Methone: 6 tiles
+  Aachen <-> Heidelberg: 9 tiles
+  Aachen <-> Berlin: 8 tiles
+  Aachen <-> Hamburg: 4 tiles
+  Aachen <-> Pella: 10 tiles
+  Aachen <-> Ulm: 16 tiles
+  Aachen <-> Cologne: 36 tiles
+  Aachen <-> Zanzibar: 41 tiles
+  Aachen <-> Ayutthaya: 12 tiles
+  Aachen <-> Hull: 22 tiles
+  Aachen <-> Plymouth: 16 tiles
+  Aachen <-> Magdeburg: 11 tiles
+  Frankfurt <-> Trier: 5 tiles
+  Frankfurt <-> Methone: 4 tiles
+  Frankfurt <-> Heidelberg: 4 tiles
+  Frankfurt <-> Berlin: 10 tiles
+  Frankfurt <-> Hamburg: 6 tiles
+  Frankfurt <-> Pella: 7 tiles
+  Frankfurt <-> Ulm: 11 tiles
+  Frankfurt <-> Cologne: 31 tiles
+  Frankfurt <-> Zanzibar: 36 tiles
+  Frankfurt <-> Ayutthaya: 11 tiles
+  Frankfurt <-> Hull: 17 tiles
+  Frankfurt <-> Plymouth: 19 tiles
+  Frankfurt <-> Magdeburg: 14 tiles
+  Trier <-> Methone: 4 tiles
+  Trier <-> Heidelberg: 9 tiles
+  Trier <-> Berlin: 5 tiles
+  Trier <-> Hamburg: 8 tiles
+  Trier <-> Pella: 8 tiles
+  Trier <-> Ulm: 14 tiles
+  Trier <-> Cologne: 34 tiles
+  Trier <-> Zanzibar: 39 tiles
+  Trier <-> Ayutthaya: 8 tiles
+  Trier <-> Hull: 22 tiles
+  Trier <-> Plymouth: 14 tiles
+  Trier <-> Magdeburg: 9 tiles
+  Methone <-> Heidelberg: 7 tiles
+  Methone <-> Berlin: 7 tiles
+  Methone <-> Hamburg: 10 tiles
+  Methone <-> Pella: 4 tiles
+  Methone <-> Ulm: 11 tiles
+  Methone <-> Cologne: 30 tiles
+  Methone <-> Zanzibar: 35 tiles
+  Methone <-> Ayutthaya: 8 tiles
+  Methone <-> Hull: 20 tiles
+  Methone <-> Plymouth: 16 tiles
+  Methone <-> Magdeburg: 11 tiles
+  Heidelberg <-> Berlin: 14 tiles
+  Heidelberg <-> Hamburg: 9 tiles
+  Heidelberg <-> Pella: 7 tiles
+  Heidelberg <-> Ulm: 7 tiles
+  Heidelberg <-> Cologne: 27 tiles
+  Heidelberg <-> Zanzibar: 32 tiles
+  Heidelberg <-> Ayutthaya: 15 tiles
+  Heidelberg <-> Hull: 13 tiles
+  Heidelberg <-> Plymouth: 23 tiles
+  Heidelberg <-> Magdeburg: 18 tiles
+  Berlin <-> Hamburg: 12 tiles
+  Berlin <-> Pella: 9 tiles
+  Berlin <-> Ulm: 18 tiles
+  Berlin <-> Cologne: 37 tiles
+  Berlin <-> Zanzibar: 34 tiles
+  Berlin <-> Ayutthaya: 4 tiles
+  Berlin <-> Hull: 27 tiles
+  Berlin <-> Plymouth: 9 tiles
+  Berlin <-> Magdeburg: 4 tiles
+  Hamburg <-> Pella: 13 tiles
+  Hamburg <-> Ulm: 16 tiles
+  Hamburg <-> Cologne: 36 tiles
+  Hamburg <-> Zanzibar: 41 tiles
+  Hamburg <-> Ayutthaya: 16 tiles
+  Hamburg <-> Hull: 22 tiles
+  Hamburg <-> Plymouth: 20 tiles
+  Hamburg <-> Magdeburg: 15 tiles
+  Pella <-> Ulm: 10 tiles
+  Pella <-> Cologne: 29 tiles
+  Pella <-> Zanzibar: 32 tiles
+  Pella <-> Ayutthaya: 9 tiles
+  Pella <-> Hull: 19 tiles
+  Pella <-> Plymouth: 17 tiles
+  Pella <-> Magdeburg: 12 tiles
+  Ulm <-> Cologne: 20 tiles
+  Ulm <-> Zanzibar: 25 tiles
+  Ulm <-> Ayutthaya: 19 tiles
+  Ulm <-> Hull: 9 tiles
+  Ulm <-> Plymouth: 27 tiles
+  Ulm <-> Magdeburg: 22 tiles
+  Cologne <-> Zanzibar: 5 tiles
+  Cologne <-> Ayutthaya: 38 tiles
+  Cologne <-> Hull: 14 tiles
+  Cologne <-> Plymouth: 35 tiles
+  Cologne <-> Magdeburg: 37 tiles
+  Zanzibar <-> Ayutthaya: 37 tiles
+  Zanzibar <-> Hull: 19 tiles
+  Zanzibar <-> Plymouth: 30 tiles
+  Zanzibar <-> Magdeburg: 32 tiles
+  Ayutthaya <-> Hull: 28 tiles
+  Ayutthaya <-> Plymouth: 8 tiles
+  Ayutthaya <-> Magdeburg: 5 tiles
+  Hull <-> Plymouth: 36 tiles
+  Hull <-> Magdeburg: 31 tiles
+  Plymouth <-> Magdeburg: 5 tiles

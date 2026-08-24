@@ -1,0 +1,22 @@
+{
+  "tool": "get_pathing_estimate",
+  "arguments": {
+    "unit_id": 0,
+    "target_x": 14,
+    "target_y": 8
+  },
+  "scenario": "barbunits",
+  "recorded_at": "2026-08-24T17:52:47+00:00",
+  "notes": null,
+  "result": "Unreachable \u2014 no path found. Destination may be in fog, behind foreign borders, or blocked by impassable terrain.",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local unit = UnitManager.GetUnit(me, 0) if unit == nil then print(\"ERR:UNIT_NOT_FOUND\"); print(\"---END---\"); return end\n-- Guard: GetMoveToPath returns degenerate paths for units with 0 moves\nif unit:GetMovesRemaining() <= 0 then\n    print(\"PATH|-2|0|0\")\n    print(\"WAYPOINTS|\")\n    print(\"---END---\")\n    return\nend\nlocal targetPlot = Map.GetPlot(14, 8)\nif not targetPlot then print(\"ERR:INVALID_TARGET|Target (14,8) is out of bounds\"); print(\"---END---\"); return end\nlocal path = UnitManager.GetMoveToPath(unit, targetPlot:GetIndex())\nif not path or #path == 0 then\n    print(\"PATH|-1|0|0\")\n    print(\"WAYPOINTS|\")\n    print(\"---END---\")\n    return\nend\n-- Validate path reaches destination (GetMoveToPath returns garbage for unreachable targets)\nlocal lastPlot = Map.GetPlotByIndex(path[#path])\nif lastPlot:GetX() ~= 14 or lastPlot:GetY() ~= 8 then\n    print(\"PATH|-1|\" .. #path .. \"|0\")\n    print(\"WAYPOINTS|\")\n    print(\"---END---\")\n    return\nend\nlocal reach = UnitManager.GetReachableMovement(unit)\nlocal reachSet = {}\nif reach then\n    for _, pIdx in ipairs(reach) do reachSet[pIdx] = true end\nend\n-- Count how many path tiles are reachable this turn\nlocal reachCount = 0\nfor _, pIdx in ipairs(path) do\n    if reachSet[pIdx] then reachCount = reachCount + 1 end\nend\nlocal totalTiles = #path\nlocal tilesPerTurn = math.max(reachCount, 1)\nlocal turnsNeeded\nif reachCount >= totalTiles then\n    turnsNeeded = 0\nelse\n    turnsNeeded = math.ceil((totalTiles - reachCount) / tilesPerTurn)\nend\nprint(\"PATH|\" .. turnsNeeded .. \"|\" .. totalTiles .. \"|\" .. reachCount)\n-- Emit waypoints for context (first tile, last reachable, destination)\nlocal waypoints = {}\nfor i, pIdx in ipairs(path) do\n    local plot = Map.GetPlotByIndex(pIdx)\n    waypoints[#waypoints + 1] = \"(\" .. plot:GetX() .. \",\" .. plot:GetY() .. \")\"\nend\nprint(\"WAYPOINTS|\" .. table.concat(waypoints, \";\"))\nprint(\"---END---\")\n",
+      "lines": [
+        "PATH|-1|0|0",
+        "WAYPOINTS|"
+      ]
+    }
+  ]
+}

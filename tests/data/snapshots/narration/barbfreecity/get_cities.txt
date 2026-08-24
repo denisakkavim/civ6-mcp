@@ -1,0 +1,36 @@
+6 cities:
+  Aachen (pop 4) at (14,8) — Food 10 Prod 10 Gold 8 Sci 4 Cul 4 | Housing 8 Amenities 4 | Growth: 14/44 food (15t, +2.0/t) | Building: UNIT_TRADER (4 turns) | HP:200/200 Def:20 Gar:none [id:16777216]
+    Districts: DISTRICT_CAMPUS(13,7)
+    Buildings: BUILDING_PALACE, BUILDING_GRANARY
+    !! PILLAGED TILES: IMPROVEMENT_MINE@14,7 (send builder to repair)
+    Needs builder: RESOURCE_DEER@13,6, RESOURCE_TOBACCO@14,9, RESOURCE_RICE@16,11 (unimproved)
+  Frankfurt (pop 3) at (18,10) — Food 8 Prod 10 Gold 3 Sci 1 Cul 1 | Housing 8 Amenities 3 | Growth: 14/33 food (12t, +2.0/t) | Building: DISTRICT_CAMPUS (6 turns) | HP:200/200 Def:20 Gar:UNIT_ARCHER [id:16777217]
+    Districts: DISTRICT_CAMPUS(19,9)
+    Buildings: BUILDING_GRANARY
+    Needs builder: RESOURCE_IRON@21,10, RESOURCE_RICE@16,11, RESOURCE_COAL@16,13 (unimproved)
+  Trier (pop 4) at (14,12) — Food 13 Prod 4 Gold 0 Sci 2 Cul 1 | Housing 5 Amenities 3 | Growth: 42/44 food (1t, +5.0/t) | Building: UNIT_SPEARMAN (2 turns) | HP:200/200 Def:25 Gar:UNIT_SPEARMAN [id:16777218]
+    Needs builder: RESOURCE_TOBACCO@14,9, RESOURCE_RICE@16,11, RESOURCE_HORSES@12,12, RESOURCE_HORSES@14,13, RESOURCE_COAL@16,13 (unimproved)
+  Methone (pop 3) at (17,14) — Food 8 Prod 7 Gold 0 Sci 1 Cul 1 | Housing 5 Amenities 3 | Growth: 2/33 food (19t, +2.0/t) | Building: BUILDING_WALLS (5 turns) | HP:200/200 Def:15 Gar:UNIT_ARCHER [id:16777219]
+    !! SLOW GROWTH: 19 turns to next pop — needs farm, granary, or trade route
+    Needs builder: RESOURCE_RICE@16,11, RESOURCE_HORSES@14,13, RESOURCE_COAL@16,13 (unimproved)
+  Heidelberg (pop 1) at (22,10) — Food 3 Prod 4 Gold 0 Sci 2 Cul 0 | Housing 5 Amenities 2 | Growth: 2/15 food (13t, +1.0/t) | Building: BUILDING_WALLS (18 turns) | HP:200/200 Def:15 Gar:none [id:16777220]
+    Needs builder: RESOURCE_IRON@21,10, RESOURCE_IRON@22,11 (unimproved)
+  Alexandria (pop 2) at (14,16) — Food 9 Prod 3 Gold 0 Sci 1 Cul 0 | Housing 5 Amenities 1 | Growth: 4/24 food (5t, +5.0/t) | Building: nothing | HP:200/200 Def:15 Gar:none [id:16777221]
+    Needs builder: RESOURCE_HORSES@14,13, RESOURCE_COAL@16,13, RESOURCE_RICE@13,16 (unimproved)
+
+City Distances:
+  Aachen <-> Frankfurt: 5 tiles
+  Aachen <-> Trier: 4 tiles
+  Aachen <-> Methone: 6 tiles
+  Aachen <-> Heidelberg: 9 tiles
+  Aachen <-> Alexandria: 8 tiles
+  Frankfurt <-> Trier: 5 tiles
+  Frankfurt <-> Methone: 4 tiles
+  Frankfurt <-> Heidelberg: 4 tiles
+  Frankfurt <-> Alexandria: 7 tiles
+  Trier <-> Methone: 4 tiles
+  Trier <-> Heidelberg: 9 tiles
+  Trier <-> Alexandria: 4 tiles
+  Methone <-> Heidelberg: 7 tiles
+  Methone <-> Alexandria: 4 tiles
+  Heidelberg <-> Alexandria: 11 tiles

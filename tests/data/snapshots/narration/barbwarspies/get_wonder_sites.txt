@@ -1,0 +1,1 @@
+No valid placement tiles for BUILDING_PYRAMIDS in this city.

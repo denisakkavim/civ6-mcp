@@ -1,0 +1,7 @@
+Best activation cities for Sergei Gorshkov (Admiral -> DISTRICT_HARBOR): [1 charge(s)]
+  1. Aachen (13,10) — needs move (dist 5), yield 91
+  2. Berlin (10,15) — needs move (dist 0), yield 69
+  3. Zanzibar (50,17) — needs move (dist 35), yield 35
+  4. Ulm (28,12) — needs move (dist 19), yield 34
+  5. Cologne (46,13) — needs move (dist 37), yield 29
+  6. Plymouth (4,22) — needs move (dist 10), yield 8

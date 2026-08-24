@@ -1,0 +1,5 @@
+Best activation cities for Dandara (General -> DISTRICT_ENCAMPMENT): [2 charge(s)]
+  1. Aachen (16,10) — CAN ACTIVATE, yield 73
+  2. Pella (18,16) — CAN ACTIVATE, yield 68
+  3. Methone (18,15) — CAN ACTIVATE, yield 57
+  4. Cologne (49,14) — needs move (dist 32), yield 36

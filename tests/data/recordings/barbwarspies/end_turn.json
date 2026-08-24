@@ -1,0 +1,486 @@
+{
+  "tool": "end_turn",
+  "arguments": {},
+  "scenario": "barbwarspies",
+  "recorded_at": "2026-08-24T17:40:05+00:00",
+  "notes": null,
+  "result": "Turn paused \u2014 AI diplomatic proposal from Mapuche (Lautaro) [deal].\nDeal from Mapuche: You offer: RESOURCE_COSMETICS x1 (30 turns); You offer: Diplomatic Favor x10; They offer: Open Borders (30 turns); They offer: Gold (lump) x4; They offer: Gold per turn x2 (30 turns)\nUse respond_to_deal(player_id=X, accept=True/False) to handle it, then end_turn again.",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CRITICAL"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal found = false\nlocal dialogueText = \"\"\nlocal reasonText = \"\"\nlocal ctrl1 = ContextPtr:LookUpControl(\"/InGame/DiplomacyActionView/LeaderResponseText\")\nlocal ctrl2 = ContextPtr:LookUpControl(\"/InGame/DiplomacyActionView/LeaderReasonText\")\nif ctrl1 then local ok, t = pcall(ctrl1.GetText, ctrl1); if ok and t and t ~= \"\" then dialogueText = t end end\nif ctrl2 then local ok, t = pcall(ctrl2.GetText, ctrl2); if ok and t and t ~= \"\" then reasonText = t end end\nlocal dealCtrl = ContextPtr:LookUpControl(\"/InGame/DiplomacyDealView/LeaderResponseText\")\nif dealCtrl and not dealCtrl:IsHidden() then local ok, t = pcall(dealCtrl.GetText, dealCtrl); if ok and t and t ~= \"\" then dialogueText = t end end\nlocal btnTexts = {}\nfor _, path in ipairs({\n    \"/InGame/DiplomacyActionView/SelectionStack/Selection1Button/SelectionText\",\n    \"/InGame/DiplomacyActionView/SelectionStack/Selection2Button/SelectionText\",\n}) do\n    local btn = ContextPtr:LookUpControl(path)\n    if btn then\n        local par = btn:GetParent()\n        if par and not par:IsHidden() then\n            local ok, t = pcall(btn.GetText, btn)\n            if ok and t and t ~= \"\" then btnTexts[#btnTexts + 1] = t end\n        end\n    end\nend\nlocal goodbyeBtn = ContextPtr:LookUpControl(\"/InGame/DiplomacyActionView/GoodbyeButton\")\nif goodbyeBtn and not goodbyeBtn:IsHidden() then btnTexts[#btnTexts + 1] = \"GOODBYE\" end\nlocal buttonInfo = table.concat(btnTexts, \";\")\nfor i = 0, 62 do\n    if i ~= me and Players[i] and Players[i]:IsAlive() then\n        local sid = DiplomacyManager.FindOpenSessionID(me, i)\n        if sid and sid >= 0 then\n            local cfg = PlayerConfigurations[i]\n            local civName = Locale.Lookup(cfg:GetCivilizationShortDescription())\n            local leaderName = Locale.Lookup(cfg:GetLeaderName())\n            local atWar = Players[me]:GetDiplomacy():IsAtWarWith(i) and \"1\" or \"0\"\n            print(\"SESSION|\" .. sid .. \"|\" .. i .. \"|\" .. civName .. \"|\" .. leaderName .. \"|\" .. dialogueText .. \"|\" .. reasonText .. \"|\" .. buttonInfo .. \"|\" .. atWar)\n            found = true\n            local okD, deal = pcall(function() return DealManager.GetWorkingDeal(DealDirection.INCOMING, me, i) end)\n            if okD and deal then\n                local okN, cnt = pcall(function() return deal:GetItemCount() end)\n                if okN and cnt and cnt > 0 then\n                    for item in deal:Items() do\n                        local fromTag = \"THEM\"\n                        local okF, fromID = pcall(function() return item:GetFromPlayerID() end)\n                        if okF and fromID == me then fromTag = \"US\" end\n                        local itype = item:GetType()\n                        local typeName = \"UNKNOWN\"\n                        local itemName = \"Unknown\"\n                        local ok3, vid = pcall(function() return item:GetValueTypeID() end); vid = (ok3 and vid) and tostring(vid) or \"\"\n                        local ok4, sid2 = pcall(function() return item:GetSubTypeID() end); sid2 = (ok4 and sid2) and tostring(sid2) or \"\"\n                        local amount = item:GetAmount() or 0\n                        local duration = item:GetDuration() or 0\n                        if itype == DealItemTypes.AGREEMENTS then\n                            typeName = \"AGREEMENT\"\n                            if vid == \"OPEN_BORDERS\" or sid2 == \"DIPLOACTION_OPEN_BORDERS\" then itemName = \"Open Borders\"\n                            elseif vid == \"JOINT_WAR\" or sid2 == \"DIPLOACTION_JOINT_WAR\" then itemName = \"Joint War\"\n                            elseif string.find(vid, \"ALLIANCE\") or sid2 == \"DIPLOACTION_ALLIANCE\" then\n                                local aMap = {RESEARCH=\"Research\", CULTURAL=\"Cultural\", ECONOMIC=\"Economic\", MILITARY=\"Military\", RELIGIOUS=\"Religious\"}\n                                local aKey = string.match(vid, \"ALLIANCE_(%w+)\")\n                                itemName = ((aKey and aMap[aKey]) or aKey or \"Unknown\") .. \" Alliance\"\n                            else itemName = \"\" end\n                        elseif itype == DealItemTypes.GOLD then\n                            typeName = \"GOLD\"\n                            itemName = duration > 0 and \"Gold per turn\" or \"Gold (lump)\"\n                        elseif itype == DealItemTypes.RESOURCES then\n                            typeName = \"RESOURCE\"\n                            itemName = vid ~= \"\" and vid or \"Resource\"\n                        elseif itype == DealItemTypes.FAVOR then\n                            typeName = \"FAVOR\"; itemName = \"Diplomatic Favor\"\n                        elseif itype == DealItemTypes.CITIES then\n                            typeName = \"CITY\"; itemName = \"City\"\n                        elseif itype == DealItemTypes.GREATWORK then\n                            typeName = \"GREAT_WORK\"; itemName = \"Great Work\"\n                        end\n                        if itemName ~= \"\" and itemName ~= \"Unknown\" then\n                            print(\"DEAL_ITEM|\" .. i .. \"|\" .. fromTag .. \"|\" .. typeName .. \"|\" .. itemName:gsub(\"|\",\"/\") .. \"|\" .. amount .. \"|\" .. duration)\n                        end\n                    end\n                end\n            end\n        end\n    end\nend\nif not found then print(\"NONE\") end\nprint(\"---END---\")\n",
+      "lines": [
+        "NONE"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pDiplo = Players[me]:GetDiplomacy()\nfor i = 0, 62 do\n    if i ~= me and Players[i] and Players[i]:IsAlive() and Players[i]:IsMajor() and pDiplo:HasMet(i) then\n        local sid = DiplomacyManager.FindOpenSessionID(me, i)\n        if sid and sid >= 0 then\n        local ok, deal = pcall(function() return DealManager.GetWorkingDeal(DealDirection.INCOMING, me, i) end)\n        if ok and deal then\n            local count = deal:GetItemCount()\n            if count and count > 0 then\n                local cfg = PlayerConfigurations[i]\n                local civName = Locale.Lookup(cfg:GetCivilizationShortDescription())\n                local leaderName = Locale.Lookup(cfg:GetLeaderName())\n                print(\"DEAL|\" .. i .. \"|\" .. civName:gsub(\"|\",\"/\") .. \"|\" .. leaderName:gsub(\"|\",\"/\"))\n                for item in deal:Items() do\n                    local fromID = item:GetFromPlayerID()\n                    local iType = item:GetType()\n                    local subType = item:GetSubType()\n                    local amount = item:GetAmount() or 0\n                    local duration = item:GetDuration() or 0\n                    local valueType = item:GetValueType() or -1\n                    local typeName = \"UNKNOWN\"\n                    local itemName = \"Unknown\"\n                    if iType == DealItemTypes.GOLD then\n                        typeName = \"GOLD\"\n                        if duration > 0 then itemName = \"Gold per turn\" else itemName = \"Gold (lump sum)\" end\n                    elseif iType == DealItemTypes.RESOURCES then\n                        typeName = \"RESOURCE\"\n                        local res = GameInfo.Resources[valueType]\n                        if res then itemName = Locale.Lookup(res.Name) else itemName = \"Resource#\" .. tostring(valueType) end\n                    elseif iType == DealItemTypes.AGREEMENTS then\n                        typeName = \"AGREEMENT\"\n                        if subType == DealAgreementTypes.OPEN_BORDERS then itemName = \"Open Borders\"\n                        elseif subType == DealAgreementTypes.JOINT_WAR then itemName = \"Joint War\"\n                        elseif subType == DealAgreementTypes.ALLIANCE then\n                            local aNames = {\"Research\",\"Cultural\",\"Economic\",\"Military\",\"Religious\"}\n                            itemName = (valueType >= 0 and valueType < 5 and aNames[valueType+1] or \"Unknown\") .. \" Alliance\"\n                        else itemName = \"\" end\n                    elseif iType == DealItemTypes.FAVOR then\n                        typeName = \"FAVOR\"\n                        itemName = \"Diplomatic Favor\"\n                    elseif iType == DealItemTypes.CITIES then\n                        typeName = \"CITY\"\n                        itemName = \"City\"\n                    elseif iType == DealItemTypes.GREATWORK then\n                        typeName = \"GREAT_WORK\"\n                        itemName = \"Great Work\"\n                    end\n                    if itemName ~= \"\" and itemName ~= \"Unknown\" then\n                        local fromTag = \"THEM\"\n                        if fromID == me then fromTag = \"US\" end\n                        print(\"ITEM|\" .. i .. \"|\" .. fromTag .. \"|\" .. typeName .. \"|\" .. itemName:gsub(\"|\",\"/\") .. \"|\" .. amount .. \"|\" .. duration)\n                    end\n                end\n            end\n        end\n        end\n    end\nend\nprint(\"---END---\")\n",
+      "lines": []
+    },
+    {
+      "context": "write",
+      "lua": "do local c = ContextPtr:LookUpControl(\"/InGame/InGamePopup\") if c and not c:IsHidden() then   pcall(function() UIManager:DequeuePopup(c) end)   pcall(function() Input.PopContext() end)   c:SetHide(true)   print(\"DISMISSED|InGamePopup\") end end do local c = ContextPtr:LookUpControl(\"/InGame/GenericPopup\") if c and not c:IsHidden() then   pcall(function() UIManager:DequeuePopup(c) end)   pcall(function() Input.PopContext() end)   c:SetHide(true)   print(\"DISMISSED|GenericPopup\") end end do local c = ContextPtr:LookUpControl(\"/InGame/PopupDialog\") if c and not c:IsHidden() then   pcall(function() UIManager:DequeuePopup(c) end)   pcall(function() Input.PopContext() end)   c:SetHide(true)   print(\"DISMISSED|PopupDialog\") end end do local c = ContextPtr:LookUpControl(\"/InGame/BoostUnlockedPopup\") if c and not c:IsHidden() then   pcall(function() UIManager:DequeuePopup(c) end)   pcall(function() Input.PopContext() end)   c:SetHide(true)   print(\"DISMISSED|BoostUnlockedPopup\") end end do local c = ContextPtr:LookUpControl(\"/InGame/GreatWorkShowcase\") if c and not c:IsHidden() then   pcall(function() UIManager:DequeuePopup(c) end)   pcall(function() Input.PopContext() end)   c:SetHide(true)   print(\"DISMISSED|GreatWorkShowcase\") end end do local c = ContextPtr:LookUpControl(\"/InGame/WorldCongressPopup\") if c and not c:IsHidden() then   pcall(function() UIManager:DequeuePopup(c) end)   pcall(function() Input.PopContext() end)   c:SetHide(true)   print(\"DISMISSED|WorldCongressPopup\") end end do local c = ContextPtr:LookUpControl(\"/InGame/WorldCongressIntro\") if c and not c:IsHidden() then   pcall(function() UIManager:DequeuePopup(c) end)   pcall(function() Input.PopContext() end)   c:SetHide(true)   print(\"DISMISSED|WorldCongressIntro\") end end do local ls = ContextPtr:LookUpControl(\"/InGame/LeaderScene\") if ls and not ls:IsHidden() then   pcall(function() Events.HideLeaderScreen() end)   ls:SetHide(true)   print(\"DISMISSED|LeaderScene\") end end do local dv = ContextPtr:LookUpControl(\"/InGame/DiplomacyActionView\") if dv and not dv:IsHidden() then   print(\"PENDING|DiplomacyActionView\") end end do local ddv = ContextPtr:LookUpControl(\"/InGame/DiplomacyDealView\") if ddv and not ddv:IsHidden() then   print(\"PENDING|DiplomacyDealView\") end end local mode = UI.GetInterfaceMode() if mode == InterfaceModeTypes.CINEMATIC then   pcall(function() UI.ClearTemporaryPlotVisibility(\"NaturalDisaster\") end)   pcall(function() UI.ClearTemporaryPlotVisibility(\"NaturalWonder\") end)   pcall(function() Events.StopAllCameraAnimations() end)   pcall(function() UILens.RestoreActiveLens() end)   UI.SetInterfaceMode(InterfaceModeTypes.SELECTION)   print(\"DISMISSED|cinematic_camera\") end print(\"---END---\")",
+      "lines": [
+        "PENDING|DiplomacyActionView"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "do local c = ContextPtr:LookUpControl(\"/InGame/TechCivicCompletedPopup\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end do local c = ContextPtr:LookUpControl(\"/InGame/NaturalWonderPopup\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end do local c = ContextPtr:LookUpControl(\"/InGame/NaturalDisasterPopup\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end do local c = ContextPtr:LookUpControl(\"/InGame/WonderBuiltPopup\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end do local c = ContextPtr:LookUpControl(\"/InGame/EraCompletePopup\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end do local c = ContextPtr:LookUpControl(\"/InGame/HistoricMoments\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end do local c = ContextPtr:LookUpControl(\"/InGame/MomentPopup\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end do local c = ContextPtr:LookUpControl(\"/InGame/ProjectBuiltPopup\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end do local c = ContextPtr:LookUpControl(\"/InGame/RockBandPopup\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end do local c = ContextPtr:LookUpControl(\"/InGame/RockBandMoviePopup\") if c and not c:IsHidden() then print(\"EXCL_VISIBLE\") end end print(\"---END---\")",
+      "lines": []
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pDiplo = Players[me]:GetDiplomacy()\nlocal wc = Game.GetWorldCongress()\nif not wc then print(\"ERR:NO_WORLD_CONGRESS|World Congress not available yet\"); print(\"---END---\"); return end\nlocal inSession = wc:IsInSession()\nlocal meeting = wc:GetMeetingStatus()\nlocal turnsLeft = meeting and meeting.TurnsLeft or -1\nlocal favor = Players[me]:GetFavor()\nlocal costs = wc:GetVotesandFavorCost()\nlocal maxVotes = costs.MaxVotes or 5\nlocal costStr = \"\"\nfor i = 0, maxVotes do\n    if i > 0 then costStr = costStr .. \",\" end\n    costStr = costStr .. tostring(costs[i] or 0)\nend\nprint(\"WC_STATUS|\" .. tostring(inSession) .. \"|\" .. turnsLeft .. \"|\" .. favor .. \"|\" .. maxVotes .. \"|\" .. costStr)\nlocal ress = wc:GetResolutions()\nif ress then\n    for _, res in ipairs(ress) do\n        local rType = res.Type\n        local gRes = nil\n        for row in GameInfo.Resolutions() do\n            if row.Hash == rType then gRes = row end\n        end\n        local typeName = gRes and gRes.ResolutionType or (\"HASH_\" .. tostring(rType))\n        local name = gRes and Locale.Lookup(gRes.Name) or \"Unknown\"\n        local targetKind = gRes and (gRes.TargetKind or \"\") or \"\"\n        local effectA = gRes and gRes.Effect1Description and Locale.Lookup(gRes.Effect1Description) or \"\"\n        local effectB = gRes and gRes.Effect2Description and Locale.Lookup(gRes.Effect2Description) or \"\"\n        local isPassed = \"0\"\n        local winner = -1\n        local chosen = \"\"\n        if not inSession then\n            isPassed = \"1\"\n            winner = res.Winner or -1\n            if res.ChosenThing then\n                if res.TargetType == \"PlayerType\" then\n                    local pid = tonumber(res.ChosenThing)\n                    if pid and PlayerConfigurations[pid] and pDiplo:HasMet(pid) then\n                        chosen = Locale.Lookup(PlayerConfigurations[pid]:GetCivilizationShortDescription())\n                    else\n                        chosen = \"Unmet Player\"\n                    end\n                else\n                    chosen = Locale.Lookup(res.ChosenThing)\n                end\n            end\n        end\n        local targets = \"\"\n        if res.PossibleTargets then\n            local isPlayerType = (res.TargetType == \"PlayerType\")\n            for ti, tgt in ipairs(res.PossibleTargets) do\n                if ti > 1 then targets = targets .. \"~\" end\n                local tName = \"\"\n                local tId = tostring(ti - 1)  -- 0-based index as fallback ID\n                if isPlayerType then\n                    -- PlayerType: targets are player IDs (numbers)\n                    local pid = tonumber(tgt)\n                    tId = tostring(pid or (ti - 1))\n                    if pid and PlayerConfigurations[pid] and pDiplo:HasMet(pid) then\n                        tName = Locale.Lookup(PlayerConfigurations[pid]:GetCivilizationShortDescription())\n                    else\n                        tName = \"Unmet Player\"\n                    end\n                else\n                    -- Other types (District, Yield, etc.): targets are LOC key strings\n                    local ok, resolved = pcall(Locale.Lookup, tostring(tgt))\n                    if ok and resolved then tName = resolved\n                    else tName = tostring(tgt) end\n                end\n                targets = targets .. tId .. \":\" .. tName\n            end\n        end\n        effectA = effectA:gsub(\"|\", \"/\"):gsub(\"~\", \"-\")\n        effectB = effectB:gsub(\"|\", \"/\"):gsub(\"~\", \"-\")\n        name = name:gsub(\"|\", \"/\"):gsub(\"~\", \"-\")\n        chosen = chosen:gsub(\"|\", \"/\"):gsub(\"~\", \"-\")\n        print(\"WC_RES|\" .. rType .. \"|\" .. typeName .. \"|\" .. name .. \"|\" .. targetKind .. \"|\" .. effectA .. \"|\" .. effectB .. \"|\" .. isPassed .. \"|\" .. winner .. \"|\" .. chosen .. \"|\" .. targets)\n    end\nend\nif inSession then\n    local props = wc:GetProposals()\n    if props then\n        for _, prop in ipairs(props) do\n            local sid = prop.SenderID or -1\n            local tid = prop.TargetID or -1\n            local sName = sid >= 0 and Locale.Lookup(PlayerConfigurations[sid]:GetCivilizationShortDescription()) or \"Unknown\"\n            local tName = tid >= 0 and Locale.Lookup(PlayerConfigurations[tid]:GetCivilizationShortDescription()) or \"Unknown\"\n            local pType = prop.Type or 0\n            local desc = prop.Description and Locale.Lookup(prop.Description) or \"\"\n            desc = desc:gsub(\"|\", \"/\"):gsub(\"~\", \"-\")\n            sName = sName:gsub(\"|\", \"/\")\n            tName = tName:gsub(\"|\", \"/\")\n            print(\"WC_PROP|\" .. sid .. \"|\" .. sName .. \"|\" .. tid .. \"|\" .. tName .. \"|\" .. pType .. \"|\" .. desc)\n        end\n    end\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "WC_STATUS|false|9|10|2|0,10,30",
+        "WC_RES|-1027166762|WC_RES_MERCENARY_COMPANIES|Mercenary Companies|YIELD|Producing, or purchasing military units using the chosen currency type, is +100% of the cost until the next World Congress.|Producing, or purchasing military units using the chosen currency type, is -50% of the cost until the next World Congress.|1|0|Production|",
+        "WC_RES|194445045|WC_RES_GLOBAL_ENERGY_TREATY|Global Energy Treaty|BUILDING|Ban the production of buildings of this type.|50% discount on the production of buildings of this type.|1|2|Oil Power Plant|",
+        "WC_RES|334823573|WC_RES_DIPLOVICTORY|Diplomatic Victory|PLAYER|Chosen Player gains 2 Diplomatic Victory points.|Chosen Player loses 2 Diplomatic Victory points.|1|0|Kongo|"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal list = NotificationManager.GetList(me)\nlocal seen = {}\nlocal found = 0\nif list then\n    for _, nid in ipairs(list) do\n        local entry = NotificationManager.Find(me, nid)\n        if entry and not entry:IsDismissed() then\n            local bt = entry:GetEndTurnBlocking()\n            if bt and bt ~= 0 then\n                local typeName = \"UNKNOWN\"\n                for k, v in pairs(EndTurnBlockingTypes) do\n                    if v == bt then typeName = k; break end\n                end\n                if not seen[typeName] then\n                    seen[typeName] = true\n                    local msg = (entry:GetMessage() or \"\"):gsub(\"|\", \"/\")\n                    print(\"BLOCKING|\" .. typeName .. \"|\" .. msg)\n                    found = found + 1\n                end\n            end\n        end\n    end\nend\nif found == 0 then print(\"NONE\") end\nprint(\"---END---\")\n",
+      "lines": [
+        "BLOCKING|ENDTURN_BLOCKING_PRODUCTION|Choose Production"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "local me = Game.GetLocalPlayer(); local corrupted = {}; for i, c in Players[me]:GetCities():Members() do   local bq = c:GetBuildQueue();   if bq:GetSize() > 0 and bq:GetCurrentProductionTypeHash() == 0 then     table.insert(corrupted, Locale.Lookup(c:GetName()) .. \" (id:\" .. c:GetID() .. \")\")   end end; if #corrupted > 0 then   print(\"CORRUPTED|\" .. table.concat(corrupted, \",\")) else print(\"CLEAN\") end; print(\"---END---\")",
+      "lines": [
+        "CLEAN"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "local me = Game.GetLocalPlayer(); local empty = {}; for i, c in Players[me]:GetCities():Members() do   local bq = c:GetBuildQueue();   if bq:GetSize() == 0 then     table.insert(empty, Locale.Lookup(c:GetName()) .. \" (id:\" .. c:GetID() .. \")\")   end end; if #empty > 0 then   print(\"EMPTY|\" .. table.concat(empty, \", \")) else print(\"CLEAN\") end; print(\"---END---\")",
+      "lines": [
+        "EMPTY|Heidelberg (id:327684)"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "local can = UI.CanEndTurn(); print(can and \"CAN_END\" or \"CANNOT_END\"); print(\"---END---\")",
+      "lines": [
+        "CAN_END"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal id = Game.GetLocalPlayer()\nlocal p = Players[id]\nlocal cfg = PlayerConfigurations[id]\nlocal tr = p:GetTreasury()\nlocal te = p:GetTechs()\nlocal cu = p:GetCulture()\nlocal re = p:GetReligion()\nlocal techIdx = te:GetResearchingTech()\nlocal civicIdx = cu:GetProgressingCivic()\nlocal techName = \"None\"\nif techIdx >= 0 then techName = Locale.Lookup(GameInfo.Technologies[techIdx].Name) end\nlocal civicName = \"None\"\nif civicIdx >= 0 then civicName = Locale.Lookup(GameInfo.Civics[civicIdx].Name) end\nlocal nCities = 0; local totalPop = 0; for i, c in p:GetCities():Members() do nCities = nCities + 1; totalPop = totalPop + c:GetPopulation() end\nlocal nUnits = 0\nlocal unitCounts = {}\nlocal unitMaint = 0\nfor i, u in p:GetUnits():Members() do\n    nUnits = nUnits + 1\n    local entry = GameInfo.Units[u:GetType()]\n    if entry then\n        local shortName = Locale.Lookup(entry.Name)\n        unitCounts[shortName] = (unitCounts[shortName] or 0) + 1\n        unitMaint = unitMaint + (entry.Maintenance or 0)\n    end\nend\nlocal myScore = p:GetScore()\nlocal favor = p:GetFavor()\nlocal favorPerTurn = 0\nlocal pDiplo = p:GetDiplomacy()\n-- 1. Government tier bonus (govRow.Tier is a string like \"GOVERNMENT_TIER_1\")\nlocal govIdx = cu:GetCurrentGovernment()\nif govIdx >= 0 then\n    local govRow = GameInfo.Governments[govIdx]\n    if govRow and govRow.Tier then\n        local n = tonumber(tostring(govRow.Tier):match(\"(%d+)$\")) or 0\n        favorPerTurn = favorPerTurn + math.max(1, n)\n    end\nend\n-- 2. Alliances (level-based, +1 per alliance level)\nfor i = 0, 62 do\n    if i ~= id and Players[i] and Players[i]:IsAlive() and Players[i]:IsMajor() and pDiplo:HasMet(i) then\n        local ok, ai = pcall(function() return Players[i]:GetDiplomaticAI() end)\n        if ok and ai then\n            local ok2, stateIdx = pcall(function() return ai:GetDiplomaticStateIndex(id) end)\n            if ok2 and stateIdx then\n                local si = tonumber(stateIdx) or -1\n                if si == 0 then\n                    local ok3, aLvl = pcall(function() return pDiplo:GetAllianceLevel(i) end)\n                    favorPerTurn = favorPerTurn + (tonumber(ok3 and aLvl) or 1)\n                end\n            end\n        end\n    end\nend\n-- 3. Suzerainties (+1 each)\nfor i = 0, 62 do\n    if Players[i] and Players[i]:IsAlive() then\n        local ok, canRecv = pcall(function() return Players[i]:GetInfluence():CanReceiveInfluence() end)\n        if ok and canRecv then\n            local suzID = Players[i]:GetInfluence():GetSuzerain()\n            if suzID == id then favorPerTurn = favorPerTurn + 1 end\n        end\n    end\nend\nprint(Game.GetCurrentGameTurn() .. \"|\" .. id .. \"|\" .. Locale.Lookup(cfg:GetCivilizationShortDescription()):gsub(\"|\", \"/\") .. \"|\" .. Locale.Lookup(cfg:GetLeaderName()):gsub(\"|\", \"/\") .. \"|\" .. string.format(\"%.1f\", tr:GetGoldBalance()) .. \"|\" .. string.format(\"%.1f\", tr:GetGoldYield() - tr:GetTotalMaintenance()) .. \"|\" .. string.format(\"%.1f\", te:GetScienceYield()) .. \"|\" .. string.format(\"%.1f\", cu:GetCultureYield()) .. \"|\" .. string.format(\"%.1f\", re:GetFaithBalance()) .. \"|\" .. techName .. \"|\" .. civicName .. \"|\" .. nCities .. \"|\" .. nUnits .. \"|\" .. myScore .. \"|\" .. favor .. \"|\" .. favorPerTurn .. \"|\" .. totalPop .. \"|\" .. string.format(\"%.1f\", tr:GetGoldYield()) .. \"|\" .. string.format(\"%.1f\", tr:GetTotalMaintenance()))\nfor i = 0, 62 do\n    if i ~= id and Players[i] and Players[i]:IsAlive() and Players[i]:IsMajor() and pDiplo:HasMet(i) then\n        local oCfg = PlayerConfigurations[i]\n        print(\"RANK|\" .. i .. \"|\" .. Locale.Lookup(oCfg:GetCivilizationShortDescription()):gsub(\"|\", \"/\") .. \"|\" .. Players[i]:GetScore())\n    end\nend\nlocal pVis = PlayersVisibility[id]\nlocal totalPlots = Map.GetPlotCount()\nlocal revLand, totalLand = 0, 0\nfor i = 0, totalPlots - 1 do\n    local plot = Map.GetPlotByIndex(i)\n    if not plot:IsWater() then\n        totalLand = totalLand + 1\n        if pVis:IsRevealed(plot:GetX(), plot:GetY()) then revLand = revLand + 1 end\n    end\nend\nprint(\"EXPLORE|\" .. revLand .. \"|\" .. totalLand)\nlocal nMajors = 0\nlocal nReligions = 0\nfor i = 0, 62 do\n    if Players[i] and Players[i]:IsMajor() and Players[i]:IsAlive() then\n        nMajors = nMajors + 1\n        local rType = Players[i]:GetReligion():GetReligionTypeCreated()\n        if rType >= 0 then\n            nReligions = nReligions + 1\n            if i == id or pDiplo:HasMet(i) then\n                local rName = \"Unknown\"\n                local rEntry = GameInfo.Religions[rType]\n                if rEntry then rName = Locale.Lookup(rEntry.Name) end\n                local oCfg = PlayerConfigurations[i]\n                local civName = Locale.Lookup(oCfg:GetCivilizationShortDescription())\n                print(\"REL|\" .. i .. \"|\" .. civName .. \"|\" .. rName)\n            end\n        end\n    end\nend\nlocal maxRel = math.floor(nMajors / 2) + 1\nprint(\"RELSLOTS|\" .. nReligions .. \"|\" .. maxRel)\nlocal eraManager = Game.GetEras()\nlocal eraIdx = eraManager:GetCurrentEra()\nlocal eraEntry = GameInfo.Eras[eraIdx]\nlocal eraName = eraEntry and Locale.Lookup(eraEntry.Name) or \"Unknown\"\nlocal eraScore = eraManager:GetPlayerCurrentScore(id)\nlocal darkThresh = eraManager:GetPlayerDarkAgeThreshold(id)\nlocal goldenThresh = eraManager:GetPlayerGoldenAgeThreshold(id)\nprint(\"ERA|\" .. eraName .. \"|\" .. eraScore .. \"|\" .. darkThresh .. \"|\" .. goldenThresh)\nlocal maxTurns = GameConfiguration.GetValue(\"GAME_MAX_TURNS\") or 0\nprint(\"MAXTURNS|\" .. maxTurns)\nlocal diffName = \"Unknown\"\npcall(function()\n    local diffHash = PlayerConfigurations[id]:GetHandicapTypeID()\n    for d in GameInfo.Difficulties() do\n        if GameConfiguration.MakeHash(d.DifficultyType) == diffHash then\n            diffName = Locale.Lookup(d.Name)\n            break\n        end\n    end\nend)\nprint(\"DIFFICULTY|\" .. diffName)\nlocal ubParts = {}\nfor name, count in pairs(unitCounts) do\n    table.insert(ubParts, name .. \":\" .. count)\nend\ntable.sort(ubParts, function(a, b)\n    return tonumber(a:match(\":(%d+)$\")) > tonumber(b:match(\":(%d+)$\"))\nend)\nprint(\"UNITBREAKDOWN|\" .. table.concat(ubParts, \",\") .. \"|\" .. unitMaint)\npcall(function()\n    local gsIdx = Game.GetGameSpeedType()\n    local gsRow = GameInfo.GameSpeeds[gsIdx]\n    if gsRow then\n        local gsName = Locale.Lookup(gsRow.Name)\n        local gsMult = gsRow.CostMultiplier or 100\n        print(\"SPEED|\" .. gsRow.GameSpeedType .. \"|\" .. gsName .. \"|\" .. gsMult)\n    end\nend)\nlocal vtypes = {\"VICTORY_TECHNOLOGY\", \"VICTORY_CONQUEST\", \"VICTORY_CULTURE\", \"VICTORY_RELIGIOUS\", \"VICTORY_DIPLOMATIC\"}\nlocal vEnabled = {}\nfor _, vt in ipairs(vtypes) do\n    local row = GameInfo.Victories[vt]\n    if row then\n        local ok, en = pcall(function() return Game.IsVictoryEnabled(row.Index) end)\n        if ok and en then table.insert(vEnabled, vt) end\n    end\nend\nif #vEnabled < #vtypes then\n    print(\"VENABLED|\" .. table.concat(vEnabled, \",\"))\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "352|0|Germany|Frederick Barbarossa|2332.6|-261.0|0.0|0.0|2115.1|Computers|Mysticism|15|38|1041|10|2|128|0.0|261.0",
+        "RANK|2|Mapuche|733",
+        "RANK|3|England|1015",
+        "RANK|4|Georgia|782",
+        "RANK|5|Kongo|1038",
+        "EXPLORE|765|1142",
+        "REL|2|Mapuche|Zoroastrianism",
+        "REL|3|England|Protestantism",
+        "REL|4|Georgia|Eastern Orthodoxy",
+        "RELSLOTS|3|3",
+        "ERA|Atomic Era|189|206|220",
+        "MAXTURNS|0",
+        "DIFFICULTY|Prince",
+        "UNITBREAKDOWN|Trader:10,Bomber:3,Builder:3,Tank:3,Military Engineer:2,Anti-Air Gun:2,Machine Gun:2,Fighter:2,Aircraft Carrier:2,Destroyer:2,Artillery:1,Great Admiral:1,Great Merchant:1,Field Cannon:1,Infantry:1,Great General:1,Spy:1|122"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "\nlocal id = Game.GetLocalPlayer()\nfor i, u in Players[id]:GetUnits():Members() do\n    local x, y = u:GetX(), u:GetY()\n    if x ~= -9999 then\n        local uid = ((u:GetID() % 65536) + u:GetOwner() * 65536)\n        local entry = GameInfo.Units[u:GetType()]\n        local ut = entry and entry.UnitType or \"UNKNOWN\"\n        local nm = Locale.Lookup(u:GetName())\n        local cs = entry and entry.Combat or 0\n        local rs = entry and entry.RangedCombat or 0\n        local charges = u:GetBuildCharges() or 0\n        local gp = u:GetGreatPerson()\n        if gp then\n            local ok_gp, gp_charges = pcall(function() return gp:GetActionCharges() end)\n            if ok_gp and gp_charges and gp_charges > 0 then charges = gp_charges end\n            if charges == 0 then\n                -- Cultural GPs (Writers/Artists/Musicians) return 0 from\n                -- GetActionCharges(). Fall back to the individual definition.\n                pcall(function()\n                    local indIdx = gp:GetIndividual()\n                    for ind in GameInfo.GreatPersonIndividuals() do\n                        if ind.Index == indIdx then\n                            charges = ind.ActionCharges or 0\n                            break\n                        end\n                    end\n                end)\n            end\n        end\n        if charges == 0 then\n            local ok_sp, sp = pcall(function() return u:GetSpreadCharges() end)\n            if ok_sp and sp and sp > 0 then charges = sp end\n        end\n        local relName = \"\"\n        local ok_r, rIdx = pcall(function() return u:GetReligionType() end)\n        if ok_r and rIdx and rIdx >= 0 then\n            for row in GameInfo.Religions() do\n                if row.Index == rIdx then relName = row.ReligionType; break end\n            end\n        end\n        -- Scan for attackable enemies if unit has moves\n        local targets = \"\"\n        if u:GetMovesRemaining() > 0 and (cs > 0 or rs > 0) then\n            local rng = (rs > 0) and (entry and entry.Range or 1) or 1\n            local tgtList = {}\n            for dy = -rng, rng do\n                for dx = -rng, rng do\n                    local tx, ty = x + dx, y + dy\n                    local d = Map.GetPlotDistance(x, y, tx, ty)\n                    if d >= 1 and d <= rng then\n                        local plotUnits = Map.GetUnitsAt(tx, ty)\n                        if plotUnits then\n                            for other in plotUnits:Units() do\n                                local otherOwner = other:GetOwner()\n                                if otherOwner ~= id and (otherOwner == 63 or Players[id]:GetDiplomacy():IsAtWarWith(otherOwner)) then\n                                    -- LOS check for ranged units (d>1): verify the\n                                    -- game engine agrees we can actually fire there.\n                                    -- Melee (d==1) doesn't need LOS.\n                                    local losOK = true\n                                    if rs > 0 and d > 1 then\n                                        local lp = {{}}\n                                        lp[UnitOperationTypes.PARAM_X] = tx\n                                        lp[UnitOperationTypes.PARAM_Y] = ty\n                                        losOK = UnitManager.CanStartOperation(u, UnitOperationTypes.RANGE_ATTACK, nil, lp)\n                                    end\n                                    if losOK then\n                                        local eInfo = GameInfo.Units[other:GetType()]\n                                        local eName = eInfo and eInfo.UnitType or \"UNKNOWN\"\n                                        local eHP = other:GetMaxDamage() - other:GetDamage()\n                                        table.insert(tgtList, eName .. \"@\" .. tx .. \",\" .. ty .. \"(\" .. eHP .. \"hp)\")\n                                    end\n                                end\n                            end\n                        end\n                    end\n                end\n            end\n            if #tgtList > 0 then targets = table.concat(tgtList, \";\") end\n        end\n        -- NOTE: promotion detection is intentionally omitted here.\n        -- GetExperiencePoints() >= GetExperienceForNextLevel() stays true after\n        -- SetPromotion() (level and XP are not consumed), so any mid-turn check\n        -- fires one turn early AND causes double-promotions when end_turn's\n        -- authoritative GameCore CanPromote check also fires.\n        -- All promotion handling is routed through the end_turn blocker (which\n        -- uses CanPromote in GameCore \u2014 the only correct check).\n        local promo = \"0\"\n        -- Upgrade info (InGame only: CanStartCommand)\n        local canUp, upName, upCost = \"0\", \"\", \"0\"\n        local ok1, _ = pcall(function()\n            if UnitManager.CanStartCommand(u, UnitCommandTypes.UPGRADE, nil, true) then\n                canUp = \"1\"\n                local c2 = u:GetUpgradeCost()\n                if c2 then upCost = tostring(c2) end\n                if entry and entry.UpgradeUnitCollection then\n                    for _, row in ipairs(entry.UpgradeUnitCollection) do\n                        if row.UpgradeUnit then upName = row.UpgradeUnit end\n                        break\n                    end\n                end\n            end\n        end)\n        -- Builder improvement advisor (InGame only: CanStartOperation)\n        local validImps = \"\"\n        if ut == \"UNIT_BUILDER\" and u:GetMovesRemaining() > 0 then\n            local plot = Map.GetPlot(x, y)\n            if plot and plot:GetOwner() == id then\n                local impList = {}\n                for imp in GameInfo.Improvements() do\n                    if imp.Buildable and not imp.TraitType then\n                        local bParams = {}\n                        bParams[UnitOperationTypes.PARAM_X] = x\n                        bParams[UnitOperationTypes.PARAM_Y] = y\n                        bParams[UnitOperationTypes.PARAM_IMPROVEMENT_TYPE] = imp.Hash\n                        local ok2, _ = pcall(function()\n                            if UnitManager.CanStartOperation(u, UnitOperationTypes.BUILD_IMPROVEMENT, nil, bParams) then\n                                table.insert(impList, imp.ImprovementType)\n                            end\n                        end)\n                    end\n                end\n                if #impList > 0 then validImps = table.concat(impList, \";\") end\n            end\n        end\n        -- Military Engineer advisor (BUILD_ROUTE + fort/airstrip)\n        if ut == \"UNIT_MILITARY_ENGINEER\" and u:GetMovesRemaining() > 0 then\n            local meList = {}\n            pcall(function()\n                local opRow = GameInfo.UnitOperations[\"UNITOPERATION_BUILD_ROUTE\"]\n                if opRow then\n                    local rp = {}\n                    rp[UnitOperationTypes.PARAM_X] = x\n                    rp[UnitOperationTypes.PARAM_Y] = y\n                    if UnitManager.CanStartOperation(u, opRow.Hash, nil, rp) then\n                        table.insert(meList, \"BUILD_ROUTE\")\n                    end\n                end\n            end)\n            local plot = Map.GetPlot(x, y)\n            if plot and plot:GetOwner() == id then\n                for imp in GameInfo.Improvements() do\n                    if imp.Buildable and not imp.TraitType then\n                        pcall(function()\n                            local bp = {}\n                            bp[UnitOperationTypes.PARAM_X] = x\n                            bp[UnitOperationTypes.PARAM_Y] = y\n                            bp[UnitOperationTypes.PARAM_IMPROVEMENT_TYPE] = imp.Hash\n                            if UnitManager.CanStartOperation(u, UnitOperationTypes.BUILD_IMPROVEMENT, nil, bp) then\n                                table.insert(meList, imp.ImprovementType)\n                            end\n                        end)\n                    end\n                end\n            end\n            if #meList > 0 then validImps = table.concat(meList, \";\") end\n        end\n        print(uid .. \"|\" .. (uid % 65536) .. \"|\" .. nm .. \"|\" .. ut .. \"|\" .. x .. \",\" .. y .. \"|\" .. u:GetMovesRemaining() .. \"/\" .. u:GetMaxMoves() .. \"|\" .. (u:GetMaxDamage() - u:GetDamage()) .. \"/\" .. u:GetMaxDamage() .. \"|\" .. cs .. \"|\" .. rs .. \"|\" .. charges .. \"|\" .. targets .. \"|\" .. promo .. \"|\" .. canUp .. \"|\" .. upName .. \"|\" .. upCost .. \"|\" .. validImps .. \"|\" .. relName)\n    end\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "1|1|Sergei Gorshkov|UNIT_GREAT_ADMIRAL|10,15|0/5|100/100|0|0|1||0|0||0||",
+        "2|2|Trader|UNIT_TRADER|6,22|0/2|100/100|0|0|0||0|0||0||",
+        "4|4|Military Engineer|UNIT_MILITARY_ENGINEER|17,7|0/2|100/100|0|0|1||0|0||0||",
+        "5|5|Trader|UNIT_TRADER|20,22|0/2|100/100|0|0|0||0|0||0||",
+        "7|7|Anti-Air Gun|UNIT_ANTIAIR_GUN|47,15|0/2|100/100|0|0|0||0|0||0||",
+        "8|8|Trader|UNIT_TRADER|47,14|0/2|100/100|0|0|0||0|0||0||",
+        "9|9|Trader|UNIT_TRADER|15,7|0/2|100/100|0|0|0||0|0||0||",
+        "10|10|Trader|UNIT_TRADER|20,18|0/2|100/100|0|0|0||0|0||0||",
+        "11|11|Trader|UNIT_TRADER|23,19|0/2|100/100|0|0|0||0|0||0||",
+        "12|12|Trader|UNIT_TRADER|27,18|0/2|100/100|0|0|0||0|0||0||",
+        "13|13|Trader|UNIT_TRADER|18,14|0/2|100/100|0|0|0||0|0||0||",
+        "15|15|Military Engineer|UNIT_MILITARY_ENGINEER|22,10|0/2|100/100|0|0|2||0|0||0||",
+        "16|16|Trader|UNIT_TRADER|14,12|0/2|100/100|0|0|0||0|0||0||",
+        "17|17|Dandara|UNIT_GREAT_GENERAL|17,14|0/4|100/100|0|0|2||0|0||0||",
+        "18|18|Machine Gun|UNIT_MACHINE_GUN|14,8|0/2|100/100|70|85|0||0|0||0||",
+        "19|19|Wanda|UNIT_SPY|54,20|0/1|100/100|0|0|0||0|0||0||",
+        "20|20|Bomber|UNIT_BOMBER|51,14|0/10|100/100|85|0|0||0|0||0||",
+        "21|21|Bomber|UNIT_BOMBER|48,15|0/10|100/100|85|0|0||0|0||0||",
+        "23|23|Builder|UNIT_BUILDER|35,10|0/2|100/100|0|0|3||0|0||0||",
+        "24|24|Field Cannon|UNIT_FIELD_CANNON|8,17|0/2|100/100|50|60|0||0|0||0||",
+        "25|25|Builder|UNIT_BUILDER|47,15|0/2|100/100|0|0|3||0|0||0||",
+        "26|26|Stamford Raffles|UNIT_GREAT_MERCHANT|48,14|0/4|100/100|0|0|1||0|0||0||",
+        "27|27|Trader|UNIT_TRADER|49,15|0/2|100/100|0|0|0||0|0||0||",
+        "29|29|Anti-Air Gun|UNIT_ANTIAIR_GUN|51,16|0/2|100/100|0|0|0||0|0||0||",
+        "30|30|Fighter|UNIT_FIGHTER|35,10|0/8|100/100|100|100|0||0|0||0||",
+        "31|31|Fighter|UNIT_FIGHTER|51,14|0/8|100/100|100|100|0||0|0||0||",
+        "32|32|Bomber|UNIT_BOMBER|48,15|0/10|100/100|85|0|0||0|0||0||",
+        "33|33|Builder|UNIT_BUILDER|49,14|0/2|100/100|0|0|4||0|0||0||",
+        "34|34|Aircraft Carrier|UNIT_AIRCRAFT_CARRIER|46,14|0/4|100/100|65|0|0||0|0||0||",
+        "35|35|Aircraft Carrier|UNIT_AIRCRAFT_CARRIER|49,13|0/4|100/100|65|0|0||0|0||0||",
+        "36|36|Destroyer|UNIT_DESTROYER|47,13|0/5|63/100|85|0|0||0|0||0||",
+        "37|37|Destroyer|UNIT_DESTROYER|51,7|0/5|100/100|85|0|0||0|0||0||",
+        "38|38|Tank|UNIT_TANK|4,21|0/5|100/100|85|0|0||0|0||0||",
+        "39|39|Infantry|UNIT_INFANTRY|11,16|0/2|100/100|75|0|0||0|0||0||",
+        "40|40|Machine Gun|UNIT_MACHINE_GUN|6,19|0/2|100/100|70|85|0||0|0||0||",
+        "41|41|Artillery|UNIT_ARTILLERY|17,14|0/3|100/100|60|0|0||0|0||0||",
+        "42|42|Tank|UNIT_TANK|47,14|0/5|100/100|85|0|0||0|0||0||",
+        "43|43|Tank|UNIT_TANK|49,14|0/5|100/100|85|0|0||0|0||0||"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal hashName = {}\nfor u in GameInfo.Units() do hashName[u.Hash] = u.UnitType end\nfor b in GameInfo.Buildings() do hashName[b.Hash] = b.BuildingType end\nfor d in GameInfo.Districts() do hashName[d.Hash] = d.DistrictType end\nfor p in GameInfo.Projects() do hashName[p.Hash] = p.ProjectType end\nlocal cityCoords = {}\nfor i, c in Players[me]:GetCities():Members() do\n    local nm = Locale.Lookup(c:GetName()):gsub(\"|\", \"/\")\n    local bq = c:GetBuildQueue()\n    local producing = \"nothing\"\n    local turnsLeft = 0\n    if bq:GetSize() > 0 then\n        local h = bq:GetCurrentProductionTypeHash()\n        if h == 0 then\n            -- Ghost entry (Babylon eureka can obsolete queued items).\n            -- Try to clear it so the city reports as idle.\n            pcall(function() bq:RemoveAt(0) end)\n            producing = \"nothing\"\n        else\n            producing = hashName[h] or \"UNKNOWN\"\n        end\n        turnsLeft = bq:GetTurnsLeft()\n    end\n    local g = c:GetGrowth()\n    local amNeed = 0\n    pcall(function() amNeed = g:GetAmenitiesNeeded() end)\n    local amTotal = amNeed + g:GetAmenities()\n    -- City defense info\n    local defStr, garHP, garMax, wallHP, wallMax = 0, 0, 0, 0, 0\n    local ccIdx = GameInfo.Districts[\"DISTRICT_CITY_CENTER\"].Index\n    for _, d in c:GetDistricts():Members() do\n        if d:GetType() == ccIdx then\n            local ok, _ = pcall(function()\n                defStr = d:GetDefenseStrength() or 0\n                garMax = d:GetMaxDamage(DefenseTypes.DISTRICT_GARRISON) or 0\n                garHP = garMax - (d:GetDamage(DefenseTypes.DISTRICT_GARRISON) or 0)\n                wallMax = d:GetMaxDamage(DefenseTypes.DISTRICT_OUTER) or 0\n                wallHP = wallMax - (d:GetDamage(DefenseTypes.DISTRICT_OUTER) or 0)\n            end)\n            break\n        end\n    end\n    local cityTargets = {}\n    if wallMax > 0 then\n        local cx, cy = c:GetX(), c:GetY()\n        for dy = -3, 3 do for dx = -3, 3 do\n            local tx, ty = cx + dx, cy + dy\n            local d = Map.GetPlotDistance(cx, cy, tx, ty)\n            if d >= 1 and d <= 3 then\n                local pu = Map.GetUnitsAt(tx, ty)\n                if pu then for other in pu:Units() do\n                    if other:GetOwner() ~= me then\n                        local eInfo = GameInfo.Units[other:GetType()]\n                        local eName = eInfo and eInfo.UnitType or \"UNKNOWN\"\n                        local eHP = other:GetMaxDamage() - other:GetDamage()\n                        table.insert(cityTargets, eName .. \"@\" .. tx .. \",\" .. ty .. \"(\" .. eHP .. \"hp)[\" .. ((other:GetID() % 65536) + other:GetOwner() * 65536) .. \"]\")\n                    end\n                end end\n            end\n        end end\n    end\n    local pillDistricts = {}\n    local distLocs = {}\n    for _, d in c:GetDistricts():Members() do\n        local dInfo = GameInfo.Districts[d:GetType()]\n        if dInfo and dInfo.DistrictType ~= \"DISTRICT_CITY_CENTER\" then\n            table.insert(distLocs, dInfo.DistrictType .. \"@\" .. d:GetX() .. \",\" .. d:GetY())\n        end\n        if d:IsPillaged() then\n            if dInfo then table.insert(pillDistricts, dInfo.DistrictType .. \"@\" .. d:GetX() .. \",\" .. d:GetY()) end\n        end\n    end\n    local pillBuildings = {}\n    local allBuildings = {}\n    local pBuildings = c:GetBuildings()\n    for bldg in GameInfo.Buildings() do\n        if pBuildings:HasBuilding(bldg.Index) then\n            table.insert(allBuildings, bldg.BuildingType)\n            if pBuildings:IsPillaged(bldg.Index) then\n                table.insert(pillBuildings, bldg.BuildingType)\n            end\n        end\n    end\n    -- Scan owned tiles for unimproved resources and pillaged improvements\n    local unimproved = {}\n    local pillImprov = {}\n    local cx2, cy2 = c:GetX(), c:GetY()\n    for dy = -3, 3 do for dx = -3, 3 do\n        local px, py = cx2 + dx, cy2 + dy\n        local plot = Map.GetPlot(px, py)\n        if plot and plot:GetOwner() == me then\n            local res = plot:GetResourceType()\n            local imp = plot:GetImprovementType()\n            if res >= 0 and imp < 0 then\n                local resInfo = GameInfo.Resources[res]\n                if resInfo then\n                    table.insert(unimproved, resInfo.ResourceType .. \"@\" .. px .. \",\" .. py)\n                end\n            end\n            if imp >= 0 then\n                local okP, pil = pcall(function() return plot:IsImprovementPillaged() end)\n                if okP and pil then\n                    local impInfo = GameInfo.Improvements[imp]\n                    if impInfo then\n                        table.insert(pillImprov, impInfo.ImprovementType .. \"@\" .. px .. \",\" .. py)\n                    end\n                end\n            end\n        end\n    end end\n    table.insert(cityCoords, {name=nm, x=c:GetX(), y=c:GetY()})\n    local loy, loyMax, loyPT, loyFlip = 100, 100, 0, 0\n    local cult = c:GetCulturalIdentity()\n    if cult then\n        loy = cult:GetLoyalty()\n        loyMax = cult:GetMaxLoyalty()\n        loyPT = cult:GetLoyaltyPerTurn()\n        loyFlip = cult:GetTurnsToConversion()\n    end\n    local garrisonUnit = \"\"\n    local garFound = false\n    local garUnitsAt = Map.GetUnitsAt(c:GetX(), c:GetY())\n    if garUnitsAt then\n        for gu in garUnitsAt:Units() do\n            if not garFound and gu:GetOwner() == me then\n                local guInfo = GameInfo.Units[gu:GetType()]\n                if guInfo then\n                    local fc = guInfo.FormationClass\n                    if fc == \"FORMATION_CLASS_LAND_COMBAT\" or fc == \"FORMATION_CLASS_NAVAL_COMBAT\" then\n                        garrisonUnit = guInfo.UnitType\n                        garFound = true\n                    end\n                end\n            end\n        end\n    end\n    print(((c:GetID() % 65536) + c:GetOwner() * 65536 + 16777216) .. \"|\" .. nm .. \"|\" .. c:GetX() .. \",\" .. c:GetY() .. \"|\" .. c:GetPopulation() .. \"|\" .. string.format(\"%.1f|%.1f|%.1f|%.1f|%.1f|%.1f\", c:GetYield(0), c:GetYield(1), c:GetYield(2), c:GetYield(3), c:GetYield(4), c:GetYield(5)) .. \"|\" .. string.format(\"%.1f\", g:GetHousing()) .. \"|\" .. amTotal .. \"|\" .. g:GetTurnsUntilGrowth() .. \"|\" .. producing .. \"|\" .. turnsLeft .. \"|\" .. defStr .. \"|\" .. garHP .. \"/\" .. garMax .. \"|\" .. wallHP .. \"/\" .. wallMax .. \"|\" .. table.concat(cityTargets, \";\") .. \"|\" .. table.concat(pillDistricts, \";\") .. \"|\" .. table.concat(distLocs, \";\") .. \"|\" .. string.format(\"%.1f|%.1f|%.1f|%d\", loy, loyMax, loyPT, loyFlip) .. \"|\" .. string.format(\"%.1f|%.1f|%d\", g:GetFoodSurplus(), g:GetFood(), g:GetGrowthThreshold()) .. \"|\" .. table.concat(pillBuildings, \";\") .. \"|\" .. garrisonUnit)\n    if #unimproved > 0 or #pillImprov > 0 then\n        print(\"CITYTILES|\" .. ((c:GetID() % 65536) + c:GetOwner() * 65536 + 16777216) .. \"|\" .. table.concat(unimproved, \";\") .. \"|\" .. table.concat(pillImprov, \";\"))\n    end\n    if #allBuildings > 0 then\n        print(\"CITYBLDG|\" .. ((c:GetID() % 65536) + c:GetOwner() * 65536 + 16777216) .. \"|\" .. table.concat(allBuildings, \",\"))\n    end\nend\nfor i = 1, #cityCoords do for j = i + 1, #cityCoords do\n    local d = Map.GetPlotDistance(cityCoords[i].x, cityCoords[i].y, cityCoords[j].x, cityCoords[j].y)\n    print(\"DIST|\" .. cityCoords[i].name .. \"|\" .. cityCoords[j].name .. \"|\" .. d)\nend end\nprint(\"---END---\")\n",
+      "lines": [
+        "16777216|Aachen|14,8|13|38.0|60.3|91.1|47.6|23.0|4.5|23.0|13|9|UNIT_SETTLER|6|111|200/200|400/400|||DISTRICT_CAMPUS@13,7;DISTRICT_ENCAMPMENT@16,10;DISTRICT_COMMERCIAL_HUB@13,8;DISTRICT_HANSA@12,9;DISTRICT_AQUEDUCT@15,8;DISTRICT_HARBOR@13,10;DISTRICT_NEIGHBORHOOD@15,6;DISTRICT_THEATER@14,6|100.0|100.0|28.0|0|12.0|66.7|152||UNIT_MACHINE_GUN",
+        "CITYTILES|16777216|RESOURCE_DEER@14,5;RESOURCE_SHIPWRECK@11,7;RESOURCE_SHEEP@16,7;RESOURCE_OIL@11,8;RESOURCE_ANTIQUITY_SITE@11,9;RESOURCE_RICE@16,11|",
+        "CITYBLDG|16777216|BUILDING_MONUMENT,BUILDING_PALACE,BUILDING_BARRACKS,BUILDING_GRANARY,BUILDING_LIBRARY,BUILDING_WALLS,BUILDING_WATER_MILL,BUILDING_LIGHTHOUSE,BUILDING_MARKET,BUILDING_AMPHITHEATER,BUILDING_CASTLE,BUILDING_UNIVERSITY,BUILDING_WORKSHOP,BUILDING_ARMORY,BUILDING_SHIPYARD,BUILDING_BANK,BUILDING_STAR_FORT,BUILDING_MUSEUM_ART,BUILDING_FACTORY,BUILDING_STOCK_EXCHANGE,BUILDING_MILITARY_ACADEMY,BUILDING_SEWER,BUILDING_SEAPORT,BUILDING_FOOD_MARKET,BUILDING_COAL_POWER_PLANT",
+        "16777217|Frankfurt|18,10|7|14.0|48.4|36.0|16.7|6.4|5.4|15.0|7|-1|BUILDING_EIFFEL_TOWER|31|99|200/200|400/400|||DISTRICT_CAMPUS@19,9;DISTRICT_AQUEDUCT@19,10;DISTRICT_COMMERCIAL_HUB@17,10;DISTRICT_HANSA@19,11;DISTRICT_DAM@17,9;DISTRICT_WONDER@19,12;DISTRICT_AERODROME@18,9;DISTRICT_WONDER@17,11|100.0|100.0|27.0|0|0.0|47.2|77||",
+        "CITYTILES|16777217|RESOURCE_SHEEP@16,7;RESOURCE_RICE@16,11;RESOURCE_IRON@20,11;RESOURCE_COAL@16,13|IMPROVEMENT_MINE@18,8",
+        "CITYBLDG|16777217|BUILDING_GRANARY,BUILDING_LIBRARY,BUILDING_WALLS,BUILDING_WATER_MILL,BUILDING_MARKET,BUILDING_CASTLE,BUILDING_UNIVERSITY,BUILDING_WORKSHOP,BUILDING_BANK,BUILDING_FACTORY,BUILDING_STOCK_EXCHANGE,BUILDING_SEWER,BUILDING_HANGAR,BUILDING_AIRPORT,BUILDING_RUHR_VALLEY,BUILDING_HYDROELECTRIC_DAM,BUILDING_COAL_POWER_PLANT",
+        "16777218|Trier|14,12|10|29.0|14.0|1.0|8.1|6.0|1.0|8.0|10|2|PROJECT_ENHANCE_DISTRICT_CAMPUS|6|89|200/200|400/400||DISTRICT_COMMERCIAL_HUB@15,13;DISTRICT_DAM@13,14;DISTRICT_HANSA@15,12|DISTRICT_COMMERCIAL_HUB@15,13;DISTRICT_ENTERTAINMENT_COMPLEX@15,11;DISTRICT_DAM@13,14;DISTRICT_HANSA@15,12;DISTRICT_CANAL@12,11;DISTRICT_CAMPUS@13,12|100.0|100.0|22.0|0|9.0|110.7|114|BUILDING_MARKET;BUILDING_WORKSHOP;BUILDING_BANK;BUILDING_STOCK_EXCHANGE|",
+        "CITYTILES|16777218|RESOURCE_ANTIQUITY_SITE@11,9;RESOURCE_RICE@16,11;RESOURCE_HORSES@14,13;RESOURCE_COAL@16,13;RESOURCE_ANTIQUITY_SITE@12,14;RESOURCE_WHEAT@17,15|IMPROVEMENT_MINE@11,15",
+        "CITYBLDG|16777218|BUILDING_GRANARY,BUILDING_ARENA,BUILDING_MARKET,BUILDING_WORKSHOP,BUILDING_BANK,BUILDING_STOCK_EXCHANGE",
+        "16777219|Methone|17,14|11|18.0|37.8|58.5|19.2|8.4|0.0|23.0|10|-1|BUILDING_WORKSHOP|1|106|200/200|400/400|UNIT_ROCK_BAND@19,14(100hp)[327705]|DISTRICT_ENTERTAINMENT_COMPLEX@17,12;DISTRICT_NEIGHBORHOOD@19,13|DISTRICT_ENCAMPMENT@18,15;DISTRICT_CAMPUS@18,14;DISTRICT_HANSA@16,14;DISTRICT_ENTERTAINMENT_COMPLEX@17,12;DISTRICT_AQUEDUCT@16,13;DISTRICT_COMMERCIAL_HUB@16,12;DISTRICT_WONDER@18,12;DISTRICT_WONDER@19,14;DISTRICT_NEIGHBORHOOD@18,13;DISTRICT_NEIGHBORHOOD@19,13;DISTRICT_NEIGHBORHOOD@15,17|100.0|100.0|16.0|0|-4.0|20.7|126|BUILDING_ARENA;BUILDING_WORKSHOP;BUILDING_FACTORY;BUILDING_ZOO;BUILDING_FOOD_MARKET;BUILDING_COAL_POWER_PLANT|UNIT_ARTILLERY",
+        "CITYTILES|16777219|RESOURCE_RICE@16,11;RESOURCE_IRON@20,11;RESOURCE_HORSES@14,13;RESOURCE_COAL@16,13;RESOURCE_ALUMINUM@19,14;RESOURCE_WHEAT@17,15|IMPROVEMENT_FARM@17,16;IMPROVEMENT_FARM@19,16;IMPROVEMENT_FARM@17,17",
+        "CITYBLDG|16777219|BUILDING_MONUMENT,BUILDING_BARRACKS,BUILDING_GRANARY,BUILDING_LIBRARY,BUILDING_WALLS,BUILDING_WATER_MILL,BUILDING_ARENA,BUILDING_MARKET,BUILDING_CASTLE,BUILDING_UNIVERSITY,BUILDING_WORKSHOP,BUILDING_ARMORY,BUILDING_BANK,BUILDING_STAR_FORT,BUILDING_FACTORY,BUILDING_STOCK_EXCHANGE,BUILDING_MILITARY_ACADEMY,BUILDING_SEWER,BUILDING_ZOO,BUILDING_COLOSSEUM,BUILDING_OXFORD_UNIVERSITY,BUILDING_FOOD_MARKET,BUILDING_COAL_POWER_PLANT",
+        "16777220|Heidelberg|22,10|11|30.0|53.1|49.5|21.2|10.2|1.8|27.0|10|10|nothing|0|108|200/200|400/400|||DISTRICT_CAMPUS@21,9;DISTRICT_HANSA@20,10;DISTRICT_AQUEDUCT@22,9;DISTRICT_COMMERCIAL_HUB@22,8;DISTRICT_WONDER@23,8;DISTRICT_AERODROME@23,9;DISTRICT_NEIGHBORHOOD@21,8;DISTRICT_NEIGHBORHOOD@21,13;DISTRICT_NEIGHBORHOOD@23,12|100.0|100.0|28.0|0|8.0|44.9|126||",
+        "CITYTILES|16777220|RESOURCE_OIL@23,8;RESOURCE_ANTIQUITY_SITE@23,9;RESOURCE_WHEAT@24,9;RESOURCE_ANTIQUITY_SITE@25,10;RESOURCE_IRON@20,11;RESOURCE_WHEAT@24,12;RESOURCE_COPPER@25,13|",
+        "CITYBLDG|16777220|BUILDING_MONUMENT,BUILDING_GRANARY,BUILDING_LIBRARY,BUILDING_WALLS,BUILDING_WATER_MILL,BUILDING_MARKET,BUILDING_CASTLE,BUILDING_UNIVERSITY,BUILDING_WORKSHOP,BUILDING_BANK,BUILDING_STAR_FORT,BUILDING_FACTORY,BUILDING_STOCK_EXCHANGE,BUILDING_SEWER,BUILDING_HANGAR,BUILDING_AIRPORT,BUILDING_BIG_BEN,BUILDING_FOOD_MARKET,BUILDING_COAL_POWER_PLANT",
+        "16777221|Berlin|11,16|15|50.0|32.4|69.3|7.7|5.0|1.8|16.0|14|13|BUILDING_HYDROELECTRIC_DAM|13|99|200/200|400/400|||DISTRICT_HARBOR@10,15;DISTRICT_COMMERCIAL_HUB@11,14;DISTRICT_HANSA@12,14;DISTRICT_DAM@12,16;DISTRICT_AERODROME@9,18|100.0|100.0|17.0|0|20.0|75.0|179||UNIT_INFANTRY",
+        "CITYTILES|16777221|RESOURCE_HORSES@14,13;RESOURCE_ANTIQUITY_SITE@12,14;RESOURCE_ALUMINUM@8,18;RESOURCE_ANTIQUITY_SITE@10,18|IMPROVEMENT_MINE@11,15;IMPROVEMENT_FARM@13,16;IMPROVEMENT_FARM@11,18;IMPROVEMENT_FARM@10,19",
+        "CITYBLDG|16777221|BUILDING_GRANARY,BUILDING_WALLS,BUILDING_WATER_MILL,BUILDING_LIGHTHOUSE,BUILDING_MARKET,BUILDING_CASTLE,BUILDING_SHIPYARD,BUILDING_BANK,BUILDING_STOCK_EXCHANGE,BUILDING_SEWER",
+        "16777222|Hamburg|16,4|6|12.0|38.7|37.3|15.3|6.1|0.9|10.0|5|-1|PROJECT_ENHANCE_DISTRICT_COMMERCIAL_HUB|2|91|200/200|400/400|||DISTRICT_HANSA@16,6;DISTRICT_COMMERCIAL_HUB@17,4;DISTRICT_CAMPUS@18,5;DISTRICT_NEIGHBORHOOD@17,2|100.0|100.0|18.0|0|0.0|58.9|66||",
+        "CITYTILES|16777222|RESOURCE_DEER@14,5;RESOURCE_SHEEP@16,7|",
+        "CITYBLDG|16777222|BUILDING_MONUMENT,BUILDING_GRANARY,BUILDING_LIBRARY,BUILDING_WATER_MILL,BUILDING_MARKET,BUILDING_UNIVERSITY,BUILDING_WORKSHOP,BUILDING_BANK,BUILDING_FACTORY,BUILDING_STOCK_EXCHANGE,BUILDING_SEWER,BUILDING_COAL_POWER_PLANT",
+        "16777223|Pella|19,17|14|35.0|55.8|42.3|18.0|10.1|1.8|17.0|12|8|BUILDING_GOV_CONQUEST|2|104|200/200|400/400|UNIT_ROCK_BAND@19,14(100hp)[327705]||DISTRICT_ENCAMPMENT@18,16;DISTRICT_CAMPUS@21,17;DISTRICT_COMMERCIAL_HUB@20,16;DISTRICT_AQUEDUCT@20,18;DISTRICT_HANSA@21,18;DISTRICT_GOVERNMENT@18,17|100.0|100.0|19.0|0|7.0|120.7|165||",
+        "CITYTILES|16777223|RESOURCE_ALUMINUM@19,14;RESOURCE_WHEAT@17,15|IMPROVEMENT_FARM@17,16;IMPROVEMENT_FARM@19,16;IMPROVEMENT_FARM@17,17",
+        "CITYBLDG|16777223|BUILDING_MONUMENT,BUILDING_BARRACKS,BUILDING_GRANARY,BUILDING_LIBRARY,BUILDING_WALLS,BUILDING_MARKET,BUILDING_CASTLE,BUILDING_UNIVERSITY,BUILDING_WORKSHOP,BUILDING_ARMORY,BUILDING_BANK,BUILDING_STAR_FORT,BUILDING_FACTORY,BUILDING_STOCK_EXCHANGE,BUILDING_MILITARY_ACADEMY,BUILDING_SEWER,BUILDING_COAL_POWER_PLANT",
+        "16777224|Ulm|27,13|8|24.0|26.1|34.7|16.2|4.0|1.8|12.0|6|2|DISTRICT_COMMERCIAL_HUB|8|94|200/200|400/400|||DISTRICT_HARBOR@28,12;DISTRICT_CAMPUS@26,13;DISTRICT_AERODROME@27,14;DISTRICT_COMMERCIAL_HUB@26,14|100.0|100.0|17.0|0|8.0|81.8|89||",
+        "CITYTILES|16777224|RESOURCE_ANTIQUITY_SITE@25,10;RESOURCE_WHEAT@24,12;RESOURCE_FISH@29,12;RESOURCE_COPPER@25,13|",
+        "CITYBLDG|16777224|BUILDING_GRANARY,BUILDING_LIBRARY,BUILDING_WALLS,BUILDING_LIGHTHOUSE,BUILDING_UNIVERSITY,BUILDING_SHIPYARD,BUILDING_SEWER",
+        "16777225|Cologne|47,14|6|15.0|27.0|29.7|2.7|3.4|1.8|11.0|5|25|BUILDING_SHIPYARD|9|94|200/200|400/400|||DISTRICT_AERODROME@48,15;DISTRICT_ENCAMPMENT@49,14;DISTRICT_HARBOR@46,13|100.0|100.0|16.1|0|3.0|3.9|66||UNIT_TANK",
+        "CITYTILES|16777225|RESOURCE_CRABS@46,12;RESOURCE_HORSES@50,13|",
+        "CITYBLDG|16777225|BUILDING_MONUMENT,BUILDING_BARRACKS,BUILDING_GRANARY,BUILDING_WALLS,BUILDING_LIGHTHOUSE,BUILDING_ARMORY,BUILDING_MILITARY_ACADEMY,BUILDING_HANGAR,BUILDING_AIRPORT",
+        "16777226|Zanzibar|51,16|11|34.0|38.7|35.5|3.2|3.9|1.8|12.0|10|7|PROJECT_ENHANCE_DISTRICT_COMMERCIAL_HUB|3|91|200/200|400/400|||DISTRICT_HARBOR@50,17;DISTRICT_COMMERCIAL_HUB@51,17;DISTRICT_AERODROME@51,14|82.7|100.0|-18.0|5|12.0|94.3|126|BUILDING_MARKET|",
+        "CITYTILES|16777226|RESOURCE_HORSES@50,13;RESOURCE_WHEAT@52,15;RESOURCE_WHEAT@52,17;RESOURCE_PEARLS@49,18|",
+        "CITYBLDG|16777226|BUILDING_MONUMENT,BUILDING_GRANARY,BUILDING_WATER_MILL,BUILDING_LIGHTHOUSE,BUILDING_MARKET,BUILDING_SHIPYARD,BUILDING_SEAPORT",
+        "16777227|Ayutthaya|12,20|8|28.0|18.9|0.0|3.6|9.4|0.9|9.0|6|9|DISTRICT_HANSA|4|87|200/200|400/400|||DISTRICT_THEATER@11,19;DISTRICT_HANSA@11,22|100.0|100.0|16.8|0|12.0|43.3|89||",
+        "CITYTILES|16777227|RESOURCE_ANTIQUITY_SITE@10,18|IMPROVEMENT_FARM@11,18;IMPROVEMENT_FARM@10,19",
+        "CITYBLDG|16777227|BUILDING_MONUMENT,BUILDING_GRANARY,BUILDING_WATER_MILL,BUILDING_AMPHITHEATER,BUILDING_MUSEUM_ART",
+        "16777228|Hull|35,10|2|7.0|1.8|1.8|0.9|0.5|0.0|3.0|1|14|BUILDING_GRANARY|25|85|200/200|400/400||||100.0|100.0|13.8|0|3.0|6.5|24||",
+        "CITYTILES|16777228|RESOURCE_FISH@35,12|",
+        "16777229|Plymouth|4,21|5|14.0|8.1|8.1|2.2|3.2|0.0|3.0|5|57|BUILDING_LIGHTHOUSE|8|87|200/200|400/400|||DISTRICT_HARBOR@4,22|100.0|100.0|11.5|0|4.0|7.4|55||UNIT_TANK",
+        "CITYTILES|16777229|RESOURCE_CRABS@5,18;RESOURCE_CRABS@3,19;RESOURCE_BANANAS@5,20;RESOURCE_BANANAS@4,21;RESOURCE_ANTIQUITY_SITE@5,21;RESOURCE_FISH@3,23;RESOURCE_FISH@4,23|",
+        "CITYBLDG|16777229|BUILDING_MONUMENT",
+        "16777230|Magdeburg|8,18|1|3.0|9.0|0.9|1.4|0.3|0.0|3.0|1|16|BUILDING_GRANARY|6|85|200/200|400/400||||100.0|100.0|17.0|0|1.0|1.7|15||",
+        "CITYTILES|16777230|RESOURCE_OIL@6,17;RESOURCE_CRABS@5,18;RESOURCE_ALUMINUM@8,18;RESOURCE_ANTIQUITY_SITE@10,18;RESOURCE_BANANAS@5,20;RESOURCE_ANTIQUITY_SITE@5,21|IMPROVEMENT_MINE@11,15;IMPROVEMENT_FARM@11,18;IMPROVEMENT_FARM@10,19",
+        "DIST|Aachen|Frankfurt|5",
+        "DIST|Aachen|Trier|4",
+        "DIST|Aachen|Methone|6",
+        "DIST|Aachen|Heidelberg|9",
+        "DIST|Aachen|Berlin|8",
+        "DIST|Aachen|Hamburg|4",
+        "DIST|Aachen|Pella|10",
+        "DIST|Aachen|Ulm|16",
+        "DIST|Aachen|Cologne|36",
+        "DIST|Aachen|Zanzibar|41",
+        "DIST|Aachen|Ayutthaya|12",
+        "DIST|Aachen|Hull|22",
+        "DIST|Aachen|Plymouth|16",
+        "DIST|Aachen|Magdeburg|11",
+        "DIST|Frankfurt|Trier|5",
+        "DIST|Frankfurt|Methone|4",
+        "DIST|Frankfurt|Heidelberg|4",
+        "DIST|Frankfurt|Berlin|10",
+        "DIST|Frankfurt|Hamburg|6",
+        "DIST|Frankfurt|Pella|7",
+        "DIST|Frankfurt|Ulm|11",
+        "DIST|Frankfurt|Cologne|31",
+        "DIST|Frankfurt|Zanzibar|36",
+        "DIST|Frankfurt|Ayutthaya|11",
+        "DIST|Frankfurt|Hull|17",
+        "DIST|Frankfurt|Plymouth|19",
+        "DIST|Frankfurt|Magdeburg|14",
+        "DIST|Trier|Methone|4",
+        "DIST|Trier|Heidelberg|9",
+        "DIST|Trier|Berlin|5",
+        "DIST|Trier|Hamburg|8",
+        "DIST|Trier|Pella|8",
+        "DIST|Trier|Ulm|14",
+        "DIST|Trier|Cologne|34",
+        "DIST|Trier|Zanzibar|39",
+        "DIST|Trier|Ayutthaya|8",
+        "DIST|Trier|Hull|22",
+        "DIST|Trier|Plymouth|14",
+        "DIST|Trier|Magdeburg|9",
+        "DIST|Methone|Heidelberg|7",
+        "DIST|Methone|Berlin|7",
+        "DIST|Methone|Hamburg|10",
+        "DIST|Methone|Pella|4",
+        "DIST|Methone|Ulm|11",
+        "DIST|Methone|Cologne|30",
+        "DIST|Methone|Zanzibar|35",
+        "DIST|Methone|Ayutthaya|8",
+        "DIST|Methone|Hull|20",
+        "DIST|Methone|Plymouth|16",
+        "DIST|Methone|Magdeburg|11",
+        "DIST|Heidelberg|Berlin|14",
+        "DIST|Heidelberg|Hamburg|9",
+        "DIST|Heidelberg|Pella|7",
+        "DIST|Heidelberg|Ulm|7",
+        "DIST|Heidelberg|Cologne|27",
+        "DIST|Heidelberg|Zanzibar|32",
+        "DIST|Heidelberg|Ayutthaya|15",
+        "DIST|Heidelberg|Hull|13",
+        "DIST|Heidelberg|Plymouth|23",
+        "DIST|Heidelberg|Magdeburg|18",
+        "DIST|Berlin|Hamburg|12",
+        "DIST|Berlin|Pella|9",
+        "DIST|Berlin|Ulm|18",
+        "DIST|Berlin|Cologne|37",
+        "DIST|Berlin|Zanzibar|34",
+        "DIST|Berlin|Ayutthaya|4",
+        "DIST|Berlin|Hull|27",
+        "DIST|Berlin|Plymouth|9",
+        "DIST|Berlin|Magdeburg|4",
+        "DIST|Hamburg|Pella|13",
+        "DIST|Hamburg|Ulm|16",
+        "DIST|Hamburg|Cologne|36",
+        "DIST|Hamburg|Zanzibar|41",
+        "DIST|Hamburg|Ayutthaya|16",
+        "DIST|Hamburg|Hull|22",
+        "DIST|Hamburg|Plymouth|20",
+        "DIST|Hamburg|Magdeburg|15",
+        "DIST|Pella|Ulm|10",
+        "DIST|Pella|Cologne|29",
+        "DIST|Pella|Zanzibar|32",
+        "DIST|Pella|Ayutthaya|9",
+        "DIST|Pella|Hull|19",
+        "DIST|Pella|Plymouth|17",
+        "DIST|Pella|Magdeburg|12",
+        "DIST|Ulm|Cologne|20",
+        "DIST|Ulm|Zanzibar|25",
+        "DIST|Ulm|Ayutthaya|19",
+        "DIST|Ulm|Hull|9",
+        "DIST|Ulm|Plymouth|27",
+        "DIST|Ulm|Magdeburg|22",
+        "DIST|Cologne|Zanzibar|5",
+        "DIST|Cologne|Ayutthaya|38",
+        "DIST|Cologne|Hull|14",
+        "DIST|Cologne|Plymouth|35",
+        "DIST|Cologne|Magdeburg|37",
+        "DIST|Zanzibar|Ayutthaya|37",
+        "DIST|Zanzibar|Hull|19",
+        "DIST|Zanzibar|Plymouth|30",
+        "DIST|Zanzibar|Magdeburg|32",
+        "DIST|Ayutthaya|Hull|28",
+        "DIST|Ayutthaya|Plymouth|8",
+        "DIST|Ayutthaya|Magdeburg|5",
+        "DIST|Hull|Plymouth|36",
+        "DIST|Hull|Magdeburg|31",
+        "DIST|Plymouth|Magdeburg|5"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pRes = Players[me]:GetResources()\nfor row in GameInfo.Resources() do\n    if row.ResourceClassType == \"RESOURCECLASS_STRATEGIC\" and pRes:IsResourceVisible(row.Index) then\n        local amt = pRes:GetResourceAmount(row.Index)\n        local cap = pRes:GetResourceStockpileCap(row.Index)\n        local accum = pRes:GetResourceAccumulationPerTurn(row.Index)\n        local demand = pRes:GetUnitResourceDemandPerTurn(row.Index)\n        local imported = pRes:GetResourceImportPerTurn(row.Index)\n        local rName = row.ResourceType\n        print(\"STOCKPILE|\" .. rName .. \"|\" .. amt .. \"|\" .. cap .. \"|\" .. accum .. \"|\" .. demand .. \"|\" .. imported)\n    end\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "STOCKPILE|RESOURCE_ALUMINUM|0|170|4|3|0",
+        "STOCKPILE|RESOURCE_COAL|104|170|9|0|0",
+        "STOCKPILE|RESOURCE_HORSES|170|170|9|0|0",
+        "STOCKPILE|RESOURCE_IRON|170|170|4|0|0",
+        "STOCKPILE|RESOURCE_NITER|170|170|6|0|0",
+        "STOCKPILE|RESOURCE_OIL|170|170|6|8|3",
+        "STOCKPILE|RESOURCE_URANIUM|72|170|6|0|0"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pDiplo = Players[me]:GetDiplomacy()\nlocal pVis = PlayersVisibility[me]\nlocal myPos = {}\nfor _, c in Players[me]:GetCities():Members() do\n    table.insert(myPos, {c:GetX(), c:GetY()})\nend\nfor _, u in Players[me]:GetUnits():Members() do\n    local ux, uy = u:GetX(), u:GetY()\n    if ux ~= -9999 then table.insert(myPos, {ux, uy}) end\nend\nlocal found = false\nfor pid = 0, 63 do\n    if pid ~= me and Players[pid] and Players[pid]:IsAlive() then\n        local isMajor = Players[pid]:IsMajor()\n        local isBarbarian = (pid == 63)\n        -- Skip city-state units unless we're at war with them\n        if not isMajor and not isBarbarian and not pDiplo:IsAtWarWith(pid) then\n            -- City-state, not at war \u2014 not a threat\n        else\n        local ownerName = \"Barbarian\"\n        if pid ~= 63 then\n            local cfg = PlayerConfigurations[pid]\n            if cfg then ownerName = Locale.Lookup(cfg:GetCivilizationShortDescription()) end\n        end\n        for _, bu in Players[pid]:GetUnits():Members() do\n            local bx, by = bu:GetX(), bu:GetY()\n            if bx ~= -9999 and pVis:IsVisible(bx, by) then\n                local uType = bu:GetType()\n                if uType then\n                    local entry = GameInfo.Units[uType]\n                    local bcs = entry and entry.Combat or 0\n                    if bcs > 0 or (entry and entry.RangedCombat and entry.RangedCombat > 0) then\n                        local minDist = 999\n                        for _, pos in ipairs(myPos) do\n                            local d = Map.GetPlotDistance(pos[1], pos[2], bx, by)\n                            if d < minDist then minDist = d end\n                        end\n                        local name = entry and entry.UnitType or \"UNKNOWN\"\n                        local hp = bu:GetMaxDamage() - bu:GetDamage()\n                        local brs = entry and entry.RangedCombat or 0\n                        local isCS = Players[pid]:IsMajor() and \"0\" or \"1\"\n                        print(\"THREAT|\" .. pid .. \"|\" .. ownerName:gsub(\"|\",\"/\") .. \"|\" .. name .. \"|\" .. bx .. \",\" .. by .. \"|\" .. hp .. \"/\" .. bu:GetMaxDamage() .. \"|CS:\" .. bcs .. \"|RS:\" .. brs .. \"|dist:\" .. minDist .. \"|cs:\" .. isCS .. \"|uid:\" .. ((bu:GetID() % 65536) + bu:GetOwner() * 65536))\n                        found = true\n                    end\n                end\n            end\n        end\n        end -- close city-state skip if/else\n    end -- close if pid alive\nend -- close for pid\nif not found then print(\"NO_THREATS\") end\nprint(\"---END---\")\n",
+      "lines": [
+        "THREAT|3|England|UNIT_QUADRIREME|46,19|100/100|CS:20|RS:25|dist:4|cs:0|uid:196621",
+        "THREAT|4|Georgia|UNIT_LINE_INFANTRY|55,17|100/100|CS:65|RS:0|dist:3|cs:0|uid:262149",
+        "THREAT|4|Georgia|UNIT_PIKE_AND_SHOT|54,12|100/100|CS:55|RS:0|dist:4|cs:0|uid:262153",
+        "THREAT|4|Georgia|UNIT_LINE_INFANTRY|53,12|100/100|CS:65|RS:0|dist:3|cs:0|uid:262156",
+        "THREAT|5|Kongo|UNIT_FIELD_CANNON|18,22|100/100|CS:50|RS:60|dist:2|cs:0|uid:327689",
+        "THREAT|5|Kongo|UNIT_BOMBARD|21,22|100/100|CS:45|RS:0|dist:1|cs:0|uid:327706"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nUI.RequestAction(ActionTypes.ACTION_ENDTURN)\nprint(\"OK:TURN_ENDED\")\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:TURN_ENDED"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "print(Game.GetCurrentGameTurn()); print(\"---END---\")",
+      "lines": [
+        "352"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal found = false\nlocal dialogueText = \"\"\nlocal reasonText = \"\"\nlocal ctrl1 = ContextPtr:LookUpControl(\"/InGame/DiplomacyActionView/LeaderResponseText\")\nlocal ctrl2 = ContextPtr:LookUpControl(\"/InGame/DiplomacyActionView/LeaderReasonText\")\nif ctrl1 then local ok, t = pcall(ctrl1.GetText, ctrl1); if ok and t and t ~= \"\" then dialogueText = t end end\nif ctrl2 then local ok, t = pcall(ctrl2.GetText, ctrl2); if ok and t and t ~= \"\" then reasonText = t end end\nlocal dealCtrl = ContextPtr:LookUpControl(\"/InGame/DiplomacyDealView/LeaderResponseText\")\nif dealCtrl and not dealCtrl:IsHidden() then local ok, t = pcall(dealCtrl.GetText, dealCtrl); if ok and t and t ~= \"\" then dialogueText = t end end\nlocal btnTexts = {}\nfor _, path in ipairs({\n    \"/InGame/DiplomacyActionView/SelectionStack/Selection1Button/SelectionText\",\n    \"/InGame/DiplomacyActionView/SelectionStack/Selection2Button/SelectionText\",\n}) do\n    local btn = ContextPtr:LookUpControl(path)\n    if btn then\n        local par = btn:GetParent()\n        if par and not par:IsHidden() then\n            local ok, t = pcall(btn.GetText, btn)\n            if ok and t and t ~= \"\" then btnTexts[#btnTexts + 1] = t end\n        end\n    end\nend\nlocal goodbyeBtn = ContextPtr:LookUpControl(\"/InGame/DiplomacyActionView/GoodbyeButton\")\nif goodbyeBtn and not goodbyeBtn:IsHidden() then btnTexts[#btnTexts + 1] = \"GOODBYE\" end\nlocal buttonInfo = table.concat(btnTexts, \";\")\nfor i = 0, 62 do\n    if i ~= me and Players[i] and Players[i]:IsAlive() then\n        local sid = DiplomacyManager.FindOpenSessionID(me, i)\n        if sid and sid >= 0 then\n            local cfg = PlayerConfigurations[i]\n            local civName = Locale.Lookup(cfg:GetCivilizationShortDescription())\n            local leaderName = Locale.Lookup(cfg:GetLeaderName())\n            local atWar = Players[me]:GetDiplomacy():IsAtWarWith(i) and \"1\" or \"0\"\n            print(\"SESSION|\" .. sid .. \"|\" .. i .. \"|\" .. civName .. \"|\" .. leaderName .. \"|\" .. dialogueText .. \"|\" .. reasonText .. \"|\" .. buttonInfo .. \"|\" .. atWar)\n            found = true\n            local okD, deal = pcall(function() return DealManager.GetWorkingDeal(DealDirection.INCOMING, me, i) end)\n            if okD and deal then\n                local okN, cnt = pcall(function() return deal:GetItemCount() end)\n                if okN and cnt and cnt > 0 then\n                    for item in deal:Items() do\n                        local fromTag = \"THEM\"\n                        local okF, fromID = pcall(function() return item:GetFromPlayerID() end)\n                        if okF and fromID == me then fromTag = \"US\" end\n                        local itype = item:GetType()\n                        local typeName = \"UNKNOWN\"\n                        local itemName = \"Unknown\"\n                        local ok3, vid = pcall(function() return item:GetValueTypeID() end); vid = (ok3 and vid) and tostring(vid) or \"\"\n                        local ok4, sid2 = pcall(function() return item:GetSubTypeID() end); sid2 = (ok4 and sid2) and tostring(sid2) or \"\"\n                        local amount = item:GetAmount() or 0\n                        local duration = item:GetDuration() or 0\n                        if itype == DealItemTypes.AGREEMENTS then\n                            typeName = \"AGREEMENT\"\n                            if vid == \"OPEN_BORDERS\" or sid2 == \"DIPLOACTION_OPEN_BORDERS\" then itemName = \"Open Borders\"\n                            elseif vid == \"JOINT_WAR\" or sid2 == \"DIPLOACTION_JOINT_WAR\" then itemName = \"Joint War\"\n                            elseif string.find(vid, \"ALLIANCE\") or sid2 == \"DIPLOACTION_ALLIANCE\" then\n                                local aMap = {RESEARCH=\"Research\", CULTURAL=\"Cultural\", ECONOMIC=\"Economic\", MILITARY=\"Military\", RELIGIOUS=\"Religious\"}\n                                local aKey = string.match(vid, \"ALLIANCE_(%w+)\")\n                                itemName = ((aKey and aMap[aKey]) or aKey or \"Unknown\") .. \" Alliance\"\n                            else itemName = \"\" end\n                        elseif itype == DealItemTypes.GOLD then\n                            typeName = \"GOLD\"\n                            itemName = duration > 0 and \"Gold per turn\" or \"Gold (lump)\"\n                        elseif itype == DealItemTypes.RESOURCES then\n                            typeName = \"RESOURCE\"\n                            itemName = vid ~= \"\" and vid or \"Resource\"\n                        elseif itype == DealItemTypes.FAVOR then\n                            typeName = \"FAVOR\"; itemName = \"Diplomatic Favor\"\n                        elseif itype == DealItemTypes.CITIES then\n                            typeName = \"CITY\"; itemName = \"City\"\n                        elseif itype == DealItemTypes.GREATWORK then\n                            typeName = \"GREAT_WORK\"; itemName = \"Great Work\"\n                        end\n                        if itemName ~= \"\" and itemName ~= \"Unknown\" then\n                            print(\"DEAL_ITEM|\" .. i .. \"|\" .. fromTag .. \"|\" .. typeName .. \"|\" .. itemName:gsub(\"|\",\"/\") .. \"|\" .. amount .. \"|\" .. duration)\n                        end\n                    end\n                end\n            end\n        end\n    end\nend\nif not found then print(\"NONE\") end\nprint(\"---END---\")\n",
+      "lines": [
+        "SESSION|2|2|Mapuche|Lautaro||||0",
+        "DEAL_ITEM|2|US|RESOURCE|RESOURCE_COSMETICS|1|30",
+        "DEAL_ITEM|2|US|FAVOR|Diplomatic Favor|10|0",
+        "DEAL_ITEM|2|THEM|AGREEMENT|Open Borders|0|30",
+        "DEAL_ITEM|2|THEM|GOLD|Gold (lump)|4|0",
+        "DEAL_ITEM|2|THEM|GOLD|Gold per turn|2|30"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal found = false\nlocal dialogueText = \"\"\nlocal reasonText = \"\"\nlocal ctrl1 = ContextPtr:LookUpControl(\"/InGame/DiplomacyActionView/LeaderResponseText\")\nlocal ctrl2 = ContextPtr:LookUpControl(\"/InGame/DiplomacyActionView/LeaderReasonText\")\nif ctrl1 then local ok, t = pcall(ctrl1.GetText, ctrl1); if ok and t and t ~= \"\" then dialogueText = t end end\nif ctrl2 then local ok, t = pcall(ctrl2.GetText, ctrl2); if ok and t and t ~= \"\" then reasonText = t end end\nlocal dealCtrl = ContextPtr:LookUpControl(\"/InGame/DiplomacyDealView/LeaderResponseText\")\nif dealCtrl and not dealCtrl:IsHidden() then local ok, t = pcall(dealCtrl.GetText, dealCtrl); if ok and t and t ~= \"\" then dialogueText = t end end\nlocal btnTexts = {}\nfor _, path in ipairs({\n    \"/InGame/DiplomacyActionView/SelectionStack/Selection1Button/SelectionText\",\n    \"/InGame/DiplomacyActionView/SelectionStack/Selection2Button/SelectionText\",\n}) do\n    local btn = ContextPtr:LookUpControl(path)\n    if btn then\n        local par = btn:GetParent()\n        if par and not par:IsHidden() then\n            local ok, t = pcall(btn.GetText, btn)\n            if ok and t and t ~= \"\" then btnTexts[#btnTexts + 1] = t end\n        end\n    end\nend\nlocal goodbyeBtn = ContextPtr:LookUpControl(\"/InGame/DiplomacyActionView/GoodbyeButton\")\nif goodbyeBtn and not goodbyeBtn:IsHidden() then btnTexts[#btnTexts + 1] = \"GOODBYE\" end\nlocal buttonInfo = table.concat(btnTexts, \";\")\nfor i = 0, 62 do\n    if i ~= me and Players[i] and Players[i]:IsAlive() then\n        local sid = DiplomacyManager.FindOpenSessionID(me, i)\n        if sid and sid >= 0 then\n            local cfg = PlayerConfigurations[i]\n            local civName = Locale.Lookup(cfg:GetCivilizationShortDescription())\n            local leaderName = Locale.Lookup(cfg:GetLeaderName())\n            local atWar = Players[me]:GetDiplomacy():IsAtWarWith(i) and \"1\" or \"0\"\n            print(\"SESSION|\" .. sid .. \"|\" .. i .. \"|\" .. civName .. \"|\" .. leaderName .. \"|\" .. dialogueText .. \"|\" .. reasonText .. \"|\" .. buttonInfo .. \"|\" .. atWar)\n            found = true\n            local okD, deal = pcall(function() return DealManager.GetWorkingDeal(DealDirection.INCOMING, me, i) end)\n            if okD and deal then\n                local okN, cnt = pcall(function() return deal:GetItemCount() end)\n                if okN and cnt and cnt > 0 then\n                    for item in deal:Items() do\n                        local fromTag = \"THEM\"\n                        local okF, fromID = pcall(function() return item:GetFromPlayerID() end)\n                        if okF and fromID == me then fromTag = \"US\" end\n                        local itype = item:GetType()\n                        local typeName = \"UNKNOWN\"\n                        local itemName = \"Unknown\"\n                        local ok3, vid = pcall(function() return item:GetValueTypeID() end); vid = (ok3 and vid) and tostring(vid) or \"\"\n                        local ok4, sid2 = pcall(function() return item:GetSubTypeID() end); sid2 = (ok4 and sid2) and tostring(sid2) or \"\"\n                        local amount = item:GetAmount() or 0\n                        local duration = item:GetDuration() or 0\n                        if itype == DealItemTypes.AGREEMENTS then\n                            typeName = \"AGREEMENT\"\n                            if vid == \"OPEN_BORDERS\" or sid2 == \"DIPLOACTION_OPEN_BORDERS\" then itemName = \"Open Borders\"\n                            elseif vid == \"JOINT_WAR\" or sid2 == \"DIPLOACTION_JOINT_WAR\" then itemName = \"Joint War\"\n                            elseif string.find(vid, \"ALLIANCE\") or sid2 == \"DIPLOACTION_ALLIANCE\" then\n                                local aMap = {RESEARCH=\"Research\", CULTURAL=\"Cultural\", ECONOMIC=\"Economic\", MILITARY=\"Military\", RELIGIOUS=\"Religious\"}\n                                local aKey = string.match(vid, \"ALLIANCE_(%w+)\")\n                                itemName = ((aKey and aMap[aKey]) or aKey or \"Unknown\") .. \" Alliance\"\n                            else itemName = \"\" end\n                        elseif itype == DealItemTypes.GOLD then\n                            typeName = \"GOLD\"\n                            itemName = duration > 0 and \"Gold per turn\" or \"Gold (lump)\"\n                        elseif itype == DealItemTypes.RESOURCES then\n                            typeName = \"RESOURCE\"\n                            itemName = vid ~= \"\" and vid or \"Resource\"\n                        elseif itype == DealItemTypes.FAVOR then\n                            typeName = \"FAVOR\"; itemName = \"Diplomatic Favor\"\n                        elseif itype == DealItemTypes.CITIES then\n                            typeName = \"CITY\"; itemName = \"City\"\n                        elseif itype == DealItemTypes.GREATWORK then\n                            typeName = \"GREAT_WORK\"; itemName = \"Great Work\"\n                        end\n                        if itemName ~= \"\" and itemName ~= \"Unknown\" then\n                            print(\"DEAL_ITEM|\" .. i .. \"|\" .. fromTag .. \"|\" .. typeName .. \"|\" .. itemName:gsub(\"|\",\"/\") .. \"|\" .. amount .. \"|\" .. duration)\n                        end\n                    end\n                end\n            end\n        end\n    end\nend\nif not found then print(\"NONE\") end\nprint(\"---END---\")\n",
+      "lines": [
+        "SESSION|2|2|Mapuche|Lautaro||||0",
+        "DEAL_ITEM|2|US|RESOURCE|RESOURCE_COSMETICS|1|30",
+        "DEAL_ITEM|2|US|FAVOR|Diplomatic Favor|10|0",
+        "DEAL_ITEM|2|THEM|AGREEMENT|Open Borders|0|30",
+        "DEAL_ITEM|2|THEM|GOLD|Gold (lump)|4|0",
+        "DEAL_ITEM|2|THEM|GOLD|Gold per turn|2|30"
+      ]
+    }
+  ]
+}

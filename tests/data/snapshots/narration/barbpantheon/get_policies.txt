@@ -1,0 +1,13 @@
+Government: Chiefdom (GOVERNMENT_CHIEFDOM)
+
+3 policy slots:
+  Slot 0 (Military): Discipline (POLICY_DISCIPLINE)
+  Slot 1 (Economic): Urban Planning (POLICY_URBAN_PLANNING)
+  Slot 2 (Military): Survey (POLICY_SURVEY)
+
+Available policies:
+  Economic:
+    God King (POLICY_GOD_KING): +1 [ICON_Faith] Faith and +1 [ICON_Gold] Gold in the [ICON_Capital] Capital.
+
+Use set_policies with slot assignments, e.g. {0: "POLICY_AGOGE", 1: "POLICY_URBAN_PLANNING"}
+Wildcard slots can accept any policy type.

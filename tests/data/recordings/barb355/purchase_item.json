@@ -1,0 +1,28 @@
+{
+  "tool": "purchase_item",
+  "arguments": {
+    "city_id": 16777216,
+    "item_type": "BUILDING_MUSEUM_ART",
+    "yield_type": "YIELD_GOLD"
+  },
+  "scenario": "barb355",
+  "recorded_at": "2026-08-24T17:33:12+00:00",
+  "notes": null,
+  "result": "PURCHASED|BUILDING_MUSEUM_ART|cost=1160g (had 3044g)",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CLEAR"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local pCity = CityManager.GetCity(me, 16777216 % 65536) if pCity == nil then print(\"ERR:CITY_NOT_FOUND\"); print(\"---END---\"); return end\nlocal item = GameInfo.Buildings[\"BUILDING_MUSEUM_ART\"]\nif item == nil then print(\"ERR:ITEM_NOT_FOUND|BUILDING_MUSEUM_ART\"); print(\"---END---\"); return end\nlocal yieldRow = GameInfo.Yields[\"YIELD_GOLD\"]\nif yieldRow == nil then print(\"ERR:YIELD_NOT_FOUND|YIELD_GOLD\"); print(\"---END---\"); return end\nlocal tParams = {}\ntParams[CityCommandTypes.PARAM_BUILDING_TYPE] = item.Hash\ntParams[CityCommandTypes.PARAM_YIELD_TYPE] = yieldRow.Index\nif \"BUILDING\" == \"UNIT\" then\n    tParams[CityCommandTypes.PARAM_MILITARY_FORMATION_TYPE] = MilitaryFormationTypes.STANDARD_MILITARY_FORMATION\n    local cx, cy = pCity:GetX(), pCity:GetY()\n    local targetClass = item.FormationClass\n    local existing = Map.GetUnitsAt(cx, cy)\n    if existing and existing:GetCount() > 0 then\n        for u in existing:Units() do\n            if u:GetOwner() == me then\n                local uDef = GameInfo.Units[u:GetType()]\n                if uDef and uDef.FormationClass == targetClass then\n                    local uid = ((u:GetID() % 65536) + u:GetOwner() * 65536)\n                    print(\"ERR:STACKING_CONFLICT|Cannot purchase BUILDING_MUSEUM_ART \u2014 \" .. uDef.UnitType .. \" (unit_id=\" .. uid .. \") is on the city tile. Move it with unit_action(unit_id=\" .. uid .. \", action='move', target_x, target_y) first, then retry the purchase.\"); print(\"---END---\"); return\n                end\n            end\n        end\n    end\nend\nlocal cost = pCity:GetGold():GetPurchaseCost(yieldRow.Index, item.Hash, MilitaryFormationTypes.STANDARD_MILITARY_FORMATION)\nlocal isFaith = (\"YIELD_GOLD\" == \"YIELD_FAITH\")\nlocal balance\nif isFaith then\n    balance = Players[me]:GetReligion():GetFaithBalance()\nelse\n    balance = Players[me]:GetTreasury():GetGoldBalance()\nend\nlocal suffix = isFaith and \"f\" or \"g\"\nlocal canBuy, results = CityManager.CanStartCommand(pCity, CityCommandTypes.PURCHASE, false, tParams, true)\nif not canBuy then\n    local reasons = {}\n    if results then\n        for _,v in pairs(results) do\n            if type(v) == \"table\" then\n                for _,msg in pairs(v) do if type(msg) == \"string\" then table.insert(reasons, msg) end end\n            elseif type(v) == \"string\" then table.insert(reasons, v)\n            end\n        end\n    end\n    if cost > balance then\n        table.insert(reasons, 1, \"costs \" .. math.floor(cost) .. suffix .. \" but you only have \" .. math.floor(balance) .. suffix)\n    end\n    local reason = #reasons > 0 and table.concat(reasons, \"; \") or \"unknown\"\n    print(\"ERR:CANNOT_PURCHASE|\" .. reason); print(\"---END---\"); return\nend\nCityManager.RequestCommand(pCity, CityCommandTypes.PURCHASE, tParams)\nprint(\"OK:PURCHASED|BUILDING_MUSEUM_ART|cost=\" .. math.floor(cost) .. suffix .. \" (had \" .. math.floor(balance) .. suffix .. \")\")\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:PURCHASED|BUILDING_MUSEUM_ART|cost=1160g (had 3044g)"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+Turn 28 | Germany (Frederick Barbarossa) | Score: 24 | Prince
+Gold: 149 (+8/turn) | Income: 8 | Maintenance: -0 (units: 0) | Science: 3.0 | Culture: 1.6 | Faith: 26 | Favor: 0 (+0/turn)
+Research: Writing | Civic: Craftsmanship
+Cities: 1 | Population: 2 | Units: 4 — 2 Warrior, 1 Slinger, 1 Scout
+Explored: 13% of land (160/1161 tiles)
+Religion: none yet (4/4 slots remaining — Great Prophet needed)
+Era: Ancient Era | Score: 9 (Dark: 11, Golden: 25) !! 2 short of avoiding Dark Age
+Rankings: Germany 24 > Macedon 20

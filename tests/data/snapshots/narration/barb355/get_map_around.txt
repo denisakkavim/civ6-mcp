@@ -1,0 +1,26 @@
+25 tiles:
+  (12,6): TUNDRA FOREST Coast {F:1 P:1} (owned by Germany) [mv:2]
+  (13,6): TUNDRA FOREST [RESOURCE_DEER] (IMPROVEMENT_CAMP) {F:1 P:2} (owned by Germany) [mv:2]
+  (14,6): TUNDRA (Road) [THEATER] {F:0 P:0} (owned by Germany)
+  (15,6): TUNDRA (Railroad) [NEIGHBORHOOD] {F:0 P:0} (owned by Germany)
+  (16,6): TUNDRA (Road) [HANSA] {F:0 P:0} (owned by Germany)
+  (12,7): TUNDRA_HILLS Hills FOREST River Coast (IMPROVEMENT_LUMBER_MILL) {F:1 P:2} (owned by Germany) [mv:3]
+  (13,7): TUNDRA_HILLS Hills River (Road) [CAMPUS] {F:0 P:0} (owned by Germany)
+  (14,7): TUNDRA_HILLS Hills [RESOURCE_DIAMONDS+] River (IMPROVEMENT_MINE) {F:1 P:1 G:3} (owned by Germany) [mv:2]
+  (15,7): TUNDRA River (Railroad) {F:1 P:0} (owned by Germany)
+  (16,7): TUNDRA_HILLS Hills [RESOURCE_SHEEP] {F:2 P:1} (owned by Germany) [mv:2]
+  (12,8): GRASS River Coast {F:2 P:0} (owned by Germany)
+  (13,8): GRASS_HILLS Hills River (Road) [COMMERCIAL_HUB] {F:0 P:0} (owned by Germany)
+  (14,8): GRASS River (Railroad) [CITY_CENTER] {F:2 P:0} (owned by Germany) [my: UNIT_FIELD_CANNON]
+  (15,8): GRASS River (Railroad) [AQUEDUCT] {F:0 P:0} (owned by Germany)
+  (16,8): TUNDRA_HILLS Hills FOREST River {F:2 P:2} (owned by Germany) [mv:3]
+  (12,9): GRASS Coast FreshWater (Road) [HANSA] {F:0 P:0} (owned by Germany)
+  (13,9): GRASS [RESOURCE_STONE] Coast FreshWater (IMPROVEMENT_QUARRY) (Railroad) {F:2 P:1} (owned by Germany) [my: UNIT_TRADER]
+  (14,9): GRASS FOREST [RESOURCE_TOBACCO+] (IMPROVEMENT_PLANTATION) {F:2 P:1 Fa:1} (owned by Germany) [mv:2]
+  (15,9): GRASS River (Railroad) {F:2 P:0} (owned by Germany)
+  (16,9): GRASS FLOODPLAINS_GRASSLAND [RESOURCE_NITER*] River (IMPROVEMENT_MINE) {F:3 P:1} (owned by Germany)
+  (12,10): GRASS [RESOURCE_TOBACCO+] Coast FreshWater (IMPROVEMENT_PLANTATION) (Road) {F:2 P:0 Fa:1} (owned by Germany)
+  (13,10): COAST [HARBOR] {F:0 P:0} (owned by Germany)
+  (14,10): GRASS Coast FreshWater (Railroad) {F:2 P:0} (owned by Germany)
+  (15,10): GRASS [RESOURCE_STONE] (IMPROVEMENT_QUARRY) {F:2 P:1} (owned by Germany)
+  (16,10): GRASS (Railroad) [ENCAMPMENT] {F:0 P:0} (owned by Germany)

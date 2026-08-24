@@ -1,0 +1,4 @@
+1 cities:
+  Aachen (pop 2) at (14,8) — Food 5 Prod 6 Gold 8 Sci 3 Cul 2 | Housing 6 Amenities 3 | Growth: 19/24 food (5t, +1.0/t) | Building: UNIT_SETTLER (2 turns) | HP:200/200 Def:13 Gar:UNIT_SLINGER [id:16777216]
+    Buildings: BUILDING_PALACE
+    Needs builder: RESOURCE_DEER@13,6, RESOURCE_DIAMONDS@14,7, RESOURCE_STONE@13,9, RESOURCE_TOBACCO@14,9, RESOURCE_STONE@15,10 (unimproved)

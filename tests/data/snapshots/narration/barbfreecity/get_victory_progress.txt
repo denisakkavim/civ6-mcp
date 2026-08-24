@@ -1,0 +1,59 @@
+=== VICTORY PROGRESS ===
+
+Enabled: Science, Domination, Culture, Religious, Diplomatic
+
+SCIENCE VICTORY (launch 4 space projects = 50 VP)
+  Kongo: 0/50 VP | 10 techs | 0 spaceport(s) [0/50]
+  Germany: 0/50 VP | 9 techs | 0 spaceport(s) [0/50] <--
+  Macedon: 0/50 VP | 5 techs | 0 spaceport(s) [0/50]
+
+  YOUR SPACE PROJECT CHAIN:
+    [LOCKED] Launch Earth Satellite -- requires TECH_ROCKETRY (NEED)
+    [LOCKED] Launch Moon Landing -- requires TECH_SATELLITES (NEED)
+    [LOCKED] Launch Exoplanet Expedition -- requires TECH_OFFWORLD_MISSION (NEED)
+
+DOMINATION (own all original capitals)
+  Germany: holds own capital | military 123 <--
+  Macedon: holds own capital | military 38
+  Kongo: holds own capital | military 104
+
+CULTURE (your tourists > every civ's domestic tourists)
+  Our domestic tourists: 5
+  vs Macedon: 0/5 tourists (need 5 more)
+  vs Kongo: 0/6 tourists (need 6 more)
+
+RELIGION (your religion majority in all civs — slots: 1/4)
+  Germany: majority=none | 0 cities converted <--
+  Macedon: majority=none | 0 cities converted
+  Kongo: majority=none | 0 cities converted
+
+DIPLOMATIC (20 VP from World Congress)
+  Germany: 0/20 VP <--
+  Macedon: 0/20 VP
+  Kongo: 0/20 VP
+
+SCORE (highest at turn 500)
+  Germany: 122 <--
+  Kongo: 109
+  Macedon: 49
+
+RIVAL INTELLIGENCE (met civilizations)
+  Germany: 6 cities | Sci 11 Cul 8 Gold +10 | Mil 123 <--
+  Kongo: 3 cities | Sci 18 Cul 11 Gold +11 | Mil 104
+  Macedon: 1 cities | Sci 4 Cul 6 Gold +9 | Mil 38
+
+DEMOGRAPHICS (all civilizations)
+  Population   Rank 1 | Ours: 17 | Best: 17 | Avg: 12.8 | Worst: 3
+  Soldiers     Rank 1 | Ours: 123 | Best: 123 | Avg: 92.0 | Worst: 38
+  Crop Yield   Rank 2 | Ours: 51 | Best: 54 | Avg: 38.7 | Worst: 7
+  GNP          Rank 4 | Ours: 10 | Best: 21 | Avg: 13.0 | Worst: 8
+  Land         Rank 1 | Ours: 52 | Best: 52 | Avg: 35.5 | Worst: 13
+  Goods        Rank 1 | Ours: 37 | Best: 37 | Avg: 26.8 | Worst: 12
+
+VICTORY ASSESSMENT
+  Culture      [#######---] 70% — Close to cultural victory (max gap: 6) ** RECOMMENDED **
+  Science      [######----] 60% — Near tech lead (1 behind best known: Kongo (10))
+  Score        [#####-----] 50% — Rank #1 by population (proxy for score)
+  Domination   [####------] 40% — Strong military (123 vs best 123), 2 known capitals to capture
+  Diplomatic   [##--------] 20% — 0/20 VP — slow accumulation
+  Religion     [----------] 0% — No founded religion — path closed

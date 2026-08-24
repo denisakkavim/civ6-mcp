@@ -1,0 +1,38 @@
+29 trade route destinations:
+
+Domestic (food + production to destination):
+  Aachen at (14,8) [city:16777216] | Food:2 Prod:1 Gold:2
+  Frankfurt at (18,10) [city:16777217] | Food:2 Prod:1 Gold:2
+  Trier at (14,12) [city:16777218] | Food:1 Prod:1 Gold:2
+  Methone at (17,14) [city:16777219] | Food:1 Prod:1 Gold:2
+  Heidelberg at (22,10) [city:16777220] | Food:1 Prod:1 Gold:2
+
+International (gold to origin):
+  Ngulu Mapu (Mapuche) at (63,33) [city:16908288] | Prod:1 Gold:5 Sci:1
+  Ina Pire Mapu (Mapuche) at (63,37) [city:16908289] | Gold:5 Cul:1
+  Rangkül Mapu (Mapuche) at (60,27) [city:16908291] | Gold:5 | Protestantism <- 0.5
+  Willi Mapu (Mapuche) at (60,39) [city:16908292] | Gold:5
+  London (England) at (52,26) [city:16973824] | Gold:8 Sci:1 | Protestantism <- 0.5
+  Newcastle upon Tyne (England) at (55,27) [city:16973825] | Gold:5 Sci:1 | Protestantism <- 0.5
+  Leeds (England) at (57,23) [city:16973826] | Gold:5
+  Tbilisi (Georgia) at (59,17) [city:17039360] | Prod:1 Gold:5
+  Kutaisi (Georgia) at (55,16) [city:17039361] | Gold:7
+  Zugdidi (Georgia) at (54,20) [city:17039362] | Gold:5 Sci:1 | Protestantism <- 0.5
+  Telavi (Georgia) at (62,19) [city:17039363] | Gold:5
+  Mbanza Kongo (Kongo) at (24,29) [city:17104896] | Prod:1 Gold:5 Sci:1 Cul:1
+  Kinchassa (Kongo) at (22,33) [city:17104897] | Gold:5
+  Mbumbi (Kongo) at (21,28) [city:17104898] | Gold:5
+  Kwango (Kongo) at (26,25) [city:17104899] | Gold:5
+  Mbanza Nsundi (Kongo) at (19,23) [city:17104900] | Gold:5
+  Anshan (Anshan) at (68,26) [city:17170432] | Gold:5 Sci:1
+  Venice (Venice) at (7,26) [city:17301504] | Gold:8
+  Mexico City (Mexico City) at (27,18) [city:17367040] | Gold:5 | [QUEST]
+  Ayutthaya (Ayutthaya) at (12,20) [city:17432576] | Gold:5 Cul:1
+  Zanzibar (Zanzibar) at (51,16) [city:17498112] | Gold:8 | Protestantism <- 0.5
+  Bandar Brunei (Bandar Brunei) at (63,23) [city:17563648] | Gold:8
+  Preslav (Preslav) at (58,36) [city:17629184] | Gold:5
+  Kumasi (Kumasi) at (56,9) [city:17694720] | Gold:5
+
+City-state quests (send trade route for envoy): Mexico City
+
+Use unit_action with action='trade_route', target_x=X, target_y=Y

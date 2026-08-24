@@ -395,13 +395,20 @@ def narrate_cities(
                 " (repair via set_city_production)"
             )
         if c.pillaged_improvements:
-            pill_imps = [p.split("@")[0] for p in c.pillaged_improvements]
+            # Keep the coordinates. Repairing means standing on the tile, so
+            # stripping them left the agent told to send a builder with no way
+            # to know where — the same defect Stage 3.4d fixed for pillaged
+            # districts, missed here because these are improvements.
             lines.append(
-                f"    !! PILLAGED TILES: {', '.join(pill_imps)} (send builder to repair)"
+                f"    !! PILLAGED TILES: {', '.join(c.pillaged_improvements)}"
+                f" (send builder to repair)"
             )
         if c.unimproved_resources:
-            res_names = [r.split("@")[0] for r in c.unimproved_resources]
-            lines.append(f"    Needs builder: {', '.join(res_names)} (unimproved)")
+            # Keep the tile. "Needs builder" without a location is advice the
+            # agent cannot act on — the same reason pillaged tiles keep theirs.
+            lines.append(
+                f"    Needs builder: {', '.join(c.unimproved_resources)} (unimproved)"
+            )
     if distances:
         lines.append("")
         lines.append("City Distances:")

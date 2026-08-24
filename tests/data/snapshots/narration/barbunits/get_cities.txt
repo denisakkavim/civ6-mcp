@@ -1,0 +1,66 @@
+8 cities:
+  Aachen (pop 8) at (14,8) — Food 20 Prod 40 Gold 31 Sci 25 Cul 14 | Housing 13 Amenities 8 | Growth: 72/89 food (5t, +4.0/t) | Building: UNIT_SPY (4 turns) | Walls 200/200 Garrison 200/200 Def:52 Gar:UNIT_CROSSBOWMAN [id:16777216]
+    Districts: DISTRICT_CAMPUS(13,7) DISTRICT_ENCAMPMENT(16,10) DISTRICT_COMMERCIAL_HUB(13,8) DISTRICT_HANSA(12,9) DISTRICT_AQUEDUCT(15,8)
+    Buildings: BUILDING_MONUMENT, BUILDING_PALACE, BUILDING_BARRACKS, BUILDING_GRANARY, BUILDING_LIBRARY, BUILDING_WALLS, BUILDING_WATER_MILL, BUILDING_MARKET, BUILDING_CASTLE, BUILDING_UNIVERSITY, BUILDING_WORKSHOP, BUILDING_ARMORY, BUILDING_FACTORY
+    Needs builder: RESOURCE_DEER@14,5, RESOURCE_SHEEP@16,7, RESOURCE_RICE@16,11 (unimproved)
+  Frankfurt (pop 6) at (18,10) — Food 16 Prod 31 Gold 9 Sci 14 Cul 5 | Housing 13 Amenities 6 | Growth: 38/66 food (7t, +4.0/t) | Building: BUILDING_MARKET (3 turns) | Walls 100/100 Garrison 200/200 Def:44 Gar:none [id:16777217]
+    Districts: DISTRICT_CAMPUS(19,9) DISTRICT_AQUEDUCT(19,10) DISTRICT_COMMERCIAL_HUB(17,10) DISTRICT_HANSA(19,11) DISTRICT_DAM(17,9) DISTRICT_WONDER(19,12)
+    Buildings: BUILDING_GRANARY, BUILDING_LIBRARY, BUILDING_WALLS, BUILDING_WATER_MILL, BUILDING_UNIVERSITY, BUILDING_WORKSHOP, BUILDING_FACTORY, BUILDING_RUHR_VALLEY
+    !! PILLAGED TILES: IMPROVEMENT_MINE@18,8 (send builder to repair)
+    Needs builder: RESOURCE_SHEEP@16,7, RESOURCE_RICE@16,11, RESOURCE_COAL@16,13 (unimproved)
+  Trier (pop 9) at (14,12) — Food 28 Prod 8 Gold 10 Sci 4 Cul 3 | Housing 8 Amenities 11 | Growth: 1/101 food (41t, +10.0/t) | Building: DISTRICT_DAM (4 turns) | HP:200/200 Def:39 Gar:none [id:16777218]
+    !! SLOW GROWTH: 41 turns to next pop — needs farm, granary, or trade route
+    Districts: DISTRICT_COMMERCIAL_HUB(15,13) DISTRICT_ENTERTAINMENT_COMPLEX(15,11) DISTRICT_DAM(13,14)
+    Buildings: BUILDING_GRANARY
+    Needs builder: RESOURCE_RICE@16,11, RESOURCE_HORSES@14,13, RESOURCE_COAL@16,13, RESOURCE_NITER@11,15 (unimproved)
+  Methone (pop 10) at (17,14) — Food 20 Prod 38 Gold 32 Sci 17 Cul 11 | Housing 12 Amenities 10 | Growth: STAGNANT (+0.0 food/t) | Building: nothing | Walls 200/200 Garrison 200/200 Def:66 Gar:UNIT_BOMBARD [id:16777219]
+    !! STAGNANT: 0 food surplus — needs farm, granary, or trade route
+    Districts: DISTRICT_ENCAMPMENT(18,15) DISTRICT_CAMPUS(18,14) DISTRICT_HANSA(16,14) DISTRICT_ENTERTAINMENT_COMPLEX(17,12) DISTRICT_AQUEDUCT(16,13) DISTRICT_COMMERCIAL_HUB(16,12)
+    Buildings: BUILDING_MONUMENT, BUILDING_BARRACKS, BUILDING_GRANARY, BUILDING_LIBRARY, BUILDING_WALLS, BUILDING_WATER_MILL, BUILDING_ARENA, BUILDING_MARKET, BUILDING_CASTLE, BUILDING_UNIVERSITY, BUILDING_WORKSHOP, BUILDING_ARMORY, BUILDING_FACTORY
+    Needs builder: RESOURCE_RICE@16,11, RESOURCE_HORSES@14,13, RESOURCE_COAL@16,13, RESOURCE_ALUMINUM@19,14, RESOURCE_AMBER@16,17 (unimproved)
+  Heidelberg (pop 5) at (22,10) — Food 12 Prod 35 Gold 22 Sci 16 Cul 8 | Housing 10 Amenities 6 | Growth: 42/55 food (7t, +2.0/t) | Building: UNIT_TRADER (1 turns) | Walls 200/200 Garrison 200/200 Def:47 Gar:none [id:16777220]
+    Districts: DISTRICT_CAMPUS(21,9) DISTRICT_HANSA(20,10) DISTRICT_AQUEDUCT(22,9) DISTRICT_COMMERCIAL_HUB(22,8)
+    Buildings: BUILDING_MONUMENT, BUILDING_GRANARY, BUILDING_LIBRARY, BUILDING_WALLS, BUILDING_WATER_MILL, BUILDING_MARKET, BUILDING_CASTLE, BUILDING_UNIVERSITY, BUILDING_WORKSHOP, BUILDING_FACTORY
+    Needs builder: RESOURCE_OIL@23,8 (unimproved)
+  Berlin (pop 11) at (11,16) — Food 43 Prod 17 Gold 31 Sci 6 Cul 4 | Housing 12 Amenities 12 | Growth: 91/126 food (4t, +21.0/t) | Building: UNIT_GERMAN_UBOAT (10 turns) | Walls 200/200 Garrison 200/200 Def:45 Gar:UNIT_CROSSBOWMAN [id:16777221]
+    Districts: DISTRICT_HARBOR(10,15) DISTRICT_COMMERCIAL_HUB(11,14)
+    Buildings: BUILDING_GRANARY, BUILDING_WALLS, BUILDING_WATER_MILL, BUILDING_LIGHTHOUSE, BUILDING_CASTLE
+    Needs builder: RESOURCE_HORSES@14,13, RESOURCE_NITER@11,15 (unimproved)
+  Hamburg (pop 4) at (16,4) — Food 11 Prod 28 Gold 4 Sci 2 Cul 4 | Housing 7 Amenities 4 | Growth: 14/44 food (10t, +3.0/t) | Building: nothing | HP:200/200 Def:47 Gar:UNIT_MAN_AT_ARMS [id:16777222]
+    Districts: DISTRICT_HANSA(16,6)
+    Buildings: BUILDING_GRANARY, BUILDING_WATER_MILL, BUILDING_WORKSHOP
+    Needs builder: RESOURCE_DEER@14,5, RESOURCE_SHEEP@16,7 (unimproved)
+  Pella (pop 4) at (19,17) — Food 11 Prod 16 Gold 5 Sci 11 Cul 3 | Housing 14 Amenities 4 | Growth: 33/44 food (4t, +3.0/t) | Building: BUILDING_CASTLE (8 turns) | Walls 100/100 Garrison 200/200 Def:42 Gar:none [id:16777223]
+    Districts: DISTRICT_ENCAMPMENT(18,16) DISTRICT_CAMPUS(21,17)
+    Buildings: BUILDING_MONUMENT, BUILDING_BARRACKS, BUILDING_GRANARY, BUILDING_LIBRARY, BUILDING_WALLS, BUILDING_UNIVERSITY
+    Needs builder: RESOURCE_ALUMINUM@19,14, RESOURCE_WHEAT@21,14, RESOURCE_WHEAT@21,15, RESOURCE_AMBER@16,17 (unimproved)
+
+City Distances:
+  Aachen <-> Frankfurt: 5 tiles
+  Aachen <-> Trier: 4 tiles
+  Aachen <-> Methone: 6 tiles
+  Aachen <-> Heidelberg: 9 tiles
+  Aachen <-> Berlin: 8 tiles
+  Aachen <-> Hamburg: 4 tiles
+  Aachen <-> Pella: 10 tiles
+  Frankfurt <-> Trier: 5 tiles
+  Frankfurt <-> Methone: 4 tiles
+  Frankfurt <-> Heidelberg: 4 tiles
+  Frankfurt <-> Berlin: 10 tiles
+  Frankfurt <-> Hamburg: 6 tiles
+  Frankfurt <-> Pella: 7 tiles
+  Trier <-> Methone: 4 tiles
+  Trier <-> Heidelberg: 9 tiles
+  Trier <-> Berlin: 5 tiles
+  Trier <-> Hamburg: 8 tiles
+  Trier <-> Pella: 8 tiles
+  Methone <-> Heidelberg: 7 tiles
+  Methone <-> Berlin: 7 tiles
+  Methone <-> Hamburg: 10 tiles
+  Methone <-> Pella: 4 tiles
+  Heidelberg <-> Berlin: 14 tiles
+  Heidelberg <-> Hamburg: 9 tiles
+  Heidelberg <-> Pella: 7 tiles
+  Berlin <-> Hamburg: 12 tiles
+  Berlin <-> Pella: 9 tiles
+  Hamburg <-> Pella: 13 tiles

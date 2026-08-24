@@ -2,15 +2,15 @@
   Qusqu (pop 5) at (45,12) — Food 12 Prod 16 Gold 8 Sci 4 Cul 4 | Housing 9 Amenities 7 | Growth: 14/27 food (7t, +2.0/t) | Building: DISTRICT_COMMERCIAL_HUB (2 turns) | Walls 100/100 Garrison 200/200 Def:23 Gar:UNIT_ARCHER [id:16777216]
     Districts: DISTRICT_HOLY_SITE(46,12) DISTRICT_COMMERCIAL_HUB(44,11)
     Buildings: BUILDING_MONUMENT, BUILDING_PALACE, BUILDING_GRANARY, BUILDING_WALLS
-    Needs builder: RESOURCE_INCENSE, 9, RESOURCE_WHEAT, 10 (unimproved)
+    Needs builder: RESOURCE_INCENSE@46,9, RESOURCE_WHEAT@43,10 (unimproved)
   Wanuku (pop 4) at (44,8) — Food 13 Prod 5 Gold 0 Sci 2 Cul 3 | Housing 5 Amenities 3 | Growth: 6/22 food (8t, +5.0/t) | Building: BUILDING_WALLS (5 turns) | HP:200/200 Def:20 Gar:UNIT_WARRIOR [id:16777217]
     Buildings: BUILDING_MONUMENT, BUILDING_GRANARY
-    Needs builder: RESOURCE_SALT, 6, RESOURCE_CATTLE, 8, RESOURCE_WHEAT, 8, RESOURCE_INCENSE, 9, RESOURCE_WHEAT, 10 (unimproved)
+    Needs builder: RESOURCE_SALT@44,6, RESOURCE_CATTLE@42,8, RESOURCE_WHEAT@44,8, RESOURCE_INCENSE@46,9, RESOURCE_WHEAT@43,10 (unimproved)
   Antawaylla (pop 3) at (47,9) — Food 8 Prod 7 Gold 0 Sci 2 Cul 1 | Housing 3 Amenities 4 | Growth: 6/16 food (20t, +2.0/t) | Building: BUILDING_GRANARY (4 turns) | HP:200/200 Def:17 Gar:UNIT_ARCHER [id:16777218]
     !! SLOW GROWTH: 20 turns to next pop — needs farm, granary, or trade route
     Districts: DISTRICT_HOLY_SITE(46,7)
     Buildings: BUILDING_SHRINE
-    Needs builder: RESOURCE_SALT, 6, RESOURCE_WHEAT, 8, RESOURCE_DEER, 8, RESOURCE_INCENSE, 9, RESOURCE_HORSES, 10 (unimproved)
+    Needs builder: RESOURCE_SALT@44,6, RESOURCE_WHEAT@44,8, RESOURCE_DEER@48,8, RESOURCE_INCENSE@46,9, RESOURCE_HORSES@49,10 (unimproved)
 
 City Distances:
   Qusqu <-> Wanuku: 4 tiles

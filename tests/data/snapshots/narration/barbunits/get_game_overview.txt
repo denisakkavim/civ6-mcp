@@ -1,0 +1,8 @@
+Turn 238 | Germany (Frederick Barbarossa) | Score: 527 | Prince
+Gold: 1803 (+98/turn) | Income: 169 | Maintenance: -71 (units: 30) | Science: 94.8 | Culture: 51.9 | Faith: 1914 | Favor: 289 (+4/turn)
+Research: Metal Casting | Civic: Humanism
+Cities: 8 | Population: 57 | Units: 15 — 4 Trader, 3 Crossbowman, 2 Military Engineer, 2 Man-At-Arms, 1 Frigate, 1 Settler, 1 Bombard, 1 Pikeman
+Explored: 55% of land (642/1161 tiles)
+Religion: NONE — all 3 slots filled (Mapuche: Zoroastrianism, England: Protestantism, Georgia: Eastern Orthodoxy)
+Era: Industrial Era | Score: 117 (Dark: 119, Golden: 133) !! 2 short of avoiding Dark Age
+Rankings: England 594 > Kongo 531 > Germany 527 > Georgia 516 > Mapuche 484

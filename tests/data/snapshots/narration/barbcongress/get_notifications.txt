@@ -1,0 +1,15 @@
+== Action Required (1) ==
+  * Resume Congress  -> Use: get_world_congress() then queue_world_congress_votes()
+
+== Notifications (11) ==
+  - Wonder Completed
+  - Wonder Completed
+  - Wonder Completed
+  - Barbarians Approach at (23,12)
+  - New City-State Quest at (16,24)
+  - New City-State Quest at (12,20)
+  - Need More Amenities
+  - Need More Housing
+  - City Needs Food
+  - Tribal Village Discovered at (7,18)
+  - City-State's First Suzerain

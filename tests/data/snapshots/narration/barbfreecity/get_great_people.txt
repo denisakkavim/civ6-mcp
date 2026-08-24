@@ -1,0 +1,36 @@
+9 Great People:
+  Great General: Sun Tzu (Classical Era) — Unclaimed — your points: 0/60
+    Ability: PLAYER_UNITS_GRANT_ABILITY (passive), PLAYER_UNITS_GRANT_ABILITY (passive), creates 1 Great Works
+    Patronize: 1100g / 750f
+    (individual_id: 58)
+  Great Admiral: Artemisia (Classical Era) — Unclaimed — your points: 0/60
+    Ability: Grants 1 promotion level to a military naval unit.
+    Patronize: 1100g / 750f
+    (individual_id: 0)
+  Great Engineer: James of St. George (Medieval Era) — Unclaimed — your points: 0/120
+    Ability: Instantly builds Ancient and Medieval Walls in this city.
+    Patronize: 2000g / 1350f
+    (individual_id: 40)
+  Great Merchant: Marcus Licinius Crassus (Classical Era) — Unclaimed — your points: 0/60
+    Ability: UNIT_GRANT_PLOT, +60 GOLD
+    Patronize: 1100g / 750f
+    (individual_id: 76)
+  Great Prophet: Zoroaster (Classical Era) — Unclaimed — your points: 0/60
+    Patronize: 1100g / 750f
+    (individual_id: 114)
+  Great Scientist: Hypatia (Classical Era) — Unclaimed — your points: 23/60
+    Ability: SINGLE_CITY_GRANT_BUILDING_IN_CITY_IGNORE, CITIES_ADJUST_BUILDING_YIELD_CHANGE (amount=1)
+    Patronize: 755g / 520f
+    (individual_id: 130)
+  Great Writer: Bhasa (Classical Era) — Unclaimed — your points: 0/60
+    Ability: creates 2 Great Works
+    Patronize: 1100g / 750f
+    (individual_id: 149)
+  Great Artist: Hieronymus Bosch (Renaissance Era) — Unclaimed — your points: 0/240
+    Ability: creates 3 Great Works
+    Patronize: 3800g / 2550f
+    (individual_id: 19)
+  Great Musician: Yatsuhashi Kengyo (Industrial Era) — Unclaimed — your points: 0/420
+    Ability: creates 2 Great Works
+    Patronize: 6500g / 4350f
+    (individual_id: 100)

@@ -1,0 +1,59 @@
+{
+  "tool": "get_production_options",
+  "arguments": {
+    "city_id": 16777216
+  },
+  "scenario": "barbwarspies",
+  "recorded_at": "2026-08-24T17:37:18+00:00",
+  "notes": null,
+  "result": "Units:\n  UNIT_SETTLER (cost 80, 6 turns, buy: 1280g)\n  UNIT_BUILDER (cost 50, 2 turns, buy: 455g)\n  UNIT_TRADER (cost 40, 3 turns, buy: 500g)\n  UNIT_MILITARY_ENGINEER (cost 170, 2 turns, buy: 680g)\n  UNIT_CAVALRY (cost 330, 3 turns, buy: 1320g)\n  UNIT_OBSERVATION_BALLOON (cost 240, 3 turns, buy: 960g)\n  UNIT_INFANTRY (cost 430, 4 turns, buy: 1720g)\n  UNIT_ARTILLERY (cost 430, 4 turns, buy: 1720g)\n  UNIT_BATTLESHIP (cost 430, 4 turns, buy: 1720g)\n  UNIT_GERMAN_UBOAT (cost 430, 4 turns, buy: 1720g)\n  UNIT_TANK (cost 480, 5 turns, buy: 1920g)\n  UNIT_ANTIAIR_GUN (cost 455, 4 turns, buy: 1820g)\n  UNIT_MACHINE_GUN (cost 540, 5 turns, buy: 2160g)\n  UNIT_AIRCRAFT_CARRIER (cost 540, 5 turns, buy: 2160g)\n  UNIT_DESTROYER (cost 540, 5 turns, buy: 2160g)\n  UNIT_SPEC_OPS (cost 520, 5 turns, buy: 2080g)\n  UNIT_SUPPLY_CONVOY (cost 450, 4 turns, buy: 1800g)\nBuildings:\n  BUILDING_MUSEUM_ART (cost 290, 5 turns, buy: 1160g)\n  BUILDING_MUSEUM_ARTIFACT (cost 290, 5 turns, buy: 1160g)\n  BUILDING_CRISTO_REDENTOR (cost 1620, 25 turns)\n  BUILDING_HALICARNASSUS_MAUSOLEUM (cost 400, 7 turns)\n  BUILDING_TAJ_MAHAL (cost 920, 15 turns)\n  BUILDING_ORSZAGHAZ (cost 920, 15 turns)\nDistricts:\n  DISTRICT_HOLY_SITE (cost 54, 4 turns)\n  DISTRICT_AERODROME (cost 54, 7 turns)\n  DISTRICT_ENTERTAINMENT_COMPLEX (cost 54, 4 turns)\n  DISTRICT_NEIGHBORHOOD (cost 54, 6 turns)\n  DISTRICT_WATER_ENTERTAINMENT_COMPLEX (cost 54, 4 turns)\n  DISTRICT_CANAL (cost 81, 10 turns)\n  DISTRICT_DAM (cost 81, 10 turns)\nProjects:\n  PROJECT_ENHANCE_DISTRICT_ENCAMPMENT (cost 25, 5 turns)\n  PROJECT_ENHANCE_DISTRICT_HARBOR (cost 25, 5 turns)\n  PROJECT_ENHANCE_DISTRICT_INDUSTRIAL_ZONE (cost 25, 5 turns)\n  PROJECT_ENHANCE_DISTRICT_COMMERCIAL_HUB (cost 25, 5 turns)\n  PROJECT_ENHANCE_DISTRICT_CAMPUS (cost 25, 3 turns)\n  PROJECT_ENHANCE_DISTRICT_THEATER (cost 25, 5 turns)",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local pCity = CityManager.GetCity(me, 16777216 % 65536) if pCity == nil then print(\"ERR:CITY_NOT_FOUND\"); print(\"---END---\"); return end\nlocal bq = pCity:GetBuildQueue()\nlocal goldIdx = GameInfo.Yields[\"YIELD_GOLD\"].Index\nlocal cityGold = pCity:GetGold()\nlocal function getGoldCost(hash, isUnit)\n    local ok, cost = pcall(function()\n        if isUnit then\n            return cityGold:GetPurchaseCost(goldIdx, hash, MilitaryFormationTypes.STANDARD_MILITARY_FORMATION)\n        else\n            return cityGold:GetPurchaseCost(goldIdx, hash, -1)\n        end\n    end)\n    if ok and cost and cost > 0 then return math.floor(cost) end\n    return -1\nend\n-- Check Trader cap: game silently rejects Traders when count >= route capacity\nlocal pTrade = Players[me]:GetTrade()\nlocal traderCount = 0\nfor _, u in Players[me]:GetUnits():Members() do\n    if GameInfo.Units[u:GetType()].UnitType == \"UNIT_TRADER\" then traderCount = traderCount + 1 end\nend\nlocal routeCap = pTrade:GetOutgoingRouteCapacity()\nlocal traderCapped = (traderCount >= routeCap)\nprint(\"UNITS:\")\nfor unit in GameInfo.Units() do\n    if bq:CanProduce(unit.Hash, true) then\n        if unit.UnitType == \"UNIT_TRADER\" and traderCapped then\n            -- skip: game will silently reject (traders >= route capacity)\n        else\n            -- CanStartOperation catches missing strategic resources that CanProduce misses\n            local unitCheck = {}\n            unitCheck[CityOperationTypes.PARAM_UNIT_TYPE] = unit.Hash\n            local canStart = CityManager.CanStartOperation(pCity, CityOperationTypes.BUILD, unitCheck, true)\n            if canStart then\n                local t = bq:GetTurnsLeft(unit.Hash)\n                local gc = getGoldCost(unit.Hash, true)\n                local adjCost = unit.Cost\n                pcall(function() local c = bq:GetProductionCost(unit.Hash); if c > 0 then adjCost = math.floor(c) end end)\n                print(\"UNIT|\" .. unit.UnitType .. \"|\" .. adjCost .. \"|\" .. t .. \"|\" .. gc)\n            end\n        end\n    end\nend\nprint(\"BUILDINGS:\")\nfor bldg in GameInfo.Buildings() do\n    if bq:CanProduce(bldg.Hash, true) then\n        -- CanStartOperation catches pillaged-district prerequisites that CanProduce misses\n        local bldgCheck = {}\n        bldgCheck[CityOperationTypes.PARAM_BUILDING_TYPE] = bldg.Hash\n        local canStart = CityManager.CanStartOperation(pCity, CityOperationTypes.BUILD, bldgCheck, true)\n        if canStart then\n            local t = bq:GetTurnsLeft(bldg.Hash)\n            local gc = -1\n            if not bldg.IsWonder then\n                gc = getGoldCost(bldg.Hash, false)\n            end\n            local adjCost = bldg.Cost\n            pcall(function() local c = bq:GetProductionCost(bldg.Hash); if c > 0 then adjCost = math.floor(c) end end)\n            print(\"BUILDING|\" .. bldg.BuildingType .. \"|\" .. adjCost .. \"|\" .. t .. \"|\" .. gc)\n        end\n    end\nend\nprint(\"DISTRICTS:\")\nfor dist in GameInfo.Districts() do\n    if bq:CanProduce(dist.Hash, true) then\n        local t = bq:GetTurnsLeft(dist.Hash)\n        local adjCost = dist.Cost\n        pcall(function() local c = bq:GetProductionCost(dist.Hash); if c > 0 then adjCost = math.floor(c) end end)\n        print(\"DISTRICT|\" .. dist.DistrictType .. \"|\" .. adjCost .. \"|\" .. t .. \"|-1\")\n    end\nend\nprint(\"PROJECTS:\")\nfor proj in GameInfo.Projects() do\n    if bq:CanProduce(proj.Hash, true) then\n        local t = bq:GetTurnsLeft(proj.Hash)\n        local adjCost = proj.Cost\n        pcall(function() local c = bq:GetProductionCost(proj.Hash); if c > 0 then adjCost = math.floor(c) end end)\n        print(\"PROJECT|\" .. proj.ProjectType .. \"|\" .. adjCost .. \"|\" .. t .. \"|-1\")\n    end\nend\n-- Pillaged districts/buildings that can be repaired via production queue\nprint(\"REPAIRS:\")\nlocal pBuildings = pCity:GetBuildings()\nfor _, d in pCity:GetDistricts():Members() do\n    if d:IsPillaged() then\n        local dInfo = GameInfo.Districts[d:GetType()]\n        if dInfo and dInfo.DistrictType ~= \"DISTRICT_CITY_CENTER\" then\n            local repParams = {}\n            repParams[CityOperationTypes.PARAM_DISTRICT_TYPE] = dInfo.Hash\n            repParams[CityOperationTypes.PARAM_X] = d:GetX()\n            repParams[CityOperationTypes.PARAM_Y] = d:GetY()\n            local canRepair = CityManager.CanStartOperation(pCity, CityOperationTypes.BUILD, repParams, true)\n            if canRepair then\n                local t = bq:GetTurnsLeft(dInfo.Hash)\n                local adjCost = dInfo.Cost\n                pcall(function() local c = bq:GetProductionCost(dInfo.Hash); if c > 0 then adjCost = math.floor(c) end end)\n                print(\"DISTRICT|\" .. dInfo.DistrictType .. \"|\" .. adjCost .. \"|\" .. t .. \"|-1|REPAIR|\" .. d:GetX() .. \",\" .. d:GetY())\n            end\n        end\n    end\nend\nfor bldg in GameInfo.Buildings() do\n    if pBuildings:HasBuilding(bldg.Index) and pBuildings:IsPillaged(bldg.Index) then\n        local repCheck = {}\n        repCheck[CityOperationTypes.PARAM_BUILDING_TYPE] = bldg.Hash\n        local canRepair = CityManager.CanStartOperation(pCity, CityOperationTypes.BUILD, repCheck, true)\n        if canRepair then\n            local t = bq:GetTurnsLeft(bldg.Hash)\n            local adjCost = bldg.Cost\n            pcall(function() local c = bq:GetProductionCost(bldg.Hash); if c > 0 then adjCost = math.floor(c) end end)\n            print(\"BUILDING|\" .. bldg.BuildingType .. \"|\" .. adjCost .. \"|\" .. t .. \"|-1|REPAIR\")\n        end\n    end\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "UNITS:",
+        "UNIT|UNIT_SETTLER|80|6|1280",
+        "UNIT|UNIT_BUILDER|50|2|455",
+        "UNIT|UNIT_TRADER|40|3|500",
+        "UNIT|UNIT_MILITARY_ENGINEER|170|2|680",
+        "UNIT|UNIT_CAVALRY|330|3|1320",
+        "UNIT|UNIT_OBSERVATION_BALLOON|240|3|960",
+        "UNIT|UNIT_INFANTRY|430|4|1720",
+        "UNIT|UNIT_ARTILLERY|430|4|1720",
+        "UNIT|UNIT_BATTLESHIP|430|4|1720",
+        "UNIT|UNIT_GERMAN_UBOAT|430|4|1720",
+        "UNIT|UNIT_TANK|480|5|1920",
+        "UNIT|UNIT_ANTIAIR_GUN|455|4|1820",
+        "UNIT|UNIT_MACHINE_GUN|540|5|2160",
+        "UNIT|UNIT_AIRCRAFT_CARRIER|540|5|2160",
+        "UNIT|UNIT_DESTROYER|540|5|2160",
+        "UNIT|UNIT_SPEC_OPS|520|5|2080",
+        "UNIT|UNIT_SUPPLY_CONVOY|450|4|1800",
+        "BUILDINGS:",
+        "BUILDING|BUILDING_MUSEUM_ART|290|5|1160",
+        "BUILDING|BUILDING_MUSEUM_ARTIFACT|290|5|1160",
+        "BUILDING|BUILDING_CRISTO_REDENTOR|1620|25|-1",
+        "BUILDING|BUILDING_HALICARNASSUS_MAUSOLEUM|400|7|-1",
+        "BUILDING|BUILDING_TAJ_MAHAL|920|15|-1",
+        "BUILDING|BUILDING_ORSZAGHAZ|920|15|-1",
+        "DISTRICTS:",
+        "DISTRICT|DISTRICT_HOLY_SITE|54|4|-1",
+        "DISTRICT|DISTRICT_AERODROME|54|7|-1",
+        "DISTRICT|DISTRICT_ENTERTAINMENT_COMPLEX|54|4|-1",
+        "DISTRICT|DISTRICT_NEIGHBORHOOD|54|6|-1",
+        "DISTRICT|DISTRICT_WATER_ENTERTAINMENT_COMPLEX|54|4|-1",
+        "DISTRICT|DISTRICT_CANAL|81|10|-1",
+        "DISTRICT|DISTRICT_DAM|81|10|-1",
+        "PROJECTS:",
+        "PROJECT|PROJECT_ENHANCE_DISTRICT_ENCAMPMENT|25|5|-1",
+        "PROJECT|PROJECT_ENHANCE_DISTRICT_HARBOR|25|5|-1",
+        "PROJECT|PROJECT_ENHANCE_DISTRICT_INDUSTRIAL_ZONE|25|5|-1",
+        "PROJECT|PROJECT_ENHANCE_DISTRICT_COMMERCIAL_HUB|25|5|-1",
+        "PROJECT|PROJECT_ENHANCE_DISTRICT_CAMPUS|25|3|-1",
+        "PROJECT|PROJECT_ENHANCE_DISTRICT_THEATER|25|5|-1",
+        "REPAIRS:"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+7 units:
+  Scout (UNIT_SCOUT) at (20,14) — CS:10 moves 3/3 [HP: 90/100] [id:0]
+  Warrior (UNIT_WARRIOR) at (20,13) — CS:20 moves 2/2 [HP: 72/100] [id:1]
+  Slinger (UNIT_SLINGER) at (18,4) — CS:5 RS:15 moves 2/2 [id:2]
+  Slinger (UNIT_SLINGER) at (14,8) — CS:5 RS:15 moves 2/2 [id:3]
+  Trader (UNIT_TRADER) at (16,11) — moves 2/2 [ON ROUTE: Trier -> Frankfurt (Domestic)] [id:4]
+  Warrior (UNIT_WARRIOR) at (20,10) — CS:20 moves 2/2 [id:5]
+  Builder (UNIT_BUILDER) at (18,8) — moves 2/2 charges:3 [id:6]
+    >> Can build: IMPROVEMENT_MINE
+
+Nearby threats (1):
+  Macedon (1 unit):
+    UNIT_WARRIOR at (19,16) — CS:20 HP:100/100 (2 tiles away) [id:65536]

@@ -5,7 +5,7 @@
     "focus": "production"
   },
   "scenario": "turn37",
-  "recorded_at": "2026-08-16T20:27:54+00:00",
+  "recorded_at": "2026-08-24T17:16:00+00:00",
   "notes": null,
   "result": "FOCUS_SET|YIELD_PRODUCTION|favored",
   "exchanges": [

@@ -1,0 +1,54 @@
+4 civilizations:
+  Mapuche (Lautaro) — WAR (-25) **AT WAR** [player 2]
+    Cities (9): Huilli Mapu pop 9 (66,35) [city:16908293]; Nag Mapu pop 5 (69,37) [walls] [city:16908294]; Pehuen Mapu pop 3 (69,33) [city:16908295] + 6 in fog
+    Military: 213 vs our 1734 (0.1x)
+    -9 We occupy a city belonging to their friend or ally
+    -22 Grievances from other players against us
+    -15 Grievances against us
+    +9 Likes civs with high Loyalty, but dislikes those with low
+    +6 Unknown Reason
+    +6 Unknown Reason
+    !! DEFENSIVE PACTS with: England (player 3)
+    Agenda: Spirit of Tucapel — Tries to create and maintain a high degree of cultural loyalty. Dislikes civilizations that lose cities by failing to maintain the loyalty of their people, likes those that gain cities through loyalty.
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+  England (Victoria) — UNFRIENDLY (-51) [player 3]
+    Cities (11): Zugdidi pop 9 (54,20) !! loy 50 (-4.2/t) [city:16973831]; Hull pop 2 (35,10) [city:16973832]; Stoke-upon-Trent pop 2 (51,22) [city:16973835] + 8 in fog
+    Military: 861 vs our 1734 (0.5x)
+    -5 Broke a pledge to move troops from their border
+    +2 Friendly meeting
+    -1 We had troops on their border
+    -11 Grievances from other players against us
+    -37 Grievances against us
+    -5 Victoria wants to expand to a continent you occupy
+    +6 Unknown Reason
+    !! DEFENSIVE PACTS with: Mapuche (player 2)
+    Agenda: Sun Never Sets — Likes civilizations from her home continent, and wants to expand to all continents. Doesn’t like civilizations on continents where England has no city.
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Can: Declare Friendship, Denounce, Resident Embassy, Open Borders (Via Propose Deal)
+  Georgia (Tamar) — DENOUNCED (-30) [player 4]
+    Cities (9): Kutaisi pop 9 (55,16) [walls] [city:17039361]; Omalo pop 6 (72,23) [city:17039362]; Tskhumi pop 12 (57,13) [walls] [city:17039366]; Tsageri pop 9 (53,12) [walls] [city:17039367]; Poti pop 3 (62,15) [walls] [city:17039368] + 4 in fog
+    Military: 431 vs our 1734 (0.2x)
+    Access: they have embassy, grievances: 17
+    -32 Grievances from other players against us
+    +8 Tamar is happy you are fortifying your cities
+    -6 Unknown Reason
+    Agenda: Narikala Fortress — Tries to put high-level walls around her cities and respects civilizations who follow her lead. Does not like civilizations who fail to fortify their cities.
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Can: Declare War
+  Kongo (Mvemba a Nzinga) — DENOUNCED (-36) [player 5]
+    Cities (13): Mbanza Kongo pop 16 (24,29) [walls] [city:17104896]; Kinchassa pop 17 (22,33) [walls] [city:17104897]; Mbumbi pop 19 (21,28) [city:17104898]; Kwango pop 17 (26,25) [city:17104899]; Mbanza Nsundi pop 12 (19,23) [city:17104900]; Mbanza Mbata pop 16 (23,23) [city:17104901]; Mbamba pop 11 (11,26) [city:17104902]; Bakavu pop 7 (30,22) [walls] [city:17104904]; Mbanza Mpangu pop 4 (29,30) [walls] [city:17104906]; Nkondo pop 4 (31,18) [city:17104907] + 3 in fog
+    Military: 653 vs our 1734 (0.4x)
+    Access: they have embassy
+    -3 Settled near them
+    +2 Trade routes between our nations
+    -24 Grievances from other players against us
+    -11 Grievances against us
+    -6 They really dislike civilizations who are very aggressive to city states
+    +6 Unknown Reason
+    Agenda: Enthusiastic Disciple — Likes civilizations that bring Religion to the Kongo. Dislikes civilizations that have founded a Religion but not brought it to a Kongolese city.
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Can: Declare War

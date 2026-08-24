@@ -1,0 +1,64 @@
+Researching: Nuclear Fission (5 turns) | Completed: 55 techs, 30 civics
+Civic: Ideology (2 turns)
+
+Available techs:
+  Computers (TECH_COMPUTERS) [ATOMIC] — 47%, 5 turns BOOSTED [Boost: Adopt a government with 8 inherent policy slots.] -> Drone, Flood Barrier (needs: TECH_ELECTRICITY,TECH_RADIO)
+  Nuclear Fission (TECH_NUCLEAR_FISSION) [ATOMIC] — 54%, 5 turns [Boost: Boost through Great Scientist or Spy.] -> Nuclear Power Plant, Project: Manhattan Project, Project: Build Nuclear Device, Project: Convert to Nuclear Power, Project: Recommission Nuclear Reactor (needs: TECH_ADVANCED_BALLISTICS,TECH_COMBINED_ARMS)
+  Synthetic Materials (TECH_SYNTHETIC_MATERIALS) [ATOMIC] — 47%, 5 turns BOOSTED [Boost: Build 2 Aerodromes.] -> Helicopter, Geothermal Plant (needs: TECH_PLASTICS)
+  Chemistry (TECH_CHEMISTRY) [MODERN] — 0%, 7 turns [Boost: Have a level 2 Alliance.] -> AT Crew, Research Lab, Mountain Tunnel (needs: TECH_SANITATION,TECH_REPLACEABLE_PARTS)
+
+Available civics:
+  Mysticism (CIVIC_MYSTICISM) [ANCIENT] — 0%, 1 turns BOOSTED [Boost: Found a pantheon.] (needs: CIVIC_FOREIGN_TRADE) !! GRAB THIS
+  Naval Tradition (CIVIC_NAVAL_TRADITION) [MEDIEVAL] — 0%, 2 turns [Boost: Kill a unit with a Quadrireme.] (needs: CIVIC_DEFENSIVE_TACTICS) !! GRAB THIS
+  Opera and Ballet (CIVIC_OPERA_BALLET) [INDUSTRIAL] — 0%, 7 turns BOOSTED [Boost: Build an Art Museum.] (needs: CIVIC_THE_ENLIGHTENMENT)
+  Conservation (CIVIC_CONSERVATION) [MODERN] — 0%, 14 turns BOOSTED [Boost: Have a Neighborhood district with Breathtaking Appeal.] (needs: CIVIC_NATURAL_HISTORY)
+  Capitalism (CIVIC_CAPITALISM) [MODERN] — 0%, 14 turns BOOSTED [Boost: Build 2 Stock Exchanges.] (needs: CIVIC_MASS_MEDIA)
+  Ideology (CIVIC_IDEOLOGY) [MODERN] — 0%, 15 turns (needs: CIVIC_MASS_MEDIA,CIVIC_MOBILIZATION)
+  Global Warming Mitigation (CIVIC_GLOBAL_WARMING_MITIGATION) [FUTURE] — 0%, 42 turns
+  Information Warfare (CIVIC_INFORMATION_WARFARE) [FUTURE] — 0%, 42 turns
+  Cultural Hegemony (CIVIC_CULTURAL_HEGEMONY) [FUTURE] — 0%, 42 turns
+  Smart Power Doctrine (CIVIC_SMART_POWER_DOCTRINE) [FUTURE] — 0%, 44 turns
+  Exodus Imperative (CIVIC_EXODUS_IMPERATIVE) [FUTURE] — 0%, 44 turns
+
+Locked techs (prerequisites missing):
+  -- ATOMIC --
+  Rocketry (TECH_ROCKETRY) — needs: Chemistry BOOSTED [Boost: Boost through Great Scientist or Spy.]
+  -- INFORMATION --
+  Telecommunications (TECH_TELECOMMUNICATIONS) — needs: Computers [Boost: Boost through Great Scientist or Spy.]
+  Satellites (TECH_SATELLITES) — needs: Rocketry BOOSTED [Boost: Build 2 Broadcast Centers.]
+  Guidance Systems (TECH_GUIDANCE_SYSTEMS) — needs: Rocketry [Boost: Kill a Fighter.]
+  Lasers (TECH_LASERS) — needs: Nuclear Fission BOOSTED [Boost: Build 2 Drones.]
+  Composites (TECH_COMPOSITES) — needs: Synthetic Materials BOOSTED [Boost: Own 3 Tanks.]
+  Stealth Technology (TECH_STEALTH_TECHNOLOGY) — needs: Synthetic Materials BOOSTED [Boost: Boost through Great Scientist or Spy.]
+  Robotics (TECH_ROBOTICS) — needs: Computers, Satellites, Guidance Systems, Lasers [Boost: Have the Globalization civic.]
+  Nanotechnology (TECH_NANOTECHNOLOGY) — needs: Composites BOOSTED [Boost: Build an Aluminum Mine.]
+  Nuclear Fusion (TECH_NUCLEAR_FUSION) — needs: Lasers [Boost: Build a Nuclear Power Plant.]
+
+Locked civics (prerequisites missing):
+  -- CLASSICAL --
+  Theology (CIVIC_THEOLOGY) — needs: Mysticism BOOSTED [Boost: Found a Religion.]
+  -- MEDIEVAL --
+  Divine Right (CIVIC_DIVINE_RIGHT) — needs: Theology BOOSTED [Boost: Build 2 Temples.]
+  -- RENAISSANCE --
+  Reformed Church (CIVIC_REFORMED_CHURCH) — needs: Divine Right [Boost: Have 6 cities following your Religion.]
+  -- MODERN --
+  Nuclear Program (CIVIC_NUCLEAR_PROGRAM) — needs: Ideology [Boost: Build a Research Lab.]
+  Suffrage (CIVIC_SUFFRAGE) — needs: Ideology BOOSTED [Boost: Build 4 Sewers.]
+  Totalitarianism (CIVIC_TOTALITARIANISM) — needs: Ideology BOOSTED [Boost: Build 3 Military Academies.]
+  Class Struggle (CIVIC_CLASS_STRUGGLE) — needs: Ideology BOOSTED [Boost: Build 3 Factories.]
+  -- ATOMIC --
+  Cold War (CIVIC_COLD_WAR) — needs: Ideology [Boost: Research the Nuclear Fission technology.]
+  Professional Sports (CIVIC_PROFESSIONAL_SPORTS) — needs: Ideology BOOSTED [Boost: Build 2 Entertainment Complex districts.]
+  Cultural Heritage (CIVIC_CULTURAL_HERITAGE) — needs: Conservation [Boost: Have a Themed Building.]
+  Rapid Deployment (CIVIC_RAPID_DEPLOYMENT) — needs: Cold War BOOSTED [Boost: Build an Aerodrome or Airstrip on a foreign continent.]
+  Space Race (CIVIC_SPACE_RACE) — needs: Cold War [Boost: Build a Spaceport district.]
+  -- INFORMATION --
+  Globalization (CIVIC_GLOBALIZATION) — needs: Rapid Deployment, Space Race BOOSTED [Boost: Build 2 Airports.]
+  Social Media (CIVIC_SOCIAL_MEDIA) — needs: Space Race, Professional Sports [Boost: Research the Telecommunications technology.]
+  Environmentalism (CIVIC_ENVIRONMENTALISM) — needs: Cultural Heritage, Rapid Deployment [Boost: Build 2 Solar Farms.]
+  Venture Politics (CIVIC_CORPORATE_LIBERTARIANISM) — needs: Globalization, Social Media BOOSTED [Boost: Build a Uranium Mine.]
+  Distributed Sovereignty (CIVIC_DIGITAL_DEMOCRACY) — needs: Globalization, Social Media [Boost: Own a Rock Band.]
+  Optimization Imperative (CIVIC_SYNTHETIC_TECHNOCRACY) — needs: Globalization, Social Media [Boost: Research the Robotics technology.]
+  Near Future Governance (CIVIC_NEAR_FUTURE_GOVERNANCE) — needs: Environmentalism, Globalization [Boost: Adopt a government with 10 inherent policy slots.]
+  -- FUTURE --
+  Future Civic (CIVIC_FUTURE_CIVIC) — needs: Globalization, Social Media

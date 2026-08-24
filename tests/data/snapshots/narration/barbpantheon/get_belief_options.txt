@@ -1,0 +1,26 @@
+No pantheon selected. Faith: 26
+
+21 available beliefs:
+  Dance of the Aurora (BELIEF_DANCE_OF_THE_AURORA): Holy Site districts get +1 [ICON_Faith] Faith from adjacent Tundra tiles.
+  Desert Folklore (BELIEF_DESERT_FOLKLORE): Holy Site districts get +1 [ICON_Faith] Faith from adjacent Desert tiles.
+  Sacred Path (BELIEF_SACRED_PATH): Holy Site districts get +1 [ICON_Faith] Faith from adjacent Rainforest tiles.
+  River Goddess (BELIEF_RIVER_GODDESS): +2 [ICON_Amenities] Amenities and +2 [ICON_Housing] Housing to cities if they have a Holy Site district adjacent to a River.
+  Monument to the Gods (BELIEF_MONUMENT_TO_THE_GODS): +15% [ICON_Production] Production towards Ancient and Classical era wonders.
+  Divine Spark (BELIEF_DIVINE_SPARK): +1 [ICON_GreatPerson] Great Person Points from Holy Sites (Prophet), Campuses with a Library (Scientist), and Theater Squares with an Amphitheater (Writer).
+  Lady of the Reeds and Marshes (BELIEF_LADY_OF_THE_REEDS_AND_MARSHES): +2 [ICON_Production] Production from Marsh, Oasis, and Desert Floodplains.
+  God of the Sea (BELIEF_GOD_OF_THE_SEA): +1 [ICON_Production] Production from Fishing Boats.
+  God of the Open Sky (BELIEF_GOD_OF_THE_OPEN_SKY): +1 [ICON_Culture] Culture from Pastures.
+  Goddess of the Hunt (BELIEF_GODDESS_OF_THE_HUNT): +1 [ICON_Food] Food and +1 [ICON_Production] Production from Camps.
+  Stone Circles (BELIEF_STONE_CIRCLES): +2 [ICON_Faith] Faith from Quarries.
+  Religious Idols (BELIEF_RELIGIOUS_IDOLS): +2 [ICON_Faith] Faith from Mines over Luxury and Bonus resources.
+  God of Craftsmen (BELIEF_GOD_OF_CRAFTSMEN): +1 [ICON_Production] Production and +1 [ICON_Faith] Faith from improved Strategic resources.
+  Goddess of Festivals (BELIEF_GODDESS_OF_FESTIVALS): +1 [ICON_Culture] Culture from Plantations.
+  God of the Forge (BELIEF_GOD_OF_THE_FORGE): +25% [ICON_Production] Production toward Ancient and Classical military units.
+  God of Healing (BELIEF_GOD_OF_HEALING): Increases Healing by +30 in your Holy Site district, or any adjacent tiles.
+  God of War (BELIEF_GOD_OF_WAR): Bonus [ICON_Faith] Faith equal to 50% of the strength of each combat unit killed within 8 tiles of a Holy Site district. (on Standard Speed)
+  Fertility Rites (BELIEF_FERTILITY_RITES): When chosen receive a Builder in your capital. City growth rate is 10% higher.
+  City Patron Goddess (BELIEF_CITY_PATRON_GODDESS): +25% [ICON_Production] Production toward districts in cities without a specialty district.
+  Earth Goddess (BELIEF_EARTH_GODDESS): +1 Faith [ICON_Faith] from tiles with Breathtaking Appeal.
+  Fire Goddess (BELIEF_GODDESS_OF_FIRE): +2 [ICON_FAITH] Faith from Geothermal Fissures and Volcanic Soil.
+
+Use choose_pantheon(belief_type) to found a pantheon.

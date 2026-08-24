@@ -1,0 +1,8 @@
+7 purchasable tiles:
+  (13,10): 135g — Coast and Lake
+  (11,7): 205g — Coast and Lake
+  (11,8): 205g — Coast and Lake
+  (11,9): 205g — Grassland
+  (13,5): 205g — Tundra
+  (12,5): 205g — Snow
+  (12,6): 205g — Tundra

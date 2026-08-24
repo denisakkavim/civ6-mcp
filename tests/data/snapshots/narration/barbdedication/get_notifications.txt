@@ -1,0 +1,12 @@
+== Action Required (4) ==
+  * Make Dedication  -> Use: get_dedications() then choose_dedication(dedication_index=...)
+  * Choose a Technology  -> Use: set_tech(tech_type=...)
+  * Choose a Civic  -> Use: set_civic(civic_type=...)
+  * New Governor Opportunity Available  -> Use: get_governors() then appoint_governor()
+
+== Notifications (5) ==
+  - Wonder Completed
+  - New City-State Quest at (12,20)
+  - Discovered Archery
+  - Discovered Early Empire
+  - Command Units  -> Units have moves remaining — move them or use skip_remaining_units()

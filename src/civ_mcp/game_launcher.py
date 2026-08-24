@@ -23,6 +23,7 @@ import asyncio
 import glob
 import logging
 import os
+from pathlib import Path
 import socket
 import subprocess
 import sys
@@ -2101,6 +2102,44 @@ def list_autosaves(limit: int = 10) -> list[str]:
 # ---------------------------------------------------------------------------
 
 
+def _touch_save(save_name: str) -> None:
+    """Update a save's mtime so the Load Game list shows it first.
+
+    Best effort: a save the loader cannot find on disk may still be reachable
+    in the UI, and the navigation reports its own failure if not.
+    """
+    if not SINGLE_SAVE_DIR:
+        return
+    path = Path(SINGLE_SAVE_DIR) / f"{save_name}.Civ6Save"
+    try:
+        path.touch()
+        log.info("Touched %s so it sorts to the top of the load list", path.name)
+    except OSError:
+        log.info("Could not touch %s; relying on its position in the list", path.name)
+
+
+def _back_out_to_main_menu(attempts: int = 3) -> None:
+    """Click Back until the main menu is showing, or give up quietly.
+
+    Uses OCR clicking rather than an Escape key press, because the launcher
+    has no key-press primitive and clicking already works on all three
+    platforms. Gives up rather than raising: the caller's own step 1 reports
+    the failure, and this is only a recovery attempt.
+    """
+    # One OCR pass costs 3-5 seconds (screen grab plus Vision), so a timeout
+    # under that returns before a single pass completes. A first cut used 3
+    # seconds and never saw the "BACK" that OCR reports at (1209,122).
+    for attempt in range(attempts):
+        if _wait_for_text("Single Player", timeout=10, exact=True):
+            if attempt:
+                log.info("Backed out to the main menu after %d click(s)", attempt)
+            return
+        log.info("Not on the main menu — clicking Back (attempt %d)", attempt + 1)
+        if not _click_text("Back", timeout=10, exact=True, post_delay=1.5):
+            log.info("No 'Back' on screen; leaving the UI where it is")
+            return
+
+
 def _navigate_to_save_sync(save_name: str, tab: str | None = "Autosaves") -> str:
     """Navigate: Main Menu → Single Player → Load Game → [tab] → select → Load.
 
@@ -2127,6 +2166,20 @@ def _navigate_to_save_sync(save_name: str, tab: str | None = "Autosaves") -> str
         # Click through Aspyr launcher if present (macOS shows PLAY button before main menu)
         _click_aspyr_launcher_sync()
 
+    # Back out to the main menu first. This navigation assumes it starts
+    # there, and an attempt that failed part-way leaves the UI on whatever
+    # screen it reached — most often the Load Game list, which has no "Single
+    # Player" on it. Every later attempt then fails at step 1 with a message
+    # blaming the main menu, until somebody clicks Back by hand.
+    _back_out_to_main_menu()
+
+    # Bring the save to the top of the list. The Load Game screen sorts by
+    # "Sort by Last Modified", not by name, so a long save directory pushes
+    # older saves below the visible window and step 4 reports them as missing.
+    # (tests/data/saves/README.md claimed a leading "0" was enough. It is not
+    # — that only helps when the list is sorted by name, which it is not.)
+    _touch_save(save_name)
+
     log.info("[1/7] Waiting for main menu (Single Player)...")
     if not _click_text("Single Player", timeout=90, exact=True, post_delay=0.5):
         return "FAILED: Could not find 'Single Player' on main menu. Is the game at the main menu?"
@@ -2135,7 +2188,10 @@ def _navigate_to_save_sync(save_name: str, tab: str | None = "Autosaves") -> str
     log.info("[2/7] Clicking 'Load Game'...")
     # y_offset nudges the click down from bbox center to avoid hitting
     # "Resume Game" directly above in the tightly-packed single player menu.
-    if not _click_text("Load Game", timeout=5, exact=True, post_delay=0.5, y_offset=15):
+    # 15s, not 5: one OCR pass costs 3-5 seconds, so a 5-second budget can
+    # expire before a single pass finishes and reports a menu item that is
+    # plainly on screen.
+    if not _click_text("Load Game", timeout=15, exact=True, post_delay=0.5, y_offset=15):
         return "FAILED: Could not find 'Load Game' button."
     steps.append("Clicked Load Game")
 

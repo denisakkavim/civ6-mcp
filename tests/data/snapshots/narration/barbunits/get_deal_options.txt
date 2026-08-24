@@ -1,0 +1,35 @@
+Trade options with Mapuche (player 2):
+
+Economy:
+  Our gold: 1802 (+97/turn) | Favor: 289
+  Their gold: 114 (+18/turn) | Favor: 70
+
+Our tradeable resources:
+  Luxuries: Cocoa, Diamonds x2, Pearls, Tobacco, Amber
+  Strategics: Coal x100, Horses x100, Iron x100, Niter x100
+
+Their tradeable resources:
+  Luxuries: Coffee x2, Dyes x3, Silk, Truffles
+  Strategics: Horses x80, Iron x80, Niter x80, Oil x28
+
+Our cities (8):
+  Aachen (id=16777216, pop 8) (CAPITAL)
+  Frankfurt (id=16777217, pop 6)
+  Trier (id=16777218, pop 9)
+  Methone (id=16777219, pop 10)
+  Heidelberg (id=16777220, pop 5)
+  Berlin (id=16777221, pop 11)
+  Hamburg (id=16777222, pop 4)
+  Pella (id=16777223, pop 4)
+
+Their cities (6):
+  Ngulu Mapu (id=16908288, pop 9) (CAPITAL)
+  Ina Pire Mapu (id=16908289, pop 10)
+  Wente Mapu (id=16908290, pop 2)
+  Willi Mapu (id=16908292, pop 7)
+  Huilli Mapu (id=16908293, pop 7)
+  Nag Mapu (id=16908294, pop 3)
+
+Agreements:
+  Open borders: not active (available)
+  Alliance: not eligible (requires declared friendship + Diplomatic Service civic)

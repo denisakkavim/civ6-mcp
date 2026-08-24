@@ -1,0 +1,32 @@
+=== STRATEGIC MAP ===
+
+FOG BOUNDARIES (distance to unexplored, -1 = fully explored):
+  Aachen (14,8): N:9 NE:6 SE:clear S:clear SW:6 NW:3 <- EXPLORE NW!
+  Frankfurt (18,10): N:11 NE:4 SE:14 S:clear SW:14 NW:6 <- EXPLORE NE!
+  Trier (14,12): N:13 NE:6 SE:15 S:clear SW:11 NW:5 <- EXPLORE NW!
+  Methone (17,14): N:15 NE:8 SE:12 S:11 SW:11 NW:8
+  Heidelberg (22,10): N:4 NE:3 SE:11 S:clear SW:15 NW:10 <- EXPLORE N/NE!
+
+UNCLAIMED RESOURCES (revealed, unowned):
+  RESOURCE_TOBACCO+ at (12,10) — luxury
+  RESOURCE_TURTLES+ at (30,13) — luxury
+  RESOURCE_AMBER+ at (29,15) — luxury
+  RESOURCE_PEARLS+ at (31,16) — luxury
+  RESOURCE_AMBER+ at (16,17) — luxury
+  RESOURCE_COCOA+ at (15,18) — luxury
+  RESOURCE_TOBACCO+ at (29,19) — luxury
+  RESOURCE_COCOA+ at (6,21) — luxury
+  RESOURCE_COCOA+ at (22,21) — luxury
+  RESOURCE_COCOA+ at (25,21) — luxury
+  RESOURCE_DIAMONDS+ at (18,22) — luxury
+  RESOURCE_AMBER+ at (7,23) — luxury
+  RESOURCE_COCOA+ at (10,23) — luxury
+  RESOURCE_TOBACCO+ at (23,23) — luxury
+  RESOURCE_AMBER+ at (21,24) — luxury
+  RESOURCE_AMBER+ at (25,24) — luxury
+  RESOURCE_DIAMONDS+ at (28,24) — luxury
+  RESOURCE_JADE+ at (29,30) — luxury
+  RESOURCE_OLIVES+ at (26,31) — luxury
+  RESOURCE_IRON* at (24,7) — strategic
+  RESOURCE_HORSES* at (27,12) — strategic
+  RESOURCE_HORSES* at (17,20) — strategic

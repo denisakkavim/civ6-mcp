@@ -1,0 +1,35 @@
+9 Great People:
+  Great General: Boudica (Classical Era) — Unclaimed — your points: 0/60
+    Ability: Converts adjacent Barbarian units to your control.
+    Patronize: 1100g / 750f
+    (individual_id: 56)
+  Great Admiral: Artemisia (Classical Era) — Unclaimed — your points: 0/60
+    Ability: Grants 1 promotion level to a military naval unit.
+    (individual_id: 0)
+  Great Engineer: James of St. George (Medieval Era) — Unclaimed — your points: 0/120
+    Ability: Instantly builds Ancient and Medieval Walls in this city.
+    Patronize: 2000g / 1350f
+    (individual_id: 40)
+  Great Merchant: Marcus Licinius Crassus (Classical Era) — Unclaimed — your points: 0/60
+    Ability: UNIT_GRANT_PLOT, +60 GOLD
+    Patronize: 1100g / 750f
+    (individual_id: 76)
+  Great Prophet: Simon Peter (Classical Era) — Unclaimed — your points: 0/60
+    Patronize: 1100g / 750f
+    (individual_id: 117)
+  Great Scientist: Zhang Heng (Classical Era) — Unclaimed — your points: 0/60
+    Ability: GRANT_SPECIFIC_TECH_BOOST, GRANT_SPECIFIC_TECH_BOOST, GRANT_SPECIFIC_TECH_BOOST
+    Patronize: 1100g / 750f
+    (individual_id: 195)
+  Great Writer: Bhasa (Classical Era) — Unclaimed — your points: 0/60
+    Ability: creates 2 Great Works
+    Patronize: 1100g / 750f
+    (individual_id: 149)
+  Great Artist: Hieronymus Bosch (Renaissance Era) — Unclaimed — your points: 0/240
+    Ability: creates 3 Great Works
+    Patronize: 3800g / 2550f
+    (individual_id: 19)
+  Great Musician: Yatsuhashi Kengyo (Industrial Era) — Unclaimed — your points: 0/420
+    Ability: creates 2 Great Works
+    Patronize: 6500g / 4350f
+    (individual_id: 100)

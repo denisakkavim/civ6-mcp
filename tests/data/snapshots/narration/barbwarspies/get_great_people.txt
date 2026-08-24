@@ -1,0 +1,36 @@
+9 Great People:
+  Great General: Sudirman (Atomic Era) — Unclaimed — your points: 301/960
+    Ability: Grants +6 Loyalty per turn for this city.
+    Patronize: 10085g / 6740f
+    (individual_id: 177)
+  Great Admiral: Sergei Gorshkov (Atomic Era) — Unclaimed — your points: 830/960
+    Ability: Grants 1 promotion level and +100% combat experience to a military naval unit.
+    Patronize: 2150g / 1450f
+    (individual_id: 16)
+  Great Engineer: Sergei Korolev (Atomic Era) — Unclaimed — your points: 665/960
+    Ability: +1500 production toward current build
+    Patronize: 4625g / 3100f
+    (individual_id: 52)
+  Great Merchant: Levi Strauss (Atomic Era) — Unclaimed — your points: 517/960
+    Ability: +2 RESOURCE_JEANS
+    Patronize: 6845g / 4580f
+    (individual_id: 92)
+  Great Prophet: O no Yasumaro (Medieval Era) — Unclaimed — your points: 100/120
+    Patronize: 500g / 350f
+    (individual_id: 121)
+  Great Scientist: Stephanie Kwolek (Information Era) — Unclaimed — your points: 1497/1715
+    Ability: CITIES_ADJUST_SPACE_RACE_PROJECTS_PRODUCTION (amount=100)
+    Patronize: 3470g / 2330f
+    (individual_id: 148)
+  Great Writer: H.G. Wells (Atomic Era) — Unclaimed — your points: 142/960
+    Ability: creates 2 Great Works
+    Patronize: 12470g / 8330f
+    (individual_id: 171)
+  Great Artist: Vincent van Gogh (Atomic Era) — Unclaimed — your points: 140/960
+    Ability: creates 3 Great Works
+    Patronize: 12500g / 8350f
+    (individual_id: 30)
+  Great Musician: Juventino Rosas (Atomic Era) — Unclaimed — your points: 116/960
+    Ability: creates 2 Great Works
+    Patronize: 12860g / 8590f
+    (individual_id: 108)

@@ -1,0 +1,24 @@
+Trade options with Macedon (player 1):
+
+Economy:
+  Our gold: 187 (+11/turn) | Favor: 44
+  Their gold: 21 (+7/turn) | Favor: 6
+
+Our tradeable resources:
+  Luxuries: Diamonds
+  Strategics: Horses x50, Iron x8
+
+Our cities (6):
+  Aachen (id=16777216, pop 4) (CAPITAL)
+  Frankfurt (id=16777217, pop 4)
+  Trier (id=16777218, pop 5)
+  Methone (id=16777219, pop 3)
+  Heidelberg (id=16777220, pop 2)
+  Alexandria (id=16777221, pop 4)
+
+Their cities (1):
+  Pella (id=16842752, pop 3) (CAPITAL)
+
+Agreements:
+  Open borders: not active (available)
+  Alliance: not eligible (requires declared friendship + Diplomatic Service civic)

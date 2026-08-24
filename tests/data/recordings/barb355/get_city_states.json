@@ -1,0 +1,32 @@
+{
+  "tool": "get_city_states",
+  "arguments": {},
+  "scenario": "barb355",
+  "recorded_at": "2026-08-24T17:32:15+00:00",
+  "notes": null,
+  "result": "Envoy tokens available: 0\n\n8 known city-states:\n  Anshan (Scientific) \u2014 6 envoys (Suzerain: Mapuche) [player 6]\n    Anshan [city:17170432]\n  La Venta (Religious) \u2014 1 envoys (Suzerain: Kongo) [player 7]\n    La Venta [city:17235968]\n  Venice (Trade) \u2014 11 envoys (Suzerain: Germany) [player 8]\n    Venice [city:17301504]\n  Mexico City (Industrial) \u2014 7 envoys (Suzerain: Germany) [player 9]\n    Mexico City [city:17367040]\n  Bandar Brunei (Trade) \u2014 0 envoys (Suzerain: Mapuche) [player 12]\n    Bandar Brunei [city:17563648]\n  Preslav (Militaristic) \u2014 0 envoys (Suzerain: Mapuche) [player 13]\n    Preslav [city:17629184]\n  Kumasi (Cultural) \u2014 3 envoys (Suzerain: Mapuche) [player 14]\n    Kumasi [city:17694720]\n  Free Cities (Unknown) \u2014 0 envoys [player 62]",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pInfluence = Players[me]:GetInfluence()\nlocal pDiplo = Players[me]:GetDiplomacy()\nprint(\"TOKENS|\" .. pInfluence:GetTokensToGive())\nlocal csTypeMap = {}\ncsTypeMap[\"LEADER_MINOR_CIV_SCIENTIFIC\"] = \"Scientific\"\ncsTypeMap[\"LEADER_MINOR_CIV_CULTURAL\"] = \"Cultural\"\ncsTypeMap[\"LEADER_MINOR_CIV_MILITARISTIC\"] = \"Militaristic\"\ncsTypeMap[\"LEADER_MINOR_CIV_RELIGIOUS\"] = \"Religious\"\ncsTypeMap[\"LEADER_MINOR_CIV_TRADE\"] = \"Trade\"\ncsTypeMap[\"LEADER_MINOR_CIV_INDUSTRIAL\"] = \"Industrial\"\nfor i = 0, 62 do\n    if Players[i] and Players[i]:IsAlive() and Players[i]:IsMajor() == false and Players[i]:IsBarbarian() == false and pDiplo:HasMet(i) then\n        local cfg = PlayerConfigurations[i]\n        local name = Locale.Lookup(cfg:GetPlayerName())\n        local leaderType = cfg:GetLeaderTypeName() or \"\"\n        local csType = \"Unknown\"\n        local leader = GameInfo.Leaders[leaderType]\n        if leader and leader.InheritFrom then\n            csType = csTypeMap[leader.InheritFrom] or leader.InheritFrom\n        end\n        local csInfluence = Players[i]:GetInfluence()\n        local envoys = csInfluence:GetTokensReceived(me)\n        local suzID = csInfluence:GetSuzerain() or -1\n        local suzName = \"None\"\n        if suzID >= 0 and suzID ~= 63 then\n            local sCfg = PlayerConfigurations[suzID]\n            if sCfg then suzName = Locale.Lookup(sCfg:GetCivilizationShortDescription()) end\n        end\n        local canSend = pInfluence:CanGiveTokensToPlayer(i) and \"1\" or \"0\"\n        print(\"CS|\" .. i .. \"|\" .. name:gsub(\"|\",\"/\") .. \"|\" .. csType .. \"|\" .. envoys .. \"|\" .. suzID .. \"|\" .. suzName:gsub(\"|\",\"/\") .. \"|\" .. canSend)\n        for _, csc in Players[i]:GetCities():Members() do\n            print(\"CSCITY|\" .. i .. \"|\" .. ((csc:GetID() % 65536) + csc:GetOwner() * 65536 + 16777216) .. \"|\" .. Locale.Lookup(csc:GetName()):gsub(\"|\",\"/\"))\n        end\n    end\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "TOKENS|0",
+        "CS|6|Anshan|Scientific|6|2|Mapuche|1",
+        "CSCITY|6|17170432|Anshan",
+        "CS|7|La Venta|Religious|1|5|Kongo|1",
+        "CSCITY|7|17235968|La Venta",
+        "CS|8|Venice|Trade|11|0|Germany|1",
+        "CSCITY|8|17301504|Venice",
+        "CS|9|Mexico City|Industrial|7|0|Germany|1",
+        "CSCITY|9|17367040|Mexico City",
+        "CS|12|Bandar Brunei|Trade|0|2|Mapuche|1",
+        "CSCITY|12|17563648|Bandar Brunei",
+        "CS|13|Preslav|Militaristic|0|2|Mapuche|1",
+        "CSCITY|13|17629184|Preslav",
+        "CS|14|Kumasi|Cultural|3|2|Mapuche|1",
+        "CSCITY|14|17694720|Kumasi",
+        "CS|62|Free Cities|Unknown|0|-1|None|0"
+      ]
+    }
+  ]
+}

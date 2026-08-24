@@ -1,0 +1,14 @@
+6 units:
+  Warrior (UNIT_WARRIOR) at (22,9) — CS:20 moves 2/2 [HP: 76/100] [id:0]
+    >> CAN ATTACK: UNIT_ARCHER@23,9(100hp)
+  Builder (UNIT_BUILDER) at (14,9) — moves 2/2 charges:3 [id:1]
+  Spearman (UNIT_SPEARMAN) at (14,12) — CS:25 moves 0/2 (no moves) [id:5]
+  Archer (UNIT_ARCHER) at (18,10) — CS:15 RS:25 moves 2/2 [id:6]
+  Spearman (UNIT_SPEARMAN) at (16,11) — CS:25 moves 0/2 (no moves) [id:7]
+  Archer (UNIT_ARCHER) at (17,14) — CS:15 RS:25 moves 2/2 [id:8]
+    >> CAN ATTACK: UNIT_SCOUT@18,15(100hp)
+
+Nearby threats (2):
+  Barbarian (2 units):
+    UNIT_ARCHER at (23,9) — CS:15 RS:25 HP:100/100 (1 tiles away) [id:4128810]
+    UNIT_SCOUT at (18,15) — CS:10 HP:100/100 (2 tiles away) [id:4128809]

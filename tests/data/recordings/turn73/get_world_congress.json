@@ -2,7 +2,7 @@
   "tool": "get_world_congress",
   "arguments": {},
   "scenario": "turn73",
-  "recorded_at": "2026-08-16T21:02:29+00:00",
+  "recorded_at": "2026-08-24T17:27:24+00:00",
   "notes": null,
   "result": "World Congress: Next session in 8 turns\nFavor: 36\n\n  Trade Policy \u2014 Outcome A (Unmet Player): [ICON_TradeRoute] Trade Routes sent to the chosen player provide +4 [ICON_Gold] Gold to the sender. The chosen player receives +1 [ICON_TradeRoute] Trade Route capacity.\n  Luxury Policy \u2014 Outcome B (Citrus): The chosen Luxury resource grants no [ICON_Amenities] Amenities.",
   "exchanges": [

@@ -1,0 +1,26 @@
+{
+  "tool": "choose_pantheon",
+  "arguments": {
+    "belief_type": "BELIEF_DANCE_OF_THE_AURORA"
+  },
+  "scenario": "barbpantheon",
+  "recorded_at": "2026-08-24T18:14:45+00:00",
+  "notes": null,
+  "result": "PANTHEON_FOUNDED|Dance of the Aurora",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CRITICAL"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pReligion = Players[me]:GetReligion()\nif pReligion:GetPantheon() >= 0 then print(\"ERR:ALREADY_HAS_PANTHEON|You already have a pantheon\"); print(\"---END---\"); return end\nlocal belief = GameInfo.Beliefs[\"BELIEF_DANCE_OF_THE_AURORA\"]\nif belief == nil then print(\"ERR:BELIEF_NOT_FOUND|BELIEF_DANCE_OF_THE_AURORA\"); print(\"---END---\"); return end\nlocal params = {}\nparams[PlayerOperations.PARAM_BELIEF_TYPE] = belief.Hash\nUI.RequestPlayerOperation(me, PlayerOperations.FOUND_PANTHEON, params)\nprint(\"OK:PANTHEON_FOUNDED|\" .. Locale.Lookup(belief.Name))\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:PANTHEON_FOUNDED|Dance of the Aurora"
+      ]
+    }
+  ]
+}

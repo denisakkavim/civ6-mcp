@@ -1,0 +1,1 @@
+CAPTURE_MOVE|28,15|from:15,5|now_at:17,6|(moved dx:+2 dy:+1)|STOPPED_MID_PATH (moves exhausted)

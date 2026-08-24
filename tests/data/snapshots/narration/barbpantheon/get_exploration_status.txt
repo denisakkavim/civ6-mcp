@@ -1,0 +1,11 @@
+=== STRATEGIC MAP ===
+
+FOG BOUNDARIES (distance to unexplored, -1 = fully explored):
+  Aachen (14,8): N:7 NE:4 SE:7 S:8 SW:4 NW:3 <- EXPLORE NE/SW/NW!
+
+UNCLAIMED RESOURCES (revealed, unowned):
+  RESOURCE_DIAMONDS+ at (18,8) — luxury
+  RESOURCE_TOBACCO+ at (12,10) — luxury
+  RESOURCE_TURTLES+ at (30,13) — luxury
+  RESOURCE_AMBER+ at (15,15) — luxury
+  RESOURCE_AMBER+ at (29,15) — luxury

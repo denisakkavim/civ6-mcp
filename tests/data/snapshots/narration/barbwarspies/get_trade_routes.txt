@@ -1,0 +1,15 @@
+Trade Routes: 10/11 active
+
+On route (10):
+  Trader (id:10) Aachen -> Kwango (Kongo) | Prod:2 Gold:18 Sci:1 Cul:1 Faith:1 | Protestantism -> 1.0 Protestantism <- 0.5
+  Trader (id:16) Aachen -> Venice (City-State) | Gold:23.2578125 Faith:1 | Protestantism -> 1.0 Eastern Orthodoxy <- 0.5
+  Trader (id:2) Methone -> Venice (City-State) | Gold:26 Faith:1 | Protestantism -> 1.0 Eastern Orthodoxy <- 0.5
+  Trader (id:13) Heidelberg -> Mbanza Nsundi (Kongo) | Prod:1 Gold:20 Sci:1 Cul:1 Faith:1 | Protestantism <- 0.5
+  Trader (id:5) Berlin -> Mbanza Nsundi (Kongo) | Prod:1 Gold:20 Sci:1 Cul:1 Faith:1 | Protestantism -> 1.0 Protestantism <- 0.5
+  Trader (id:9) Hamburg -> Methone (Domestic) | Food:3 Prod:4 Gold:8 Faith:1 | Protestantism -> 1.0 Protestantism <- 0.5
+  Trader (id:11) Ulm -> Mbumbi (Kongo) | Food:1 Prod:2 Gold:17.5390625 Sci:1 Cul:1 Faith:1 | Protestantism -> 1.0 Protestantism <- 0.5
+  Trader (id:12) Ulm -> Mbanza Nsundi (Kongo) | Prod:1 Gold:15 Sci:1 Cul:1 Faith:1 | Protestantism -> 1.0 Protestantism <- 0.5
+  Trader (id:27) Cologne -> Zanzibar (Domestic) | Food:1 Prod:3 Gold:8 Faith:1 | Eastern Orthodoxy -> 1.0 Eastern Orthodoxy <- 0.5
+  Trader (id:8) Zanzibar -> Cologne (Domestic) | Food:1 Prod:3 Gold:6 Faith:1 | Eastern Orthodoxy -> 1.0 Eastern Orthodoxy <- 0.5
+
+1 free route slot(s) — build/buy a Trader to fill.

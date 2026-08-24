@@ -6,7 +6,7 @@
     }
   },
   "scenario": "turn37",
-  "recorded_at": "2026-08-16T20:27:56+00:00",
+  "recorded_at": "2026-08-24T17:16:01+00:00",
   "notes": null,
   "result": "POLICIES_SET|Policies updated. Use get_policies to verify.",
   "exchanges": [

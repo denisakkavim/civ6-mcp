@@ -1,0 +1,9 @@
+Trade Routes: 4/5 active
+
+On route (4):
+  Trader (id:2) Methone -> Mexico City (City-State) | Prod:1 Gold:6
+  Trader (id:13) Heidelberg -> Mbanza Nsundi (Kongo) | Prod:1 Gold:9.75 Sci:1 Cul:1
+  Trader (id:5) Berlin -> Nag Mapu (Mapuche) | Gold:10 Cul:1 | Zoroastrianism <- 0.5
+  Trader (id:9) Hamburg -> Methone (Domestic) | Food:3 Prod:4 Gold:2
+
+1 free route slot(s) — build/buy a Trader to fill.

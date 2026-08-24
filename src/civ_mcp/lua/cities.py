@@ -154,7 +154,7 @@ for i, c in Players[me]:GetCities():Members() do
     end
     print(((c:GetID() % 65536) + c:GetOwner() * 65536 + 16777216) .. "|" .. nm .. "|" .. c:GetX() .. "," .. c:GetY() .. "|" .. c:GetPopulation() .. "|" .. string.format("%.1f|%.1f|%.1f|%.1f|%.1f|%.1f", c:GetYield(0), c:GetYield(1), c:GetYield(2), c:GetYield(3), c:GetYield(4), c:GetYield(5)) .. "|" .. string.format("%.1f", g:GetHousing()) .. "|" .. amTotal .. "|" .. g:GetTurnsUntilGrowth() .. "|" .. producing .. "|" .. turnsLeft .. "|" .. defStr .. "|" .. garHP .. "/" .. garMax .. "|" .. wallHP .. "/" .. wallMax .. "|" .. table.concat(cityTargets, ";") .. "|" .. table.concat(pillDistricts, ";") .. "|" .. table.concat(distLocs, ";") .. "|" .. string.format("%.1f|%.1f|%.1f|%d", loy, loyMax, loyPT, loyFlip) .. "|" .. string.format("%.1f|%.1f|%d", g:GetFoodSurplus(), g:GetFood(), g:GetGrowthThreshold()) .. "|" .. table.concat(pillBuildings, ";") .. "|" .. garrisonUnit)
     if #unimproved > 0 or #pillImprov > 0 then
-        print("CITYTILES|" .. ((c:GetID() % 65536) + c:GetOwner() * 65536 + 16777216) .. "|" .. table.concat(unimproved, ",") .. "|" .. table.concat(pillImprov, ","))
+        print("CITYTILES|" .. ((c:GetID() % 65536) + c:GetOwner() * 65536 + 16777216) .. "|" .. table.concat(unimproved, ";") .. "|" .. table.concat(pillImprov, ";"))
     end
     if #allBuildings > 0 then
         print("CITYBLDG|" .. ((c:GetID() % 65536) + c:GetOwner() * 65536 + 16777216) .. "|" .. table.concat(allBuildings, ","))
@@ -738,11 +738,17 @@ def parse_cities_response(lines: list[str]) -> tuple[list[CityInfo], list[str]]:
             if len(p) >= 4:
                 cid = int(p[1])
                 if cid in city_by_id:
+                    # Split on ";", not ",". Each entry is "TYPE@x,y", so a
+                    # comma delimiter tore every entry in half: the agent saw
+                    # "RESOURCE_INCENSE, 9" where the tile was
+                    # "RESOURCE_INCENSE@46,9". Stripping the coordinates in
+                    # narration hid it for pillaged tiles; the unimproved list
+                    # showed the debris all along.
                     city_by_id[cid].unimproved_resources = [
-                        r for r in p[2].split(",") if r
+                        r for r in p[2].split(";") if r
                     ]
                     city_by_id[cid].pillaged_improvements = [
-                        r for r in p[3].split(",") if r
+                        r for r in p[3].split(";") if r
                     ]
             continue
         if line.startswith("CITYBLDG|"):

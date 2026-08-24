@@ -1,0 +1,26 @@
+{
+  "tool": "get_notifications",
+  "arguments": {},
+  "scenario": "barbdedication",
+  "recorded_at": "2026-08-24T18:05:11+00:00",
+  "notes": null,
+  "result": "== Action Required (4) ==\n  * Make Dedication  -> Use: get_dedications() then choose_dedication(dedication_index=...)\n  * Choose a Technology  -> Use: set_tech(tech_type=...)\n  * Choose a Civic  -> Use: set_civic(civic_type=...)\n  * New Governor Opportunity Available  -> Use: get_governors() then appoint_governor()\n\n== Notifications (5) ==\n  - Wonder Completed\n  - New City-State Quest at (12,20)\n  - Discovered Archery\n  - Discovered Early Empire\n  - Command Units  -> Units have moves remaining \u2014 move them or use skip_remaining_units()",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal nm = NotificationManager\nlocal list = nm.GetList(me)\nlocal total = 0\nlocal emitted = 0\nif list then\n    total = #list\n    for _, nID in ipairs(list) do\n        pcall(function()\n            local entry = nm.Find(me, nID)\n            if entry and not entry:IsDismissed() then\n                local typeName = entry:GetTypeName() or \"UNKNOWN\"\n                local msg = (entry:GetMessage() or \"\"):gsub(\"|\", \"/\")\n                if typeName:find(\"WONDER\") then\n                    pcall(function()\n                        local wx, wy = entry:GetLocation()\n                        if wx and wx >= 0 then\n                            local wPlot = Map.GetPlot(wx, wy)\n                            if wPlot then\n                                local wOwner = wPlot:GetOwner()\n                                if wOwner and wOwner >= 0 and PlayerConfigurations[wOwner] then\n                                    local civShort = Locale.Lookup(PlayerConfigurations[wOwner]:GetCivilizationShortDescription())\n                                    if civShort then msg = msg .. \" [\" .. civShort .. \"]\" end\n                                end\n                                local dt = wPlot:GetDistrictType()\n                                if dt and dt >= 0 and GameInfo.Districts[dt] then\n                                    local dName = Locale.Lookup(GameInfo.Districts[dt].Name)\n                                    if dName then msg = msg .. \" (\" .. dName .. \")\" end\n                                end\n                            end\n                        end\n                    end)\n                end\n                local turn = entry:GetAddedTurn() or -1\n                local x, y = -1, -1\n                pcall(function() x, y = entry:GetLocation() end)\n                if x == nil then x = -1 end\n                if y == nil then y = -1 end\n                print(\"NOTIF|\" .. typeName .. \"|\" .. msg .. \"|\" .. turn .. \"|\" .. x .. \",\" .. y)\n                emitted = emitted + 1\n            end\n        end)\n    end\nend\nprint(\"TOTAL|\" .. total .. \"|\" .. emitted)\nprint(\"---END---\")\n",
+      "lines": [
+        "NOTIF|NOTIFICATION_WONDER_COMPLETED|Wonder Completed|42|-9999,-9999",
+        "NOTIF|NOTIFICATION_COMMEMORATION_AVAILABLE|Make Dedication|61|-9999,-9999",
+        "NOTIF|NOTIFICATION_CITYSTATE_QUEST_GIVEN|New City-State Quest|61|12,20",
+        "NOTIF|NOTIFICATION_TECH_DISCOVERED|Discovered Archery|61|-9999,-9999",
+        "NOTIF|NOTIFICATION_CHOOSE_TECH|Choose a Technology|61|-9999,-9999",
+        "NOTIF|NOTIFICATION_CHOOSE_CIVIC|Choose a Civic|61|-9999,-9999",
+        "NOTIF|NOTIFICATION_GOVERNOR_APPOINTMENT_AVAILABLE|New Governor Opportunity Available|61|-9999,-9999",
+        "NOTIF|NOTIFICATION_CIVIC_DISCOVERED|Discovered Early Empire|61|-9999,-9999",
+        "NOTIF|NOTIFICATION_COMMAND_UNITS|Command Units|61|-9999,-9999",
+        "TOTAL|9|9"
+      ]
+    }
+  ]
+}

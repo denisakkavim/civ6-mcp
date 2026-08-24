@@ -1,0 +1,22 @@
+6 units:
+  Trader (UNIT_TRADER) at (15,9) — moves 2/2 [ON ROUTE: Heidelberg -> Aachen (Domestic)] [id:2]
+  Swordsman (UNIT_SWORDSMAN) at (20,16) — CS:35 moves 1/2 [HP: 50/100] [id:3]
+    >> CAN ATTACK: UNIT_ARCHER@19,17(100hp)
+  Spearman (UNIT_SPEARMAN) at (22,10) — CS:25 moves 2/2 [HP: 69/100] [id:5]
+  Archer (UNIT_ARCHER) at (17,14) — CS:15 RS:25 moves 2/2 [HP: 46/100] [id:6]
+    >> CAN ATTACK: UNIT_BUILDER@18,16(100hp)
+    >> CAN ATTACK: UNIT_ARCHER@18,16(100hp)
+  Archer (UNIT_ARCHER) at (22,10) — CS:15 RS:25 moves 2/2 [id:7]
+  Archer (UNIT_ARCHER) at (16,15) — CS:15 RS:25 moves 2/2 [HP: 68/100] [id:8]
+    >> CAN ATTACK: UNIT_BUILDER@18,16(100hp)
+    >> CAN ATTACK: UNIT_ARCHER@18,16(100hp)
+    >> CAN ATTACK: UNIT_ARCHER@15,17(100hp)
+
+Nearby threats (4):
+  Barbarian (1 unit):
+    UNIT_SWORDSMAN at (15,8) — CS:35 HP:64/100 (1 tiles away) [id:4128792]
+  Macedon (2 units):
+    UNIT_ARCHER at (19,17) — CS:15 RS:25 HP:100/100 (1 tiles away) [id:65536]
+    UNIT_ARCHER at (18,16) — CS:15 RS:25 HP:100/100 (2 tiles away) [id:65540]
+  La Venta (city-state) (1 unit):
+    UNIT_ARCHER at (15,17) — CS:15 RS:25 HP:100/100 (2 tiles away) [id:458756]

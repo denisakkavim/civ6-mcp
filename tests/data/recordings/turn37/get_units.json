@@ -2,7 +2,7 @@
   "tool": "get_units",
   "arguments": {},
   "scenario": "turn37",
-  "recorded_at": "2026-08-16T20:27:03+00:00",
+  "recorded_at": "2026-08-24T17:15:11+00:00",
   "notes": null,
   "result": "6 units:\n  Scout (UNIT_SCOUT) at (43,14) \u2014 CS:10 moves 3/3 [id:0]\n  Warrior (UNIT_WARRIOR) at (45,11) \u2014 CS:20 moves 2/2 [id:1]\n  Builder (UNIT_BUILDER) at (45,12) \u2014 moves 2/2 charges:3 [id:2]\n  Slinger (UNIT_SLINGER) at (43,7) \u2014 CS:5 RS:15 moves 2/2 [id:3]\n  Slinger (UNIT_SLINGER) at (44,8) \u2014 CS:5 RS:15 moves 2/2 [id:5]\n  Slinger (UNIT_SLINGER) at (45,12) \u2014 CS:5 RS:15 moves 2/2 [id:7]",
   "exchanges": [

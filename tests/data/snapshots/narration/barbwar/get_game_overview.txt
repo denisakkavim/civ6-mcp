@@ -1,0 +1,8 @@
+Turn 99 | Germany (Frederick Barbarossa) | Score: 147 | Prince
+Gold: 187 (+11/turn) | Income: 13 | Maintenance: -2 (units: 5) | Science: 15.7 | Culture: 10.0 | Faith: 264 | Favor: 44 (+1/turn)
+Research: Engineering | Civic: Defensive Tactics
+Cities: 6 | Population: 22 | Units: 8 — 3 Spearman, 2 Warrior, 2 Archer, 1 Trader
+Explored: 38% of land (443/1161 tiles)
+Religion: none yet (3/4 slots remaining — Great Prophet needed)
+Era: Classical Era | Score: 37 (Dark: 40, Golden: 54) !! 3 short of avoiding Dark Age
+Rankings: Germany 147 > Kongo 146 > Macedon 65

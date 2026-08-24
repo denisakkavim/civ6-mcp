@@ -1,0 +1,22 @@
+Government: Chiefdom (GOVERNMENT_CHIEFDOM)
+
+3 policy slots:
+  Slot 0 (Military): Agoge (POLICY_AGOGE)
+  Slot 1 (Economic): Colonization (POLICY_COLONIZATION)
+  Slot 2 (Military): Maneuver (POLICY_MANEUVER)
+
+Available policies:
+  Military:
+    Discipline (POLICY_DISCIPLINE): +5 [ICON_Strength] Unit Combat Strength when fighting Barbarians.
+    Survey (POLICY_SURVEY): Double experience for recon units.
+    Maritime Industries (POLICY_MARITIME_INDUSTRIES): +100% [ICON_Production] Production toward Ancient and Classical era naval units.
+    Limitanei (POLICY_LIMITANEI): +2 Loyalty per turn for cities with a garrisoned unit.
+  Economic:
+    God King (POLICY_GOD_KING): +1 [ICON_Faith] Faith and +1 [ICON_Gold] Gold in the [ICON_Capital] Capital.
+    Urban Planning (POLICY_URBAN_PLANNING): +1 [ICON_Production] Production in all cities.
+    Ilkum (POLICY_ILKUM): +30% [ICON_Production] Production toward Builders.
+    Caravansaries (POLICY_CARAVANSARIES): +2 [ICON_Gold] Gold from all [ICON_TradeRoute] Trade Routes.
+    Land Surveyors (POLICY_LAND_SURVEYORS): Reduces the cost of purchasing a tile by 20%.
+
+Use set_policies with slot assignments, e.g. {0: "POLICY_AGOGE", 1: "POLICY_URBAN_PLANNING"}
+Wildcard slots can accept any policy type.

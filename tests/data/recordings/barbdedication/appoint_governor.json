@@ -1,0 +1,34 @@
+{
+  "tool": "appoint_governor",
+  "arguments": {
+    "governor_type": "GOVERNOR_THE_DEFENDER",
+    "city_id": 16777216
+  },
+  "scenario": "barbdedication",
+  "recorded_at": "2026-08-24T18:06:01+00:00",
+  "notes": null,
+  "result": "APPOINT_REQUESTED|Victor \u2014 verify with get_governors() | ASSIGNED|Victor to Aachen",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CRITICAL"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pGovs = Players[me]:GetGovernors()\nif not pGovs:CanAppoint() then print(\"ERR:CANNOT_APPOINT|No governor points available\"); print(\"---END---\"); return end\nlocal gov = GameInfo.Governors[\"GOVERNOR_THE_DEFENDER\"]\nif gov == nil then print(\"ERR:GOVERNOR_NOT_FOUND|GOVERNOR_THE_DEFENDER\"); print(\"---END---\"); return end\nif PlayerOperations.APPOINT_GOVERNOR == nil then print(\"ERR:API_MISSING|PlayerOperations.APPOINT_GOVERNOR is nil\"); print(\"---END---\"); return end\nif PlayerOperations.PARAM_GOVERNOR_TYPE == nil then print(\"ERR:API_MISSING|PlayerOperations.PARAM_GOVERNOR_TYPE is nil\"); print(\"---END---\"); return end\nlocal prePts = pGovs:GetGovernorPointsSpent()\nlocal params = {}\nparams[PlayerOperations.PARAM_GOVERNOR_TYPE] = gov.Index\nUI.RequestPlayerOperation(me, PlayerOperations.APPOINT_GOVERNOR, params)\nlocal postPts = pGovs:GetGovernorPointsSpent()\nif postPts > prePts then\n    print(\"OK:APPOINTED|\" .. Locale.Lookup(gov.Name) .. \" (\" .. Locale.Lookup(gov.Title) .. \")\")\nelse\n    print(\"OK:APPOINT_REQUESTED|\" .. Locale.Lookup(gov.Name) .. \" \u2014 verify with get_governors()\")\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:APPOINT_REQUESTED|Victor \u2014 verify with get_governors()"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local pCity = CityManager.GetCity(me, 16777216 % 65536) if pCity == nil then print(\"ERR:CITY_NOT_FOUND\"); print(\"---END---\"); return end\nlocal gov = GameInfo.Governors[\"GOVERNOR_THE_DEFENDER\"]\nif gov == nil then print(\"ERR:GOVERNOR_NOT_FOUND|GOVERNOR_THE_DEFENDER\"); print(\"---END---\"); return end\nif PlayerOperations.ASSIGN_GOVERNOR == nil then print(\"ERR:API_MISSING|PlayerOperations.ASSIGN_GOVERNOR is nil\"); print(\"---END---\"); return end\nlocal params = {}\nparams[PlayerOperations.PARAM_GOVERNOR_TYPE] = gov.Index\nparams[PlayerOperations.PARAM_CITY_DEST] = pCity:GetID()\nparams[PlayerOperations.PARAM_PLAYER_ONE] = me\nUI.RequestPlayerOperation(me, PlayerOperations.ASSIGN_GOVERNOR, params)\nprint(\"OK:ASSIGNED|\" .. Locale.Lookup(gov.Name) .. \" to \" .. Locale.Lookup(pCity:GetName()))\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:ASSIGNED|Victor to Aachen"
+      ]
+    }
+  ]
+}

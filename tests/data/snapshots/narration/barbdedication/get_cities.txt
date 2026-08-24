@@ -1,0 +1,17 @@
+3 cities:
+  Aachen (pop 3) at (14,8) — Food 7 Prod 8 Gold 8 Sci 4 Cul 4 | Housing 6 Amenities 5 | Growth: 14/33 food (19t, +1.0/t) | Building: DISTRICT_CAMPUS (2 turns) | HP:200/200 Def:13 Gar:UNIT_SLINGER [id:16777216]
+    !! SLOW GROWTH: 19 turns to next pop — needs farm, granary, or trade route
+    Districts: DISTRICT_CAMPUS(13,7)
+    Buildings: BUILDING_PALACE
+    Needs builder: RESOURCE_DEER@13,6, RESOURCE_TOBACCO@14,9 (unimproved)
+  Frankfurt (pop 3) at (18,10) — Food 8 Prod 6 Gold 3 Sci 1 Cul 1 | Housing 7 Amenities 3 | Growth: 4/33 food (18t, +2.0/t) | Building: UNIT_SPEARMAN (6 turns) | HP:200/200 Def:10 Gar:none [id:16777217]
+    !! SLOW GROWTH: 18 turns to next pop — needs farm, granary, or trade route
+    Buildings: BUILDING_GRANARY
+    Needs builder: RESOURCE_DIAMONDS@18,8, RESOURCE_HORSES@18,11 (unimproved)
+  Trier (pop 3) at (14,12) — Food 11 Prod 3 Gold 0 Sci 1 Cul 1 | Housing 5 Amenities 3 | Growth: 5/33 food (7t, +5.0/t) | Building: BUILDING_GRANARY (13 turns) | HP:200/200 Def:10 Gar:none [id:16777218]
+    Needs builder: RESOURCE_TOBACCO@14,9, RESOURCE_HORSES@14,13 (unimproved)
+
+City Distances:
+  Aachen <-> Frankfurt: 5 tiles
+  Aachen <-> Trier: 4 tiles
+  Frankfurt <-> Trier: 5 tiles

@@ -4,7 +4,7 @@
     "city_id": 16777216
   },
   "scenario": "turn37",
-  "recorded_at": "2026-08-16T20:27:05+00:00",
+  "recorded_at": "2026-08-24T17:15:13+00:00",
   "notes": null,
   "result": "Units:\n  UNIT_SETTLER (cost 80, 6 turns, buy: 280g)\n  UNIT_BUILDER (cost 50, 2 turns, buy: 115g)\n  UNIT_TRADER (cost 40, 2 turns, buy: 90g)\n  UNIT_SCOUT (cost 30, 1 turns, buy: 60g)\n  UNIT_WARRIOR (cost 40, 1 turns, buy: 80g)\n  UNIT_SLINGER (cost 35, 1 turns, buy: 65g)\n  UNIT_SPEARMAN (cost 65, 2 turns, buy: 125g)\nDistricts:\n  DISTRICT_ENCAMPMENT (cost 54, 3 turns)",
   "exchanges": [

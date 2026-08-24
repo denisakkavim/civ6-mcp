@@ -1,0 +1,4 @@
+Trade Routes: 1/1 active
+
+On route (1):
+  Trader (id:4) Trier -> Frankfurt (Domestic) | Food:1 Prod:1

@@ -1,6 +1,6 @@
 Religious Victory Tracker:
-  RELIGION_SHINTO: majority in 1/4 civilizations
   RELIGION_ORTHODOXY: majority in 1/4 civilizations
+  RELIGION_SHINTO: majority in 1/4 civilizations
 
 Inca:
   Qusqu (pop 5) — RELIGION_SHINTO (Shinto:4)

@@ -1,0 +1,59 @@
+=== VICTORY PROGRESS ===
+
+Enabled: Science, Domination, Culture, Religious, Diplomatic
+
+SCIENCE VICTORY (launch 4 space projects = 50 VP)
+  Germany: 0/50 VP | 15 techs | 0 spaceport(s) [0/50] <--
+  Kongo: 0/50 VP | 15 techs | 0 spaceport(s) [0/50]
+  Macedon: 0/50 VP | 10 techs | 0 spaceport(s) [0/50]
+
+  YOUR SPACE PROJECT CHAIN:
+    [LOCKED] Launch Earth Satellite -- requires TECH_ROCKETRY (NEED)
+    [LOCKED] Launch Moon Landing -- requires TECH_SATELLITES (NEED)
+    [LOCKED] Launch Exoplanet Expedition -- requires TECH_OFFWORLD_MISSION (NEED)
+
+DOMINATION (own all original capitals)
+  Germany: holds own capital | military 106 <--
+  Macedon: holds own capital | military 102
+  Kongo: holds own capital | military 190
+
+CULTURE (your tourists > every civ's domestic tourists)
+  Our domestic tourists: 9
+  vs Macedon: 0/7 tourists (need 7 more)
+  vs Kongo: 0/13 tourists (need 13 more)
+
+RELIGION (your religion majority in all civs — slots: 1/4)
+  Germany: majority=none | 0 cities converted <--
+  Macedon: majority=none | 0 cities converted
+  Kongo: majority=none | 0 cities converted
+
+DIPLOMATIC (20 VP from World Congress)
+  Germany: 0/20 VP <--
+  Macedon: 0/20 VP
+  Kongo: 0/20 VP
+
+SCORE (highest at turn 500)
+  Kongo: 193
+  Germany: 179 <--
+  Macedon: 76
+
+RIVAL INTELLIGENCE (met civilizations)
+  Kongo: 5 cities | Sci 32 Cul 27 Gold +11 | Mil 190
+  Germany: 5 cities | Sci 23 Cul 10 Gold +4 | Mil 106 <--
+  Macedon: 1 cities | Sci 5 Cul 6 Gold +8 | Mil 102
+
+DEMOGRAPHICS (all civilizations)
+  Population   Rank 3 | Ours: 23 | Best: 26 | Avg: 18.7 | Worst: 4
+  Soldiers     Rank 5 | Ours: 106 | Best: 190 | Avg: 136.2 | Worst: 102
+  Crop Yield   Rank 3 | Ours: 59 | Best: 83 | Avg: 51.7 | Worst: 8
+  GNP          Rank 5 | Ours: 4 | Best: 28 | Avg: 13.6 | Worst: 4
+  Land         Rank 4 | Ours: 54 | Best: 64 | Avg: 49.7 | Worst: 15
+  Goods        Rank 4 | Ours: 43 | Best: 59 | Avg: 42.7 | Worst: 13
+
+VICTORY ASSESSMENT
+  Science      [######----] 60% — Near tech lead (0 behind best known: Germany (15)) ** RECOMMENDED **
+  Culture      [####------] 40% — Tourism growing (max gap: 13)
+  Score        [##--------] 25% — Rank #3 by population (proxy for score)
+  Diplomatic   [##--------] 20% — 0/20 VP — slow accumulation
+  Domination   [#---------] 15% — Military too weak (106 vs best 190)
+  Religion     [----------] 0% — No founded religion — path closed

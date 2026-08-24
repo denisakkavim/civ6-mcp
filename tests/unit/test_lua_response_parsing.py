@@ -385,3 +385,25 @@ def test_blocking_parses_multiple_blockers():
         ]
     )
     assert len(blockers) == 2
+
+
+def test_city_tiles_keep_their_coordinates():
+    """Each entry is "TYPE@x,y", so the list delimiter cannot also be a comma.
+
+    It was, so every entry was torn in half: `RESOURCE_INCENSE@46,9` reached
+    the agent as two items, `RESOURCE_INCENSE@46` and `9`. Narration stripped
+    coordinates from pillaged tiles, which hid it there, but the unimproved
+    list printed the debris in every save.
+    """
+    from civ_mcp import lua as lq
+
+    lines = [
+        "16777216|Aachen|14,8|6|1|1|1|1|1|1|9|7|5|NONE|0|25|200/200|100/100||||100|100|0|0|0|0|0||",
+        "CITYTILES|16777216|RESOURCE_INCENSE@46,9;RESOURCE_WHEAT@47,10"
+        "|IMPROVEMENT_MINE@14,7",
+    ]
+    cities, _ = lq.parse_cities_response(lines)
+
+    city = cities[0]
+    assert city.unimproved_resources == ["RESOURCE_INCENSE@46,9", "RESOURCE_WHEAT@47,10"]
+    assert city.pillaged_improvements == ["IMPROVEMENT_MINE@14,7"]

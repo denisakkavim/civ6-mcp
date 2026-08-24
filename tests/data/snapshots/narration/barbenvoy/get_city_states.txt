@@ -1,0 +1,12 @@
+Envoy tokens available: 1
+
+4 known city-states:
+  La Venta (Religious) — 0 envoys (Suzerain: Kongo) [can send] [player 7]
+    La Venta [city:17235968]
+  Mexico City (Industrial) — 1 envoys [can send] [player 9]
+    Mexico City [city:17367040]
+  Ayutthaya (Cultural) — 2 envoys [can send] [player 10]
+    Ayutthaya [city:17432576]
+  Free Cities (Unknown) — 0 envoys [player 62]
+
+Use send_envoy(player_id) to send an envoy.

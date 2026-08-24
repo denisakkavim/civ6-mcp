@@ -1,0 +1,35 @@
+=== STRATEGIC MAP ===
+
+FOG BOUNDARIES (distance to unexplored, -1 = fully explored):
+  Aachen (14,8): N:9 NE:9 SE:clear S:clear SW:clear NW:5 <- EXPLORE NW!
+  Frankfurt (18,10): N:11 NE:9 SE:14 S:clear SW:clear NW:8
+  Trier (14,12): N:13 NE:12 SE:15 S:clear SW:clear NW:8
+  Methone (17,14): N:15 NE:11 SE:12 S:11 SW:clear NW:10
+  Heidelberg (22,10): N:11 NE:6 SE:11 S:clear SW:clear NW:10
+  Berlin (11,16): N:15 NE:15 SE:clear S:clear SW:clear NW:7
+  Hamburg (16,4): N:5 NE:5 SE:clear S:clear SW:clear NW:4 <- EXPLORE N/NE/NW!
+  Pella (19,17): N:clear NE:12 SE:10 S:clear SW:clear NW:13
+  Ulm (27,13): N:10 NE:8 SE:7 S:clear SW:clear NW:14
+  Cologne (47,14): N:8 NE:13 SE:9 S:clear SW:7 NW:8
+  Zanzibar (51,16): N:15 NE:13 SE:6 S:9 SW:9 NW:10
+  Ayutthaya (12,20): N:clear NE:clear SE:5 S:9 SW:clear NW:clear <- EXPLORE SE!
+  Plymouth (4,21): N:12 NE:clear SE:8 S:13 SW:11 NW:clear
+  Magdeburg (8,18): N:14 NE:clear SE:clear S:clear SW:clear NW:15
+
+UNCLAIMED RESOURCES (revealed, unowned):
+  RESOURCE_TOBACCO+ at (21,6) — luxury
+  RESOURCE_TURTLES+ at (34,7) — luxury
+  RESOURCE_TURTLES+ at (33,11) — luxury
+  RESOURCE_TURTLES+ at (8,13) — luxury
+  RESOURCE_TURTLES+ at (30,13) — luxury
+  RESOURCE_AMBER+ at (29,15) — luxury
+  RESOURCE_PEARLS+ at (47,17) — luxury
+  RESOURCE_AMBER+ at (7,23) — luxury
+  RESOURCE_PEARLS+ at (7,30) — luxury
+  RESOURCE_OIL* at (20,2) — strategic
+  RESOURCE_IRON* at (24,7) — strategic
+  RESOURCE_ALUMINUM* at (70,19) — strategic
+  RESOURCE_COAL* at (14,21) — strategic
+  RESOURCE_OIL* at (3,26) — strategic
+  RESOURCE_ALUMINUM* at (9,31) — strategic
+  RESOURCE_OIL* at (8,32) — strategic

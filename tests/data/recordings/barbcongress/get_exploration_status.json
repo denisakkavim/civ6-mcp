@@ -1,0 +1,43 @@
+{
+  "tool": "get_exploration_status",
+  "arguments": {},
+  "scenario": "barbcongress",
+  "recorded_at": "2026-08-24T17:56:20+00:00",
+  "notes": null,
+  "result": "=== STRATEGIC MAP ===\n\nFOG BOUNDARIES (distance to unexplored, -1 = fully explored):\n  Aachen (14,8): N:9 NE:6 SE:clear S:clear SW:6 NW:3 <- EXPLORE NW!\n  Frankfurt (18,10): N:11 NE:4 SE:14 S:clear SW:14 NW:6 <- EXPLORE NE!\n  Trier (14,12): N:13 NE:6 SE:15 S:clear SW:11 NW:5 <- EXPLORE NW!\n  Methone (17,14): N:15 NE:8 SE:12 S:11 SW:11 NW:8\n  Heidelberg (22,10): N:4 NE:3 SE:11 S:clear SW:15 NW:10 <- EXPLORE N/NE!\n\nUNCLAIMED RESOURCES (revealed, unowned):\n  RESOURCE_TOBACCO+ at (12,10) \u2014 luxury\n  RESOURCE_TURTLES+ at (30,13) \u2014 luxury\n  RESOURCE_AMBER+ at (29,15) \u2014 luxury\n  RESOURCE_PEARLS+ at (31,16) \u2014 luxury\n  RESOURCE_AMBER+ at (16,17) \u2014 luxury\n  RESOURCE_COCOA+ at (15,18) \u2014 luxury\n  RESOURCE_TOBACCO+ at (29,19) \u2014 luxury\n  RESOURCE_COCOA+ at (6,21) \u2014 luxury\n  RESOURCE_COCOA+ at (22,21) \u2014 luxury\n  RESOURCE_COCOA+ at (25,21) \u2014 luxury\n  RESOURCE_DIAMONDS+ at (18,22) \u2014 luxury\n  RESOURCE_AMBER+ at (7,23) \u2014 luxury\n  RESOURCE_COCOA+ at (10,23) \u2014 luxury\n  RESOURCE_TOBACCO+ at (23,23) \u2014 luxury\n  RESOURCE_AMBER+ at (21,24) \u2014 luxury\n  RESOURCE_AMBER+ at (25,24) \u2014 luxury\n  RESOURCE_DIAMONDS+ at (28,24) \u2014 luxury\n  RESOURCE_JADE+ at (29,30) \u2014 luxury\n  RESOURCE_OLIVES+ at (26,31) \u2014 luxury\n  RESOURCE_IRON* at (24,7) \u2014 strategic\n  RESOURCE_HORSES* at (27,12) \u2014 strategic\n  RESOURCE_HORSES* at (17,20) \u2014 strategic",
+  "exchanges": [
+    {
+      "context": "read",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal vis = PlayersVisibility[me]\nlocal pTech = Players[me]:GetTechs()\nlocal w, h = Map.GetGridSize()\n-- Hex direction offsets (NE, E, SE, SW, W, NW) for offset coords\nlocal dirs = {{0,-1},{1,0},{0,1},{-1,1},{-1,0},{0,-1}}\n-- Actually use precise ray-cast: step along each cardinal hex direction\n-- For offset coordinates, direction deltas depend on row parity\n-- Simplified: use angular sectors by scanning radius rings\nfor _, c in Players[me]:GetCities():Members() do\n    local cx, cy = c:GetX(), c:GetY()\n    local nm = Locale.Lookup(c:GetName())\n    -- For 6 directions, scan along a ray and find first unrevealed tile\n    -- Directions: N(0,-1), NE(+1,-1), SE(+1,+1), S(0,+1), SW(-1,+1), NW(-1,-1) approx\n    local dirVecs = {{0,-1},{1,-1},{1,1},{0,1},{-1,1},{-1,-1}}\n    local fogDists = {}\n    for _, dv in ipairs(dirVecs) do\n        local fogDist = -1\n        for dist = 3, 15 do\n            local tx = cx + dv[1] * dist\n            local ty = cy + dv[2] * dist\n            local plot = Map.GetPlot(tx, ty)\n            if plot then\n                if not vis:IsRevealed(plot:GetIndex()) then\n                    fogDist = dist\n                    break\n                end\n            else\n                fogDist = dist\n                break\n            end\n        end\n        table.insert(fogDists, fogDist)\n    end\n    print(\"FOG|\" .. nm .. \"|\" .. cx .. \",\" .. cy .. \"|\" .. table.concat(fogDists, \",\"))\nend\n-- Pass 2: unclaimed luxury/strategic resources on revealed land\nfor y = 0, h - 1 do\n    for x = 0, w - 1 do\n        local plot = Map.GetPlot(x, y)\n        if plot and vis:IsRevealed(plot:GetIndex()) and plot:GetOwner() == -1 then\n            local resIdx = plot:GetResourceType()\n            if resIdx >= 0 then\n                local res = GameInfo.Resources[resIdx]\n                if res and res.ResourceClassType ~= \"RESOURCECLASS_BONUS\" then\n                    -- Check tech visibility\n                    local visible = true\n                    if res.PrereqTech then\n                        local t = GameInfo.Technologies[res.PrereqTech]\n                        if t and not pTech:HasTech(t.Index) then visible = false end\n                    end\n                    if visible then\n                        print(\"UNCLAIMED|\" .. res.ResourceType .. \"|\" .. x .. \",\" .. y .. \"|\" .. res.ResourceClassType)\n                    end\n                end\n            end\n        end\n    end\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "FOG|Aachen|14,8|9,6,-1,-1,6,3",
+        "FOG|Frankfurt|18,10|11,4,14,-1,14,6",
+        "FOG|Trier|14,12|13,6,15,-1,11,5",
+        "FOG|Methone|17,14|15,8,12,11,11,8",
+        "FOG|Heidelberg|22,10|4,3,11,-1,15,10",
+        "UNCLAIMED|RESOURCE_IRON|24,7|RESOURCECLASS_STRATEGIC",
+        "UNCLAIMED|RESOURCE_TOBACCO|12,10|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_HORSES|27,12|RESOURCECLASS_STRATEGIC",
+        "UNCLAIMED|RESOURCE_TURTLES|30,13|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_AMBER|29,15|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_PEARLS|31,16|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_AMBER|16,17|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_COCOA|15,18|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_TOBACCO|29,19|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_HORSES|17,20|RESOURCECLASS_STRATEGIC",
+        "UNCLAIMED|RESOURCE_COCOA|6,21|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_COCOA|22,21|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_COCOA|25,21|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_DIAMONDS|18,22|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_AMBER|7,23|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_COCOA|10,23|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_TOBACCO|23,23|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_AMBER|21,24|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_AMBER|25,24|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_DIAMONDS|28,24|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_JADE|29,30|RESOURCECLASS_LUXURY",
+        "UNCLAIMED|RESOURCE_OLIVES|26,31|RESOURCECLASS_LUXURY"
+      ]
+    }
+  ]
+}

@@ -4,7 +4,7 @@
     "player_id": 1
   },
   "scenario": "turn57",
-  "recorded_at": "2026-08-16T20:58:48+00:00",
+  "recorded_at": "2026-08-24T17:19:25+00:00",
   "notes": null,
   "result": "Trade options with Georgia (player 1):\n\nEconomy:\n  Our gold: 371 (+4/turn) | Favor: 20\n  Their gold: 39 (+5/turn) | Favor: 38\n\nOur tradeable resources:\n  Luxuries: Salt\n  Strategics: Horses x25\n\nTheir tradeable resources:\n  Luxuries: Spices\n\nOur cities (3):\n  Qusqu (id=16777216, pop 5) (CAPITAL)\n  Wanuku (id=16777217, pop 3)\n  Antawaylla (id=16777218, pop 2)\n\nTheir cities (4):\n  Tbilisi (id=16842752, pop 9) (CAPITAL)\n  Kutaisi (id=16842753, pop 2)\n  Rustavi (id=16842754, pop 4)\n  Gori (id=16842755, pop 2)\n\nAgreements:\n  Open borders: not active (available)\n  Alliance: not eligible (requires declared friendship + Diplomatic Service civic)",
   "exchanges": [

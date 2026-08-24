@@ -1,0 +1,8 @@
+DISTRICT_HOLY_SITE placement options (7 tiles):
+  #1 (15,8) Adj: +1 (1 faith) — Grassland Marsh
+  #2 (13,6) Adj: +1 (1 faith) — Tundra Woods
+  #3 (15,10) Adj: +1 (1 faith) — Grassland
+  #4 (13,8) Adj: +0 (no adjacency) — Grassland (Hills) Hills
+  #5 (16,8) Adj: +0 (no adjacency) — Tundra (Hills) Hills Woods
+  #6 (13,9) Adj: +0 (no adjacency) — Grassland
+  #7 (12,9) Adj: +0 (no adjacency) — Grassland Marsh

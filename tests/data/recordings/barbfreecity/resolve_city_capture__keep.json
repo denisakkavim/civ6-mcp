@@ -1,0 +1,26 @@
+{
+  "tool": "resolve_city_capture",
+  "arguments": {
+    "action": "keep"
+  },
+  "scenario": "barbfreecity",
+  "recorded_at": "2026-08-24T18:09:59+00:00",
+  "notes": null,
+  "result": "KEEP|Alexandria (pop 2, id:16777221, rebelled)",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CRITICAL"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal player = Players[me]\nlocal city = player:GetCities():GetNextRebelledCity()\nlocal source = \"rebelled\"\nif city == nil then\n    city = player:GetCities():GetNextCapturedCity()\n    source = \"captured\"\nend\nif city == nil then print(\"ERR:NO_PENDING_CITY|No rebelled or captured city pending decision\"); print(\"---END---\"); return end\nlocal name = Locale.Lookup(city:GetName())\nlocal pop = city:GetPopulation()\nlocal cid = ((city:GetID() % 65536) + city:GetOwner() * 65536 + 16777216)\nlocal params = {}\nparams[UnitOperationTypes.PARAM_FLAGS] = CityDestroyDirectives.KEEP\nlocal canDo = CityManager.CanStartCommand(city, CityCommandTypes.DESTROY, params)\nif not canDo then print(\"ERR:CANNOT_KEEP|Cannot keep \" .. name .. \" (CanStartCommand returned false)\"); print(\"---END---\"); return end\nCityManager.RequestCommand(city, CityCommandTypes.DESTROY, params)\nprint(\"OK:KEEP|\" .. name .. \" (pop \" .. pop .. \", id:\" .. cid .. \", \" .. source .. \")\")\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:KEEP|Alexandria (pop 2, id:16777221, rebelled)"
+      ]
+    }
+  ]
+}

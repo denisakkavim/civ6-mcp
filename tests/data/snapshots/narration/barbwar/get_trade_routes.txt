@@ -1,0 +1,4 @@
+Trade Routes: 1/1 active
+
+On route (1):
+  Trader (id:2) Heidelberg -> Aachen (Domestic) | Food:2 Prod:1

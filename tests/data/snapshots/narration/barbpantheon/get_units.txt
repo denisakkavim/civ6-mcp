@@ -1,0 +1,10 @@
+4 units:
+  Scout (UNIT_SCOUT) at (29,16) — CS:10 moves 3/3 [HP: 57/100] [id:0]
+    >> CAN ATTACK: UNIT_BARBARIAN_HORSEMAN@28,15(71hp)
+  Warrior (UNIT_WARRIOR) at (15,5) — CS:20 moves 2/2 [HP: 67/100] [id:1]
+  Slinger (UNIT_SLINGER) at (14,8) — CS:5 RS:15 moves 2/2 [id:2]
+  Warrior (UNIT_WARRIOR) at (16,6) — CS:20 moves 2/2 [HP: 70/100] [id:3]
+
+Nearby threats (1):
+  Barbarian (1 unit):
+    UNIT_BARBARIAN_HORSEMAN at (28,15) — CS:20 HP:71/100 (1 tiles away) [id:4128773]

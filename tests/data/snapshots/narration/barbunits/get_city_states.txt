@@ -1,0 +1,16 @@
+Envoy tokens available: 0
+
+7 known city-states:
+  Anshan (Scientific) — 0 envoys (Suzerain: Mapuche) [player 6]
+    Anshan [city:17170432]
+  La Venta (Religious) — 1 envoys (Suzerain: Kongo) [player 7]
+    La Venta [city:17235968]
+  Venice (Trade) — 10 envoys (Suzerain: Germany) [player 8]
+    Venice [city:17301504]
+  Mexico City (Industrial) — 6 envoys (Suzerain: Germany) [player 9]
+    Mexico City [city:17367040]
+  Ayutthaya (Cultural) — 3 envoys (Suzerain: Kongo) [player 10]
+    Ayutthaya [city:17432576]
+  Kumasi (Cultural) — 2 envoys [player 14]
+    Kumasi [city:17694720]
+  Free Cities (Unknown) — 0 envoys [player 62]

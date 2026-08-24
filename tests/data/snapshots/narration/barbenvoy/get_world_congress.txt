@@ -1,0 +1,2 @@
+World Congress: FIRES THIS TURN — use queue_world_congress_votes() before end_turn()!
+Favor: 46 | Vote costs (cumulative): 1 vote=free, 2=10, 3=30, 4=60

@@ -1,0 +1,56 @@
+{
+  "tool": "get_deal_options",
+  "arguments": {
+    "player_id": 2
+  },
+  "scenario": "barbunits",
+  "recorded_at": "2026-08-24T17:52:42+00:00",
+  "notes": null,
+  "result": "Trade options with Mapuche (player 2):\n\nEconomy:\n  Our gold: 1802 (+97/turn) | Favor: 289\n  Their gold: 114 (+18/turn) | Favor: 70\n\nOur tradeable resources:\n  Luxuries: Cocoa, Diamonds x2, Pearls, Tobacco, Amber\n  Strategics: Coal x100, Horses x100, Iron x100, Niter x100\n\nTheir tradeable resources:\n  Luxuries: Coffee x2, Dyes x3, Silk, Truffles\n  Strategics: Horses x80, Iron x80, Niter x80, Oil x28\n\nOur cities (8):\n  Aachen (id=16777216, pop 8) (CAPITAL)\n  Frankfurt (id=16777217, pop 6)\n  Trier (id=16777218, pop 9)\n  Methone (id=16777219, pop 10)\n  Heidelberg (id=16777220, pop 5)\n  Berlin (id=16777221, pop 11)\n  Hamburg (id=16777222, pop 4)\n  Pella (id=16777223, pop 4)\n\nTheir cities (6):\n  Ngulu Mapu (id=16908288, pop 9) (CAPITAL)\n  Ina Pire Mapu (id=16908289, pop 10)\n  Wente Mapu (id=16908290, pop 2)\n  Willi Mapu (id=16908292, pop 7)\n  Huilli Mapu (id=16908293, pop 7)\n  Nag Mapu (id=16908294, pop 3)\n\nAgreements:\n  Open borders: not active (available)\n  Alliance: not eligible (requires declared friendship + Diplomatic Service civic)",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal target = 2\nlocal pDiplo = Players[me]:GetDiplomacy()\nif not Players[target] or not Players[target]:IsAlive() then print(\"ERR:INVALID_PLAYER|Player 2 not found\"); print(\"---END---\"); return end\nif not pDiplo:HasMet(target) then print(\"ERR:NOT_MET|Have not met player 2\"); print(\"---END---\"); return end\nlocal name = Locale.Lookup(PlayerConfigurations[target]:GetCivilizationShortDescription())\nprint(\"CIV|\" .. target .. \"|\" .. name:gsub(\"|\",\"/\"))\nlocal ourGold = math.floor(Players[me]:GetTreasury():GetGoldBalance())\nlocal ourGPT = math.floor(Players[me]:GetTreasury():GetGoldYield() - Players[me]:GetTreasury():GetTotalMaintenance())\nlocal ourFavor = 0\npcall(function() ourFavor = math.floor(Players[me]:GetFavor() or 0) end)\nlocal theirGold = math.floor(Players[target]:GetTreasury():GetGoldBalance())\nlocal theirGPT = math.floor(Players[target]:GetTreasury():GetGoldYield() - Players[target]:GetTreasury():GetTotalMaintenance())\nlocal theirFavor = 0\npcall(function() theirFavor = math.floor(Players[target]:GetFavor() or 0) end)\nprint(\"ECON|\" .. ourGold .. \"|\" .. ourGPT .. \"|\" .. ourFavor .. \"|\" .. theirGold .. \"|\" .. theirGPT .. \"|\" .. theirFavor)\nfor row in GameInfo.Resources() do\n    local ourAmt = Players[me]:GetResources():GetResourceAmount(row.Index)\n    local theirAmt = Players[target]:GetResources():GetResourceAmount(row.Index)\n    if ourAmt > 0 or theirAmt > 0 then\n        local rClass = row.ResourceClassType or \"\"\n        local rName = Locale.Lookup(row.Name)\n        print(\"RES|\" .. rName:gsub(\"|\",\"/\") .. \"|\" .. row.ResourceType .. \"|\" .. rClass .. \"|\" .. ourAmt .. \"|\" .. theirAmt)\n    end\nend\nlocal hasOB = false\npcall(function() hasOB = pDiplo:HasOpenBordersFrom(target) end)\nif not hasOB then pcall(function() hasOB = pDiplo:GetVisibilityOn(target) >= 2 end) end\nprint(\"OB|\" .. (hasOB and \"1\" or \"0\"))\nlocal ai = Players[target]:GetDiplomaticAI()\nlocal stateIdx = ai:GetDiplomaticStateIndex(me)\nlocal hasDiploService = false\npcall(function()\n    local civic = GameInfo.Civics[\"CIVIC_DIPLOMATIC_SERVICE\"]\n    if civic then hasDiploService = Players[me]:GetCulture():HasCivic(civic.Index) end\nend)\nlocal allianceEligible = (stateIdx == 1 and hasDiploService)\nlocal currentAlliance = \"\"\nif stateIdx == 0 then\n    local ok3, aType = pcall(function() return pDiplo:GetAllianceType(target) end)\n    if ok3 and aType and aType >= 0 then\n        local aNames = {\"RESEARCH\",\"CULTURAL\",\"ECONOMIC\",\"MILITARY\",\"RELIGIOUS\"}\n        currentAlliance = aNames[aType+1] or \"\"\n    end\nend\nprint(\"ALLIANCE|\" .. (allianceEligible and \"1\" or \"0\") .. \"|\" .. currentAlliance)\nfor _, city in Players[me]:GetCities():Members() do\n    local cName = Locale.Lookup(city:GetName()):gsub(\"|\", \"/\")\n    local cid = ((city:GetID() % 65536) + city:GetOwner() * 65536 + 16777216)\n    local pop = city:GetPopulation()\n    local isCapital = city:IsCapital() and \"1\" or \"0\"\n    print(\"CITY|OURS|\" .. cid .. \"|\" .. cName .. \"|\" .. pop .. \"|\" .. isCapital)\nend\nfor _, city in Players[target]:GetCities():Members() do\n    local cName = Locale.Lookup(city:GetName()):gsub(\"|\", \"/\")\n    local cid = ((city:GetID() % 65536) + city:GetOwner() * 65536 + 16777216)\n    local pop = city:GetPopulation()\n    local isCapital = city:IsCapital() and \"1\" or \"0\"\n    print(\"CITY|THEIRS|\" .. cid .. \"|\" .. cName .. \"|\" .. pop .. \"|\" .. isCapital)\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "CIV|2|Mapuche",
+        "ECON|1802|97|289|114|18|70",
+        "RES|Crabs|RESOURCE_CRABS|RESOURCECLASS_BONUS|1|0",
+        "RES|Deer|RESOURCE_DEER|RESOURCECLASS_BONUS|3|1",
+        "RES|Rice|RESOURCE_RICE|RESOURCECLASS_BONUS|1|0",
+        "RES|Sheep|RESOURCE_SHEEP|RESOURCECLASS_BONUS|2|1",
+        "RES|Stone|RESOURCE_STONE|RESOURCECLASS_BONUS|2|2",
+        "RES|Wheat|RESOURCE_WHEAT|RESOURCECLASS_BONUS|3|1",
+        "RES|Cocoa|RESOURCE_COCOA|RESOURCECLASS_LUXURY|1|0",
+        "RES|Coffee|RESOURCE_COFFEE|RESOURCECLASS_LUXURY|0|2",
+        "RES|Diamonds|RESOURCE_DIAMONDS|RESOURCECLASS_LUXURY|2|0",
+        "RES|Dyes|RESOURCE_DYES|RESOURCECLASS_LUXURY|0|3",
+        "RES|Pearls|RESOURCE_PEARLS|RESOURCECLASS_LUXURY|1|0",
+        "RES|Silk|RESOURCE_SILK|RESOURCECLASS_LUXURY|0|1",
+        "RES|Tobacco|RESOURCE_TOBACCO|RESOURCECLASS_LUXURY|1|0",
+        "RES|Truffles|RESOURCE_TRUFFLES|RESOURCECLASS_LUXURY|0|1",
+        "RES|Coal|RESOURCE_COAL|RESOURCECLASS_STRATEGIC|100|0",
+        "RES|Horses|RESOURCE_HORSES|RESOURCECLASS_STRATEGIC|100|80",
+        "RES|Iron|RESOURCE_IRON|RESOURCECLASS_STRATEGIC|100|80",
+        "RES|Niter|RESOURCE_NITER|RESOURCECLASS_STRATEGIC|100|80",
+        "RES|Oil|RESOURCE_OIL|RESOURCECLASS_STRATEGIC|0|28",
+        "RES|Amber|RESOURCE_AMBER|RESOURCECLASS_LUXURY|1|0",
+        "OB|0",
+        "ALLIANCE|0|",
+        "CITY|OURS|16777216|Aachen|8|1",
+        "CITY|OURS|16777217|Frankfurt|6|0",
+        "CITY|OURS|16777218|Trier|9|0",
+        "CITY|OURS|16777219|Methone|10|0",
+        "CITY|OURS|16777220|Heidelberg|5|0",
+        "CITY|OURS|16777221|Berlin|11|0",
+        "CITY|OURS|16777222|Hamburg|4|0",
+        "CITY|OURS|16777223|Pella|4|0",
+        "CITY|THEIRS|16908288|Ngulu Mapu|9|1",
+        "CITY|THEIRS|16908289|Ina Pire Mapu|10|0",
+        "CITY|THEIRS|16908290|Wente Mapu|2|0",
+        "CITY|THEIRS|16908292|Willi Mapu|7|0",
+        "CITY|THEIRS|16908293|Huilli Mapu|7|0",
+        "CITY|THEIRS|16908294|Nag Mapu|3|0"
+      ]
+    }
+  ]
+}

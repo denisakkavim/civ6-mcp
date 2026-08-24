@@ -1,0 +1,78 @@
+{
+  "tool": "set_policies",
+  "arguments": {
+    "assignments": {
+      "5": "POLICY_DISCIPLINE"
+    }
+  },
+  "scenario": "barbunits",
+  "recorded_at": "2026-08-24T17:53:09+00:00",
+  "notes": null,
+  "result": "POLICIES_SET|Policies updated. Use get_policies to verify.",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CLEAR"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pCulture = Players[me]:GetCulture()\nlocal numSlots = pCulture:GetNumPolicySlots()\nif numSlots <= 0 then print(\"ERR:NO_GOVERNMENT|No government selected\"); print(\"---END---\"); return end\nlocal slotNames = {[0]=\"Economic\", [1]=\"Military\", [2]=\"Diplomatic\", [3]=\"Wildcard\", [4]=\"Wildcard\"}\nlocal slotTypeMap = {SLOT_ECONOMIC=0, SLOT_MILITARY=1, SLOT_DIPLOMATIC=2, SLOT_WILDCARD=3, SLOT_GREAT_PERSON=4}\nlocal pe_5 = GameInfo.Policies[\"POLICY_DISCIPLINE\"]; if pe_5 == nil then print(\"ERR:POLICY_NOT_FOUND|POLICY_DISCIPLINE\"); print(\"---END---\"); return end; local canSlot_5 = pCulture:CanSlotPolicy(pe_5.Index, 5); local alreadyThere_5 = (pCulture:GetSlotPolicy(5) == pe_5.Index); if not canSlot_5 and not alreadyThere_5 then local pType_5 = pe_5.GovernmentSlotType or \"unknown\"; local st_5 = pCulture:GetSlotType(5); local sName_5 = slotNames[st_5] or (\"type_\" .. st_5); print( \"ERR:CANNOT_SLOT|POLICY_DISCIPLINE (\" .. pType_5 .. \") rejected for slot 5 (\" .. sName_5 .. \")\" ); print(\"---END---\"); return end; local sType_5 = pCulture:GetSlotType(5); local pSlot_5 = slotTypeMap[pe_5.GovernmentSlotType] or -1; if sType_5 < 3 and pSlot_5 ~= sType_5   and pe_5.GovernmentSlotType ~= 'SLOT_WILDCARD' then local sName = slotNames[sType_5] or \"unknown\"; local pType = pe_5.GovernmentSlotType or \"unknown\"; print( \"ERR:SLOT_MISMATCH|POLICY_DISCIPLINE (\" .. pType .. \") cannot go in slot 5 (\" .. sName .. \")\" ); print(\"---END---\"); return end\nUI.RequestPlayerOperation(me, PlayerOperations.UNLOCK_POLICIES, {})\nlocal clearList = {}\ntable.insert(clearList, 5)\nlocal addList = {}\naddList[5] = pe_5.Hash\npCulture:RequestPolicyChanges(clearList, addList)\nprint(\"OK:POLICIES_SET|Policies updated. Use get_policies to verify.\")\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:POLICIES_SET|Policies updated. Use get_policies to verify."
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pCulture = Players[me]:GetCulture()\nlocal govIdx = pCulture:GetCurrentGovernment()\nlocal govName = \"None\"\nlocal govType = \"NONE\"\nif govIdx and govIdx >= 0 then\n    local govEntry = GameInfo.Governments[govIdx]\n    if govEntry then\n        govName = Locale.Lookup(govEntry.Name)\n        govType = govEntry.GovernmentType\n    end\nend\nlocal numSlots = pCulture:GetNumPolicySlots()\nprint(\"GOV|\" .. govType .. \"|\" .. govName:gsub(\"|\",\"/\") .. \"|\" .. numSlots)\nlocal slotNames = {[0]=\"SLOT_ECONOMIC\", [1]=\"SLOT_MILITARY\", [2]=\"SLOT_DIPLOMATIC\", [3]=\"SLOT_WILDCARD\", [4]=\"SLOT_WILDCARD\"}\nfor s = 0, numSlots - 1 do\n    local slotType = slotNames[pCulture:GetSlotType(s)] or (\"SLOT_\" .. pCulture:GetSlotType(s))\n    local policyIdx = pCulture:GetSlotPolicy(s)\n    local policyType = \"NONE\"\n    local policyName = \"Empty\"\n    if policyIdx >= 0 then\n        local pe = GameInfo.Policies[policyIdx]\n        if pe then\n            policyType = pe.PolicyType\n            policyName = Locale.Lookup(pe.Name)\n        end\n    end\n    print(\"SLOT|\" .. s .. \"|\" .. slotType .. \"|\" .. policyType .. \"|\" .. policyName:gsub(\"|\",\"/\"))\nend\nfor policy in GameInfo.Policies() do\n    if pCulture:IsPolicyUnlocked(policy.Index) then\n        local canSlot = false\n        for s = 0, numSlots - 1 do\n            if pCulture:CanSlotPolicy(policy.Index, s) then\n                canSlot = true\n                break\n            end\n        end\n        if canSlot then\n            local slotType = \"SLOT_WILDCARD\"\n            if policy.GovernmentSlotType then slotType = policy.GovernmentSlotType end\n            local name = Locale.Lookup(policy.Name)\n            local desc = Locale.Lookup(policy.Description):gsub(\"|\", \"/\"):gsub(\"\\n\", \" \")\n            print(\"AVAIL|\" .. policy.PolicyType .. \"|\" .. name:gsub(\"|\",\"/\") .. \"|\" .. desc .. \"|\" .. slotType)\n        end\n    end\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "GOV|GOVERNMENT_MERCHANT_REPUBLIC|Merchant Republic|7",
+        "SLOT|0|SLOT_MILITARY|POLICY_PROFESSIONAL_ARMY|Professional Army",
+        "SLOT|1|SLOT_ECONOMIC|POLICY_CARAVANSARIES|Caravansaries",
+        "SLOT|2|SLOT_ECONOMIC|POLICY_TOWN_CHARTERS|Town Charters",
+        "SLOT|3|SLOT_DIPLOMATIC|POLICY_MERCHANT_CONFEDERATION|Merchant Confederation",
+        "SLOT|4|SLOT_DIPLOMATIC|POLICY_COLONIAL_OFFICES|Colonial Offices",
+        "SLOT|5|SLOT_WILDCARD|POLICY_DISCIPLINE|Discipline",
+        "SLOT|6|SLOT_MILITARY|POLICY_RETAINERS|Retainers",
+        "AVAIL|POLICY_SURVEY|Survey|Double experience for recon units.|SLOT_MILITARY",
+        "AVAIL|POLICY_GOD_KING|God King|+1 [ICON_Faith] Faith and +1 [ICON_Gold] Gold in the [ICON_Capital] Capital.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_URBAN_PLANNING|Urban Planning|+1 [ICON_Production] Production in all cities.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_ILKUM|Ilkum|+30% [ICON_Production] Production toward Builders.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_AGOGE|Agoge|+50% [ICON_Production] Production toward Ancient and Classical era melee, anti-cavalry, and ranged units.|SLOT_MILITARY",
+        "AVAIL|POLICY_MARITIME_INDUSTRIES|Maritime Industries|+100% [ICON_Production] Production toward Ancient and Classical era naval units.|SLOT_MILITARY",
+        "AVAIL|POLICY_MANEUVER|Maneuver|+50% [ICON_Production] Production toward Ancient and Classical era heavy and light cavalry units.|SLOT_MILITARY",
+        "AVAIL|POLICY_STRATEGOS|Strategos|+2 [ICON_GreatGeneral] Great General points per turn.|SLOT_GREAT_PERSON",
+        "AVAIL|POLICY_CORVEE|Corv\u00e9e|+15% [ICON_Production] Production toward Ancient and Classical wonders.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_CONSCRIPTION|Conscription|Unit maintenance reduced by 1 [ICON_Gold] Gold per turn, per unit.|SLOT_MILITARY",
+        "AVAIL|POLICY_LAND_SURVEYORS|Land Surveyors|Reduces the cost of purchasing a tile by 20%.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_COLONIZATION|Colonization|+50% [ICON_Production] Production toward Settlers.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_INSULAE|Insulae|+1 [ICON_Housing] Housing in all cities with at least 2 specialty districts.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_CHARISMATIC_LEADER|Charismatic Leader|+2 Influence points per turn toward earning city-state [ICON_Envoy] Envoys.|SLOT_DIPLOMATIC",
+        "AVAIL|POLICY_DIPLOMATIC_LEAGUE|Diplomatic League|The first [ICON_Envoy] Envoy you send to each city-state counts as two [ICON_Envoy] Envoys.|SLOT_DIPLOMATIC",
+        "AVAIL|POLICY_LITERARY_TRADITION|Literary Tradition|+2 [ICON_GreatWriter] Great Writer points per turn.|SLOT_GREAT_PERSON",
+        "AVAIL|POLICY_RAID|Raid|Yields gained from pillaging and coastal raids are +50%.|SLOT_MILITARY",
+        "AVAIL|POLICY_VETERANCY|Veterancy|+30% [ICON_Production] Production toward Encampment districts, Harbor districts, and buildings for these districts.|SLOT_MILITARY",
+        "AVAIL|POLICY_BASTIONS|Bastions|+6 City [ICON_Strength] Defense Strength. +5 City [ICON_Ranged] Ranged Strength.|SLOT_MILITARY",
+        "AVAIL|POLICY_LIMES|Limes|+100% [ICON_Production] Production toward defensive buildings.|SLOT_MILITARY",
+        "AVAIL|POLICY_NATURAL_PHILOSOPHY|Natural Philosophy|+100% Campus district adjacency bonuses.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_FEUDAL_CONTRACT|Feudal Contract|+50% [ICON_Production] Production toward Ancient, Classical, Medieval, and Renaissance era melee, anti-cavalry, and ranged units.|SLOT_MILITARY",
+        "AVAIL|POLICY_SERFDOM|Serfdom|Newly trained Builders gain 2 extra build actions.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_TRADE_CONFEDERATION|Trade Confederation|+1 [ICON_Culture] Culture and +1 [ICON_Science] Science from international [ICON_TradeRoute] Trade Routes.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_AESTHETICS|Aesthetics|+100% Theater Square district adjacency bonuses.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_MEDINA_QUARTER|Medina Quarter|+2 [ICON_Housing] Housing in all cities with at least 3 specialty districts.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_CRAFTSMEN|Craftsmen|100% Industrial Zone adjacency bonuses.|SLOT_MILITARY",
+        "AVAIL|POLICY_TRAVELING_MERCHANTS|Traveling Merchants|+2 [ICON_GreatMerchant] Great Merchant points per turn.|SLOT_GREAT_PERSON",
+        "AVAIL|POLICY_PRESS_GANGS|Press Gangs|100% [ICON_Production] Production toward Industrial era and earlier naval units.|SLOT_MILITARY",
+        "AVAIL|POLICY_MACHIAVELLIANISM|Machiavellianism|+50% [ICON_Production] Production toward Spies. Spy operations take 25% less time.|SLOT_DIPLOMATIC",
+        "AVAIL|POLICY_LIMITANEI|Limitanei|+2 Loyalty per turn for cities with a garrisoned unit.|SLOT_MILITARY",
+        "AVAIL|POLICY_PRAETORIUM|Praetorium|[ICON_Governor] Governors provide +2 Loyalty per turn to their city.|SLOT_DIPLOMATIC",
+        "AVAIL|POLICY_CIVIL_PRESTIGE|Civil Prestige|Established [ICON_GOVERNOR] Governors with at least 2 Promotions provide +1 [ICON_Amenities] Amenity and +2 [ICON_Housing] Housing.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_WISSELBANKEN|Wisselbanken|Your [ICON_TradeRoute] Trade Routes to an Ally's city or vassal city-state provide +2 [ICON_Food] Food and +2 [ICON_Production] Production for both cities. Alliance Points with all allies increase by an additional .25 per turn.|SLOT_DIPLOMATIC",
+        "AVAIL|POLICY_EQUESTRIAN_ORDERS|Equestrian Orders|All improved [ICON_RESOURCE_HORSES] Horses and [ICON_RESOURCE_IRON] Iron resources yield 1 additional resource per turn.|SLOT_MILITARY",
+        "AVAIL|POLICY_RETINUES|Retinues|50% resource discount on all unit upgrades.|SLOT_MILITARY"
+      ]
+    }
+  ]
+}

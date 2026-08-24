@@ -1,0 +1,17 @@
+{
+  "tool": "get_dedications",
+  "arguments": {},
+  "scenario": "barbpantheon",
+  "recorded_at": "2026-08-24T18:14:04+00:00",
+  "notes": null,
+  "result": "Normal Age \u2014 Ancient Era\nEra Score: 9 (Dark: 11, Golden: 25)\n\nNo dedications available or required.",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pEras = Game.GetEras()\nlocal age = \"Normal\"\nif pEras:HasHeroicGoldenAge(me) then age = \"Heroic\"\nelseif pEras:HasGoldenAge(me) then age = \"Golden\"\nelseif pEras:HasDarkAge(me) then age = \"Dark\" end\nlocal era = pEras:GetCurrentEra()\nlocal darkT = pEras:GetPlayerDarkAgeThreshold(me) or 0\nlocal goldT = pEras:GetPlayerGoldenAgeThreshold(me) or 0\nlocal allowed = pEras:GetPlayerNumAllowedCommemorations(me)\nlocal score = pEras:GetPlayerCurrentScore(me)\nprint(\"STATUS|\" .. age .. \"|\" .. era .. \"|\" .. score .. \"|\" .. darkT .. \"|\" .. goldT .. \"|\" .. allowed)\n-- Active commemorations\nlocal active = pEras:GetPlayerActiveCommemorations(me)\nif active then\n    for _, a in ipairs(active) do\n        local row = GameInfo.CommemorationTypes[a]\n        if row then print(\"ACTIVE|\" .. row.CommemorationType) end\n    end\nend\n-- Available choices\nlocal choices = pEras:GetPlayerCommemorateChoices(me)\nif choices then\n    for _, idx in ipairs(choices) do\n        local row = GameInfo.CommemorationTypes[idx]\n        if row then\n            local norm = row.NormalAgeBonusDescription and Locale.Lookup(row.NormalAgeBonusDescription) or \"\"\n            local gold = row.GoldenAgeBonusDescription and Locale.Lookup(row.GoldenAgeBonusDescription) or \"\"\n            local dark = row.DarkAgeBonusDescription and Locale.Lookup(row.DarkAgeBonusDescription) or \"\"\n            print(\"CHOICE|\" .. idx .. \"|\" .. row.CommemorationType .. \"|\" .. norm .. \"|\" .. gold .. \"|\" .. dark)\n        end\n    end\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "STATUS|Normal|0|9|11|25|0"
+      ]
+    }
+  ]
+}

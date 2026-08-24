@@ -1,0 +1,1 @@
+OK:PATRONIZED|O no Yasumaro|cost:1350 faith|unit_id:3|UNIT_GREAT_PROPHET

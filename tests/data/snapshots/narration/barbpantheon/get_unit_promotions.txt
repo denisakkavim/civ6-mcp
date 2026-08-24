@@ -1,0 +1,5 @@
+Promotions for UNIT_SCOUT (id:0):
+  Ranger (PROMOTION_RANGER): Faster [ICON_Movement] Movement in Woods and Rainforest terrain.
+  Alpine (PROMOTION_ALPINE): Faster [ICON_Movement] Movement on Hill terrain.
+
+Use promote_unit(unit_id, promotion_type) to apply.

@@ -1,0 +1,131 @@
+{
+  "tool": "unit_action",
+  "arguments": {
+    "unit_id": 1,
+    "action": "move",
+    "target_x": 21,
+    "target_y": 9
+  },
+  "scenario": "barbenvoy",
+  "recorded_at": "2026-08-24T18:00:36+00:00",
+  "notes": null,
+  "result": "MOVING_TO|21,9|from:14,16|now_at:15,14|(moved dx:+1 dy:-2)|STOPPED_MID_PATH (moves exhausted)",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CLEAR"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal vis = PlayersVisibility[me]\nlocal parts = {}\nfor idx = 0, Map.GetPlotCount() - 1 do\n    local p = Map.GetPlotByIndex(idx)\n    if vis:IsRevealed(p:GetX(), p:GetY()) then\n        table.insert(parts, p:GetX() .. \",\" .. p:GetY())\n    end\nend\nprint(\"REVEALED|\" .. table.concat(parts, \";\"))\nprint(\"---END---\")\n",
+      "lines": [
+        "REVEALED|14,0;15,0;16,0;17,0;18,0;13,1;14,1;15,1;16,1;17,1;18,1;13,2;14,2;15,2;16,2;17,2;18,2;19,2;13,3;14,3;15,3;16,3;17,3;18,3;19,3;13,4;14,4;15,4;16,4;17,4;18,4;19,4;12,5;13,5;14,5;15,5;16,5;17,5;18,5;19,5;11,6;12,6;13,6;14,6;15,6;16,6;17,6;18,6;19,6;10,7;11,7;12,7;13,7;14,7;15,7;16,7;17,7;18,7;19,7;20,7;21,7;22,7;23,7;24,7;10,8;11,8;12,8;13,8;14,8;15,8;16,8;17,8;18,8;19,8;20,8;21,8;22,8;23,8;24,8;25,8;10,9;11,9;12,9;13,9;14,9;15,9;16,9;17,9;18,9;19,9;20,9;21,9;22,9;23,9;24,9;25,9;26,9;10,10;11,10;12,10;13,10;14,10;15,10;16,10;17,10;18,10;19,10;20,10;21,10;22,10;23,10;24,10;25,10;26,10;27,10;28,10;10,11;11,11;12,11;13,11;14,11;15,11;16,11;17,11;18,11;19,11;20,11;21,11;22,11;23,11;24,11;25,11;26,11;27,11;28,11;29,11;11,12;12,12;13,12;14,12;15,12;16,12;17,12;18,12;19,12;20,12;21,12;22,12;23,12;24,12;25,12;26,12;27,12;28,12;29,12;30,12;11,13;12,13;13,13;14,13;15,13;16,13;17,13;18,13;19,13;20,13;21,13;22,13;23,13;24,13;25,13;26,13;27,13;28,13;29,13;30,13;11,14;12,14;13,14;14,14;15,14;16,14;17,14;18,14;19,14;20,14;21,14;22,14;23,14;24,14;25,14;26,14;27,14;28,14;29,14;30,14;10,15;11,15;12,15;13,15;14,15;15,15;16,15;17,15;18,15;19,15;20,15;21,15;22,15;23,15;24,15;25,15;26,15;27,15;28,15;29,15;30,15;10,16;11,16;12,16;13,16;14,16;15,16;16,16;17,16;18,16;19,16;20,16;21,16;22,16;23,16;24,16;25,16;26,16;27,16;28,16;29,16;30,16;9,17;10,17;11,17;12,17;13,17;14,17;15,17;16,17;17,17;18,17;19,17;20,17;21,17;22,17;26,17;27,17;28,17;29,17;30,17;9,18;10,18;11,18;12,18;13,18;14,18;15,18;16,18;17,18;18,18;19,18;20,18;21,18;22,18;26,18;27,18;28,18;29,18;30,18;31,18;5,19;6,19;8,19;9,19;10,19;11,19;12,19;13,19;14,19;15,19;16,19;17,19;18,19;19,19;20,19;21,19;26,19;27,19;28,19;29,19;30,19;5,20;6,20;7,20;9,20;10,20;11,20;12,20;13,20;15,20;16,20;17,20;18,20;19,20;20,20;21,20;22,20;28,20;29,20;30,20;4,21;5,21;6,21;7,21;8,21;9,21;10,21;11,21;12,21;15,21;16,21;17,21;18,21;19,21;20,21;21,21;22,21;26,21;27,21;28,21;29,21;4,22;5,22;6,22;7,22;8,22;9,22;10,22;11,22;12,22;13,22;15,22;16,22;17,22;18,22;19,22;20,22;21,22;22,22;23,22;24,22;26,22;27,22;28,22;29,22;30,22;4,23;5,23;6,23;7,23;8,23;9,23;10,23;11,23;12,23;14,23;15,23;16,23;17,23;18,23;19,23;20,23;21,23;22,23;23,23;24,23;25,23;26,23;27,23;28,23;29,23;7,24;8,24;9,24;10,24;11,24;12,24;13,24;14,24;15,24;16,24;17,24;18,24;19,24;20,24;21,24;22,24;23,24;24,24;26,24;27,24;28,24;29,24;8,25;9,25;10,25;11,25;12,25;13,25;14,25;15,25;16,25;18,25;19,25;20,25;21,25;22,25;23,25;24,25;25,25;26,25;27,25;28,25;9,26;10,26;11,26;12,26;13,26;14,26;15,26;16,26;17,26;18,26;19,26;22,26;23,26;24,26;25,26;26,26;27,26;28,26;10,27;11,27;12,27;13,27;14,27;15,27;16,27;17,27;18,27;19,27;21,27;22,27;23,27;24,27;25,27;26,27;27,27;12,28;13,28;14,28;15,28;16,28;17,28;18,28;19,28;20,28;21,28;22,28;23,28;24,28;25,28;26,28;27,28;13,29;14,29;15,29;16,29;17,29;18,29;19,29;20,29;21,29;22,29;23,29;24,29;25,29;16,30;17,30;18,30;19,30;20,30;21,30;22,30;23,30;24,30;25,30;17,31;18,31;19,31;20,31;21,31;22,31;23,31;18,32;19,32;20,32;21,32;22,32;23,32;18,33;19,33;20,33"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local unit = UnitManager.GetUnit(me, 1) if unit == nil then print(\"ERR:UNIT_NOT_FOUND\"); print(\"---END---\"); return end\nif unit:GetMovesRemaining() <= 0 then\n    print(\"ERR:NO_MOVES|Unit has no movement points remaining this turn. Use skip or wait until next turn.\"); print(\"---END---\"); return\nend\nif not UnitManager.CanStartOperation(unit, UnitOperationTypes.MOVE_TO, nil, true) then\n    print(\"ERR:CANNOT_MOVE|Unit cannot move (invalid state)\"); print(\"---END---\"); return\nend\n-- Pre-check: stacking conflict at target tile\nlocal unitInfo = GameInfo.Units[unit:GetType()]\nlocal isCivilian = (unitInfo and unitInfo.FormationClass == \"FORMATION_CLASS_CIVILIAN\")\nlocal tgtUnits = Map.GetUnitsAt(21, 9)\nif tgtUnits then\n    for other in tgtUnits:Units() do\n        if other:GetOwner() == me then\n            local otherInfo = GameInfo.Units[other:GetType()]\n            local otherCivilian = (otherInfo and otherInfo.FormationClass == \"FORMATION_CLASS_CIVILIAN\")\n            if isCivilian == otherCivilian then\n                local otherName = otherInfo and otherInfo.UnitType or \"unit\"\n                print(\"ERR:STACKING_CONFLICT|Friendly \" .. otherName .. \" already on (21,9). Cannot stack same formation class.\"); print(\"---END---\"); return\n            end\n        end\n    end\nend\nlocal fromX, fromY = unit:GetX(), unit:GetY()\nlocal params = {}\nparams[UnitOperationTypes.PARAM_X] = 21\nparams[UnitOperationTypes.PARAM_Y] = 9\n-- Add ATTACK modifier if hostile unit on target tile (needed for civilian capture)\nlocal hasHostile = false\nif tgtUnits then\n    for other in tgtUnits:Units() do\n        if other:GetOwner() ~= me then hasHostile = true end\n    end\nend\nif hasHostile then\n    params[UnitOperationTypes.PARAM_MODIFIERS] = UnitOperationMoveModifiers.ATTACK\nend\nUnitManager.RequestOperation(unit, UnitOperationTypes.MOVE_TO, params)\nlocal tag = hasHostile and \"OK:CAPTURE_MOVE|\" or \"OK:MOVING_TO|\"\nprint(tag .. 21 .. \",\" .. 9 .. \"|from:\" .. fromX .. \",\" .. fromY)\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:MOVING_TO|21,9|from:14,16"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal u = Players[me]:GetUnits():FindID(1)\nif u then print(\"POS|\" .. u:GetX() .. \"|\" .. u:GetY() .. \"|\" .. u:GetMovesRemaining()) else print(\"POS|GONE\") end\n\n-- Diagnose blocked move target\npcall(function()\n    local plot = Map.GetPlot(21, 9)\n    if not plot then print(\"DIAG|UNKNOWN|tile does not exist\"); return end\n    if plot:IsWater() then\n        local hasShip = false\n        pcall(function()\n            local tech = GameInfo.Technologies[\"TECH_SHIPBUILDING\"]\n            if tech then hasShip = Players[me]:GetTechs():HasTech(tech.Index) end\n        end)\n        if hasShip then print(\"DIAG|WATER_OK|water tile (can embark)\")\n        else print(\"DIAG|WATER|water tile - land units need Shipbuilding tech to embark\") end\n    elseif plot:IsMountain() then\n        print(\"DIAG|MOUNTAIN|impassable mountain\")\n    elseif plot:IsImpassable() then\n        print(\"DIAG|IMPASSABLE|impassable terrain (ice or natural wonder)\")\n    else\n        local owner = plot:GetOwner()\n        if owner >= 0 and owner ~= me then\n            local atWar = false\n            pcall(function() atWar = Players[me]:GetDiplomacy():IsAtWarWith(owner) end)\n            if atWar then\n                print(\"DIAG|UNKNOWN|tile is enemy territory but movement still blocked - check path\")\n            else\n                local civName = \"player \" .. owner\n                pcall(function()\n                    local cfg = PlayerConfigurations[owner]\n                    civName = cfg and Locale.Lookup(cfg:GetCivilizationShortDescription()) or civName\n                end)\n                local isMajor = true\n                pcall(function() isMajor = Players[owner]:IsMajor() end)\n                if isMajor then\n                    print(\"DIAG|BORDER|foreign territory (\" .. civName .. \") - need Open Borders via propose_deal\")\n                else\n                    print(\"DIAG|BORDER_CS|city-state territory (\" .. civName .. \") - need suzerainty or Open Borders\")\n                end\n            end\n        else\n            print(\"DIAG|UNKNOWN|tile appears passable - path may be blocked by intermediate tiles\")\n        end\n    end\nend)\nprint(\"---END---\")\n",
+      "lines": [
+        "POS|15|14|0",
+        "DIAG|UNKNOWN|tile appears passable - path may be blocked by intermediate tiles"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "\nlocal cx, cy, r = 15, 14, 4\nlocal me = Game.GetLocalPlayer()\nlocal vis = PlayersVisibility[me]\nlocal pTech = Players[me]:GetTechs()\nlocal function resVisible(resEntry)\n    if not resEntry.PrereqTech then return true end\n    local t = GameInfo.Technologies[resEntry.PrereqTech]\n    return t and pTech:HasTech(t.Index)\nend\nfor dy = -r, r do\n    for dx = -r, r do\n        local x, y = cx + dx, cy + dy\n        local plot = Map.GetPlot(x, y)\n        if plot and vis:IsRevealed(plot:GetX(), plot:GetY()) then\n            local terrain = GameInfo.Terrains[plot:GetTerrainType()].TerrainType\n            local feature = \"none\"\n            local fi = plot:GetFeatureType()\n            if fi >= 0 then feature = GameInfo.Features[fi].FeatureType end\n            local resource = \"none\"\n            local ri = plot:GetResourceType()\n            if ri >= 0 then\n                local re = GameInfo.Resources[ri]\n                if resVisible(re) then\n                    resource = re.ResourceType .. \":\" .. (re.ResourceClassType or \"\")\n                end\n            end\n            local hills = plot:IsHills() and \"1\" or \"0\"\n            local camp = \"0\"\n            local ii = plot:GetImprovementType()\n            if ii >= 0 then\n                local iInfo = GameInfo.Improvements[ii]\n                if iInfo and iInfo.ImprovementType == \"IMPROVEMENT_BARBARIAN_CAMP\" then\n                    camp = \"1\"\n                end\n            end\n            local units = \"none\"\n            if vis:IsVisible(plot:GetX(), plot:GetY()) then\n                local uParts = {}\n                for pid = 0, 63 do\n                    if pid ~= me and Players[pid] and Players[pid]:IsAlive() then\n                        for _, u in Players[pid]:GetUnits():Members() do\n                            if u:GetX() == x and u:GetY() == y then\n                                local entry = GameInfo.Units[u:GetType()]\n                                local nm = entry and entry.UnitType or \"UNKNOWN\"\n                                local ownerLabel = \"Barbarian\"\n                                if pid ~= 63 then\n                                    local cfg = PlayerConfigurations[pid]\n                                    if cfg then ownerLabel = Locale.Lookup(cfg:GetCivilizationShortDescription()) end\n                                end\n                                table.insert(uParts, ownerLabel .. \" \" .. nm)\n                            end\n                        end\n                    end\n                end\n                if #uParts > 0 then units = table.concat(uParts, \";\") end\n            end\n            local cityName = \"none\"\n            if plot:IsCity() then\n                local cOwner = plot:GetOwner()\n                if cOwner >= 0 and cOwner ~= me then\n                    pcall(function()\n                        for _, c in Players[cOwner]:GetCities():Members() do\n                            if c:GetX() == x and c:GetY() == y then\n                                cityName = Locale.Lookup(c:GetName())\n                                break\n                            end\n                        end\n                    end)\n                end\n            end\n            print(\"TILE|\" .. x .. \",\" .. y .. \"|\" .. terrain .. \"|\" .. feature .. \"|\" .. resource .. \"|\" .. hills .. \"|\" .. camp .. \"|\" .. units .. \"|\" .. cityName)\n        end\n    end\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "TILE|11,10|TERRAIN_GRASS|none|none|0|0|none|none",
+        "TILE|12,10|TERRAIN_GRASS|none|RESOURCE_TOBACCO:RESOURCECLASS_LUXURY|0|0|none|none",
+        "TILE|13,10|TERRAIN_COAST|none|none|0|0|none|none",
+        "TILE|14,10|TERRAIN_GRASS|none|none|0|0|none|none",
+        "TILE|15,10|TERRAIN_GRASS|none|RESOURCE_STONE:RESOURCECLASS_BONUS|0|0|none|none",
+        "TILE|16,10|TERRAIN_GRASS|none|none|0|0|none|none",
+        "TILE|17,10|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|18,10|TERRAIN_PLAINS_HILLS|none|none|1|0|none|none",
+        "TILE|19,10|TERRAIN_PLAINS|FEATURE_FOREST|none|0|0|none|none",
+        "TILE|11,11|TERRAIN_COAST|none|none|0|0|none|none",
+        "TILE|12,11|TERRAIN_GRASS|none|none|0|0|none|none",
+        "TILE|13,11|TERRAIN_COAST|none|none|0|0|none|none",
+        "TILE|14,11|TERRAIN_GRASS|FEATURE_MARSH|none|0|0|none|none",
+        "TILE|15,11|TERRAIN_GRASS|FEATURE_FOREST|none|0|0|none|none",
+        "TILE|16,11|TERRAIN_GRASS|none|RESOURCE_RICE:RESOURCECLASS_BONUS|0|0|none|none",
+        "TILE|17,11|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|18,11|TERRAIN_GRASS|none|RESOURCE_HORSES:RESOURCECLASS_STRATEGIC|0|0|none|none",
+        "TILE|19,11|TERRAIN_PLAINS|none|none|0|0|none|none",
+        "TILE|11,12|TERRAIN_COAST|none|none|0|0|none|none",
+        "TILE|12,12|TERRAIN_GRASS|none|RESOURCE_HORSES:RESOURCECLASS_STRATEGIC|0|0|none|none",
+        "TILE|13,12|TERRAIN_DESERT|none|none|0|0|none|none",
+        "TILE|14,12|TERRAIN_DESERT|none|none|0|0|none|none",
+        "TILE|15,12|TERRAIN_GRASS|none|none|0|0|none|none",
+        "TILE|16,12|TERRAIN_GRASS|FEATURE_MARSH|none|0|0|none|none",
+        "TILE|17,12|TERRAIN_GRASS|FEATURE_FOREST|none|0|0|none|none",
+        "TILE|18,12|TERRAIN_GRASS|none|none|0|0|none|none",
+        "TILE|19,12|TERRAIN_PLAINS|FEATURE_FOREST|none|0|0|none|none",
+        "TILE|11,13|TERRAIN_PLAINS|FEATURE_FLOODPLAINS_PLAINS|none|0|0|none|none",
+        "TILE|12,13|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|13,13|TERRAIN_GRASS|none|none|0|0|none|none",
+        "TILE|14,13|TERRAIN_GRASS|none|RESOURCE_HORSES:RESOURCECLASS_STRATEGIC|0|0|none|none",
+        "TILE|15,13|TERRAIN_GRASS|none|none|0|0|none|none",
+        "TILE|16,13|TERRAIN_GRASS|FEATURE_FOREST|none|0|0|none|none",
+        "TILE|17,13|TERRAIN_GRASS_HILLS|none|none|1|0|none|none",
+        "TILE|18,13|TERRAIN_PLAINS|none|none|0|0|none|none",
+        "TILE|19,13|TERRAIN_PLAINS|none|none|0|0|none|none",
+        "TILE|11,14|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|12,14|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|13,14|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|14,14|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|15,14|TERRAIN_GRASS|none|none|0|0|none|none",
+        "TILE|16,14|TERRAIN_PLAINS|none|none|0|0|none|none",
+        "TILE|17,14|TERRAIN_PLAINS|none|none|0|0|none|none",
+        "TILE|18,14|TERRAIN_PLAINS|FEATURE_FOREST|none|0|0|none|none",
+        "TILE|19,14|TERRAIN_PLAINS|none|none|0|0|none|none",
+        "TILE|11,15|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|12,15|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|Ayutthaya UNIT_ARCHER|none",
+        "TILE|13,15|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|14,15|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|15,15|TERRAIN_GRASS_HILLS|FEATURE_FOREST|RESOURCE_AMBER:RESOURCECLASS_LUXURY|1|0|none|none",
+        "TILE|16,15|TERRAIN_PLAINS_HILLS|FEATURE_FOREST|none|1|0|none|none",
+        "TILE|17,15|TERRAIN_PLAINS|none|RESOURCE_WHEAT:RESOURCECLASS_BONUS|0|0|none|none",
+        "TILE|18,15|TERRAIN_PLAINS|none|none|0|0|none|none",
+        "TILE|19,15|TERRAIN_PLAINS|none|none|0|0|none|none",
+        "TILE|11,16|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|12,16|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|Ayutthaya UNIT_WARRIOR|none",
+        "TILE|13,16|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|RESOURCE_RICE:RESOURCECLASS_BONUS|0|0|none|none",
+        "TILE|14,16|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|15,16|TERRAIN_GRASS_HILLS|none|none|1|0|none|none",
+        "TILE|16,16|TERRAIN_PLAINS|none|none|0|0|none|none",
+        "TILE|17,16|TERRAIN_PLAINS|none|none|0|0|none|none",
+        "TILE|18,16|TERRAIN_PLAINS|none|none|0|0|none|none",
+        "TILE|19,16|TERRAIN_PLAINS|none|none|0|0|none|none",
+        "TILE|11,17|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|12,17|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|13,17|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|14,17|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|15,17|TERRAIN_GRASS|none|none|0|0|none|none",
+        "TILE|16,17|TERRAIN_GRASS|FEATURE_FOREST|RESOURCE_AMBER:RESOURCECLASS_LUXURY|0|0|none|none",
+        "TILE|17,17|TERRAIN_PLAINS|none|none|0|0|none|none",
+        "TILE|18,17|TERRAIN_PLAINS|none|none|0|0|none|none",
+        "TILE|19,17|TERRAIN_PLAINS|none|none|0|0|none|Pella",
+        "TILE|11,18|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|12,18|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|13,18|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|14,18|TERRAIN_GRASS|FEATURE_FLOODPLAINS_GRASSLAND|none|0|0|none|none",
+        "TILE|15,18|TERRAIN_PLAINS|FEATURE_JUNGLE|RESOURCE_COCOA:RESOURCECLASS_LUXURY|0|0|none|none",
+        "TILE|16,18|TERRAIN_GRASS|FEATURE_FOREST|none|0|0|none|none",
+        "TILE|17,18|TERRAIN_PLAINS_MOUNTAIN|none|none|0|0|none|none",
+        "TILE|18,18|TERRAIN_COAST|none|none|0|0|none|none",
+        "TILE|19,18|TERRAIN_COAST|none|none|0|0|none|none"
+      ]
+    }
+  ]
+}

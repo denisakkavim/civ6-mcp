@@ -1,0 +1,47 @@
+{
+  "tool": "set_policies",
+  "arguments": {
+    "assignments": {
+      "0": "POLICY_DISCIPLINE"
+    }
+  },
+  "scenario": "barbdedication",
+  "recorded_at": "2026-08-24T18:05:56+00:00",
+  "notes": null,
+  "result": "POLICIES_SET|Policies updated. Use get_policies to verify.",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CLEAR"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pCulture = Players[me]:GetCulture()\nlocal numSlots = pCulture:GetNumPolicySlots()\nif numSlots <= 0 then print(\"ERR:NO_GOVERNMENT|No government selected\"); print(\"---END---\"); return end\nlocal slotNames = {[0]=\"Economic\", [1]=\"Military\", [2]=\"Diplomatic\", [3]=\"Wildcard\", [4]=\"Wildcard\"}\nlocal slotTypeMap = {SLOT_ECONOMIC=0, SLOT_MILITARY=1, SLOT_DIPLOMATIC=2, SLOT_WILDCARD=3, SLOT_GREAT_PERSON=4}\nlocal pe_0 = GameInfo.Policies[\"POLICY_DISCIPLINE\"]; if pe_0 == nil then print(\"ERR:POLICY_NOT_FOUND|POLICY_DISCIPLINE\"); print(\"---END---\"); return end; local canSlot_0 = pCulture:CanSlotPolicy(pe_0.Index, 0); local alreadyThere_0 = (pCulture:GetSlotPolicy(0) == pe_0.Index); if not canSlot_0 and not alreadyThere_0 then local pType_0 = pe_0.GovernmentSlotType or \"unknown\"; local st_0 = pCulture:GetSlotType(0); local sName_0 = slotNames[st_0] or (\"type_\" .. st_0); print( \"ERR:CANNOT_SLOT|POLICY_DISCIPLINE (\" .. pType_0 .. \") rejected for slot 0 (\" .. sName_0 .. \")\" ); print(\"---END---\"); return end; local sType_0 = pCulture:GetSlotType(0); local pSlot_0 = slotTypeMap[pe_0.GovernmentSlotType] or -1; if sType_0 < 3 and pSlot_0 ~= sType_0   and pe_0.GovernmentSlotType ~= 'SLOT_WILDCARD' then local sName = slotNames[sType_0] or \"unknown\"; local pType = pe_0.GovernmentSlotType or \"unknown\"; print( \"ERR:SLOT_MISMATCH|POLICY_DISCIPLINE (\" .. pType .. \") cannot go in slot 0 (\" .. sName .. \")\" ); print(\"---END---\"); return end\nUI.RequestPlayerOperation(me, PlayerOperations.UNLOCK_POLICIES, {})\nlocal clearList = {}\ntable.insert(clearList, 0)\nlocal addList = {}\naddList[0] = pe_0.Hash\npCulture:RequestPolicyChanges(clearList, addList)\nprint(\"OK:POLICIES_SET|Policies updated. Use get_policies to verify.\")\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:POLICIES_SET|Policies updated. Use get_policies to verify."
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pCulture = Players[me]:GetCulture()\nlocal govIdx = pCulture:GetCurrentGovernment()\nlocal govName = \"None\"\nlocal govType = \"NONE\"\nif govIdx and govIdx >= 0 then\n    local govEntry = GameInfo.Governments[govIdx]\n    if govEntry then\n        govName = Locale.Lookup(govEntry.Name)\n        govType = govEntry.GovernmentType\n    end\nend\nlocal numSlots = pCulture:GetNumPolicySlots()\nprint(\"GOV|\" .. govType .. \"|\" .. govName:gsub(\"|\",\"/\") .. \"|\" .. numSlots)\nlocal slotNames = {[0]=\"SLOT_ECONOMIC\", [1]=\"SLOT_MILITARY\", [2]=\"SLOT_DIPLOMATIC\", [3]=\"SLOT_WILDCARD\", [4]=\"SLOT_WILDCARD\"}\nfor s = 0, numSlots - 1 do\n    local slotType = slotNames[pCulture:GetSlotType(s)] or (\"SLOT_\" .. pCulture:GetSlotType(s))\n    local policyIdx = pCulture:GetSlotPolicy(s)\n    local policyType = \"NONE\"\n    local policyName = \"Empty\"\n    if policyIdx >= 0 then\n        local pe = GameInfo.Policies[policyIdx]\n        if pe then\n            policyType = pe.PolicyType\n            policyName = Locale.Lookup(pe.Name)\n        end\n    end\n    print(\"SLOT|\" .. s .. \"|\" .. slotType .. \"|\" .. policyType .. \"|\" .. policyName:gsub(\"|\",\"/\"))\nend\nfor policy in GameInfo.Policies() do\n    if pCulture:IsPolicyUnlocked(policy.Index) then\n        local canSlot = false\n        for s = 0, numSlots - 1 do\n            if pCulture:CanSlotPolicy(policy.Index, s) then\n                canSlot = true\n                break\n            end\n        end\n        if canSlot then\n            local slotType = \"SLOT_WILDCARD\"\n            if policy.GovernmentSlotType then slotType = policy.GovernmentSlotType end\n            local name = Locale.Lookup(policy.Name)\n            local desc = Locale.Lookup(policy.Description):gsub(\"|\", \"/\"):gsub(\"\\n\", \" \")\n            print(\"AVAIL|\" .. policy.PolicyType .. \"|\" .. name:gsub(\"|\",\"/\") .. \"|\" .. desc .. \"|\" .. slotType)\n        end\n    end\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "GOV|GOVERNMENT_CHIEFDOM|Chiefdom|3",
+        "SLOT|0|SLOT_MILITARY|POLICY_DISCIPLINE|Discipline",
+        "SLOT|1|SLOT_ECONOMIC|POLICY_COLONIZATION|Colonization",
+        "SLOT|2|SLOT_MILITARY|POLICY_MANEUVER|Maneuver",
+        "AVAIL|POLICY_SURVEY|Survey|Double experience for recon units.|SLOT_MILITARY",
+        "AVAIL|POLICY_GOD_KING|God King|+1 [ICON_Faith] Faith and +1 [ICON_Gold] Gold in the [ICON_Capital] Capital.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_URBAN_PLANNING|Urban Planning|+1 [ICON_Production] Production in all cities.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_ILKUM|Ilkum|+30% [ICON_Production] Production toward Builders.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_AGOGE|Agoge|+50% [ICON_Production] Production toward Ancient and Classical era melee, anti-cavalry, and ranged units.|SLOT_MILITARY",
+        "AVAIL|POLICY_CARAVANSARIES|Caravansaries|+2 [ICON_Gold] Gold from all [ICON_TradeRoute] Trade Routes.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_MARITIME_INDUSTRIES|Maritime Industries|+100% [ICON_Production] Production toward Ancient and Classical era naval units.|SLOT_MILITARY",
+        "AVAIL|POLICY_LAND_SURVEYORS|Land Surveyors|Reduces the cost of purchasing a tile by 20%.|SLOT_ECONOMIC",
+        "AVAIL|POLICY_LIMITANEI|Limitanei|+2 Loyalty per turn for cities with a garrisoned unit.|SLOT_MILITARY"
+      ]
+    }
+  ]
+}

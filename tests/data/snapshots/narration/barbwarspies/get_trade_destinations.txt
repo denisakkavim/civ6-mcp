@@ -1,0 +1,49 @@
+40 trade route destinations:
+
+Domestic (food + production to destination):
+  Aachen at (14,8) [city:16777216] | Food:3 Prod:5 Gold:8 Faith:1 | Trading Post Protestantism <- 0.5
+  Frankfurt at (18,10) [city:16777217] | Food:2 Prod:3 Gold:6 Faith:1 | Protestantism <- 0.5
+  Trier at (14,12) [city:16777218] | Food:3 Prod:3 Gold:8 Faith:1 | Protestantism <- 0.5
+  Methone at (17,14) [city:16777219] | Food:3 Prod:4 Gold:8 Faith:1 | Trading Post Protestantism <- 0.5
+  Heidelberg at (22,10) [city:16777220] | Food:4 Prod:3 Gold:12 Faith:1 | Trading Post
+  Berlin at (11,16) [city:16777221] | Food:1 Prod:4 Gold:10 Faith:1 | Trading Post Protestantism <- 0.5
+  Hamburg at (16,4) [city:16777222] | Food:2 Prod:3 Gold:6 Faith:1 | Trading Post Protestantism <- 0.5
+  Pella at (19,17) [city:16777223] | Food:3 Prod:5 Gold:6 Faith:1 | Protestantism <- 0.5
+  Ulm at (27,13) [city:16777224] | Food:2 Prod:2 Gold:8 Faith:1 | Trading Post Protestantism <- 0.5
+  Cologne at (47,14) [city:16777225] | Food:1 Prod:3 Gold:6 Faith:1 | Trading Post Eastern Orthodoxy <- 0.5
+  Zanzibar at (51,16) [city:16777226] | Food:1 Prod:3 Gold:8 Faith:1 | Eastern Orthodoxy <- 0.5
+  Ayutthaya at (12,20) [city:16777227] | Food:2 Prod:1 Gold:6 Faith:1 | Eastern Orthodoxy <- 0.5
+  Hull at (35,10) [city:16777228] | Food:1 Prod:1 Gold:4 Faith:1 | Protestantism <- 0.5
+  Plymouth at (4,21) [city:16777229] | Food:1 Prod:2 Gold:4 Faith:1 | Protestantism <- 0.5
+  Magdeburg at (8,18) [city:16777230] | Food:1 Prod:1 Gold:8 Faith:1
+
+International (gold to origin):
+  Tbilisi (Georgia) at (59,17) [city:17039360] | Food:1 Prod:2 Gold:10 Sci:1 Cul:1 Faith:2 | Eastern Orthodoxy <- 0.5
+  Kutaisi (Georgia) at (55,16) [city:17039361] | Gold:15 Sci:1 Cul:1 Faith:2 | Protestantism <- 0.5
+  Omalo (Georgia) at (72,23) [city:17039362] | Gold:17 Faith:1 | Protestantism <- 0.5
+  Telavi (Georgia) at (62,19) [city:17039363] | Gold:9 Sci:1 Faith:2 | Eastern Orthodoxy <- 0.5
+  Batumi (Georgia) at (66,19) [city:17039364] | Gold:15 Cul:1 Faith:2 | Eastern Orthodoxy <- 0.5
+  Gori (Georgia) at (69,22) [city:17039365] | Food:1 Gold:11 Faith:1 | Eastern Orthodoxy <- 0.5
+  Tskhumi (Georgia) at (57,13) [city:17039366] | Prod:1 Gold:12 Cul:1 Faith:1 | Eastern Orthodoxy <- 0.5
+  Tsageri (Georgia) at (53,12) [city:17039367] | Prod:1 Gold:20 Faith:1 | Eastern Orthodoxy <- 0.5
+  Poti (Georgia) at (62,15) [city:17039368] | Food:1 Gold:12 Faith:1 | Eastern Orthodoxy <- 0.5
+  Mbanza Kongo (Kongo) at (24,29) [city:17104896] | Food:1 Prod:1 Gold:13 Sci:1 Cul:1 Faith:1 | Protestantism <- 0.5
+  Kinchassa (Kongo) at (22,33) [city:17104897] | Food:1 Prod:1 Gold:12 Sci:1 Cul:1 Faith:1 | Protestantism <- 0.5
+  Mbumbi (Kongo) at (21,28) [city:17104898] | Food:1 Prod:2 Gold:22 Sci:1 Cul:1 Faith:1 | Protestantism <- 0.5
+  Kwango (Kongo) at (26,25) [city:17104899] | Prod:2 Gold:18 Sci:1 Cul:1 Faith:1 | Protestantism <- 0.5
+  Mbanza Nsundi (Kongo) at (19,23) [city:17104900] | Prod:1 Gold:20 Sci:1 Cul:1 Faith:1 | Trading Post Protestantism <- 0.5
+  Mbanza Mbata (Kongo) at (23,23) [city:17104901] | Prod:2 Gold:13 Sci:1 Cul:1 Faith:1
+  Mbamba (Kongo) at (11,26) [city:17104902] | Gold:16.3515625 Cul:1 Faith:1 | Eastern Orthodoxy <- 0.5
+  Mpinda (Kongo) at (24,37) [city:17104903] | Food:1 Gold:10 Faith:1 | Protestantism <- 0.5
+  Bakavu (Kongo) at (30,22) [city:17104904] | Food:1 Gold:10 Faith:1 | Protestantism <- 0.5
+  Kwila (Kongo) at (27,34) [city:17104905] | Gold:9 Faith:1 | Protestantism <- 0.5
+  Mbanza Mpangu (Kongo) at (29,30) [city:17104906] | Gold:8 Faith:1 | Protestantism <- 0.5
+  Nkondo (Kongo) at (31,18) [city:17104907] | Gold:14 Faith:1 | Eastern Orthodoxy <- 0.5
+  Mbwila (Kongo) at (28,38) [city:17104908] | Gold:7 Faith:1
+  La Venta (La Venta) at (16,24) [city:17235968] | Gold:11 Faith:2 | [QUEST] Eastern Orthodoxy <- 0.5
+  Venice (Venice) at (7,26) [city:17301504] | Gold:22.44921875 Faith:1 | Trading Post Eastern Orthodoxy <- 0.5
+  Mexico City (Mexico City) at (27,18) [city:17367040] | Prod:1 Gold:12 Faith:1 | Trading Post
+
+City-state quests (send trade route for envoy): La Venta
+
+Use unit_action with action='trade_route', target_x=X, target_y=Y

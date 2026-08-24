@@ -1,0 +1,57 @@
+=== BUILDER TASKS (45 tasks, 3 idle builders) ===
+
+URGENT:
+  (50,13): RESOURCE_HORSES* — build IMPROVEMENT_PASTURE [city: Cologne] — nearest builder id:33, 2 tiles
+  (20,11): RESOURCE_IRON* — build IMPROVEMENT_MINE [city: Frankfurt] — nearest builder id:23, 13 tiles
+  (18,8): repair IMPROVEMENT_MINE [city: Frankfurt] — nearest builder id:23, 16 tiles
+  (19,16): repair IMPROVEMENT_FARM [city: Methone] — nearest builder id:23, 17 tiles
+  (17,16): repair IMPROVEMENT_FARM [city: Methone] — nearest builder id:23, 19 tiles
+  (17,17): repair IMPROVEMENT_FARM [city: Methone] — nearest builder id:23, 19 tiles
+  (14,13): RESOURCE_HORSES* — build IMPROVEMENT_PASTURE [city: Trier] — nearest builder id:23, 20 tiles
+  (13,16): repair IMPROVEMENT_FARM [city: Berlin] — nearest builder id:23, 23 tiles
+  (11,15): repair IMPROVEMENT_MINE [city: Trier] — nearest builder id:23, 24 tiles
+  (11,18): repair IMPROVEMENT_FARM [city: Berlin] — nearest builder id:23, 26 tiles
+  (10,19): repair IMPROVEMENT_FARM [city: Berlin] — nearest builder id:23, 27 tiles
+
+HIGH:
+  (52,15): RESOURCE_WHEAT — build IMPROVEMENT_FARM [city: Zanzibar] — nearest builder id:25, 2 tiles
+  (52,17): RESOURCE_WHEAT — build IMPROVEMENT_FARM [city: Zanzibar] — nearest builder id:25, 2 tiles
+  (24,9): RESOURCE_WHEAT — build IMPROVEMENT_FARM [city: Heidelberg] — nearest builder id:23, 9 tiles
+  (25,13): RESOURCE_COPPER — build IMPROVEMENT_MINE [city: Heidelberg] — nearest builder id:23, 9 tiles
+  (24,12): RESOURCE_WHEAT — build IMPROVEMENT_FARM [city: Heidelberg] — nearest builder id:23, 10 tiles
+  (16,11): RESOURCE_RICE — build IMPROVEMENT_FARM [city: Aachen] — nearest builder id:23, 17 tiles
+  (16,7): RESOURCE_SHEEP — build IMPROVEMENT_PASTURE [city: Aachen] — nearest builder id:23, 18 tiles
+  (17,15): RESOURCE_WHEAT — build IMPROVEMENT_FARM [city: Trier] — nearest builder id:23, 18 tiles
+  (14,5): RESOURCE_DEER — build IMPROVEMENT_CAMP [city: Aachen] — nearest builder id:23, 21 tiles
+  (5,20): RESOURCE_BANANAS — build IMPROVEMENT_PLANTATION [city: Plymouth] — nearest builder id:25, 30 tiles
+
+NORMAL:
+  (25,10): RESOURCE_ANTIQUITY_SITE — build UNKNOWN [city: Heidelberg] — nearest builder id:23, 8 tiles
+  (23,10): build IMPROVEMENT_MINE [city: Heidelberg] — nearest builder id:23, 10 tiles
+  (20,12): build IMPROVEMENT_MINE [city: Frankfurt] — nearest builder id:23, 14 tiles
+  (20,13): build IMPROVEMENT_MINE [city: Frankfurt] — nearest builder id:23, 14 tiles
+  (20,14): build IMPROVEMENT_FARM [city: Methone] — nearest builder id:23, 15 tiles
+  (18,7): build IMPROVEMENT_MINE [city: Frankfurt] — nearest builder id:23, 16 tiles
+  (17,7): build IMPROVEMENT_MINE [city: Aachen] — nearest builder id:23, 17 tiles
+  (17,8): build IMPROVEMENT_MINE [city: Aachen] — nearest builder id:23, 17 tiles
+  (17,13): build IMPROVEMENT_MINE [city: Frankfurt] — nearest builder id:23, 17 tiles
+  (17,5): build IMPROVEMENT_LUMBER_MILL [city: Aachen] — nearest builder id:23, 18 tiles
+  (16,8): build IMPROVEMENT_MINE [city: Aachen] — nearest builder id:23, 18 tiles
+  (15,9): build IMPROVEMENT_FARM [city: Aachen] — nearest builder id:23, 18 tiles
+  (18,4): build IMPROVEMENT_MINE [city: Hamburg] — nearest builder id:23, 18 tiles
+  (14,10): build IMPROVEMENT_FARM [city: Aachen] — nearest builder id:23, 19 tiles
+  (16,15): build IMPROVEMENT_MINE [city: Trier] — nearest builder id:23, 19 tiles
+  (15,14): build IMPROVEMENT_FARM [city: Trier] — nearest builder id:23, 20 tiles
+  (13,13): build IMPROVEMENT_FARM [city: Trier] — nearest builder id:23, 21 tiles
+  (15,16): build IMPROVEMENT_MINE [city: Methone] — nearest builder id:23, 21 tiles
+  (12,8): build IMPROVEMENT_FARM [city: Aachen] — nearest builder id:23, 22 tiles
+  (11,9): RESOURCE_ANTIQUITY_SITE — build UNKNOWN [city: Aachen] — nearest builder id:23, 22 tiles
+  (12,6): build IMPROVEMENT_LUMBER_MILL [city: Aachen] — nearest builder id:23, 23 tiles
+  (10,18): RESOURCE_ANTIQUITY_SITE — build UNKNOWN [city: Berlin] — nearest builder id:23, 27 tiles
+  (8,17): build IMPROVEMENT_FARM [city: Berlin] — nearest builder id:23, 28 tiles
+  (5,21): RESOURCE_ANTIQUITY_SITE — build UNKNOWN [city: Plymouth] — nearest builder id:25, 31 tiles
+
+IDLE BUILDERS (3):
+  id:23 at (33,10) — 3 charges, 2 moves
+  id:25 at (51,16) — 3 charges, 2 moves
+  id:33 at (49,14) — 4 charges, 2 moves

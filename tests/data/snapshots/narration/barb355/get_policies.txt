@@ -1,0 +1,77 @@
+Government: Merchant Republic (GOVERNMENT_MERCHANT_REPUBLIC)
+
+8 policy slots:
+  Slot 0 (Military): Levée en Masse (POLICY_LEVEE_EN_MASSE)
+  Slot 1 (Economic): Triangular Trade (POLICY_TRIANGULAR_TRADE)
+  Slot 2 (Economic): Economic Union (POLICY_ECONOMIC_UNION)
+  Slot 3 (Diplomatic): Machiavellianism (POLICY_MACHIAVELLIANISM)
+  Slot 4 (Diplomatic): Praetorium (POLICY_PRAETORIUM)
+  Slot 5 (Wildcard): Propaganda (POLICY_PROPAGANDA)
+  Slot 6 (Military): Military Research (POLICY_MILITARY_RESEARCH)
+  Slot 7 (Economic): Free Market (POLICY_FREE_MARKET)
+
+Available policies:
+  Military:
+    Discipline (POLICY_DISCIPLINE): +5 [ICON_Strength] Unit Combat Strength when fighting Barbarians.
+    Survey (POLICY_SURVEY): Double experience for recon units.
+    Agoge (POLICY_AGOGE): +50% [ICON_Production] Production toward Ancient and Classical era melee, anti-cavalry, and ranged units.
+    Maritime Industries (POLICY_MARITIME_INDUSTRIES): +100% [ICON_Production] Production toward Ancient and Classical era naval units.
+    Maneuver (POLICY_MANEUVER): +50% [ICON_Production] Production toward Ancient and Classical era heavy and light cavalry units.
+    Conscription (POLICY_CONSCRIPTION): Unit maintenance reduced by 1 [ICON_Gold] Gold per turn, per unit.
+    Raid (POLICY_RAID): Yields gained from pillaging and coastal raids are +50%.
+    Veterancy (POLICY_VETERANCY): +30% [ICON_Production] Production toward Encampment districts, Harbor districts, and buildings for these districts.
+    Bastions (POLICY_BASTIONS): +6 City [ICON_Strength] Defense Strength. +5 City [ICON_Ranged] Ranged Strength.
+    Limes (POLICY_LIMES): +100% [ICON_Production] Production toward defensive buildings.
+    Feudal Contract (POLICY_FEUDAL_CONTRACT): +50% [ICON_Production] Production toward Ancient, Classical, Medieval, and Renaissance era melee, anti-cavalry, and ranged units.
+    Retainers (POLICY_RETAINERS): +1 [ICON_Amenities] Amenity for cities with a garrisoned unit.
+    Professional Army (POLICY_PROFESSIONAL_ARMY): 50% [ICON_Gold] Gold discount on all unit upgrades.
+    Craftsmen (POLICY_CRAFTSMEN): 100% Industrial Zone adjacency bonuses.
+    Press Gangs (POLICY_PRESS_GANGS): 100% [ICON_Production] Production toward Industrial era and earlier naval units.
+    Logistics (POLICY_LOGISTICS): +1 Movement if starting turn in friendly territory.
+    Native Conquest (POLICY_NATIVE_CONQUEST): Combat victories over units from earlier eras provide [ICON_Gold] Gold equal to 50% of the [ICON_Strength] Combat Strength of the defeated unit. (on Standard Speed)
+    Grande Armée (POLICY_GRANDE_ARMEE): +50% [ICON_Production] Production toward Industrial era and earlier melee, anti-cavalry, and ranged units.
+    National Identity (POLICY_NATIONAL_IDENTITY): Units have 50% less [ICON_Strength] Combat Strength reduction from being injured.
+    Total War (POLICY_TOTAL_WAR): Yields gained from pillaging, coastal raids, and plundering [ICON_TradeRoute] Trade Routes are +50%.
+    Lightning Warfare (POLICY_LIGHTNING_WARFARE): +50% [ICON_Production] Production for all heavy and light cavalry units.
+    Limitanei (POLICY_LIMITANEI): +2 Loyalty per turn for cities with a garrisoned unit.
+    Equestrian Orders (POLICY_EQUESTRIAN_ORDERS): All improved [ICON_RESOURCE_HORSES] Horses and [ICON_RESOURCE_IRON] Iron resources yield 1 additional resource per turn.
+    Drill Manuals (POLICY_DRILL_MANUALS): All improved [ICON_RESOURCE_NITER] Niter and [ICON_RESOURCE_COAL] Coal resources yield 1 additional resource per turn.
+    Retinues (POLICY_RETINUES): 50% resource discount on all unit upgrades.
+    Force Modernization (POLICY_FORCE_MODERNIZATION): 50% [ICON_Gold] Gold and resource discount on all unit upgrades.
+  Economic:
+    God King (POLICY_GOD_KING): +1 [ICON_Faith] Faith and +1 [ICON_Gold] Gold in the [ICON_Capital] Capital.
+    Urban Planning (POLICY_URBAN_PLANNING): +1 [ICON_Production] Production in all cities.
+    Ilkum (POLICY_ILKUM): +30% [ICON_Production] Production toward Builders.
+    Caravansaries (POLICY_CARAVANSARIES): +2 [ICON_Gold] Gold from all [ICON_TradeRoute] Trade Routes.
+    Corvée (POLICY_CORVEE): +15% [ICON_Production] Production toward Ancient and Classical wonders.
+    Land Surveyors (POLICY_LAND_SURVEYORS): Reduces the cost of purchasing a tile by 20%.
+    Colonization (POLICY_COLONIZATION): +50% [ICON_Production] Production toward Settlers.
+    Insulae (POLICY_INSULAE): +1 [ICON_Housing] Housing in all cities with at least 2 specialty districts.
+    Natural Philosophy (POLICY_NATURAL_PHILOSOPHY): +100% Campus district adjacency bonuses.
+    Serfdom (POLICY_SERFDOM): Newly trained Builders gain 2 extra build actions.
+    Trade Confederation (POLICY_TRADE_CONFEDERATION): +1 [ICON_Culture] Culture and +1 [ICON_Science] Science from international [ICON_TradeRoute] Trade Routes.
+    Aesthetics (POLICY_AESTHETICS): +100% Theater Square district adjacency bonuses.
+    Medina Quarter (POLICY_MEDINA_QUARTER): +2 [ICON_Housing] Housing in all cities with at least 3 specialty districts.
+    Town Charters (POLICY_TOWN_CHARTERS): +100% Commercial Hub district adjacency bonuses.
+    Rationalism (POLICY_RATIONALISM): Extra [ICON_Science] Science from buildings in Campuses: +50% if city [ICON_CITIZEN] population is 15 or higher, +50% if district has at least +4 adjacency bonus.
+    Liberalism (POLICY_LIBERALISM): +1 [ICON_Amenities] Amenity to all cities with at least 2 specialty districts.
+    Public Works (POLICY_PUBLIC_WORKS): +30% [ICON_Production] Production toward Builders, and newly trained Builders gain 2 extra build actions.
+    Skyscrapers (POLICY_SKYSCRAPERS): +15% [ICON_Production] Production toward all wonders.
+    Public Transport (POLICY_PUBLIC_TRANSPORT): Neighborhoods with Charming appeal receive +3 Food [ICON_Food] and +1 Production [ICON_Production], Breathtaking Neighborhoods are granted an additional +1 of each yield. All Neighborhoods receive +1 [ICON_Gold] Gold.
+    Expropriation (POLICY_EXPROPRIATION): +50% [ICON_Production] Production toward Settlers. Plot purchase cost reduced by 20%.
+    Five-Year Plan (POLICY_FIVE_YEAR_PLAN): +100% Campus and Industrial Zone district adjacency bonuses.
+    Civil Prestige (POLICY_CIVIL_PRESTIGE): Established [ICON_GOVERNOR] Governors with at least 2 Promotions provide +1 [ICON_Amenities] Amenity and +2 [ICON_Housing] Housing.
+  Diplomatic:
+    Charismatic Leader (POLICY_CHARISMATIC_LEADER): +2 Influence points per turn toward earning city-state [ICON_Envoy] Envoys.
+    Diplomatic League (POLICY_DIPLOMATIC_LEAGUE): The first [ICON_Envoy] Envoy you send to each city-state counts as two [ICON_Envoy] Envoys.
+    Merchant Confederation (POLICY_MERCHANT_CONFEDERATION): +1 [ICON_Gold] Gold from each of your [ICON_Envoy] Envoys at city-states.
+    Colonial Offices (POLICY_COLONIAL_OFFICES): +15% faster growth and 3 Loyalty per turn for cities not on your original [ICON_Capital] Capital's continent.
+    Colonial Taxes (POLICY_COLONIAL_TAXES): +25% [ICON_Gold] Gold and +10% [ICON_PRODUCTION] Production in cities not on your original [ICON_Capital] Capital's continent.
+    Raj (POLICY_RAJ): +2 [ICON_Science] Science, [ICON_Culture] Culture, [ICON_Faith] Faith, and [ICON_Gold] Gold from each city-state you are Suzerain of. [ICON_TradeRoute] Trade Routes to City-States receive +2 [ICON_GOLD] Gold.
+    Gunboat Diplomacy (POLICY_GUNBOAT_DIPLOMACY): Open Borders with all city-states, and +4 Influence points per turn toward earning [ICON_Envoy] Envoys.
+    Wisselbanken (POLICY_WISSELBANKEN): Your [ICON_TradeRoute] Trade Routes to an Ally's city or vassal city-state provide +2 [ICON_Food] Food and +2 [ICON_Production] Production for both cities. Alliance Points with all allies increase by an additional .25 per turn.
+  Wildcard:
+    Oligarchic Legacy (POLICY_GOV_OLIGARCHY): All land melee, anti-cavalry, and naval melee class units gain +4 [ICON_Strength] Combat Strength.
+
+Use set_policies with slot assignments, e.g. {0: "POLICY_AGOGE", 1: "POLICY_URBAN_PLANNING"}
+Wildcard slots can accept any policy type.

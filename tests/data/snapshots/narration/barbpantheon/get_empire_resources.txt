@@ -1,0 +1,21 @@
+Empire Resources:
+
+Luxury Tiles:
+  !! RESOURCE_DIAMONDS — UNIMPROVED at (14,7) — needs builder!
+  !! RESOURCE_TOBACCO — UNIMPROVED at (14,9) — needs builder!
+
+Bonus Tiles:
+  RESOURCE_DEER — UNIMPROVED at (13,6)
+  RESOURCE_STONE — UNIMPROVED at (13,9)
+  RESOURCE_STONE — UNIMPROVED at (15,10)
+
+Nearby Unclaimed:
+  [B] RESOURCE_DEER at (15,4) — 4 tiles from Aachen
+  [B] RESOURCE_DEER at (14,5) — 3 tiles from Aachen
+  [B] RESOURCE_DEER at (18,5) — 6 tiles from Aachen
+  [B] RESOURCE_FISH at (11,6) — 4 tiles from Aachen
+  [B] RESOURCE_SHEEP at (16,7) — 3 tiles from Aachen
+  [L] RESOURCE_DIAMONDS at (18,8) — 4 tiles from Aachen
+  [B] RESOURCE_WHEAT at (19,9) — 6 tiles from Aachen
+  [L] RESOURCE_TOBACCO at (12,10) — 3 tiles from Aachen
+  [B] RESOURCE_RICE at (16,11) — 4 tiles from Aachen

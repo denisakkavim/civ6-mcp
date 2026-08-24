@@ -1,0 +1,1 @@
+TILE_PURCHASED|(13,10)|cost:50

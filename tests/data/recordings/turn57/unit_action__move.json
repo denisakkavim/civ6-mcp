@@ -7,7 +7,7 @@
     "target_y": 17
   },
   "scenario": "turn57",
-  "recorded_at": "2026-08-16T20:58:56+00:00",
+  "recorded_at": "2026-08-24T17:19:33+00:00",
   "notes": null,
   "result": "MOVING_TO|52,17|from:53,18|now_at:52,17|(moved dx:-1 dy:-1)",
   "exchanges": [

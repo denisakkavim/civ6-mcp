@@ -1,0 +1,9 @@
+Units:
+  UNIT_SETTLER (cost 80, 2 turns, buy: 320g)
+  UNIT_BUILDER (cost 50, 9 turns, buy: 200g)
+  UNIT_SCOUT (cost 30, 5 turns, buy: 120g)
+  UNIT_WARRIOR (cost 40, 7 turns, buy: 160g)
+  UNIT_SLINGER (cost 35, 6 turns, buy: 140g)
+Buildings:
+  BUILDING_MONUMENT (cost 60, 10 turns, buy: 240g)
+  BUILDING_GRANARY (cost 65, 11 turns, buy: 260g)

@@ -1,0 +1,61 @@
+Researching: Writing (3 turns) | Completed: 2 techs, 1 civics
+Civic: Craftsmanship (14 turns)
+
+Available techs:
+  Writing (TECH_WRITING) [ANCIENT] — 86%, 3 turns BOOSTED [Boost: Meet another civilization.] -> Library, Campus, Seowon (needs: TECH_POTTERY)
+  Animal Husbandry (TECH_ANIMAL_HUSBANDRY) [ANCIENT] — 0%, 9 turns -> Pasture, Camp, Kurgan, Reveals Horses
+  Astrology (TECH_ASTROLOGY) [ANCIENT] — 38%, 11 turns BOOSTED [Boost: Find a natural wonder.] -> Shrine, Stonehenge, Holy Site, Lavra
+  Irrigation (TECH_IRRIGATION) [ANCIENT] — 38%, 11 turns BOOSTED [Boost: Farm a resource.] -> Hanging Gardens, Palgum, Plantation, Stepwell (needs: TECH_POTTERY)
+  Sailing (TECH_SAILING) [ANCIENT] — 0%, 17 turns [Boost: Found a city on the Coast.] -> Galley, Viking Longship, Bireme, Fishing Boats, Fishery
+  Masonry (TECH_MASONRY) [ANCIENT] — 0%, 27 turns [Boost: Build a Quarry.] -> Battering Ram, Ancient Walls, Pyramids, Great Wall, Nubian Pyramid (needs: TECH_MINING)
+  Bronze Working (TECH_BRONZE_WORKING) [ANCIENT] — 0%, 27 turns [Boost: Kill 3 Barbarians.] -> Spearman, Hoplite, Barracks, Basilikoi Paides, Encampment, Ikanda, Reveals Iron (needs: TECH_MINING)
+  Wheel (TECH_THE_WHEEL) [ANCIENT] — 0%, 27 turns [Boost: Mine a resource.] -> Heavy Chariot, Maryannu Chariot Archer, Water Mill (needs: TECH_MINING)
+
+Available civics:
+  Craftsmanship (CIVIC_CRAFTSMANSHIP) [ANCIENT] — 0%, 26 turns [Boost: Improve 3 tiles.] (needs: CIVIC_CODE_OF_LAWS)
+  Foreign Trade (CIVIC_FOREIGN_TRADE) [ANCIENT] — 0%, 26 turns [Boost: Discover a second continent.] (needs: CIVIC_CODE_OF_LAWS)
+
+Locked techs (prerequisites missing):
+  -- ANCIENT --
+  Archery (TECH_ARCHERY) — needs: Animal Husbandry [Boost: Kill a unit with a Slinger.]
+  -- CLASSICAL --
+  Celestial Navigation (TECH_CELESTIAL_NAVIGATION) — needs: Sailing, Astrology [Boost: Improve 2 sea resources.]
+  Currency (TECH_CURRENCY) — needs: Writing [Boost: Make a [ICON_TradeRoute] Trade Route.]
+  Horseback Riding (TECH_HORSEBACK_RIDING) — needs: Archery [Boost: Build a Pasture.]
+  Iron Working (TECH_IRON_WORKING) — needs: Bronze Working [Boost: Build an Iron Mine.]
+  Shipbuilding (TECH_SHIPBUILDING) — needs: Sailing [Boost: Own 2 Galleys.]
+  Mathematics (TECH_MATHEMATICS) — needs: Currency [Boost: Build 3 different specialty districts.]
+  Construction (TECH_CONSTRUCTION) — needs: Masonry, Horseback Riding [Boost: Build a Water Mill.]
+  Engineering (TECH_ENGINEERING) — needs: Wheel [Boost: Build Ancient Walls.]
+  -- MEDIEVAL --
+  Military Tactics (TECH_MILITARY_TACTICS) — needs: Mathematics [Boost: Kill a unit with a Spearman.]
+  Apprenticeship (TECH_APPRENTICESHIP) — needs: Currency, Horseback Riding [Boost: Build 3 Mines.]
+  Machinery (TECH_MACHINERY) — needs: Iron Working, Engineering [Boost: Own 3 Archers.]
+  Education (TECH_EDUCATION) — needs: Mathematics, Apprenticeship [Boost: Earn a Great Scientist.]
+  Stirrups (TECH_STIRRUPS) — needs: Horseback Riding, Apprenticeship [Boost: Have the Feudalism civic.]
+  Military Engineering (TECH_MILITARY_ENGINEERING) — needs: Construction [Boost: Build an Aqueduct.]
+  Castles (TECH_CASTLES) — needs: Construction [Boost: Adopt a government with 6 inherent policy slots.]
+  Buttress (TECH_BUTTRESS) — needs: Shipbuilding, Mathematics [Boost: Build a Classical era or later wonder]
+
+Locked civics (prerequisites missing):
+  -- ANCIENT --
+  Military Tradition (CIVIC_MILITARY_TRADITION) — needs: Craftsmanship BOOSTED [Boost: Clear a Barbarian Outpost.]
+  State Workforce (CIVIC_STATE_WORKFORCE) — needs: Craftsmanship [Boost: Build any specialty district.]
+  Early Empire (CIVIC_EARLY_EMPIRE) — needs: Foreign Trade [Boost: Grow your civilization to at least 6 population.]
+  Mysticism (CIVIC_MYSTICISM) — needs: Foreign Trade [Boost: Found a pantheon.]
+  -- CLASSICAL --
+  Games and Recreation (CIVIC_GAMES_RECREATION) — needs: State Workforce [Boost: Research the Construction technology.]
+  Political Philosophy (CIVIC_POLITICAL_PHILOSOPHY) — needs: State Workforce, Early Empire [Boost: Meet 3 city-states.]
+  Drama and Poetry (CIVIC_DRAMA_POETRY) — needs: Early Empire [Boost: Build a wonder.]
+  Military Training (CIVIC_MILITARY_TRAINING) — needs: Military Tradition, Games and Recreation [Boost: Build an Encampment.]
+  Defensive Tactics (CIVIC_DEFENSIVE_TACTICS) — needs: Games and Recreation, Political Philosophy [Boost: Be the target of a Declaration of War.]
+  Recorded History (CIVIC_RECORDED_HISTORY) — needs: Political Philosophy, Drama and Poetry [Boost: Build 2 Campus districts.]
+  Theology (CIVIC_THEOLOGY) — needs: Drama and Poetry, Mysticism [Boost: Found a Religion.]
+  -- MEDIEVAL --
+  Naval Tradition (CIVIC_NAVAL_TRADITION) — needs: Defensive Tactics [Boost: Kill a unit with a Quadrireme.]
+  Feudalism (CIVIC_FEUDALISM) — needs: Defensive Tactics [Boost: Build 6 Farms.]
+  Civil Service (CIVIC_CIVIL_SERVICE) — needs: Defensive Tactics, Recorded History [Boost: Grow a city to 10 population.]
+  Mercenaries (CIVIC_MERCENARIES) — needs: Military Training, Feudalism [Boost: Have 8 land combat units in your military.]
+  Medieval Faires (CIVIC_MEDIEVAL_FAIRES) — needs: Feudalism [Boost: Maintain 4 Trade Routes.]
+  Guilds (CIVIC_GUILDS) — needs: Feudalism, Civil Service [Boost: Build 2 Markets.]
+  Divine Right (CIVIC_DIVINE_RIGHT) — needs: Civil Service, Theology [Boost: Build 2 Temples.]

@@ -1,0 +1,15 @@
+World Congress: IN SESSION (vote required!)
+Favor: 73 | Vote costs (cumulative): 1 vote=free, 2=10, 3=30, 4=60, 5=100
+
+Resolution #1: Patronage (hash: -1934671345)
+  Target type: GREATPERSONCLASS
+  Option A: Earn double points towards [ICON_GreatPerson] Great People of this class.
+  Option B: No points earned towards [ICON_GreatPerson] Great People of this class.
+  Targets: [target=0] Great General, [target=1] Great Admiral, [target=2] Great Engineer, [target=3] Great Merchant, [target=4] Great Prophet, [target=5] Great Scientist, [target=6] Great Writer, [target=7] Great Artist, [target=8] Great Musician
+  -> queue_world_congress_votes(votes=[{hash: -1934671345, option: 1 or 2, target: 0, votes: 1}])
+Resolution #2: Public Relations (hash: -1891060972)
+  Target type: PLAYER
+  Option A: The chosen player generates 100% more [ICON_STAT_GRIEVANCE] Grievances, and other players generate 100% more [ICON_STAT_GRIEVANCE] Grievances toward this player.
+  Option B: The chosen player generates 50% fewer [ICON_STAT_GRIEVANCE] Grievances, and other players generate 50% fewer [ICON_STAT_GRIEVANCE] Grievances toward this player.
+  Targets: [target=0] Unmet Player, [target=1] Macedon, [target=5] Kongo
+  -> queue_world_congress_votes(votes=[{hash: -1891060972, option: 1 or 2, target: 0, votes: 1}])

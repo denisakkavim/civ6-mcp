@@ -1,0 +1,15 @@
+Trade options with Macedon (player 1):
+
+Economy:
+  Our gold: 149 (+8/turn) | Favor: 0
+  Their gold: 141 (+6/turn) | Favor: 0
+
+Our cities (1):
+  Aachen (id=16777216, pop 2) (CAPITAL)
+
+Their cities (1):
+  Pella (id=16842752, pop 2) (CAPITAL)
+
+Agreements:
+  Open borders: not active (available)
+  Alliance: not eligible (requires declared friendship + Diplomatic Service civic)

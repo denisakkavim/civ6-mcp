@@ -1,0 +1,1 @@
+ALREADY_FORTIFIED|Fortify turns: 2

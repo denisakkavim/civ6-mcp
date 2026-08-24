@@ -1,0 +1,8 @@
+Turn 352 | Germany (Frederick Barbarossa) | Score: 1041 | Prince
+Gold: 4353 (+418/turn) | Income: 636 | Maintenance: -218 (units: 127) | Science: 174.8 | Culture: 91.5 | Faith: 3565 | Favor: 10 (+4/turn)
+Research: Nuclear Fission | Civic: Ideology
+Cities: 15 | Population: 128 | Units: 38 — 10 Trader, 3 Builder, 3 Tank, 3 Bomber, 2 Anti-Air Gun, 2 Destroyer, 2 Military Engineer, 2 Field Cannon, 2 Fighter, 2 Aircraft Carrier, 2 Infantry, 1 Artillery, 1 Great General, 1 Machine Gun, 1 Great Merchant, 1 Spy
+Explored: 66% of land (765/1142 tiles)
+Religion: NONE — all 3 slots filled (Mapuche: Zoroastrianism, England: Protestantism, Georgia: Eastern Orthodoxy)
+Era: Atomic Era | Score: 188 (Dark: 206, Golden: 220) !! 18 short of avoiding Dark Age
+Rankings: Germany 1041 > Kongo 1038 > England 1015 > Georgia 782 > Mapuche 733

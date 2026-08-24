@@ -1,0 +1,74 @@
+=== VICTORY PROGRESS ===
+
+Enabled: Science, Domination, Culture, Religious, Diplomatic
+
+SCIENCE VICTORY (launch 4 space projects = 50 VP)
+  Mapuche: 0/50 VP | 37 techs | 0 spaceport(s) [0/50]
+  Georgia: 0/50 VP | 36 techs | 0 spaceport(s) [0/50]
+  England: 0/50 VP | 35 techs | 0 spaceport(s) [0/50]
+  Kongo: 0/50 VP | 35 techs | 0 spaceport(s) [0/50]
+  Germany: 0/50 VP | 34 techs | 0 spaceport(s) [0/50] <--
+
+  YOUR SPACE PROJECT CHAIN:
+    [LOCKED] Launch Earth Satellite -- requires TECH_ROCKETRY (NEED)
+    [LOCKED] Launch Moon Landing -- requires TECH_SATELLITES (NEED)
+    [LOCKED] Launch Exoplanet Expedition -- requires TECH_OFFWORLD_MISSION (NEED)
+
+DOMINATION (own all original capitals)
+  Germany: holds own capital | military 440 <--
+  Mapuche: holds own capital | military 29
+  England: holds own capital | military 386
+  Georgia: holds own capital | military 345
+  Kongo: holds own capital | military 315
+
+CULTURE (your tourists > every civ's domestic tourists)
+  Our domestic tourists: 59
+  vs Mapuche: 0/87 tourists (need 87 more)
+  vs England: 0/94 tourists (need 94 more)
+  vs Georgia: 0/100 tourists (need 100 more)
+  vs Kongo: 0/107 tourists (need 107 more)
+
+RELIGION (your religion majority in all civs — slots: 3/3)
+  Germany: majority=none | 0 cities converted <--
+  Mapuche: majority=RELIGION_ZOROASTRIANISM (FOUNDED: Zoroastrianism) | 6 cities converted
+  England: majority=RELIGION_PROTESTANTISM (FOUNDED: Protestantism) | 15 cities converted
+  Georgia: majority=RELIGION_PROTESTANTISM (FOUNDED: Eastern Orthodoxy) | 5 cities converted
+  Kongo: majority=none | 0 cities converted
+  !! All 3 religion slots filled — no more Great Prophets available
+
+DIPLOMATIC (20 VP from World Congress)
+  Mapuche: 6/20 VP
+  England: 6/20 VP
+  Georgia: 6/20 VP
+  Kongo: 4/20 VP
+  Germany: 0/20 VP <--
+
+SCORE (highest at turn 500)
+  England: 594
+  Kongo: 531
+  Germany: 527 <--
+  Georgia: 516
+  Mapuche: 484
+
+RIVAL INTELLIGENCE (met civilizations)
+  England: 7 cities | Sci 94 Cul 91 Gold +28 | Mil 386
+  Kongo: 7 cities | Sci 97 Cul 134 Gold +99 | Mil 315
+  Germany: 8 cities | Sci 95 Cul 52 Gold +98 | Mil 440 <--
+  Georgia: 8 cities | Sci 71 Cul 78 Gold +20 | Mil 345
+  Mapuche: 6 cities | Sci 66 Cul 65 Gold +18 | Mil 29
+
+DEMOGRAPHICS (all civilizations)
+  Population   Rank 4 | Ours: 57 | Best: 67 | Avg: 56.8 | Worst: 38
+  Soldiers     Rank 1 | Ours: 440 | Best: 440 | Avg: 303.0 | Worst: 29
+  Crop Yield   Rank 4 | Ours: 161 | Best: 204 | Avg: 161.2 | Worst: 108
+  GNP          Rank 2 | Ours: 98 | Best: 99 | Avg: 52.4 | Worst: 18
+  Land         Rank 4 | Ours: 128 | Best: 142 | Avg: 127.2 | Worst: 100
+  Goods        Rank 1 | Ours: 213 | Best: 213 | Avg: 141.2 | Worst: 83
+
+VICTORY ASSESSMENT
+  Science      [######----] 60% — Near tech lead (3 behind best known: Mapuche (37)) ** RECOMMENDED **
+  Domination   [####------] 40% — Strong military (440 vs best 440), 4 known capitals to capture
+  Score        [##--------] 25% — Rank #4 by population (proxy for score)
+  Diplomatic   [##--------] 20% — 0/20 VP — slow accumulation
+  Culture      [#---------] 15% — Large tourism gap (max gap: 107)
+  Religion     [----------] 0% — No founded religion — path closed

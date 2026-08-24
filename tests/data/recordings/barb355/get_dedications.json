@@ -1,0 +1,22 @@
+{
+  "tool": "get_dedications",
+  "arguments": {},
+  "scenario": "barb355",
+  "recorded_at": "2026-08-24T17:32:22+00:00",
+  "notes": null,
+  "result": "Normal Age \u2014 Atomic Era\nEra Score: 192 (Dark: 206, Golden: 220)\n\nActive dedications: COMMEMORATION_MILITARY",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pEras = Game.GetEras()\nlocal age = \"Normal\"\nif pEras:HasHeroicGoldenAge(me) then age = \"Heroic\"\nelseif pEras:HasGoldenAge(me) then age = \"Golden\"\nelseif pEras:HasDarkAge(me) then age = \"Dark\" end\nlocal era = pEras:GetCurrentEra()\nlocal darkT = pEras:GetPlayerDarkAgeThreshold(me) or 0\nlocal goldT = pEras:GetPlayerGoldenAgeThreshold(me) or 0\nlocal allowed = pEras:GetPlayerNumAllowedCommemorations(me)\nlocal score = pEras:GetPlayerCurrentScore(me)\nprint(\"STATUS|\" .. age .. \"|\" .. era .. \"|\" .. score .. \"|\" .. darkT .. \"|\" .. goldT .. \"|\" .. allowed)\n-- Active commemorations\nlocal active = pEras:GetPlayerActiveCommemorations(me)\nif active then\n    for _, a in ipairs(active) do\n        local row = GameInfo.CommemorationTypes[a]\n        if row then print(\"ACTIVE|\" .. row.CommemorationType) end\n    end\nend\n-- Available choices\nlocal choices = pEras:GetPlayerCommemorateChoices(me)\nif choices then\n    for _, idx in ipairs(choices) do\n        local row = GameInfo.CommemorationTypes[idx]\n        if row then\n            local norm = row.NormalAgeBonusDescription and Locale.Lookup(row.NormalAgeBonusDescription) or \"\"\n            local gold = row.GoldenAgeBonusDescription and Locale.Lookup(row.GoldenAgeBonusDescription) or \"\"\n            local dark = row.DarkAgeBonusDescription and Locale.Lookup(row.DarkAgeBonusDescription) or \"\"\n            print(\"CHOICE|\" .. idx .. \"|\" .. row.CommemorationType .. \"|\" .. norm .. \"|\" .. gold .. \"|\" .. dark)\n        end\n    end\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "STATUS|Normal|6|192|206|220|0",
+        "ACTIVE|COMMEMORATION_MILITARY",
+        "CHOICE|6|COMMEMORATION_INDUSTRIAL|Heartbeat of Steam Dedication Bonus:[NEWLINE]Gain +1 Era Score  for each Industrial or later building constructed.|Heartbeat of Steam Golden Age:[NEWLINE]+10% [ICON_Production] Production toward Industrial era and later wonders. Campus district's [ICON_SCIENCE] Science adjacency bonus provides [ICON_PRODUCTION] Production as well.|Heartbeat of Steam Dedication Bonus:[NEWLINE]Gain +1 Era Score  for each Industrial or later building constructed.",
+        "CHOICE|7|COMMEMORATION_MILITARY|To Arms! Dedication Bonus:[NEWLINE]Gain +1 Era Score each time you kill a non-Barbarian Corps in combat and +2 Era Score each time you kill a non-Barbarian Army in combat.|To Arms! Golden Age:[NEWLINE]Unlock a special Casus Belli which generates 75% less [ICON_STAT_GRIEVANCE] Grievances than Formal War and can be used immediately after Denouncing the target. +15% [ICON_Production] Production towards military units.|To Arms! Dedication Bonus:[NEWLINE]Gain +1 Era Score each time you kill a non-Barbarian Corps in combat and +2 Era Score each time you kill a non-Barbarian Army in combat.",
+        "CHOICE|8|COMMEMORATION_TOURISM|Wish You Were Here Dedication Bonus:[NEWLINE]Gain +1 Era Score for each Artifact extracted.|Wish You Were Here Golden Age:[NEWLINE]Cities with [ICON_Governor] Governors receive +50%  [ICON_Tourism] Tourism from World Wonders. +100%  [ICON_Tourism] Tourism to all National Parks.|Wish You Were Here Dedication Bonus:[NEWLINE]Gain +1 Era Score for each Artifact extracted.",
+        "CHOICE|10|COMMEMORATION_ESPIONAGE|Bodyguard of Lies Dedication Bonus:[NEWLINE]Gain +1 Era Score for each successful offensive Spy operation.|Bodyguard of Lies Golden Age:[NEWLINE]Spies take no time to establish their presence in another civilization's city. Time to complete all offensive missions reduced by 25%.|Bodyguard of Lies Dedication Bonus:[NEWLINE]Gain +1 Era Score for each successful offensive Spy operation."
+      ]
+    }
+  ]
+}

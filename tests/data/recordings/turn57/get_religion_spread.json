@@ -2,7 +2,7 @@
   "tool": "get_religion_spread",
   "arguments": {},
   "scenario": "turn57",
-  "recorded_at": "2026-08-16T20:58:34+00:00",
+  "recorded_at": "2026-08-24T17:19:12+00:00",
   "notes": null,
   "result": "Religious Victory Tracker:\n  RELIGION_ORTHODOXY: majority in 1/4 civilizations\n\nInca:\n  Qusqu (pop 5) \u2014 none\n  Wanuku (pop 3) \u2014 none\n  Antawaylla (pop 2) \u2014 none\nGeorgia:\n  Kutaisi (pop 2) \u2014 RELIGION_ORTHODOXY (Eastern Orthodoxy:2)\n  Rustavi (pop 4) \u2014 RELIGION_ORTHODOXY (Eastern Orthodoxy:2)\n  Gori (pop 2) \u2014 RELIGION_ORTHODOXY (Eastern Orthodoxy:2)",
   "exchanges": [

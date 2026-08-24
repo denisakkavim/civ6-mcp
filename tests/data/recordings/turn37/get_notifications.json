@@ -2,7 +2,7 @@
   "tool": "get_notifications",
   "arguments": {},
   "scenario": "turn37",
-  "recorded_at": "2026-08-16T20:27:14+00:00",
+  "recorded_at": "2026-08-24T17:15:22+00:00",
   "notes": null,
   "result": "== Action Required (1) ==\n  * Choose Production  -> Use: set_city_production(city_id=..., item_type=...)\n\n== Notifications (2) ==\n  - Wonder Completed\n  - Command Units  -> Units have moves remaining \u2014 move them or use skip_remaining_units()",
   "exchanges": [

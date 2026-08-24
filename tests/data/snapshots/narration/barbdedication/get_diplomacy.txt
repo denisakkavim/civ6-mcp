@@ -1,0 +1,22 @@
+5 civilizations:
+  Macedon (Alexander) — NEUTRAL (-11) [player 1]
+    Cities (2): Pella pop 2 (19,17) [city:16842752]; Methone pop 2 (17,14) !! loy 46 (-14.3/t) [city:16842753]
+    Military: 110 vs our 77 (1.4x)
+    Access: they have delegation
+    -6 Unknown Reason
+    +2 Unknown Reason
+    -7 Alexander is not happy to see your civilization is currently at peace.
+    Agenda: Short Life of Glory — Likes civilizations at war with major powers other than Macedon. Has disdain for civilizations at peace.  Grievances against this leader decay at twice the usual rate.
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Can: Diplomatic Delegation, Declare Friendship, Denounce, Open Borders (Via Propose Deal), Declare War
+  Unmet Civilization (Unknown Leader) — not met
+  Unmet Civilization (Unknown Leader) — not met
+  Unmet Civilization (Unknown Leader) — not met
+  Kongo (Mvemba a Nzinga) — UNFRIENDLY (-2) [player 5]
+    Cities (2): Mbanza Kongo pop 6 (24,29) [city:17104896] + 1 in fog
+    Military: 86 vs our 77
+    Access: they have delegation
+    -2 Unknown Reason
+    Agenda: Enthusiastic Disciple — Likes civilizations that bring Religion to the Kongo. Dislikes civilizations that have founded a Religion but not brought it to a Kongolese city.
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Can: Diplomatic Delegation, Declare Friendship, Denounce, Open Borders (Via Propose Deal), Declare War

@@ -1,0 +1,171 @@
+Empire Resources:
+
+Strategic Stockpiles:
+  RESOURCE_ALUMINUM: 0/170 (+1/turn) [income 4, demand 3]
+  RESOURCE_COAL: 104/170 (+9/turn) [income 9]
+  RESOURCE_HORSES: 170/170 (+9/turn) [income 9]
+  RESOURCE_IRON: 170/170 (+4/turn) [income 4]
+  RESOURCE_NITER: 170/170 (+6/turn) [income 6]
+  RESOURCE_OIL: 170/170 (-2/turn) [income 6, import 3, demand 8]
+  RESOURCE_URANIUM: 72/170 (+6/turn) [income 6]
+
+Luxury Resources:
+  RESOURCE_AMBER: 2 (1 tradeable)
+  RESOURCE_COCOA: 3 (2 tradeable)
+  RESOURCE_COSMETICS: 2 (1 tradeable)
+  RESOURCE_DIAMONDS: 2 (1 tradeable)
+  RESOURCE_PEARLS: 2 (1 tradeable)
+  RESOURCE_TOBACCO: 2 (1 tradeable)
+  RESOURCE_TOYS: 1
+
+Strategic Tiles:
+  !! RESOURCE_OIL — UNIMPROVED at (6,17) — needs builder!
+  !! RESOURCE_ALUMINUM — UNIMPROVED at (8,18) — needs builder!
+  RESOURCE_URANIUM — improved at (9,17)
+  RESOURCE_URANIUM — improved at (10,21)
+  !! RESOURCE_OIL — UNIMPROVED at (11,8) — needs builder!
+  RESOURCE_NITER — improved at (11,15)
+  RESOURCE_HORSES — improved at (12,12)
+  RESOURCE_NITER — improved at (12,18)
+  !! RESOURCE_HORSES — UNIMPROVED at (14,13) — needs builder!
+  RESOURCE_COAL — improved at (16,5)
+  RESOURCE_NITER — improved at (16,9)
+  !! RESOURCE_COAL — UNIMPROVED at (16,13) — needs builder!
+  RESOURCE_HORSES — improved at (18,11)
+  !! RESOURCE_ALUMINUM — UNIMPROVED at (19,14) — needs builder!
+  !! RESOURCE_IRON — UNIMPROVED at (20,11) — needs builder!
+  RESOURCE_NITER — improved at (20,17)
+  RESOURCE_IRON — improved at (21,10)
+  RESOURCE_IRON — improved at (22,11)
+  !! RESOURCE_OIL — UNIMPROVED at (23,8) — needs builder!
+  RESOURCE_OIL — improved at (26,15)
+  RESOURCE_HORSES — improved at (27,12)
+  RESOURCE_COAL — improved at (48,14)
+  !! RESOURCE_HORSES — UNIMPROVED at (50,13) — needs builder!
+  RESOURCE_HORSES — improved at (50,14)
+
+Luxury Tiles:
+  RESOURCE_COCOA — improved at (6,21)
+  RESOURCE_TOBACCO — improved at (12,10)
+  RESOURCE_DIAMONDS — improved at (14,7)
+  RESOURCE_TOBACCO — improved at (14,9)
+  RESOURCE_AMBER — improved at (15,15)
+  RESOURCE_COCOA — improved at (15,18)
+  RESOURCE_AMBER — improved at (16,17)
+  RESOURCE_DIAMONDS — improved at (18,8)
+  RESOURCE_PEARLS — improved at (18,19)
+  RESOURCE_PEARLS — improved at (46,15)
+  !! RESOURCE_PEARLS — UNIMPROVED at (49,18) — needs builder!
+
+Bonus Tiles:
+  RESOURCE_CRABS — UNIMPROVED at (3,19)
+  RESOURCE_FISH — UNIMPROVED at (3,23)
+  RESOURCE_BANANAS — UNIMPROVED at (4,21)
+  RESOURCE_FISH — UNIMPROVED at (4,23)
+  RESOURCE_CRABS — UNIMPROVED at (5,18)
+  RESOURCE_BANANAS — UNIMPROVED at (5,20)
+  RESOURCE_ANTIQUITY_SITE — UNIMPROVED at (5,21)
+  RESOURCE_CRABS — improved at (10,14)
+  RESOURCE_ANTIQUITY_SITE — UNIMPROVED at (10,18)
+  RESOURCE_ANTIQUITY_SITE — UNIMPROVED at (11,9)
+  RESOURCE_ANTIQUITY_SITE — UNIMPROVED at (12,14)
+  RESOURCE_SHEEP — improved at (12,22)
+  RESOURCE_DEER — improved at (13,6)
+  RESOURCE_STONE — improved at (13,9)
+  RESOURCE_RICE — improved at (13,16)
+  RESOURCE_WHEAT — improved at (13,20)
+  RESOURCE_DEER — UNIMPROVED at (14,5)
+  RESOURCE_DEER — improved at (15,4)
+  RESOURCE_STONE — improved at (15,10)
+  RESOURCE_SHEEP — UNIMPROVED at (16,7)
+  RESOURCE_RICE — UNIMPROVED at (16,11)
+  RESOURCE_WHEAT — UNIMPROVED at (17,15)
+  RESOURCE_DEER — improved at (20,19)
+  RESOURCE_WHEAT — improved at (21,14)
+  RESOURCE_WHEAT — improved at (21,15)
+  RESOURCE_COPPER — improved at (22,13)
+  RESOURCE_ANTIQUITY_SITE — UNIMPROVED at (23,9)
+  RESOURCE_WHEAT — UNIMPROVED at (24,9)
+  RESOURCE_WHEAT — improved at (24,10)
+  RESOURCE_WHEAT — UNIMPROVED at (24,12)
+  RESOURCE_ANTIQUITY_SITE — UNIMPROVED at (25,10)
+  RESOURCE_COPPER — UNIMPROVED at (25,13)
+  RESOURCE_CATTLE — improved at (28,14)
+  RESOURCE_FISH — UNIMPROVED at (29,12)
+  RESOURCE_FISH — UNIMPROVED at (35,12)
+  RESOURCE_CRABS — UNIMPROVED at (46,12)
+  RESOURCE_WHEAT — UNIMPROVED at (52,15)
+  RESOURCE_WHEAT — UNIMPROVED at (52,17)
+
+Nearby Unclaimed:
+  [B] RESOURCE_FISH at (12,4) — 4 tiles from Aachen
+  [B] RESOURCE_FISH at (9,5) — 6 tiles from Aachen
+  [B] RESOURCE_FISH at (11,6) — 4 tiles from Aachen
+  [B] RESOURCE_FISH at (10,10) — 5 tiles from Aachen
+  [B] RESOURCE_FISH at (10,11) — 5 tiles from Aachen
+  [B] RESOURCE_CRABS at (10,13) — 6 tiles from Aachen
+  [L] RESOURCE_TOBACCO at (21,6) — 5 tiles from Frankfurt
+  [B] RESOURCE_COPPER at (23,15) — 8 tiles from Frankfurt
+  [B] RESOURCE_CRABS at (26,5) — 7 tiles from Heidelberg
+  [B] RESOURCE_ANTIQUITY_SITE at (24,6) — 4 tiles from Heidelberg
+  [S] RESOURCE_IRON at (24,7) — 4 tiles from Heidelberg
+  [B] RESOURCE_RICE at (26,10) — 4 tiles from Heidelberg
+  [B] RESOURCE_RICE at (25,11) — 4 tiles from Heidelberg
+  [B] RESOURCE_ANTIQUITY_SITE at (25,14) — 5 tiles from Heidelberg
+  [B] RESOURCE_SHEEP at (25,15) — 6 tiles from Heidelberg
+  [L] RESOURCE_TURTLES at (8,13) — 4 tiles from Berlin
+  [B] RESOURCE_CRABS at (6,15) — 5 tiles from Berlin
+  [B] RESOURCE_CRABS at (8,16) — 3 tiles from Berlin
+  [S] RESOURCE_COAL at (14,21) — 6 tiles from Berlin
+  [B] RESOURCE_CRABS at (17,1) — 3 tiles from Hamburg
+  [S] RESOURCE_OIL at (20,2) — 5 tiles from Hamburg
+  [B] RESOURCE_COPPER at (24,16) — 5 tiles from Pella
+  [B] RESOURCE_STONE at (23,19) — 5 tiles from Pella
+  [S] RESOURCE_HORSES at (17,20) — 4 tiles from Pella
+  [L] RESOURCE_COCOA at (22,21) — 5 tiles from Pella
+  [L] RESOURCE_DIAMONDS at (18,22) — 5 tiles from Pella
+  [L] RESOURCE_TOBACCO at (20,22) — 5 tiles from Pella
+  [B] RESOURCE_FISH at (29,11) — 3 tiles from Ulm
+  [L] RESOURCE_TURTLES at (30,13) — 3 tiles from Ulm
+  [L] RESOURCE_AMBER at (29,15) — 3 tiles from Ulm
+  [B] RESOURCE_SHEEP at (28,16) — 3 tiles from Ulm
+  [L] RESOURCE_PEARLS at (31,16) — 5 tiles from Ulm
+  [S] RESOURCE_COAL at (29,17) — 4 tiles from Ulm
+  [B] RESOURCE_RICE at (31,18) — 6 tiles from Ulm
+  [B] RESOURCE_CRABS at (52,9) — 8 tiles from Cologne
+  [L] RESOURCE_TURTLES at (51,10) — 6 tiles from Cologne
+  [B] RESOURCE_FISH at (47,11) — 3 tiles from Cologne
+  [B] RESOURCE_CRABS at (49,11) — 4 tiles from Cologne
+  [B] RESOURCE_ANTIQUITY_SITE at (50,12) — 4 tiles from Cologne
+  [L] RESOURCE_COFFEE at (52,12) — 6 tiles from Cologne
+  [L] RESOURCE_PEARLS at (47,17) — 3 tiles from Cologne
+  [B] RESOURCE_FISH at (46,19) — 5 tiles from Cologne
+  [B] RESOURCE_ANTIQUITY_SITE at (50,19) — 6 tiles from Cologne
+  [S] RESOURCE_HORSES at (53,11) — 5 tiles from Zanzibar
+  [S] RESOURCE_ALUMINUM at (54,14) — 4 tiles from Zanzibar
+  [L] RESOURCE_COFFEE at (56,16) — 5 tiles from Zanzibar
+  [B] RESOURCE_FISH at (54,17) — 4 tiles from Zanzibar
+  [B] RESOURCE_FISH at (55,18) — 5 tiles from Zanzibar
+  [L] RESOURCE_TRUFFLES at (53,19) — 4 tiles from Zanzibar
+  [B] RESOURCE_CRABS at (52,21) — 5 tiles from Zanzibar
+  [L] RESOURCE_TRUFFLES at (56,21) — 8 tiles from Zanzibar
+  [B] RESOURCE_DEER at (9,22) — 4 tiles from Ayutthaya
+  [L] RESOURCE_AMBER at (7,23) — 6 tiles from Ayutthaya
+  [B] RESOURCE_ANTIQUITY_SITE at (9,23) — 4 tiles from Ayutthaya
+  [L] RESOURCE_COCOA at (10,23) — 3 tiles from Ayutthaya
+  [B] RESOURCE_WHEAT at (12,24) — 4 tiles from Ayutthaya
+  [L] RESOURCE_DIAMONDS at (17,24) — 7 tiles from Ayutthaya
+  [B] RESOURCE_WHEAT at (12,25) — 5 tiles from Ayutthaya
+  [B] RESOURCE_CRABS at (37,6) — 4 tiles from Hull
+  [L] RESOURCE_TURTLES at (34,7) — 3 tiles from Hull
+  [B] RESOURCE_FISH at (39,7) — 6 tiles from Hull
+  [B] RESOURCE_CRABS at (33,9) — 2 tiles from Hull
+  [B] RESOURCE_CRABS at (38,10) — 3 tiles from Hull
+  [L] RESOURCE_TURTLES at (33,11) — 2 tiles from Hull
+  [B] RESOURCE_CRABS at (0,20) — 5 tiles from Plymouth
+  [B] RESOURCE_CRABS at (2,20) — 3 tiles from Plymouth
+  [B] RESOURCE_CATTLE at (-1,22) — 6 tiles from Plymouth
+  [B] RESOURCE_CRABS at (2,22) — 3 tiles from Plymouth
+  [L] RESOURCE_DIAMONDS at (6,24) — 3 tiles from Plymouth
+  [S] RESOURCE_OIL at (3,26) — 5 tiles from Plymouth
+  [B] RESOURCE_WHEAT at (9,26) — 7 tiles from Plymouth

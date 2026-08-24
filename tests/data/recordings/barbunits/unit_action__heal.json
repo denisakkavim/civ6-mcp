@@ -1,0 +1,27 @@
+{
+  "tool": "unit_action",
+  "arguments": {
+    "unit_id": 0,
+    "action": "heal"
+  },
+  "scenario": "barbunits",
+  "recorded_at": "2026-08-24T17:52:56+00:00",
+  "notes": null,
+  "result": "HEALING|HP:6/100",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CLEAR"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local unit = UnitManager.GetUnit(me, 0) if unit == nil then print(\"ERR:UNIT_NOT_FOUND\"); print(\"---END---\"); return end\nlocal hp = unit:GetMaxDamage() - unit:GetDamage()\nlocal maxHP = unit:GetMaxDamage()\nif hp >= maxHP then print(\"ERR:FULL_HP|Unit already at full health (\" .. hp .. \"/\" .. maxHP .. \")\"); print(\"---END---\"); return end\nlocal healHash = GameInfo.UnitOperations[\"UNITOPERATION_HEAL\"].Hash\nif UnitManager.CanStartOperation(unit, healHash, nil, nil) then\n    UnitManager.RequestOperation(unit, healHash, {})\n    print(\"OK:HEALING|HP:\" .. hp .. \"/\" .. maxHP)\nelse\n    print(\"ERR:CANNOT_HEAL|Unit cannot fortify-until-healed\"); print(\"---END---\"); return\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:HEALING|HP:6/100"
+      ]
+    }
+  ]
+}

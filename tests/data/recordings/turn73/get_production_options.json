@@ -4,7 +4,7 @@
     "city_id": 16777216
   },
   "scenario": "turn73",
-  "recorded_at": "2026-08-16T21:02:09+00:00",
+  "recorded_at": "2026-08-24T17:27:05+00:00",
   "notes": null,
   "result": "Units:\n  UNIT_SETTLER (cost 80, 5 turns, buy: 340g)\n  UNIT_BUILDER (cost 50, 2 turns, buy: 130g)\n  UNIT_TRADER (cost 40, 2 turns, buy: 120g)\n  UNIT_SCOUT (cost 30, 1 turns, buy: 60g)\n  UNIT_ARCHER (cost 60, 2 turns, buy: 120g)\n  UNIT_SPEARMAN (cost 65, 2 turns, buy: 125g)\n  UNIT_BATTERING_RAM (cost 65, 2 turns, buy: 125g)\n  UNIT_SWORDSMAN (cost 90, 3 turns, buy: 180g)\n  UNIT_HORSEMAN (cost 80, 3 turns, buy: 160g)\nBuildings:\n  BUILDING_SHRINE (cost 70, 2 turns, buy: 140g)\n  BUILDING_APADANA (cost 400, 14 turns)\nDistricts:\n  DISTRICT_CAMPUS (cost 54, 5 turns)\n  DISTRICT_ENCAMPMENT (cost 54, 5 turns)\n  DISTRICT_ENTERTAINMENT_COMPLEX (cost 54, 5 turns)\n  DISTRICT_THEATER (cost 54, 5 turns)\n  DISTRICT_GOVERNMENT (cost 30, 3 turns)\nProjects:\n  PROJECT_ENHANCE_DISTRICT_COMMERCIAL_HUB (cost 25, 3 turns)\n  PROJECT_ENHANCE_DISTRICT_HOLY_SITE (cost 25, 3 turns)",
   "exchanges": [

@@ -1,0 +1,6 @@
+== Notifications (5) ==
+  - Wonder Completed
+  - Wonder Completed
+  - Wonder Completed
+  - Need More Housing
+  - Command Units  -> Units have moves remaining — move them or use skip_remaining_units()

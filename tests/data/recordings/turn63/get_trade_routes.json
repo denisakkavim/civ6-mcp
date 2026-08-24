@@ -2,7 +2,7 @@
   "tool": "get_trade_routes",
   "arguments": {},
   "scenario": "turn63",
-  "recorded_at": "2026-08-16T20:34:34+00:00",
+  "recorded_at": "2026-08-24T17:23:05+00:00",
   "notes": null,
   "result": "Trade Routes: 1/2 active\n\nOn route (1):\n  Trader (id:4) Qusqu -> Antawaylla (Domestic) | Food:2 Prod:1 Gold:2 | Shinto -> 1.0 Shinto <- 0.5\n\n1 free route slot(s) \u2014 build/buy a Trader to fill.",
   "exchanges": [

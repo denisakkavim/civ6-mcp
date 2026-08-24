@@ -1,0 +1,25 @@
+{
+  "tool": "get_religion_spread",
+  "arguments": {},
+  "scenario": "barbfreecity",
+  "recorded_at": "2026-08-24T18:09:13+00:00",
+  "notes": null,
+  "result": "\nGermany:\n  Aachen (pop 4) \u2014 none\n  Frankfurt (pop 3) \u2014 none\n  Trier (pop 4) \u2014 none\n  Methone (pop 3) \u2014 none\n  Heidelberg (pop 1) \u2014 none\n  Alexandria (pop 2) \u2014 none\nMacedon:\n  Pella (pop 3) \u2014 none\nKongo:\n  Mbanza Kongo (pop 8) \u2014 none\n  Mbumbi (pop 4) \u2014 none",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pVis = PlayersVisibility[me]\nlocal pDiplo = Players[me]:GetDiplomacy()\nfor pid = 0, 62 do\n    local p = Players[pid]\n    if p and p:IsMajor() and p:IsAlive() then\n        if pid == me or pDiplo:HasMet(pid) then\n            local cfg = PlayerConfigurations[pid]\n            local civName = Locale.Lookup(cfg:GetCivilizationShortDescription())\n            for _, c in p:GetCities():Members() do\n                local cx, cy = c:GetX(), c:GetY()\n                if pid == me or pVis:IsRevealed(cx, cy) then\n                    local cityName = Locale.Lookup(c:GetName())\n                    local cityRel = c:GetReligion()\n                    local majRel = cityRel:GetMajorityReligion()\n                    local relName = \"none\"\n                    local relType = \"\"\n                    if majRel >= 0 then\n                        local r = GameInfo.Religions[majRel]\n                        if r then\n                            relName = Locale.Lookup(r.Name)\n                            relType = r.ReligionType\n                        end\n                    end\n                    local pop = c:GetPopulation()\n                    local followers = \"\"\n                    local rels = cityRel:GetReligionsInCity()\n                    if rels then\n                        local parts = {}\n                        for _, r in ipairs(rels) do\n                            if r.Religion >= 0 then\n                                local rn = GameInfo.Religions[r.Religion]\n                                local rName = rn and Locale.Lookup(rn.Name) or \"Unknown\"\n                                table.insert(parts, rName .. \":\" .. r.Followers)\n                            end\n                        end\n                        followers = table.concat(parts, \",\")\n                    end\n                    print(\"RCITY|\" .. pid .. \"|\" .. civName .. \"|\" .. cityName .. \"|\" .. relName .. \"|\" .. pop .. \"|\" .. followers .. \"|\" .. relType .. \"|\" .. ((c:GetID() % 65536) + c:GetOwner() * 65536 + 16777216))\n                end\n            end\n        end\n    end\nend\nlocal relTotals = {}\nlocal relTypes = {}\nlocal nMajors = 0\nfor i = 0, 62 do\n    local p = Players[i]\n    if p and p:IsMajor() and p:IsAlive() then\n        nMajors = nMajors + 1\n        local majRel = p:GetReligion():GetReligionInMajorityOfCities()\n        if majRel >= 0 then\n            local r = GameInfo.Religions[majRel]\n            local rName = r and Locale.Lookup(r.Name) or \"Unknown\"\n            relTotals[rName] = (relTotals[rName] or 0) + 1\n            relTypes[rName] = r and r.ReligionType or \"\"\n        end\n    end\nend\nfor rName, count in pairs(relTotals) do\n    print(\"RSUMMARY|\" .. rName .. \"|\" .. count .. \"|\" .. nMajors .. \"|\" .. (relTypes[rName] or \"\"))\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "RCITY|0|Germany|Aachen|none|4|||16777216",
+        "RCITY|0|Germany|Frankfurt|none|3|||16777217",
+        "RCITY|0|Germany|Trier|none|4|||16777218",
+        "RCITY|0|Germany|Methone|none|3|||16777219",
+        "RCITY|0|Germany|Heidelberg|none|1|||16777220",
+        "RCITY|0|Germany|Alexandria|none|2|||16777221",
+        "RCITY|1|Macedon|Pella|none|3|||16842752",
+        "RCITY|5|Kongo|Mbanza Kongo|none|8|||17104896",
+        "RCITY|5|Kongo|Mbumbi|none|4|||17104898"
+      ]
+    }
+  ]
+}

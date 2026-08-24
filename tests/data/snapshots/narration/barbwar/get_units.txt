@@ -1,0 +1,14 @@
+8 units:
+  Warrior (UNIT_WARRIOR) at (22,11) — CS:20 moves 0/2 [HP: 53/100] (no moves) [id:0]
+  Warrior (UNIT_WARRIOR) at (17,14) — CS:20 moves 2/2 [id:1]
+  Trader (UNIT_TRADER) at (15,8) — moves 2/2 [ON ROUTE: Heidelberg -> Aachen (Domestic)] [id:2]
+  Spearman (UNIT_SPEARMAN) at (14,12) — CS:25 moves 2/2 [HP: 79/100] [id:4]
+  Spearman (UNIT_SPEARMAN) at (22,13) — CS:25 moves 0/2 [HP: 50/100] (no moves) [id:5]
+  Archer (UNIT_ARCHER) at (16,8) — CS:15 RS:25 moves 0/2 (no moves) [id:6]
+  Spearman (UNIT_SPEARMAN) at (17,7) — CS:25 moves 0/2 [HP: 72/100] (no moves) [id:7]
+  Archer (UNIT_ARCHER) at (17,14) — CS:15 RS:25 moves 2/2 [id:8]
+
+Nearby threats (2):
+  Barbarian (2 units):
+    UNIT_WARRIOR at (17,6) — CS:20 HP:48/100 (1 tiles away) [id:4128782]
+    UNIT_SPEARMAN at (17,5) — CS:25 HP:100/100 (2 tiles away) [id:4128810]

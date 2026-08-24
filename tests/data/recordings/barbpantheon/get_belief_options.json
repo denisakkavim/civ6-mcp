@@ -1,0 +1,38 @@
+{
+  "tool": "get_belief_options",
+  "arguments": {},
+  "scenario": "barbpantheon",
+  "recorded_at": "2026-08-24T18:14:03+00:00",
+  "notes": null,
+  "result": "No pantheon selected. Faith: 26\n\n21 available beliefs:\n  Dance of the Aurora (BELIEF_DANCE_OF_THE_AURORA): Holy Site districts get +1 [ICON_Faith] Faith from adjacent Tundra tiles.\n  Desert Folklore (BELIEF_DESERT_FOLKLORE): Holy Site districts get +1 [ICON_Faith] Faith from adjacent Desert tiles.\n  Sacred Path (BELIEF_SACRED_PATH): Holy Site districts get +1 [ICON_Faith] Faith from adjacent Rainforest tiles.\n  River Goddess (BELIEF_RIVER_GODDESS): +2 [ICON_Amenities] Amenities and +2 [ICON_Housing] Housing to cities if they have a Holy Site district adjacent to a River.\n  Monument to the Gods (BELIEF_MONUMENT_TO_THE_GODS): +15% [ICON_Production] Production towards Ancient and Classical era wonders.\n  Divine Spark (BELIEF_DIVINE_SPARK): +1 [ICON_GreatPerson] Great Person Points from Holy Sites (Prophet), Campuses with a Library (Scientist), and Theater Squares with an Amphitheater (Writer).\n  Lady of the Reeds and Marshes (BELIEF_LADY_OF_THE_REEDS_AND_MARSHES): +2 [ICON_Production] Production from Marsh, Oasis, and Desert Floodplains.\n  God of the Sea (BELIEF_GOD_OF_THE_SEA): +1 [ICON_Production] Production from Fishing Boats.\n  God of the Open Sky (BELIEF_GOD_OF_THE_OPEN_SKY): +1 [ICON_Culture] Culture from Pastures.\n  Goddess of the Hunt (BELIEF_GODDESS_OF_THE_HUNT): +1 [ICON_Food] Food and +1 [ICON_Production] Production from Camps.\n  Stone Circles (BELIEF_STONE_CIRCLES): +2 [ICON_Faith] Faith from Quarries.\n  Religious Idols (BELIEF_RELIGIOUS_IDOLS): +2 [ICON_Faith] Faith from Mines over Luxury and Bonus resources.\n  God of Craftsmen (BELIEF_GOD_OF_CRAFTSMEN): +1 [ICON_Production] Production and +1 [ICON_Faith] Faith from improved Strategic resources.\n  Goddess of Festivals (BELIEF_GODDESS_OF_FESTIVALS): +1 [ICON_Culture] Culture from Plantations.\n  God of the Forge (BELIEF_GOD_OF_THE_FORGE): +25% [ICON_Production] Production toward Ancient and Classical military units.\n  God of Healing (BELIEF_GOD_OF_HEALING): Increases Healing by +30 in your Holy Site district, or any adjacent tiles.\n  God of War (BELIEF_GOD_OF_WAR): Bonus [ICON_Faith] Faith equal to 50% of the strength of each combat unit killed within 8 tiles of a Holy Site district. (on Standard Speed)\n  Fertility Rites (BELIEF_FERTILITY_RITES): When chosen receive a Builder in your capital. City growth rate is 10% higher.\n  City Patron Goddess (BELIEF_CITY_PATRON_GODDESS): +25% [ICON_Production] Production toward districts in cities without a specialty district.\n  Earth Goddess (BELIEF_EARTH_GODDESS): +1 Faith [ICON_Faith] from tiles with Breathtaking Appeal.\n  Fire Goddess (BELIEF_GODDESS_OF_FIRE): +2 [ICON_FAITH] Faith from Geothermal Fissures and Volcanic Soil.\n\nUse choose_pantheon(belief_type) to found a pantheon.",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pReligion = Players[me]:GetReligion()\nlocal currentPantheon = pReligion:GetPantheon()\nlocal faith = pReligion:GetFaithBalance()\nlocal hasPantheon = currentPantheon >= 0\nlocal beliefName = \"None\"\nlocal beliefType = \"None\"\nif hasPantheon then\n    local entry = GameInfo.Beliefs[currentPantheon]\n    if entry then\n        beliefType = entry.BeliefType\n        beliefName = Locale.Lookup(entry.Name)\n    end\nend\nprint(\"STATUS|\" .. (hasPantheon and \"1\" or \"0\") .. \"|\" .. beliefType .. \"|\" .. beliefName:gsub(\"|\",\"/\") .. \"|\" .. string.format(\"%.1f\", faith))\nif not hasPantheon then\n    local taken = {}\n    for i = 0, 62 do\n        if Players[i] and Players[i]:IsAlive() and i ~= me then\n            local ok, pan = pcall(function() return Players[i]:GetReligion():GetPantheon() end)\n            if ok and pan and pan >= 0 then taken[pan] = true end\n        end\n    end\n    for belief in GameInfo.Beliefs() do\n        if belief.BeliefClassType == \"BELIEF_CLASS_PANTHEON\" and not taken[belief.Index] then\n            local name = Locale.Lookup(belief.Name):gsub(\"|\",\"/\")\n            local desc = Locale.Lookup(belief.Description):gsub(\"|\",\"/\"):gsub(\"\\n\", \" \")\n            print(\"BELIEF|\" .. belief.BeliefType .. \"|\" .. name .. \"|\" .. desc)\n        end\n    end\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "STATUS|0|None|None|26.0",
+        "BELIEF|BELIEF_DANCE_OF_THE_AURORA|Dance of the Aurora|Holy Site districts get +1 [ICON_Faith] Faith from adjacent Tundra tiles.",
+        "BELIEF|BELIEF_DESERT_FOLKLORE|Desert Folklore|Holy Site districts get +1 [ICON_Faith] Faith from adjacent Desert tiles.",
+        "BELIEF|BELIEF_SACRED_PATH|Sacred Path|Holy Site districts get +1 [ICON_Faith] Faith from adjacent Rainforest tiles.",
+        "BELIEF|BELIEF_RIVER_GODDESS|River Goddess|+2 [ICON_Amenities] Amenities and +2 [ICON_Housing] Housing to cities if they have a Holy Site district adjacent to a River.",
+        "BELIEF|BELIEF_MONUMENT_TO_THE_GODS|Monument to the Gods|+15% [ICON_Production] Production towards Ancient and Classical era wonders.",
+        "BELIEF|BELIEF_DIVINE_SPARK|Divine Spark|+1 [ICON_GreatPerson] Great Person Points from Holy Sites (Prophet), Campuses with a Library (Scientist), and Theater Squares with an Amphitheater (Writer).",
+        "BELIEF|BELIEF_LADY_OF_THE_REEDS_AND_MARSHES|Lady of the Reeds and Marshes|+2 [ICON_Production] Production from Marsh, Oasis, and Desert Floodplains.",
+        "BELIEF|BELIEF_GOD_OF_THE_SEA|God of the Sea|+1 [ICON_Production] Production from Fishing Boats.",
+        "BELIEF|BELIEF_GOD_OF_THE_OPEN_SKY|God of the Open Sky|+1 [ICON_Culture] Culture from Pastures.",
+        "BELIEF|BELIEF_GODDESS_OF_THE_HUNT|Goddess of the Hunt|+1 [ICON_Food] Food and +1 [ICON_Production] Production from Camps.",
+        "BELIEF|BELIEF_STONE_CIRCLES|Stone Circles|+2 [ICON_Faith] Faith from Quarries.",
+        "BELIEF|BELIEF_RELIGIOUS_IDOLS|Religious Idols|+2 [ICON_Faith] Faith from Mines over Luxury and Bonus resources.",
+        "BELIEF|BELIEF_GOD_OF_CRAFTSMEN|God of Craftsmen|+1 [ICON_Production] Production and +1 [ICON_Faith] Faith from improved Strategic resources.",
+        "BELIEF|BELIEF_GODDESS_OF_FESTIVALS|Goddess of Festivals|+1 [ICON_Culture] Culture from Plantations.",
+        "BELIEF|BELIEF_GOD_OF_THE_FORGE|God of the Forge|+25% [ICON_Production] Production toward Ancient and Classical military units.",
+        "BELIEF|BELIEF_GOD_OF_HEALING|God of Healing|Increases Healing by +30 in your Holy Site district, or any adjacent tiles.",
+        "BELIEF|BELIEF_GOD_OF_WAR|God of War|Bonus [ICON_Faith] Faith equal to 50% of the strength of each combat unit killed within 8 tiles of a Holy Site district. (on Standard Speed)",
+        "BELIEF|BELIEF_FERTILITY_RITES|Fertility Rites|When chosen receive a Builder in your capital. City growth rate is 10% higher.",
+        "BELIEF|BELIEF_CITY_PATRON_GODDESS|City Patron Goddess|+25% [ICON_Production] Production toward districts in cities without a specialty district.",
+        "BELIEF|BELIEF_EARTH_GODDESS|Earth Goddess|+1 Faith [ICON_Faith] from tiles with Breathtaking Appeal.",
+        "BELIEF|BELIEF_GODDESS_OF_FIRE|Fire Goddess|+2 [ICON_FAITH] Faith from Geothermal Fissures and Volcanic Soil."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+9 Great People:
+  Great General: Vijaya Wimalaratne (Information Era) — Unclaimed — your points: 349/1715
+    Ability: Grants 1 promotion level and +100% combat experience to a military land unit.
+    Patronize: 20690g / 13810f
+    (individual_id: 74)
+  Great Admiral: Sergei Gorshkov (Atomic Era) — Unclaimed — your points: 881/960
+    Ability: Grants 1 promotion level and +100% combat experience to a military naval unit.
+    Patronize: 1385g / 940f
+    (individual_id: 16)
+  Great Engineer: Sergei Korolev (Atomic Era) — Unclaimed — your points: 733/960
+    Ability: +1500 production toward current build
+    Patronize: 3605g / 2420f
+    (individual_id: 52)
+  Great Merchant: Melitta Bentz (Atomic Era) — Unclaimed — your points: 731/960
+    Ability: +25 tourism, ADJUST_TRADE_ROUTE_CAPACITY (amount=1)
+    Patronize: 3635g / 2440f
+    (individual_id: 91)
+  Great Prophet: O no Yasumaro (Medieval Era) — Unclaimed — your points: 100/120
+    Patronize: 500g / 350f
+    (individual_id: 121)
+  Great Scientist: Stephanie Kwolek (Information Era) — Unclaimed — your points: 1631/1715
+    Ability: CITIES_ADJUST_SPACE_RACE_PROJECTS_PRODUCTION (amount=100)
+    Patronize: 1460g / 990f
+    (individual_id: 148)
+  Great Writer: H.G. Wells (Atomic Era) — Unclaimed — your points: 157/960
+    Ability: creates 2 Great Works
+    Patronize: 12245g / 8180f
+    (individual_id: 171)
+  Great Artist: Vincent van Gogh (Atomic Era) — Unclaimed — your points: 152/960
+    Ability: creates 3 Great Works
+    Patronize: 12320g / 8230f
+    (individual_id: 30)
+  Great Musician: Juventino Rosas (Atomic Era) — Unclaimed — your points: 122/960
+    Ability: creates 2 Great Works
+    Patronize: 12770g / 8530f
+    (individual_id: 108)

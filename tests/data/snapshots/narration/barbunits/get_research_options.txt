@@ -1,0 +1,74 @@
+Researching: Metal Casting (2 turns) | Completed: 34 techs, 19 civics
+Civic: Humanism (8 turns)
+
+Available techs:
+  Printing (TECH_PRINTING) [RENAISSANCE] — 59%, 2 turns BOOSTED [Boost: Build 2 Universities.] -> Forbidden City (needs: TECH_MACHINERY) !! GRAB THIS
+  Astronomy (TECH_ASTRONOMY) [RENAISSANCE] — 59%, 2 turns BOOSTED [Boost: Build a University adjacent to a Mountain.] -> Potala Palace (needs: TECH_EDUCATION) !! GRAB THIS
+  Metal Casting (TECH_METAL_CASTING) [RENAISSANCE] — 59%, 2 turns BOOSTED [Boost: Own 2 Crossbowman.] -> Bombard, Pike and Shot, Carolean (needs: TECH_GUNPOWDER) !! GRAB THIS
+  Banking (TECH_BANKING) [RENAISSANCE] — 39%, 3 turns BOOSTED [Boost: Have the Guilds civic.] -> Bank, Great Zimbabwe, Grand Bazaar (needs: TECH_EDUCATION,TECH_STIRRUPS)
+  Siege Tactics (TECH_SIEGE_TACTICS) [RENAISSANCE] — 0%, 6 turns [Boost: Own 2 Trebuchets.] -> Renaissance Walls, Tsikhe, Fort (needs: TECH_CASTLES)
+
+Available civics:
+  Mysticism (CIVIC_MYSTICISM) [ANCIENT] — 0%, 1 turns BOOSTED [Boost: Found a pantheon.] (needs: CIVIC_FOREIGN_TRADE) !! GRAB THIS
+  Naval Tradition (CIVIC_NAVAL_TRADITION) [MEDIEVAL] — 0%, 4 turns [Boost: Kill a unit with a Quadrireme.] (needs: CIVIC_DEFENSIVE_TACTICS)
+  Humanism (CIVIC_HUMANISM) [RENAISSANCE] — 0%, 10 turns [Boost: Earn a Great Artist.] (needs: CIVIC_MEDIEVAL_FAIRES,CIVIC_GUILDS)
+
+Locked techs (prerequisites missing):
+  -- INDUSTRIAL --
+  Scientific Theory (TECH_SCIENTIFIC_THEORY) — needs: Astronomy, Banking [Boost: Have The Enlightenment civic.]
+  Ballistics (TECH_BALLISTICS) — needs: Metal Casting [Boost: Have 2 Forts in your territory. Both constructed by a Military Engineer.]
+  Military Science (TECH_MILITARY_SCIENCE) — needs: Siege Tactics, Printing [Boost: Kill a unit with a Knight.]
+  Sanitation (TECH_SANITATION) — needs: Scientific Theory [Boost: Build 2 Neighborhoods.]
+  Economics (TECH_ECONOMICS) — needs: Scientific Theory, Metal Casting [Boost: Build 2 Banks.]
+  Rifling (TECH_RIFLING) — needs: Ballistics, Military Science BOOSTED [Boost: Build a Niter Mine.]
+  -- MODERN --
+  Flight (TECH_FLIGHT) — needs: Scientific Theory BOOSTED [Boost: Build an Industrial era or later wonder.]
+  Replaceable Parts (TECH_REPLACEABLE_PARTS) — needs: Economics BOOSTED [Boost: Own 3 Line Infantry.]
+  Steel (TECH_STEEL) — needs: Rifling [Boost: Build a Coal Mine and an Ironclad.]
+  Radio (TECH_RADIO) — needs: Flight [Boost: Build a National Park.]
+  Chemistry (TECH_CHEMISTRY) — needs: Sanitation, Replaceable Parts [Boost: Have a level 2 Alliance.]
+  Combustion (TECH_COMBUSTION) — needs: Steel, Refining [Boost: Extract an Artifact.]
+  Refining (TECH_REFINING) — needs: Rifling [Boost: Build 1 Coal Power Plant.]
+  -- ATOMIC --
+  Advanced Flight (TECH_ADVANCED_FLIGHT) — needs: Radio [Boost: Build 2 Biplanes.]
+  Rocketry (TECH_ROCKETRY) — needs: Radio, Chemistry [Boost: Boost through Great Scientist or Spy.]
+  Advanced Ballistics (TECH_ADVANCED_BALLISTICS) — needs: Replaceable Parts, Steel [Boost: Build 1 Oil Power Plant]
+  Combined Arms (TECH_COMBINED_ARMS) — needs: Steel, Combustion [Boost: Have 3 Armies or Armadas]
+  Plastics (TECH_PLASTICS) — needs: Combustion [Boost: Build an Oil Well.]
+  Computers (TECH_COMPUTERS) — needs: Radio [Boost: Adopt a government with 8 inherent policy slots.]
+  Nuclear Fission (TECH_NUCLEAR_FISSION) — needs: Advanced Ballistics, Combined Arms [Boost: Boost through Great Scientist or Spy.]
+  Synthetic Materials (TECH_SYNTHETIC_MATERIALS) — needs: Plastics [Boost: Build 2 Aerodromes.]
+
+Locked civics (prerequisites missing):
+  -- CLASSICAL --
+  Theology (CIVIC_THEOLOGY) — needs: Mysticism BOOSTED [Boost: Found a Religion.]
+  -- MEDIEVAL --
+  Divine Right (CIVIC_DIVINE_RIGHT) — needs: Theology BOOSTED [Boost: Build 2 Temples.]
+  -- RENAISSANCE --
+  Reformed Church (CIVIC_REFORMED_CHURCH) — needs: Divine Right [Boost: Have 6 cities following your Religion.]
+  Mercantilism (CIVIC_MERCANTILISM) — needs: Humanism BOOSTED [Boost: Earn a Great Merchant.]
+  The Enlightenment (CIVIC_THE_ENLIGHTENMENT) — needs: Humanism BOOSTED [Boost: Earn 3 Great People.]
+  -- INDUSTRIAL --
+  Colonialism (CIVIC_COLONIALISM) — needs: Mercantilism [Boost: Research the Astronomy technology.]
+  Civil Engineering (CIVIC_CIVIL_ENGINEERING) — needs: Mercantilism [Boost: Build 7 different specialty districts.]
+  Nationalism (CIVIC_NATIONALISM) — needs: The Enlightenment [Boost: Declare war using a casus belli.]
+  Opera and Ballet (CIVIC_OPERA_BALLET) — needs: The Enlightenment [Boost: Build an Art Museum.]
+  Natural History (CIVIC_NATURAL_HISTORY) — needs: Colonialism [Boost: Build an Archaeological Museum.]
+  Scorched Earth (CIVIC_SCORCHED_EARTH) — needs: Nationalism [Boost: Build 2 Field Cannons.]
+  Urbanization (CIVIC_URBANIZATION) — needs: Civil Engineering, Nationalism [Boost: Grow a city to 15 population.]
+  -- MODERN --
+  Conservation (CIVIC_CONSERVATION) — needs: Natural History [Boost: Have a Neighborhood district with Breathtaking Appeal.]
+  Capitalism (CIVIC_CAPITALISM) — needs: Mass Media [Boost: Build 2 Stock Exchanges.]
+  Nuclear Program (CIVIC_NUCLEAR_PROGRAM) — needs: Ideology [Boost: Build a Research Lab.]
+  Mass Media (CIVIC_MASS_MEDIA) — needs: Natural History, Urbanization [Boost: Research Radio.]
+  Mobilization (CIVIC_MOBILIZATION) — needs: Urbanization, Scorched Earth [Boost: Have 3 Corps in your military.]
+  Ideology (CIVIC_IDEOLOGY) — needs: Mass Media, Mobilization
+  Suffrage (CIVIC_SUFFRAGE) — needs: Ideology [Boost: Build 4 Sewers.]
+  Totalitarianism (CIVIC_TOTALITARIANISM) — needs: Ideology [Boost: Build 3 Military Academies.]
+  Class Struggle (CIVIC_CLASS_STRUGGLE) — needs: Ideology BOOSTED [Boost: Build 3 Factories.]
+  -- ATOMIC --
+  Cold War (CIVIC_COLD_WAR) — needs: Ideology [Boost: Research the Nuclear Fission technology.]
+  Professional Sports (CIVIC_PROFESSIONAL_SPORTS) — needs: Ideology BOOSTED [Boost: Build 2 Entertainment Complex districts.]
+  Cultural Heritage (CIVIC_CULTURAL_HERITAGE) — needs: Conservation [Boost: Have a Themed Building.]
+  Rapid Deployment (CIVIC_RAPID_DEPLOYMENT) — needs: Cold War [Boost: Build an Aerodrome or Airstrip on a foreign continent.]
+  Space Race (CIVIC_SPACE_RACE) — needs: Cold War [Boost: Build a Spaceport district.]

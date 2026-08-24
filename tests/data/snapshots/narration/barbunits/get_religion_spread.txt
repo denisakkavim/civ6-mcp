@@ -1,0 +1,25 @@
+Religious Victory Tracker:
+  RELIGION_ZOROASTRIANISM: majority in 1/5 civilizations
+  RELIGION_PROTESTANTISM: majority in 2/5 civilizations
+
+Germany:
+  Aachen (pop 8) — RELIGION_PROTESTANTISM (Protestantism:5)
+  Frankfurt (pop 6) — none (Protestantism:0)
+  Trier (pop 9) — none (Protestantism:0)
+  Methone (pop 10) — none (Protestantism:0)
+  Heidelberg (pop 5) — none (Protestantism:0)
+  Berlin (pop 11) — none (Zoroastrianism:0, Protestantism:0)
+  Hamburg (pop 4) — none (Protestantism:0)
+  Pella (pop 4) — none (Protestantism:0)
+Mapuche:
+  Huilli Mapu (pop 7) — RELIGION_ZOROASTRIANISM (Protestantism:1, Zoroastrianism:4, Eastern Orthodoxy:0)
+  Nag Mapu (pop 3) — RELIGION_ZOROASTRIANISM (Zoroastrianism:2)
+Georgia:
+  Tskhumi (pop 7) — RELIGION_ORTHODOXY (Protestantism:3, Eastern Orthodoxy:4)
+Kongo:
+  Mbanza Kongo (pop 13) — none
+  Mbumbi (pop 13) — none
+  Kwango (pop 10) — none
+  Mbanza Nsundi (pop 9) — none
+  Mbanza Mbata (pop 7) — none
+  Mbamba (pop 2) — none

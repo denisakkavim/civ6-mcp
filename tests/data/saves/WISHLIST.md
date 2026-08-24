@@ -5,7 +5,13 @@ recording for every tool on the surface that Stage 4 leaves behind.
 
 Read `README.md` first. It says what the four saves hold today.
 
-Coverage: **51 of 70 tools, and 11 of 20 `unit_action` verbs.**
+Coverage: **58 of 70 tools, and 16 of 20 `unit_action` verbs**, across 14 scenarios.
+
+The ten Frederick Barbarossa saves closed most of what the Inca saves could
+not reach. They gained seven tools — `resolve_city_capture`, `appoint_governor`,
+`propose_peace`, `send_envoy`, `choose_pantheon`, `queue_world_congress_votes`
+and `respond_to_diplomacy` — and five verbs: `activate`, `attack`, `heal`,
+`repair` and `remove_improvement`.
 
 ## Read this before you make a save
 
@@ -17,7 +23,7 @@ second reason needs you.
 | `scripts/record_game_traffic.py` never calls the tool | Me. I add the call to a plan and record it against a save we already have |
 | No save meets the tool's precondition | You. Play to that state and save |
 
-19 tools have no recording. They split three ways:
+12 tools have no recording. They split three ways:
 
 - **3 never get one.** `load_game` and `restart_game` kill and relaunch the
   game; the destructive live test covers them instead. `get_saves` scans the
@@ -27,7 +33,7 @@ second reason needs you.
 - **1 is mine.** `propose_deal` *is* recorded, but under the label `test_deal`,
   because `_logged` renames it in test mode. Recording it under its own name
   means `mode="send"`, which commits a real deal and reshapes the save.
-- **15 need a save.** They are the lists below.
+- **8 need a save.** They are the lists below.
 
 Nine `unit_action` verbs are also missing: `activate`, `attack`, `build_route`,
 `heal`, `remove_feature`, `remove_improvement`, `repair`, `sacrifice_charges`

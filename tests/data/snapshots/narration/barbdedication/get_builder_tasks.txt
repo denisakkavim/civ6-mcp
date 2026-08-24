@@ -1,0 +1,20 @@
+=== BUILDER TASKS (10 tasks, 1 idle builders) ===
+
+URGENT:
+  (18,11): RESOURCE_HORSES* — build IMPROVEMENT_PASTURE [city: Frankfurt] — nearest builder id:6, 3 tiles
+  (14,13): RESOURCE_HORSES* — build IMPROVEMENT_PASTURE [city: Trier] — nearest builder id:6, 6 tiles
+
+HIGH:
+  (18,8): RESOURCE_DIAMONDS+ — build IMPROVEMENT_MINE [city: Frankfurt] — nearest builder id:6, 0 tiles
+  (13,6): RESOURCE_DEER — build IMPROVEMENT_CAMP [city: Aachen] — nearest builder id:6, 6 tiles
+
+NORMAL:
+  (18,9): build IMPROVEMENT_FARM [city: Frankfurt] — nearest builder id:6, 1 tile
+  (16,8): build IMPROVEMENT_MINE [city: Aachen] — nearest builder id:6, 2 tiles
+  (19,10): build IMPROVEMENT_LUMBER_MILL [city: Frankfurt] — nearest builder id:6, 2 tiles
+  (13,8): build IMPROVEMENT_MINE [city: Aachen] — nearest builder id:6, 5 tiles
+  (15,12): build IMPROVEMENT_FARM [city: Frankfurt] — nearest builder id:6, 5 tiles
+  (13,13): build IMPROVEMENT_FARM [city: Trier] — nearest builder id:6, 7 tiles
+
+IDLE BUILDERS (1):
+  id:6 at (18,8) — 3 charges, 2 moves

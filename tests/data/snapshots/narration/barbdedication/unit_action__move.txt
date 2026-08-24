@@ -1,0 +1,1 @@
+MOVING_TO|19,13|from:20,13|now_at:19,13|(moved dx:-1 dy:+0)

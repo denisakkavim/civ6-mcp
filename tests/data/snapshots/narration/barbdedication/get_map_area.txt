@@ -1,0 +1,26 @@
+25 tiles:
+  (12,6): TUNDRA FOREST Coast {F:1 P:1} [mv:2]
+  (13,6): TUNDRA FOREST [RESOURCE_DEER] {F:1 P:2} (owned by Germany) [mv:2]
+  (14,6): TUNDRA FOREST {F:1 P:1} [mv:2]
+  (15,6): TUNDRA {F:1 P:0}
+  (16,6): TUNDRA [fog]
+  (12,7): TUNDRA_HILLS Hills FOREST River Coast {F:1 P:2} [mv:3]
+  (13,7): TUNDRA_HILLS Hills River [CAMPUS] {F:0 P:0} (owned by Germany) [mv:2]
+  (14,7): TUNDRA_HILLS Hills [RESOURCE_DIAMONDS+] River (IMPROVEMENT_MINE) {F:1 P:1 G:3} (owned by Germany) [mv:2]
+  (15,7): TUNDRA River {F:1 P:0}
+  (16,7): TUNDRA_HILLS Hills [RESOURCE_SHEEP] {F:2 P:1} [mv:2]
+  (12,8): GRASS River Coast {F:2 P:0}
+  (13,8): GRASS_HILLS Hills River {F:2 P:1} (owned by Germany) [mv:2]
+  (14,8): GRASS River (Road) [CITY_CENTER] {F:2 P:0} (owned by Germany) [my: UNIT_SLINGER]
+  (15,8): GRASS MARSH River {F:3 P:0} (owned by Germany) [mv:2]
+  (16,8): TUNDRA_HILLS Hills FOREST River {F:1 P:2} (owned by Germany) [mv:3]
+  (12,9): GRASS MARSH Coast FreshWater {F:3 P:0} (owned by Germany) [mv:2]
+  (13,9): GRASS [RESOURCE_STONE] Coast FreshWater (IMPROVEMENT_QUARRY) {F:2 P:1} (owned by Germany)
+  (14,9): GRASS FOREST [RESOURCE_TOBACCO+] {F:2 P:1 Fa:1} (owned by Germany) [mv:2]
+  (15,9): GRASS River {F:2 P:0}
+  (16,9): GRASS FLOODPLAINS_GRASSLAND River {F:3 P:1}
+  (12,10): GRASS [RESOURCE_TOBACCO+] Coast FreshWater {F:2 P:0 Fa:1}
+  (13,10): COAST {F:1 P:0 G:1}
+  (14,10): GRASS Coast FreshWater {F:2 P:0}
+  (15,10): GRASS [RESOURCE_STONE] (IMPROVEMENT_QUARRY) {F:2 P:1} (owned by Germany)
+  (16,10): GRASS {F:2 P:0}

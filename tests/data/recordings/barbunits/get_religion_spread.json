@@ -1,0 +1,35 @@
+{
+  "tool": "get_religion_spread",
+  "arguments": {},
+  "scenario": "barbunits",
+  "recorded_at": "2026-08-24T17:52:28+00:00",
+  "notes": null,
+  "result": "Religious Victory Tracker:\n  RELIGION_ZOROASTRIANISM: majority in 1/5 civilizations\n  RELIGION_PROTESTANTISM: majority in 2/5 civilizations\n\nGermany:\n  Aachen (pop 8) \u2014 RELIGION_PROTESTANTISM (Protestantism:5)\n  Frankfurt (pop 6) \u2014 none (Protestantism:0)\n  Trier (pop 9) \u2014 none (Protestantism:0)\n  Methone (pop 10) \u2014 none (Protestantism:0)\n  Heidelberg (pop 5) \u2014 none (Protestantism:0)\n  Berlin (pop 11) \u2014 none (Zoroastrianism:0, Protestantism:0)\n  Hamburg (pop 4) \u2014 none (Protestantism:0)\n  Pella (pop 4) \u2014 none (Protestantism:0)\nMapuche:\n  Huilli Mapu (pop 7) \u2014 RELIGION_ZOROASTRIANISM (Protestantism:1, Zoroastrianism:4, Eastern Orthodoxy:0)\n  Nag Mapu (pop 3) \u2014 RELIGION_ZOROASTRIANISM (Zoroastrianism:2)\nGeorgia:\n  Tskhumi (pop 7) \u2014 RELIGION_ORTHODOXY (Protestantism:3, Eastern Orthodoxy:4)\nKongo:\n  Mbanza Kongo (pop 13) \u2014 none\n  Mbumbi (pop 13) \u2014 none\n  Kwango (pop 10) \u2014 none\n  Mbanza Nsundi (pop 9) \u2014 none\n  Mbanza Mbata (pop 7) \u2014 none\n  Mbamba (pop 2) \u2014 none",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal pVis = PlayersVisibility[me]\nlocal pDiplo = Players[me]:GetDiplomacy()\nfor pid = 0, 62 do\n    local p = Players[pid]\n    if p and p:IsMajor() and p:IsAlive() then\n        if pid == me or pDiplo:HasMet(pid) then\n            local cfg = PlayerConfigurations[pid]\n            local civName = Locale.Lookup(cfg:GetCivilizationShortDescription())\n            for _, c in p:GetCities():Members() do\n                local cx, cy = c:GetX(), c:GetY()\n                if pid == me or pVis:IsRevealed(cx, cy) then\n                    local cityName = Locale.Lookup(c:GetName())\n                    local cityRel = c:GetReligion()\n                    local majRel = cityRel:GetMajorityReligion()\n                    local relName = \"none\"\n                    local relType = \"\"\n                    if majRel >= 0 then\n                        local r = GameInfo.Religions[majRel]\n                        if r then\n                            relName = Locale.Lookup(r.Name)\n                            relType = r.ReligionType\n                        end\n                    end\n                    local pop = c:GetPopulation()\n                    local followers = \"\"\n                    local rels = cityRel:GetReligionsInCity()\n                    if rels then\n                        local parts = {}\n                        for _, r in ipairs(rels) do\n                            if r.Religion >= 0 then\n                                local rn = GameInfo.Religions[r.Religion]\n                                local rName = rn and Locale.Lookup(rn.Name) or \"Unknown\"\n                                table.insert(parts, rName .. \":\" .. r.Followers)\n                            end\n                        end\n                        followers = table.concat(parts, \",\")\n                    end\n                    print(\"RCITY|\" .. pid .. \"|\" .. civName .. \"|\" .. cityName .. \"|\" .. relName .. \"|\" .. pop .. \"|\" .. followers .. \"|\" .. relType .. \"|\" .. ((c:GetID() % 65536) + c:GetOwner() * 65536 + 16777216))\n                end\n            end\n        end\n    end\nend\nlocal relTotals = {}\nlocal relTypes = {}\nlocal nMajors = 0\nfor i = 0, 62 do\n    local p = Players[i]\n    if p and p:IsMajor() and p:IsAlive() then\n        nMajors = nMajors + 1\n        local majRel = p:GetReligion():GetReligionInMajorityOfCities()\n        if majRel >= 0 then\n            local r = GameInfo.Religions[majRel]\n            local rName = r and Locale.Lookup(r.Name) or \"Unknown\"\n            relTotals[rName] = (relTotals[rName] or 0) + 1\n            relTypes[rName] = r and r.ReligionType or \"\"\n        end\n    end\nend\nfor rName, count in pairs(relTotals) do\n    print(\"RSUMMARY|\" .. rName .. \"|\" .. count .. \"|\" .. nMajors .. \"|\" .. (relTypes[rName] or \"\"))\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "RCITY|0|Germany|Aachen|Protestantism|8|Protestantism:5|RELIGION_PROTESTANTISM|16777216",
+        "RCITY|0|Germany|Frankfurt|none|6|Protestantism:0||16777217",
+        "RCITY|0|Germany|Trier|none|9|Protestantism:0||16777218",
+        "RCITY|0|Germany|Methone|none|10|Protestantism:0||16777219",
+        "RCITY|0|Germany|Heidelberg|none|5|Protestantism:0||16777220",
+        "RCITY|0|Germany|Berlin|none|11|Zoroastrianism:0,Protestantism:0||16777221",
+        "RCITY|0|Germany|Hamburg|none|4|Protestantism:0||16777222",
+        "RCITY|0|Germany|Pella|none|4|Protestantism:0||16777223",
+        "RCITY|2|Mapuche|Huilli Mapu|Zoroastrianism|7|Protestantism:1,Zoroastrianism:4,Eastern Orthodoxy:0|RELIGION_ZOROASTRIANISM|16908293",
+        "RCITY|2|Mapuche|Nag Mapu|Zoroastrianism|3|Zoroastrianism:2|RELIGION_ZOROASTRIANISM|16908294",
+        "RCITY|4|Georgia|Tskhumi|Eastern Orthodoxy|7|Protestantism:3,Eastern Orthodoxy:4|RELIGION_ORTHODOXY|17039366",
+        "RCITY|5|Kongo|Mbanza Kongo|none|13|||17104896",
+        "RCITY|5|Kongo|Mbumbi|none|13|||17104898",
+        "RCITY|5|Kongo|Kwango|none|10|||17104899",
+        "RCITY|5|Kongo|Mbanza Nsundi|none|9|||17104900",
+        "RCITY|5|Kongo|Mbanza Mbata|none|7|||17104901",
+        "RCITY|5|Kongo|Mbamba|none|2|||17104902",
+        "RSUMMARY|Zoroastrianism|1|5|RELIGION_ZOROASTRIANISM",
+        "RSUMMARY|Protestantism|2|5|RELIGION_PROTESTANTISM"
+      ]
+    }
+  ]
+}

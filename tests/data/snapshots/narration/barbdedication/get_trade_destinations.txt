@@ -1,0 +1,33 @@
+24 trade route destinations:
+
+Domestic (food + production to destination):
+  Aachen at (14,8) [city:16777216] | Food:1 Prod:1
+  Frankfurt at (18,10) [city:16777217] | Food:1 Prod:1
+  Trier at (14,12) [city:16777218] | Food:1 Prod:1
+
+International (gold to origin):
+  Pella (Macedon) at (19,17) [city:16842752] | Gold:3
+  Methone (Macedon) at (17,14) [city:16842753] | Gold:3
+  Ngulu Mapu (Mapuche) at (63,33) [city:16908288] | Gold:3 Sci:1
+  Ina Pire Mapu (Mapuche) at (63,37) [city:16908289] | Gold:3
+  Lafken Mapu (Mapuche) at (66,35) [city:16908290] | Gold:5
+  Rangkül Mapu (Mapuche) at (60,27) [city:16908291] | Gold:3
+  London (England) at (52,26) [city:16973824] | Gold:3 | Protestantism <- 0.5
+  Tbilisi (Georgia) at (59,17) [city:17039360] | Gold:3
+  Kutaisi (Georgia) at (55,16) [city:17039361] | Gold:3
+  Zugdidi (Georgia) at (54,20) [city:17039362] | Gold:3
+  Mbanza Kongo (Kongo) at (24,29) [city:17104896] | Prod:1 Gold:3
+  Kinchassa (Kongo) at (22,33) [city:17104897] | Gold:3
+  Anshan (Anshan) at (68,26) [city:17170432] | Gold:3
+  La Venta (La Venta) at (16,24) [city:17235968] | Gold:3
+  Venice (Venice) at (7,26) [city:17301504] | Gold:3
+  Mexico City (Mexico City) at (27,18) [city:17367040] | Gold:3 | [QUEST]
+  Ayutthaya (Ayutthaya) at (12,20) [city:17432576] | Gold:3
+  Zanzibar (Zanzibar) at (51,16) [city:17498112] | Gold:3
+  Bandar Brunei (Bandar Brunei) at (63,23) [city:17563648] | Gold:3
+  Preslav (Preslav) at (58,36) [city:17629184] | Gold:3
+  Kumasi (Kumasi) at (56,9) [city:17694720] | Gold:3
+
+City-state quests (send trade route for envoy): Mexico City
+
+Use unit_action with action='trade_route', target_x=X, target_y=Y

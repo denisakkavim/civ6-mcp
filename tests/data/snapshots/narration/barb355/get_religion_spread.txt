@@ -1,0 +1,45 @@
+Religious Victory Tracker:
+  RELIGION_ZOROASTRIANISM: majority in 1/5 civilizations
+  RELIGION_PROTESTANTISM: majority in 3/5 civilizations
+  RELIGION_ORTHODOXY: majority in 1/5 civilizations
+
+Germany:
+  Aachen (pop 13) — RELIGION_PROTESTANTISM (Protestantism:9, Eastern Orthodoxy:0)
+  Frankfurt (pop 7) — RELIGION_PROTESTANTISM (Protestantism:4)
+  Trier (pop 11) — RELIGION_PROTESTANTISM (Protestantism:8, Eastern Orthodoxy:0)
+  Methone (pop 11) — RELIGION_PROTESTANTISM (Protestantism:8, Eastern Orthodoxy:0)
+  Heidelberg (pop 11) — none (Protestantism:5, Eastern Orthodoxy:0)
+  Berlin (pop 15) — RELIGION_PROTESTANTISM (Zoroastrianism:0, Protestantism:10, Eastern Orthodoxy:1)
+  Hamburg (pop 6) — RELIGION_PROTESTANTISM (Protestantism:4)
+  Pella (pop 14) — RELIGION_PROTESTANTISM (Protestantism:9, Eastern Orthodoxy:0)
+  Ulm (pop 9) — RELIGION_PROTESTANTISM (Protestantism:7, Eastern Orthodoxy:1)
+  Cologne (pop 6) — RELIGION_ORTHODOXY (Protestantism:2, Eastern Orthodoxy:4, Zoroastrianism:0)
+  Zanzibar (pop 11) — RELIGION_ORTHODOXY (Protestantism:4, Eastern Orthodoxy:6, Zoroastrianism:0)
+  Ayutthaya (pop 8) — RELIGION_ORTHODOXY (Protestantism:1, Eastern Orthodoxy:4)
+  Plymouth (pop 5) — RELIGION_PROTESTANTISM (Protestantism:3, Eastern Orthodoxy:1)
+  Magdeburg (pop 1) — none (Protestantism:0, Eastern Orthodoxy:0)
+Mapuche:
+  Huilli Mapu (pop 9) — RELIGION_ZOROASTRIANISM (Protestantism:1, Zoroastrianism:6, Eastern Orthodoxy:1)
+  Nag Mapu (pop 5) — RELIGION_ZOROASTRIANISM (Zoroastrianism:5)
+  Pehuen Mapu (pop 3) — RELIGION_ZOROASTRIANISM (Protestantism:0, Eastern Orthodoxy:0, Zoroastrianism:3)
+England:
+  Zugdidi (pop 9) — RELIGION_PROTESTANTISM (Protestantism:7, Eastern Orthodoxy:2, Zoroastrianism:0)
+  Hull (pop 2) — RELIGION_PROTESTANTISM (Protestantism:1, Eastern Orthodoxy:0)
+  Stoke-upon-Trent (pop 2) — RELIGION_PROTESTANTISM (Eastern Orthodoxy:0, Protestantism:1, Zoroastrianism:1)
+Georgia:
+  Kutaisi (pop 9) — RELIGION_PROTESTANTISM (Protestantism:5, Eastern Orthodoxy:4, Zoroastrianism:0)
+  Omalo (pop 6) — RELIGION_PROTESTANTISM (Protestantism:3, Eastern Orthodoxy:2, Zoroastrianism:0)
+  Tskhumi (pop 12) — RELIGION_ORTHODOXY (Protestantism:5, Eastern Orthodoxy:7)
+  Tsageri (pop 9) — RELIGION_ORTHODOXY (Protestantism:3, Eastern Orthodoxy:6, Zoroastrianism:0)
+  Poti (pop 3) — RELIGION_ORTHODOXY (Protestantism:1, Eastern Orthodoxy:2)
+Kongo:
+  Mbanza Kongo (pop 16) — RELIGION_PROTESTANTISM (Protestantism:9, Eastern Orthodoxy:1)
+  Kinchassa (pop 17) — RELIGION_PROTESTANTISM (Protestantism:9, Eastern Orthodoxy:2)
+  Mbumbi (pop 19) — RELIGION_PROTESTANTISM (Protestantism:14, Eastern Orthodoxy:0)
+  Kwango (pop 17) — RELIGION_PROTESTANTISM (Protestantism:13, Eastern Orthodoxy:0)
+  Mbanza Nsundi (pop 12) — RELIGION_PROTESTANTISM (Protestantism:7, Eastern Orthodoxy:0)
+  Mbanza Mbata (pop 16) — none (Protestantism:5, Eastern Orthodoxy:5)
+  Mbamba (pop 11) — RELIGION_ORTHODOXY (Protestantism:1, Eastern Orthodoxy:7)
+  Bakavu (pop 7) — RELIGION_PROTESTANTISM (Protestantism:6, Eastern Orthodoxy:0)
+  Mbanza Mpangu (pop 4) — RELIGION_PROTESTANTISM (Protestantism:2, Eastern Orthodoxy:1)
+  Nkondo (pop 4) — RELIGION_ORTHODOXY (Protestantism:1, Eastern Orthodoxy:3)

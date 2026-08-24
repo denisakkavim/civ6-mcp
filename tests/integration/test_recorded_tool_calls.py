@@ -97,6 +97,28 @@ def test_recording_replays_to_its_snapshot(civ_server, scenario, name):
 # re-recordable against the state it came from, so losing the save turns the
 # corpus into something nobody can regenerate or extend.
 SCENARIO_SAVES = {
+    # Germany (Frederick Barbarossa) at turn 355, Atomic era. The first
+    # scenario that is at war, and the first with a pillaged tile, a damaged
+    # unit, an Encampment, an Aerodrome and a Military Engineer — the
+    # preconditions for `attack`, `repair`, `heal`, `build_route` and the two
+    # open questions in Stage 4.1 and §6b. Loaded by hand: the OCR navigation
+    # cannot reach it, which is a launcher problem and not a save problem.
+    "barb355": "0T_BARB_T355.Civ6Save",
+    # Turn 352, at war, and the only save in the project that has ever held a
+    # Spy — the tool that has been in the recording plan since the suite was
+    # built and had never once been recorded.
+    "barbwarspies": "0T_BARB_WARSPIES.Civ6Save",
+    # Germany again, each save made to hold one state the Inca saves never
+    # reach. Named for the condition rather than the turn, because that is
+    # what decides which tools they can record.
+    "barbwar": "0T_BARB_WAR.Civ6Save",
+    "barbwar2": "0T_BARB_WAR2.Civ6Save",
+    "barbunits": "0T_BARB_UNITS.Civ6Save",
+    "barbcongress": "0T_BARB_CONGRESS.Civ6Save",
+    "barbenvoy": "0T_BARB_ENVOY.Civ6Save",
+    "barbdedication": "0T_BARB_DEDICATION.Civ6Save",
+    "barbfreecity": "0T_BARB_FREECITY.Civ6Save",
+    "barbpantheon": "0T_BARB_PANTHEON.Civ6Save",
     "turn37": "0T_TURN37_INCA.Civ6Save",
     # Turn 57 carries what turn 37 could not: a settler, a trader, a builder
     # with charges, walls, a met civ and a Holy Site. Those are the
