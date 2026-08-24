@@ -6,6 +6,7 @@
 
 ## For Developers
 
+- [Play Session Findings](play-session-findings.md) — Defects found by playing a real game through the MCP tools; a fix list
 - [Architecture](architecture-diagrams.md) — Full stack from tool call to game engine, wire protocol, Lua contexts
 - [Save File Format](save-file-format.md) — Reverse-engineered .Civ6Save structure
 - [Bypassing the Aspyr Launcher](research/bypassing_aspyr_launcher.md) — macOS launch automation
