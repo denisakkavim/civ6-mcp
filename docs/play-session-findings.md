@@ -202,7 +202,26 @@ Directly after `PURCHASED|BUILDING_GOV_SPIES`, the same building was still
 listed as buyable, and a newly unlocked building was absent. An agent that
 trusts this read buys the same building twice.
 
-### 3.4 `get_great_person_sites` says "needs move" at distance 0
+### 3.4 `get_units` can never report that a unit can promote
+
+Found before the play session, and recorded here because Stage 4.9 depends on
+it. `narrate.py` prints `**NEEDS PROMOTION**` when `UnitInfo.needs_promotion`
+is true. That field is always false: `lua/units.py` sets `local promo = "0"`
+and never changes it. The comment above it gives the reason, and the reason is
+sound — an XP check (`GetExperiencePoints() >= GetExperienceForNextLevel()`)
+stays true after `SetPromotion()`, so it fires one turn early and causes
+double promotions.
+
+The result is a marker that cannot appear. The agent must call
+`get_unit_promotions` for each unit to find out, or miss promotions.
+`barbpantheon` holds a Scout with two promotions waiting, and `get_units`
+says nothing about it.
+
+Stage 4.9 asks `get_units` to mark promotion eligibility. The only correct
+source is the GameCore `CanPromote` check that `end_turn` already uses. This
+is not a one-line change.
+
+### 3.5 `get_great_person_sites` says "needs move" at distance 0
 
 With the unit standing on the tile, the output was
 `Pella (21,17) — needs move (dist 0)`. Distance 0 means the unit can act now.
