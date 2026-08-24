@@ -109,8 +109,7 @@ Five conditions, and only five, are not in any save today:
 
 - an **idle** Spy (`barbwarspies` has one, mid-mission on FOMENT_UNREST)
 - a **Great Prophet**, for `found_religion`
-- the **Royal Society** card slotted, for `disband_unit(sacrifice_charges)`
-- a **dedication choice** open at an era turn
+- the **Royal Society building** (not a card), plus a builder on that district and a project running, for `disband_unit(sacrifice_charges)`
 - a **declared friendship**, for `form_alliance`
 
 plus two nobody can force: a deal the AI offers (`respond_to_deal`) and a
@@ -157,7 +156,7 @@ save can hold all of them at once.
 | A Military Engineer with charges | `builder_work(work="build_route")` |
 | A Builder standing on a removable feature | `builder_work(work="remove_feature")` |
 | A Builder standing on an intact improvement | `builder_work(work="remove_improvement")` |
-| The Royal Society policy card slotted, and a Builder on a district under construction | `disband_unit(mode="sacrifice_charges")`. Stage 4.5 asks whether this verb belongs in `disband_unit` at all, and the answer decides where it goes |
+| The Royal Society *building* (BUILDING_GOV_SCIENCE, tier-3 Government Plaza — not a policy card, and it needs a tier-3 government first), a Builder on that district's tile, and the city producing a project | `disband_unit(mode="sacrifice_charges")`. Stage 4.5 asks whether this verb belongs in `disband_unit` at all, and the answer decides where it goes |
 | An Aerodrome and an Airport | §6b asks whether airlift is exposed anywhere. If it is not, that is a missing capability rather than a naming problem |
 
 ### Save 3 — early game, before a pantheon
@@ -194,7 +193,7 @@ game you are already playing — any of the saves above can carry it.
 | Condition | It unblocks |
 |---|---|
 | Envoy tokens available | `send_envoy` |
-| An era about to turn, with a dedication to choose | `choose_dedication` |
+| ~~An era about to turn, with a dedication to choose~~ | `choose_dedication` — **already held by `barbdedication`**, whose own snapshot reads "1 dedication(s) to choose:". This was never a save gap; the recorder simply did not call the tool. |
 | A declared friendship, so an alliance is legal | `form_alliance` |
 | Enough Great Person points to recruit | `great_person_action(action="recruit")` |
 | A deal offered to you by an AI, unanswered | `respond_to_deal` |

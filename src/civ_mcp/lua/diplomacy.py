@@ -447,9 +447,27 @@ elseif action == "DIPLOMATIC_DELEGATION" then
         print("OK:ACCEPTED|Delegation sent to " .. name)
     end
 elseif action == "RESIDENT_EMBASSY" then
-    print("OK:ACCEPTED|" .. name .. " accepted your embassy")
+    -- Do not claim acceptance. Nothing here has checked it: this branch used
+    -- to print OK:ACCEPTED unconditionally, so a refusal and an agreement were
+    -- byte-identical. The _WAR branch above shows the honest shape.
+    if pDiplo:HasEmbassyAt(target) then
+        print("OK:ACCEPTED|" .. name .. " accepted your embassy")
+    else
+        print("OK:SENT|Embassy request sent to " .. name .. " — confirm with get_diplomacy")
+    end
 elseif action == "DECLARE_FRIENDSHIP" then
-    print("OK:ACCEPTED|" .. name .. " accepted your friendship declaration")
+    -- Same: the engine resolves the response on a later frame, so a
+    -- same-frame read is stale (see this module's build_diplomacy_respond
+    -- docstring). Report what we know, not what we hope.
+    local isFriend = false
+    pcall(function()
+        isFriend = pDiplo:GetDiplomaticState(target) == "DIPLO_STATE_DECLARED_FRIEND"
+    end)
+    if isFriend then
+        print("OK:ACCEPTED|" .. name .. " accepted your friendship declaration")
+    else
+        print("OK:SENT|Friendship declared to " .. name .. " — confirm with get_diplomacy before relying on it")
+    end
 elseif action == "DENOUNCE" then
     print("OK:SENT|Denounced " .. name)
 else

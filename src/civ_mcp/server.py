@@ -1837,7 +1837,10 @@ async def unit_action(
     remove_improvement: demolishes an intact improvement. Costs one charge.
     activate: a Great Person, on their matching district.
     sacrifice_charges: spends ALL builder charges to boost a district project
-        (2% each). Royal Society card; builder must stand on the district.
+        (2% each). Needs the Royal Society *building* (BUILDING_GOV_SCIENCE,
+        a tier-3 Government Plaza building — not a policy card), the builder
+        on that district's tile, and the city already producing a project.
+        Once per city per turn.
     spread_religion: Missionaries/Apostles only. Acts in place.
     build_route: road/railroad. Military Engineers only; a railroad tile costs
         1 Iron + 1 Coal.

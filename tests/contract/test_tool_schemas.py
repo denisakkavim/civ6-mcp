@@ -78,8 +78,14 @@ from utils import snapshots
 # district") to satisfy a number. That was the proxy winning. Most of Stage 3's
 # growth sits in `unit_action`, which Stage 4 dissolves into six tools with
 # fixed signatures; that is where the reduction should come from.
-MAX_TOOL_SCHEMA_CHARS = 2900
-MAX_SURFACE_CHARS = 42_700
+# Raised again after an agent played a real game through this surface and
+# went looking for a policy card that does not exist: `sacrifice_charges` said
+# "Royal Society card" when the check is for BUILDING_GOV_SCIENCE, a tier-3
+# Government Plaza *building*, gated behind a tier-3 government, and needs the
+# city to be producing a project. Four unstated preconditions cost more than
+# the 139 characters that state them.
+MAX_TOOL_SCHEMA_CHARS = 3050
+MAX_SURFACE_CHARS = 42_900
 
 
 def _tools():
