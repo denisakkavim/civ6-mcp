@@ -166,6 +166,49 @@ Header: `Civic: Totalitarianism (2 turns)`. List:
 `Totalitarianism (CIVIC_TOTALITARIANISM) [MODERN] — 0%, 14 turns BOOSTED`.
 It took 2 turns.
 
+### 2.4 `get_cities` advertises attack targets the attack refuses — FIXED
+
+Found while verifying Stage 4's `attack`, against `0T_BARB_WAR2` at turn 117.
+Fixed while adding the Encampment branch: the list is now built from each
+defended district's own `GetCommandTargets`, intersected with tiles holding a
+hostile unit and filtered by the same `CanStartCommand` the write runs. A
+`CAN ATTACK` line now means the city can strike that tile right now. It also
+covers the Encampment's reach, which the old radius scan could not see at all.
+
+
+`get_cities` printed, under Methone at (17,14):
+
+```
+    >> CAN ATTACK: UNIT_ARCHER@18,16(100hp)[65540]
+    >> CAN ATTACK: UNIT_ARCHER@15,17(100hp)[65542]
+```
+
+and under Heidelberg at (22,10):
+
+```
+    >> CAN ATTACK: UNIT_SCOUT@22,7(43hp)[4128809]
+    >> CAN ATTACK: UNIT_SCOUT@25,10(100hp)[4128779]
+```
+
+Every one of those calls is refused:
+
+```
+attack(attacker_id=16777219, target_x=15, target_y=17)
+  -> Error: OUT_OF_RANGE|Target is 3 tiles away (city attack range is 2)
+attack(attacker_id=16777220, target_x=22, target_y=7)
+  -> Error: OUT_OF_RANGE|Target is 3 tiles away (city attack range is 2)
+```
+
+Three of the four listed targets are out of range. The read and the write
+disagree about how far a city can shoot. One of them is wrong, and the agent
+cannot tell which without spending a call to find out.
+
+The remaining in-range target fails differently — see 5.1 below.
+
+The `CAN ATTACK` list is built in `lua/cities.py`; the range check is
+`Map.GetPlotDistance` against `dist > 2` in `build_attack_from_city`. Whichever
+is right, both must use it.
+
 ## Group 3 — reads that do not feed writes
 
 The review calls this the round-trip rule in section 4j. A read must print
@@ -267,6 +310,31 @@ adds its own. The output looks truncated.
 The `spy_action` docstring says `city_id: Target city ... Preferred.`
 
 ## Group 5 — errors that do not say what to do next
+
+### 5.1 `CANNOT_ATTACK|unknown reason` for a target the same read offered — FIXED
+
+Same root cause as 2.4, arriving at the write side: the read offered a target
+the engine had never agreed to. With the read fixed, reaching this branch means
+the state moved between read and write, and the message now says so instead of
+"unknown reason".
+
+
+Same session as 2.4. Methone's one remaining `CAN ATTACK` target is in range,
+and the attack still fails:
+
+```
+attack(attacker_id=16777219, target_x=18, target_y=16)
+  -> Error: CANNOT_ATTACK|City cannot attack this target (unknown reason)
+```
+
+The Lua reached that branch, so it had already passed both earlier checks:
+the target is within 2 tiles, and it *is* in
+`CityManager.GetCommandTargets(pCity, RANGE_ATTACK)`. Only
+`CanStartCommand` refused. Two units stand on (18,16), a builder and an
+archer, and the enemy-selection loop above takes the last one it finds rather
+than the first — worth ruling out before looking further.
+
+### Errors whose cause is already on the line
 
 - `Error: CANNOT_PURCHASE|unknown`. The reason is knowable: the player holds
   no tier-3 government.

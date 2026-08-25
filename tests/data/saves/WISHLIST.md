@@ -1,11 +1,18 @@
 # Test save wish list
 
 This file says which saves the project still needs, and why. The goal is a
-recording for every tool on the surface that Stage 4 leaves behind.
+recording for every tool on the surface.
 
 Read `README.md` first. It says what the four saves hold today.
 
-Coverage: **58 of 70 tools, and 16 of 20 `unit_action` verbs**, across 14 scenarios.
+Coverage: **68 of 78 tools**, across 17 scenarios. Every tool Stage 4 created
+has a fixture, and so does `skip_remaining_units`, which the stage deleted and
+then put back.
+
+Two saves were made to finish that: `0T_INCA_MISSIONARY` (a Missionary standing
+*in* a city, the only way `spread_religion` can be recorded) and
+`0T_BARB_ENCAMPMENT` (walls, a completed Encampment and enemies in range of
+both, the only way a city ranged attack can be).
 
 The ten Frederick Barbarossa saves closed most of what the Inca saves could
 not reach. They gained seven tools — `resolve_city_capture`, `appoint_governor`,
@@ -35,10 +42,11 @@ second reason needs you.
   means `mode="send"`, which commits a real deal and reshapes the save.
 - **8 need a save.** They are the lists below.
 
-Nine `unit_action` verbs are also missing: `activate`, `attack`, `build_route`,
-`heal`, `remove_feature`, `remove_improvement`, `repair`, `sacrifice_charges`
-and `spread_religion`. Every one needs a save. Stage 4 turns each into a tool
-of its own, so a recording made now also gives that split a before-picture.
+Stage 4 closed the verb gaps by recording the split against live games, and
+the two saves above closed the last of them. Three verbs still have no
+fixture: `builder_work(remove_feature)`, `builder_work(build_route)` and
+`disband_unit(sacrifice_charges)`. Each needs a save that meets its
+precondition, listed below.
 
 ### Most of what looks like a missing save is a missing plan entry
 
@@ -50,9 +58,7 @@ say. The saves already hold the preconditions for:
 |---|---|
 | `promote_unit` | `barbpantheon` — its Scout has Ranger and Alpine waiting |
 | `promote_governor`, `appoint_governor` | `barbdedication` — a governor point is unspent |
-| `city_attack` | seven scenarios have an enemy in range while at war |
 | `build_route` | `barb355`, `barbunits`, `barbwarspies` hold a Military Engineer |
-| `spread_religion` | `turn73` — the Missionary needs one move first |
 
 None of these needs a save. They need the recorder to call them, or to call
 them correctly, which is mine to fix.
@@ -79,12 +85,14 @@ below, and listed here so that nobody reinstates them:
 - `promote_governor` needs a spare **governor point**, not merely an appointed
   governor with promotions listed. `CANNOT_PROMOTE|No governor points
   available` in all four scenarios.
-- `attack` and `city_attack` need a **war**. Turn 73 holds an enemy scout in
-  range of a city, but the call is refused with `NOT_AT_WAR`. Range matters
-  too: that scout was `OUT_OF_RANGE|Target is 3 tiles away (city attack range
-  is 2)`.
-- `spread_religion` needs the Missionary **in or adjacent to a city**. Turn 73
-  has one, at (46,7), two tiles from the nearest city.
+- `attack` needs a **war**. Turn 73 holds an enemy scout near a city, but the
+  call is refused with `NOT_AT_WAR`. Range matters too: that scout was
+  `OUT_OF_RANGE|Target is 3 tiles away (city attack range is 2)`. The
+  unit-attack half is recorded from `barbwar2`; the city half from
+  `barbencampment`, which was made for it.
+- `spread_religion` needs the Missionary **in or adjacent to a city**, and it
+  acts in place. Turn 73 leaves one at (46,7), two tiles short;
+  `0T_INCA_MISSIONARY` is that save with the Missionary walked in.
 - `respond_to_diplomacy` **does** need a save, and an earlier version of this
   file wrongly said otherwise. Recording
   `diplomacy_action(DIPLOMATIC_DELEGATION)` looked like it created the
@@ -130,7 +138,7 @@ The largest unlock. Aim for turn 140 or later, at war with a major civ.
 |---|---|
 | A captured or disloyal city awaiting your decision | `resolve_city_capture`. Stage 2 could only prove that this fails by name |
 | An enemy city you can capture on the next turn | Stage 3.4a. A city id encodes its owner, so capturing changes it. No save has ever shown that happen |
-| An enemy unit within 2 tiles of one of your cities | `attack` and `city_attack`, and so the general `attack` tool Stage 4 merges them into |
+| ~~An enemy in range of a city that the engine will let fire~~ | Provided by `0T_BARB_ENCAMPMENT`. Both halves are recorded: the City Center firing and reporting its Encampment as still loaded |
 | Past the peace cooldown | `propose_peace` |
 | A pillaged improvement | `builder_work(work="repair")` |
 | A pillaged district | The `type@x,y` output that Stage 3.4d added and nothing has run |
@@ -139,7 +147,7 @@ The largest unlock. Aim for turn 140 or later, at war with a major civ.
 | A spare governor point | `promote_governor`, and `appoint_governor(city_id=…)`, which appoints and assigns in one call |
 | An Encampment district of your own | Stage 4.1 asks whether an encampment can attack. Nothing can answer it today |
 | A Missionary or Apostle standing in or next to a city | `spread_religion` |
-| A Great Person with movement left, on or beside its matching district | `unit_action(activate)` and `activate_great_person`. A patronized Great Person spawns on the city centre with 0 moves, so it cannot reach its district before the recording ends |
+| A Great Person with movement left, on or beside its matching district | `activate_great_person` acting in place. The move-then-act form is recorded from `barb355`; a patronized Great Person spawns on the city centre with 0 moves, so the in-place path stays uncovered |
 
 A war produces most of this by itself. The capture row is the one to plan for:
 leave an enemy city at low health rather than taking it, so the capture happens
@@ -152,7 +160,7 @@ save can hold all of them at once.
 
 | Condition | It unblocks |
 |---|---|
-| A Spy, idle, not in transit | `spy_mission` and its 9 missions, and `send_unit_to_city` for a spy. `spy_action` is the one tool that has been in the recording plan since the suite was built and has never once been recorded |
+| A Spy already inside a *foreign* city, plus a second idle spy | `spy_mission` for the other eight missions, and the travel half of `send_unit_to_city`. `royalsociety` covers `GAIN_SOURCES` and nothing else: a mission acts where the spy stands, so each one needs a spy standing somewhere that offers it |
 | A Military Engineer with charges | `builder_work(work="build_route")` |
 | A Builder standing on a removable feature | `builder_work(work="remove_feature")` |
 | A Builder standing on an intact improvement | `builder_work(work="remove_improvement")` |

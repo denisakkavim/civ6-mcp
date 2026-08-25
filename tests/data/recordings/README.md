@@ -18,12 +18,11 @@ belief.
 
 There are four scenarios, one per save in `tests/data/saves/`:
 
-| Scenario | Save | Recordings |
-|---|---|---|
-| `turn37/` | `0T_TURN37_INCA` | 43 |
-| `turn57/` | `0T_TURN57_INCA` | 45 |
-| `turn63/` | `0T_TURN63_INCA` | 46 |
-| `turn73/` | `0T_TURN73_INCA` | 47 |
+There are fourteen scenarios, one per save in `tests/data/saves/`. The four
+Inca saves carry the main corpus; the Barbarossa saves each hold one game state
+the Inca saves never reach, and are named for that state rather than for a
+turn. `tests/integration/test_recorded_tool_calls.py` maps every scenario to
+its save and says what each one is for.
 
 Every recording holds a successful call. The recorder deletes a recording when
 the game refuses the call, and prints the reason.
@@ -58,11 +57,12 @@ Record the dispatcher calls first:
 uv run python scripts/record_game_traffic.py --subset dispatchers --scenario turn37
 ```
 
-Stage 4 of the tool surface refactor deletes `unit_action`, `city_attack`,
-`spy_action`, and `skip_remaining_units`. After the deletion you cannot show
-that the eleven new tools behave like the tools they replace.
+The `dispatchers` subset covers the eleven unit tools that Stage 4 split out of
+`unit_action`, `city_attack`, `spy_action` and `skip_remaining_units`. Those
+four tools no longer exist, so their recordings were deleted with them: a
+recording cannot replay through a tool that is gone.
 
-The Each scenario must be recorded against its own save.
+Each scenario must be recorded against its own save.
 `tests/integration/test_recorded_tool_calls.py` maps each scenario to its save,
 and fails if the save is missing.
 
