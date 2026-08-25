@@ -213,14 +213,14 @@ def test_recording_filenames_distinguish_dispatcher_verbs(tmp_path):
 
     recording.enable(tmp_path, scenario="s")
     try:
-        for action in ("fortify", "skip"):
-            recording.begin("unit_action", {"unit_id": 1, "action": action})
+        for stance in ("fortify", "skip"):
+            recording.begin("unit_stance", {"unit_id": 1, "stance": stance})
             recording.record(recording.WRITE, "lua", ["OK"])
             recording.finish("done")
     finally:
         recording.disable()
 
     written = sorted(p.name for p in (tmp_path / "s").glob("*.json"))
-    assert written == ["unit_action__fortify.json", "unit_action__skip.json"]
+    assert written == ["unit_stance__fortify.json", "unit_stance__skip.json"]
 
 

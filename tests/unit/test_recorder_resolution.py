@@ -76,11 +76,21 @@ CITIES = """4 cities:
 
 def test_an_attack_target_is_paired_with_the_city_that_can_reach_it():
     """The attacking city must be the one the CAN ATTACK line sits under."""
-    assert recorder._attack_target(CITIES) == (16777217, 46, 6)
+    assert recorder._attack_targets(CITIES) == (16777217, [(46, 6)])
+
+
+def test_attack_targets_collects_a_second_tile_for_a_second_district():
+    """A city fires once per defended district, so one tile is not enough.
+
+    The Encampment shoots from its own square, so its target is usually a tile
+    the City Center cannot reach.
+    """
+    two = CITIES + "    >> CAN ATTACK: UNIT_ARCHER@47,7(80hp)[65542]\n"
+    assert recorder._attack_targets(two) == (16777217, [(46, 6), (47, 7)])
 
 
 def test_no_attack_target_reports_none():
-    assert recorder._attack_target(CITIES.split(">> CAN ATTACK")[0]) is None
+    assert recorder._attack_targets(CITIES.split(">> CAN ATTACK")[0]) is None
 
 
 RESEARCH = """Researching: Apprenticeship (TECH_APPRENTICESHIP)

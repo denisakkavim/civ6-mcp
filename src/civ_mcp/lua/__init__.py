@@ -27,7 +27,7 @@ from civ_mcp.lua.espionage import (  # noqa: F401
 )
 from civ_mcp.lua.cities import (  # noqa: F401
     build_cities_query,
-    build_city_attack,
+    build_attack_from_city,
     build_city_production_query,
     build_city_yield_focus_query,
     build_produce_item,
@@ -281,7 +281,6 @@ from civ_mcp.lua.units import (  # noqa: F401
     build_builder_tasks_query,
     build_combat_estimate_query,
     build_delete_unit,
-    build_fortify_remaining_units,
     build_fortify_unit,
     build_heal_unit,
     build_build_route,
@@ -297,7 +296,9 @@ from civ_mcp.lua.units import (  # noqa: F401
     build_skip_unit,
     build_sleep_unit,
     build_fog_neighbor_query,
+    build_fortify_remaining_units,
     build_threat_scan_query,
+    build_unit_kind_query,
     build_unit_position_query,
     build_unit_roster_query,
     build_units_query,

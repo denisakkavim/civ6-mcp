@@ -19,7 +19,7 @@ from utils import recordings
 
 # Read tool -> the write tool its type strings are meant to feed.
 CONSUMERS = {
-    "get_builder_tasks": "unit_action",
+    "get_builder_tasks": "builder_work",
     "get_production_options": "set_city_production",
     "get_empire_resources": "propose_deal",
     "get_religion_spread": "found_religion",

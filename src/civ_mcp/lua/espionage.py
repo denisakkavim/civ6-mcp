@@ -195,7 +195,7 @@ def build_spy_mission(
     err_lua = (
         f'"ERR:CANNOT_MISSION|{mission_type} not available at (" .. '
         f"{target_x} .. ',' .. {target_y} .. "
-        '"). Spy must be in the target city first (use spy_action travel)."'
+        '"). Spy must be in the target city first (use send_unit_to_city)."'
     )
     return " ".join(
         [

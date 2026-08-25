@@ -103,7 +103,7 @@ _active: Recorder | None = None
 def _slug(current: _InFlight) -> str:
     """A filename that distinguishes calls to the same tool by argument.
 
-    ``unit_action`` is recorded once per verb, so the tool name alone would
+    A dispatcher is recorded once per verb, so the tool name alone would
     have each recording overwrite the last.
     """
     parts = [current.tool]

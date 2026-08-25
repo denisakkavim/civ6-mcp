@@ -132,11 +132,11 @@ def narrate_spies(spies: list[lq.SpyInfo]) -> str:
     lines.append("")
     lines.append("Actions:")
     lines.append(
-        "  Travel: spy_action(unit_id, action='travel', target_x, target_y)"
+        "  Travel: send_unit_to_city(unit_id, city_id)"
         " — send spy to own city or city-state"
     )
     lines.append(
-        "  Mission: spy_action(unit_id, action=MISSION_TYPE, target_x, target_y)"
+        "  Mission: spy_mission(unit_id, mission=MISSION_TYPE)"
         " — spy must already be in target city"
     )
     lines.append(
@@ -1508,7 +1508,8 @@ def narrate_trade_routes(status: lq.TradeRouteStatus) -> str:
         lines.append(f"\nIdle ({len(idle)}):")
         for t in idle:
             lines.append(
-                f"  Trader (id:{t.unit_id}) at ({t.x},{t.y}) — needs trade_route or teleport"
+                f"  Trader (id:{t.unit_id}) at ({t.x},{t.y}) — needs"
+                f" establish_trade_route or send_unit_to_city"
             )
     if not status.traders:
         lines.append("\nNo trader units.")
@@ -1571,7 +1572,7 @@ def narrate_trade_destinations(dests: list[lq.TradeDestination]) -> str:
         lines.append(
             f"\nCity-state quests (send trade route for envoy): {', '.join(quest_cs)}"
         )
-    lines.append("\nUse unit_action with action='trade_route', target_x=X, target_y=Y")
+    lines.append("\nUse establish_trade_route(unit_id, city_id)")
     return "\n".join(lines)
 
 

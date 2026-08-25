@@ -10,10 +10,11 @@ exercise the whole stack offline.
     # launch Civ 6 with EnableTuner=1 and load 0T_TURN37_INCA
     uv run python scripts/record_game_traffic.py --scenario turn37
 
-**Record the dispatcher captures before Stage 4 splits them.** `unit_action`,
-`city_attack`, `spy_action` and `skip_remaining_units` disappear in that stage;
-once they are gone there is no way to demonstrate that the eleven replacements
-behave like what they replaced.
+Stage 4 split the four dispatchers into eleven tools with fixed signatures.
+The `dispatchers` subset now records those eleven, one entry per verb where a
+verb survived. The recordings of `unit_action`, `city_attack`, `spy_action` and
+`skip_remaining_units` were deleted with the tools: a recording cannot replay
+through a tool that no longer exists.
 
 Write calls mutate the game. Reload the save between runs if you care about
 comparability, and pass `--subset reads` when you only need the read corpus.
@@ -97,13 +98,13 @@ READ_PLAN: list[tuple[str, dict, bool]] = [
     ),
 ]
 
-# The dispatchers Stage 4 deletes. One recording per verb, so the replacements
-# can be checked against recorded behaviour rather than against memory.
+# The eleven tools Stage 4 split the dispatchers into. One recording per verb,
+# so a change to any of them shows as a diff rather than as a surprise.
 #
 # Every verb gets its **own unit**. Run against a single unit they interfere:
-# `fortify` and `skip` end that unit's turn, so a later `move` records
+# `fortify` and `skip` end that unit's turn, so a later `move_unit` records
 # `NO_MOVES` and the recording captures a failure instead of the behaviour.
-# `move` runs first for the same reason.
+# `move_unit` runs first for the same reason.
 #
 # Verbs below the divider need a unit or a tile state no single save is
 # guaranteed to have — a settler, an idle trader, a damaged unit, a builder
@@ -114,82 +115,58 @@ READ_PLAN: list[tuple[str, dict, bool]] = [
 # everywhere else.
 DISPATCHER_PLAN: list[tuple[str, dict, bool]] = [
     (
-        "unit_action",
-        {
-            "unit_id": "$UNIT_0",
-            "action": "move",
-            "target_x": "$MOVE_X",
-            "target_y": "$MOVE_Y",
-        },
+        "move_unit",
+        {"unit_id": "$UNIT_0", "target_x": "$MOVE_X", "target_y": "$MOVE_Y"},
         True,
     ),
-    ("unit_action", {"unit_id": "$UNIT_1", "action": "fortify"}, True),
-    ("unit_action", {"unit_id": "$UNIT_2", "action": "skip"}, True),
-    ("unit_action", {"unit_id": "$UNIT_3", "action": "alert"}, True),
-    ("unit_action", {"unit_id": "$UNIT_4", "action": "automate"}, True),
+    ("unit_stance", {"unit_id": "$UNIT_1", "stance": "fortify"}, True),
+    ("unit_stance", {"unit_id": "$UNIT_2", "stance": "skip"}, True),
+    ("unit_stance", {"unit_id": "$UNIT_3", "stance": "alert"}, True),
+    ("unit_stance", {"unit_id": "$UNIT_4", "stance": "automate"}, True),
     # --- conditional on what the save contains ---------------------------
-    # `improve` has to run before anything that ends the builder's turn, and it
-    # takes no coordinates: the builder acts on the tile it is standing on, so
-    # the resolver only offers this verb when `get_units` reports a `Can build`
-    # line for that builder. (Stage 3.2 adds move-then-act; until then, being
-    # on the tile is the precondition.)
+    # `improve` takes no coordinates here: the builder acts on the tile it is
+    # standing on, so the resolver only offers this verb when `get_units`
+    # reports a `Can build` line for that builder.
     (
-        "unit_action",
+        "builder_work",
         {
             "unit_id": "$IMPROVE_UNIT",
-            "action": "improve",
+            "work": "improve",
             "improvement_type": "$IMPROVEMENT",
         },
         True,
     ),
     # Sleep is refused for a unit that has already fortified or alerted, which
     # most military units in a mid-game save have — and the builder above is
-    # busy improving. So this wants a *second* builder, and skips otherwise;
-    # the turn37 corpus already holds a sleep recording.
-    ("unit_action", {"unit_id": "$SLEEPER", "action": "sleep"}, True),
-    ("unit_action", {"unit_id": "$DAMAGED", "action": "heal"}, True),
-    # `activate` also needs the Great Person to be standing on its matching
-    # district, which nothing in `get_units` reports. If it is not, this
-    # records an error — `test_recording_captured_a_successful_call` fails on
-    # it by name, which is the signal to delete that one capture.
-    ("unit_action", {"unit_id": "$GREAT_PERSON", "action": "activate"}, True),
-    ("unit_action", {"unit_id": "$RELIGIOUS_UNIT", "action": "spread_religion"}, True),
-    # Teleport first: it needs an idle trader, and establishing a route
+    # busy improving. So this wants a *second* builder, and skips otherwise.
+    ("unit_stance", {"unit_id": "$SLEEPER", "stance": "sleep"}, True),
+    ("unit_stance", {"unit_id": "$DAMAGED", "stance": "heal"}, True),
+    # `activate_great_person` also needs the Great Person to be standing on its
+    # matching district. It spawns on the city centre instead, so LATE_PLAN
+    # records the move-then-act form, which is the one that works.
+    ("activate_great_person", {"unit_id": "$GREAT_PERSON"}, True),
+    ("spread_religion", {"unit_id": "$RELIGIOUS_UNIT"}, True),
+    # Transfer first: it needs an idle trader, and establishing a route
     # consumes exactly that idleness.
     (
-        "unit_action",
-        {
-            "unit_id": "$IDLE_TRADER",
-            "action": "teleport",
-            "target_x": "$OTHER_CITY_X",
-            "target_y": "$OTHER_CITY_Y",
-        },
+        "send_unit_to_city",
+        {"unit_id": "$IDLE_TRADER", "city_id": "$OTHER_CITY"},
         True,
     ),
-    # A different trader: teleport spends the first one's moves.
+    # A different trader: the transfer spends the first one's moves.
     (
-        "unit_action",
-        {"unit_id": "$SECOND_TRADER", "action": "trade_route", "city_id": "$TRADE_DEST"},
+        "establish_trade_route",
+        {"unit_id": "$SECOND_TRADER", "city_id": "$TRADE_DEST"},
         True,
     ),
+    ("send_unit_to_city", {"unit_id": "$SPY", "city_id": "$OTHER_CITY"}, True),
+    # A *different* spy: the one above has just left the map, and a mission
+    # needs a spy that has already arrived. Skipped unless `get_spies` reports
+    # one with an operation other than TRAVEL available where it stands.
+    ("spy_mission", {"unit_id": "$PLACED_SPY", "mission": "$SPY_OP"}, True),
     (
-        "spy_action",
-        {
-            "unit_id": "$SPY",
-            "action": "travel",
-            "target_x": "$OTHER_CITY_X",
-            "target_y": "$OTHER_CITY_Y",
-        },
-        True,
-    ),
-    (
-        "unit_action",
-        {
-            "unit_id": "$UNIT_2",
-            "action": "attack",
-            "target_x": "$ATTACK_X",
-            "target_y": "$ATTACK_Y",
-        },
+        "attack",
+        {"attacker_id": "$UNIT_2", "target_x": "$ATTACK_X", "target_y": "$ATTACK_Y"},
         True,
     ),
     # The rest of the builder verbs. Each acts where the unit stands, so each
@@ -197,25 +174,39 @@ DISPATCHER_PLAN: list[tuple[str, dict, bool]] = [
     # were made to provide. A refusal costs nothing: the recorder discards it
     # and prints the reason.
     (
-        "unit_action",
+        "builder_work",
         {
             "unit_id": "$BUILDER_2",
-            "action": "repair",
+            "work": "repair",
             "target_x": "$PILLAGED_X",
             "target_y": "$PILLAGED_Y",
         },
         True,
     ),
-    ("unit_action", {"unit_id": "$BUILDER_2", "action": "remove_feature"}, True),
-    ("unit_action", {"unit_id": "$BUILDER_2", "action": "remove_improvement"}, True),
-    ("unit_action", {"unit_id": "$ENGINEER", "action": "build_route"}, True),
-    ("unit_action", {"unit_id": "$BUILDER_2", "action": "sacrifice_charges"}, True),
+    ("builder_work", {"unit_id": "$BUILDER_2", "work": "remove_feature"}, True),
+    ("builder_work", {"unit_id": "$BUILDER_2", "work": "remove_improvement"}, True),
+    ("builder_work", {"unit_id": "$ENGINEER", "work": "build_route"}, True),
+    ("disband_unit", {"unit_id": "$BUILDER_2", "mode": "sacrifice_charges"}, True),
     # Founding reshapes ownership and city lists, so it follows every read-like
     # verb above.
-    ("unit_action", {"unit_id": "$SETTLER", "action": "found_city"}, True),
+    ("found_city", {"unit_id": "$SETTLER"}, True),
 ]
 
 WRITE_PLAN: list[tuple[str, dict, bool]] = [
+    # City attacks run first, before anything that can open a leader screen.
+    # `diplomacy_action` below starts an encounter, and an encounter is a
+    # blocking popup: every mutating call issued behind one is swallowed by the
+    # InGame context and reports whatever it would have reported anyway. These
+    # two were recorded that way once and came back "already fired this turn",
+    # which was not what had happened.
+    ("attack", {"attacker_id": "$ATTACKING_CITY", "target_x": "$ATTACK_X", "target_y": "$ATTACK_Y"}, True),
+    # Only one city strike is recorded. A second would be the Encampment
+    # firing after the City Center, which is the interesting half of the
+    # behaviour — but `attack` carries no discriminator argument, so both
+    # calls slug to `attack.json` and the second overwrites the first. The
+    # City Center recording is the one worth keeping: it carries the "spare"
+    # line that tells the agent a second strike is loaded. The Encampment
+    # firing is covered by a live check instead.
     ("set_city_production", {"city_id": "$CITY", "item_type": "$UNIT_TYPE"}, True),
     ("set_tech", {"tech_type": "$TECH"}, True),
     ("set_civic", {"civic_type": "$CIVIC"}, True),
@@ -246,7 +237,6 @@ WRITE_PLAN: list[tuple[str, dict, bool]] = [
         {"individual_id": "$GP_CANDIDATE", "action": "patronize", "yield_type": "YIELD_FAITH"},
         True,
     ),
-    ("city_attack", {"city_id": "$ATTACKING_CITY", "target_x": "$ATTACK_X", "target_y": "$ATTACK_Y"}, True),
     # `test` mode asks the game what it would accept without committing, so a
     # recording of it does not reshape the diplomatic state of the save.
     ("propose_deal", {"player_id": "$MET_PLAYER", "mode": "test", "offer_gold": 50}, True),
@@ -282,10 +272,9 @@ LATE_PLAN: list[tuple[str, dict, bool]] = [
     # centre — so this uses Stage 3.2's move-then-act form rather than acting
     # in place, which was refused with CANNOT_ACTIVATE.
     (
-        "unit_action",
+        "activate_great_person",
         {
             "unit_id": "$GREAT_PERSON",
-            "action": "activate",
             "target_x": "$GP_DISTRICT_X",
             "target_y": "$GP_DISTRICT_Y",
         },
@@ -293,10 +282,10 @@ LATE_PLAN: list[tuple[str, dict, bool]] = [
     ),
     # These two end other units' turns, so they run after every write that
     # needs a unit with moves left. `skip_remaining_units` sat in the
-    # dispatcher plan and silently starved `upgrade_unit`, which then failed
-    # with a message that read like a gold problem: "cost:30g have:58g".
+    # dispatcher plan once and silently starved `upgrade_unit`, which then
+    # failed with a message that read like a gold problem: "cost:30g have:58g".
     ("skip_remaining_units", {}, True),
-    ("unit_action", {"unit_id": "$EXPENDABLE", "action": "delete"}, True),
+    ("disband_unit", {"unit_id": "$EXPENDABLE", "mode": "delete"}, True),
     # `diplomacy_action` earlier in the run opens an encounter with that
     # player. That is the only way any save reaches this tool, and it also
     # unblocks `end_turn`, which refuses to run while one is pending.
@@ -313,6 +302,7 @@ ROLE_PLACEHOLDERS = frozenset(
     {
         "$SETTLER",
         "$SPY",
+        "$PLACED_SPY",
         "$DAMAGED",
         "$GREAT_PERSON",
         "$RELIGIOUS_UNIT",
@@ -347,13 +337,6 @@ async def _resolve(client, plan):
     context["$UNIT"] = unit_ids[0] if unit_ids else 0
     context["$CITY"] = city_ids[0] if city_ids else 0
     context["$CITY_X"], context["$CITY_Y"] = coords[0] if coords else (0, 0)
-
-    # A second city, for the verbs that send a unit somewhere. None when the
-    # empire has only one — teleport and spy travel then skip.
-    if len(coords) > 1:
-        context["$OTHER_CITY_X"], context["$OTHER_CITY_Y"] = coords[1]
-    else:
-        context["$OTHER_CITY_X"], context["$OTHER_CITY_Y"] = None, None
 
     # Strict: these gate a *write*, so a miss must skip the verb rather than
     # aim it at whatever unit happens to be first. (The settle-site read below
@@ -528,15 +511,29 @@ async def _resolve(client, plan):
     pillaged = _pillaged_tile(cities_text)
     context["$PILLAGED_X"], context["$PILLAGED_Y"] = pillaged if pillaged else (None, None)
 
-    attack = _attack_target(cities_text)
+    attack = _attack_targets(cities_text)
     if attack:
-        context["$ATTACKING_CITY"], context["$ATTACK_X"], context["$ATTACK_Y"] = attack
+        city_id, targets = attack
+        context["$ATTACKING_CITY"] = city_id
+        context["$ATTACK_X"], context["$ATTACK_Y"] = targets[0]
+        if len(targets) > 1:
+            context["$ATTACK_X2"], context["$ATTACK_Y2"] = targets[1]
+        else:
+            context["$ATTACK_X2"], context["$ATTACK_Y2"] = None, None
     else:
         context["$ATTACKING_CITY"] = None
         context["$ATTACK_X"], context["$ATTACK_Y"] = None, None
+        context["$ATTACK_X2"], context["$ATTACK_Y2"] = None, None
 
-    # A second city, so assign_governor moves a governor somewhere new.
+    # A second city: assign_governor moves a governor somewhere new, and
+    # send_unit_to_city needs a destination that is not where the unit is.
+    # None when the empire has only one, which skips those verbs.
     context["$OTHER_CITY"] = city_ids[1] if len(city_ids) > 1 else None
+
+    spies_text = await _call(client, "get_spies", {})
+    context["$PLACED_SPY"], context["$SPY_OP"] = _placed_spy(
+        spies_text, context["$SPY"]
+    )
 
     if context["$IDLE_TRADER"] is not None:
         destinations = await _call(
@@ -803,6 +800,41 @@ def _military_units(text: str) -> list[int]:
         if match:
             found.append(int(match.group(1)))
     return found
+
+
+def _placed_spy(text: str, exclude: int | None) -> tuple[int | None, str | None]:
+    """A spy whose current city already allows a mission, and that mission.
+
+    `spy_mission` takes no coordinates: it acts where the spy stands, so the
+    only spy worth recording is one that has already arrived somewhere with an
+    operation available. `narrate_spies` prints those as `ops: A, B`.
+
+    *exclude* is the spy `send_unit_to_city` will send earlier in the same run.
+    Handing the same spy to both takes it off the map first, and the mission is
+    then refused with SPY_IN_TRANSIT — which is the guard working, but it
+    records nothing. A spy with no TRAVEL among its operations is preferred:
+    that is a spy sitting inside a foreign city, which is the case a mission
+    fixture should hold.
+    """
+    import re
+
+    best = (None, None)
+    for line in text.splitlines():
+        match = re.search(r"id:(\d+)\b.*\bops:\s*(.+)$", line)
+        if not match:
+            continue
+        spy_id = int(match.group(1))
+        if spy_id == exclude:
+            continue
+        names = [name.strip() for name in match.group(2).split(",")]
+        missions = [name for name in names if name and name != "TRAVEL"]
+        if not missions:
+            continue
+        if "TRAVEL" not in names:
+            return spy_id, missions[0]
+        if best == (None, None):
+            best = (spy_id, missions[0])
+    return best
 
 
 def _idle_trader(text: str) -> int | None:
@@ -1076,11 +1108,14 @@ def _upgradeable_unit(units: str) -> int | None:
     return None
 
 
-def _attack_target(cities: str) -> tuple[int, int, int] | None:
-    """(attacking city id, target x, target y) from a CAN ATTACK line.
+def _attack_targets(cities: str) -> tuple[int, list[tuple[int, int]]] | None:
+    """(attacking city id, its target tiles) from that city's CAN ATTACK lines.
 
-    The city id comes from the city block the line sits under, so the attack
-    is issued by a city that can actually reach the target.
+    The city id comes from the city block the lines sit under, so the attack is
+    issued by a city that can actually reach them. Two tiles are wanted, not
+    one: a city fires from each defended district once per turn, so recording
+    the second shot needs a second tile — and the two are usually different
+    tiles, because the Encampment shoots from its own square.
     """
     import re
 
@@ -1089,9 +1124,15 @@ def _attack_target(cities: str) -> tuple[int, int, int] | None:
         city = re.search(r"\[id:(\d+)\]", line)
         if city:
             city_id = int(city.group(1))
+            targets: list[tuple[int, int]] = []
+            continue
         target = re.search(r"CAN ATTACK:\s*\S+@(\d+),(\d+)", line)
         if target and city_id is not None:
-            return city_id, int(target.group(1)), int(target.group(2))
+            targets.append((int(target.group(1)), int(target.group(2))))
+            if len(targets) >= 2:
+                return city_id, targets
+    if city_id is not None and targets:
+        return city_id, targets
     return None
 
 
@@ -1139,6 +1180,52 @@ async def _clear_popups(conn) -> None:
         print(f"  ! could not clear popups: {exc}")
 
 
+async def _clear_diplomacy(conn) -> None:
+    """Close any open leader encounter, between recorded calls.
+
+    `dismiss_popup` cannot reach these. A leader screen lives in
+    `ExclusivePopupManager`, and the shallow dismissal the mutating path runs
+    walks straight past it — so every command recorded behind one is swallowed
+    by the InGame context while the tool still prints whatever it would have
+    printed. A run once recorded two city attacks as "already fired this turn"
+    with Alexander on screen; neither had fired, and nothing in the output said
+    so.
+
+    Runs on the raw connection like `_clear_popups`, so the traffic lands in no
+    recording.
+    """
+    from civ_mcp import lua as lq
+
+    try:
+        for _ in range(6):
+            lines = await conn.execute_write(lq.build_diplomacy_session_query())
+            sessions = lq.parse_diplomacy_sessions(lines)
+            if not sessions:
+                return
+            for session in sessions:
+                await conn.execute_write(
+                    lq.build_diplomacy_respond(session.other_player_id, "POSITIVE")
+                )
+        print("  ! a leader encounter would not close — later calls are suspect")
+    except Exception as exc:
+        print(f"  ! could not clear diplomacy: {exc}")
+
+
+async def _leave_screen_clear(live) -> None:
+    """Close anything the run left on screen, once it is over.
+
+    The last recorded call is `end_turn`, and the turn it starts is where the
+    AI opens its encounters — so a run reliably ends with a leader on screen
+    and nothing after it to dismiss them. That is not this run's problem; it is
+    the *next* one's, and the next thing to touch the game is usually a person
+    wondering why nothing works.
+    """
+    if live.get("conn") is None:
+        return
+    await _clear_popups(live["conn"])
+    await _clear_diplomacy(live["conn"])
+
+
 async def _run_plan(client, live, recorder, resolved) -> int:
     """Record each call in `resolved`. Returns how many the game refused."""
     discarded = 0
@@ -1153,6 +1240,7 @@ async def _run_plan(client, live, recorder, resolved) -> int:
         # in `tests/e2e/`, which is where it can be covered honestly.
         if live.get("conn") is not None:
             await _clear_popups(live["conn"])
+            await _clear_diplomacy(live["conn"])
 
         before = len(recorder.written)
         text = await _call(client, tool, arguments)
@@ -1241,6 +1329,7 @@ async def _record(scenario: str, plan, dry_run: bool) -> None:
                 if late:
                     print("\n-- second pass --")
                     discarded += await _run_plan(client, live, recorder, late)
+            await _leave_screen_clear(live)
             written = {path.name for path in recorder.written}
             stale = sorted(
                 path.name
@@ -1297,7 +1386,7 @@ def main(
     ),
     subset: Subset = typer.Option(
         Subset.all,
-        help="Which calls to record. 'dispatchers' covers the tools Stage 4 deletes.",
+        help="Which calls to record. 'dispatchers' covers the eleven unit tools.",
     ),
     show_plan: bool = typer.Option(
         False, "--show-plan", help="Print the calls that would be recorded and exit."

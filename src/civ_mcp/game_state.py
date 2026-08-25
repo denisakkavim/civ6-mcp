@@ -265,6 +265,23 @@ class GameState:
             return int(parts[1]), int(parts[2]), moves
         return None
 
+    async def read_unit_kind(self, unit_index: int) -> tuple[str, str, int, int] | None:
+        """Return the unit's type, its formation class and its tile, or None if gone.
+
+        A spy that is travelling reports ``x = -9999``: the engine has taken it
+        off the map until it arrives. Callers must treat that as "not anywhere
+        yet" rather than as a tile.
+        """
+        lines = await self.conn.execute_read(lq.build_unit_kind_query(unit_index))
+        for line in lines:
+            if not line.startswith("KIND|") or "GONE" in line:
+                continue
+            parts = line.split("|")
+            if len(parts) < 5:
+                continue
+            return parts[1], parts[2], int(parts[3]), int(parts[4])
+        return None
+
     async def move_then_act(
         self,
         unit_index: int,
@@ -484,8 +501,8 @@ class GameState:
                 log.debug("Attack followup formatting failed: %s", e)
         return estimate_str + result
 
-    async def city_attack(self, city_id: int, target_x: int, target_y: int) -> str:
-        lua = lq.build_city_attack(city_id, target_x, target_y)
+    async def attack_from_city(self, city_id: int, target_x: int, target_y: int) -> str:
+        lua = lq.build_attack_from_city(city_id, target_x, target_y)
         lines = await self.conn.execute_write(lua)
         result = _action_result(lines)
         if result.startswith("CITY_RANGE_ATTACK"):
@@ -626,6 +643,14 @@ class GameState:
         return _action_result(lines)
 
     async def skip_remaining_units(self) -> str:
+        """Settle every unit that still has moves, in two passes.
+
+        The first pass fortifies combat units, or heals the damaged ones,
+        because leaving a soldier idle and leaving it dug in are not the same
+        thing. The second finishes the moves of whatever the first could not
+        place. Each pass is one Lua loop over the roster rather than one call
+        per unit, and both filter to units that still have movement.
+        """
         # First try to fortify/heal combat units (InGame context)
         fortify_result = ""
         try:

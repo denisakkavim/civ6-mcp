@@ -259,6 +259,30 @@ print("{SENTINEL}")
 """
 
 
+def build_unit_kind_query(unit_index: int) -> str:
+    """GameCore: what kind of unit this is, and where it stands.
+
+    A tool that dispatches on unit type must not ask the agent to say which
+    type it holds — the agent would only be restating what the game already
+    knows, and a wrong answer would route the order to the wrong engine call.
+    A spy in transit reports x=-9999, which is why the position comes back
+    here rather than being read separately.
+    """
+    return f"""
+local me = Game.GetLocalPlayer()
+local u = Players[me]:GetUnits():FindID({unit_index})
+if u == nil then
+    print("KIND|GONE")
+else
+    local entry = GameInfo.Units[u:GetType()]
+    local unitType = entry and entry.UnitType or "UNKNOWN"
+    local formation = entry and entry.FormationClass or "UNKNOWN"
+    print("KIND|" .. unitType .. "|" .. formation .. "|" .. u:GetX() .. "|" .. u:GetY())
+end
+print("{SENTINEL}")
+"""
+
+
 def build_unit_position_query(
     unit_index: int,
     move_target_x: int | None = None,
@@ -863,8 +887,9 @@ print("{SENTINEL}")
 def build_fortify_remaining_units() -> str:
     """Fortify/heal combat units with remaining moves (InGame context).
 
-    Tries to fortify (or heal if damaged) combat units. Non-combat units
-    and units that can't fortify are left for skip_remaining_units to handle.
+    Tries to fortify (or heal if damaged) combat units. Non-combat units and
+    units that can't fortify are left for build_skip_remaining_units, which
+    runs straight after this and finishes the moves of whatever is left.
     """
     return """
 local me = Game.GetLocalPlayer()

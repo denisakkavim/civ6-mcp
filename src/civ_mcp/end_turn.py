@@ -519,7 +519,7 @@ async def execute_end_turn(gs: GameState) -> str:
             )
 
     # Record turn number at entry so we can detect external advancement
-    # (e.g. game auto-ends turn when skip_remaining_units finishes all moves)
+    # (e.g. game auto-ends the turn once the last unit's moves are spent)
     turn_at_entry = await _get_turn_number(gs)
 
     # 1. Diplomacy sessions block turn advancement
@@ -1054,7 +1054,7 @@ async def execute_end_turn(gs: GameState) -> str:
                 hard_blockers.append((blocking_type, blocking_msg))
 
             # If we have hard blockers, check if turn advanced externally
-            # (e.g. game auto-end-turn after skip_remaining_units)
+            # (e.g. game auto-end-turn once every unit's moves are spent)
             if hard_blockers:
                 turn_now = await _get_turn_number(gs)
                 if (

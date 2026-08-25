@@ -76,16 +76,59 @@ from utils import snapshots
 # Stage 3 also shows the failure mode. Trimming `unit_action`'s docstring to
 # fit 2,500 cut real preconditions ("not on a route", "must stand on the
 # district") to satisfy a number. That was the proxy winning. Most of Stage 3's
-# growth sits in `unit_action`, which Stage 4 dissolves into six tools with
-# fixed signatures; that is where the reduction should come from.
+# growth sat in `unit_action`, and the expectation was that Stage 4 would take
+# it back out. It did not — see the Stage 4 note below.
 # Raised again after an agent played a real game through this surface and
 # went looking for a policy card that does not exist: `sacrifice_charges` said
 # "Royal Society card" when the check is for BUILDING_GOV_SCIENCE, a tier-3
 # Government Plaza *building*, gated behind a tier-3 government, and needs the
 # city to be producing a project. Four unstated preconditions cost more than
 # the 139 characters that state them.
+#
+# Stage 4 was written expecting the large drop, and it went the other way:
+# 42,861 -> 47,087, and the three dispatchers it deleted cost 5,680 chars while
+# the eleven tools replacing them cost 9,597. The plan's prediction assumed
+# twenty verbs of prose were the cost. They were not. Three things are:
+#
+# 1. Envelope. Every tool pays ~110 chars of JSON Schema wrapper and its own
+#    name and summary line. Seven more tools is ~800 chars before a word of
+#    documentation.
+# 2. Rules that were stated once are now stated where they apply. The
+#    move-then-act contract (MOVED_PARTIAL / ARRIVED_WAITING) governed seven
+#    verbs from one paragraph in `unit_action`; it now appears in the three
+#    tools that can return it, because an agent reading `found_city` never
+#    sees `builder_work`'s docstring.
+# 3. Preconditions that a discriminator hid. `unit_action` could not say which
+#    of its twenty verbs needed walls, an idle trader or a district underfoot
+#    without saying it twenty times, so it mostly did not. Each tool now says
+#    its own.
+#
+# All three are the schema doing its job. What the stage did deliver is the
+# thing the size was ever a proxy for: the runtime error branches are gone.
+# "move requires target_x and target_y", "attack requires target_x and
+# target_y" and BATCH_NOT_ALLOWED were three ways to learn a rule by failing,
+# and the schema now refuses those calls before they are sent. The per-tool
+# ceiling did not move, which is the check that actually detects prose
+# carrying a rule: the largest tool in the split is `builder_work` at 1,737,
+# against `unit_action`'s 3,039.
+#
+# `skip_remaining_units` was deleted by Stage 4 and put back afterwards, for
+# 679 chars. §4.3 held that `unit_stance`'s list form made it redundant. It did
+# not: the tool runs two Lua loops over the whole roster — fortify or heal the
+# combat units, then finish the moves of everything left — where the list form
+# is one round trip per unit and fortifies nothing. It is also the only one of
+# the two that takes no ids, which is the point: the agent does not have to
+# read `get_units` to find out what it is about to settle.
+#
+# `attack` grew to 1,262 when the Encampment became a real dispatch branch.
+# A city shoots once per turn from each defended district, so one city id can
+# mean two strikes from two tiles, and an Encampment covers ground the centre
+# cannot. None of that is guessable, and an agent that does not know it leaves
+# half the city's firepower unused every turn. The docstring also states that
+# an enemy Encampment or City Center absorbs a strike aimed at a unit standing
+# on it — measured, and the reason a hit can look like it did nothing.
 MAX_TOOL_SCHEMA_CHARS = 3050
-MAX_SURFACE_CHARS = 42_900
+MAX_SURFACE_CHARS = 47_700
 
 
 def _tools():
@@ -291,10 +334,10 @@ def test_core_reads_are_present(tool_name):
 # ---------------------------------------------------------------------------
 
 # Parameters the review identified as closed sets typed as bare `str`. Stage
-# 1.3 typed all of them with `Literal`; the tool names on the left change in
-# Stage 2 and again in Stage 4, so update this table as those land.
+# 1.3 typed all of them with `Literal`; Stage 2 and Stage 4 renamed the tools
+# on the left, and this table moved with them.
 #
-# `unit_action.improvement` is deliberately absent. Its legal values are a
+# `builder_work.improvement_type` is deliberately absent. Its legal values are a
 # property of the game database, not of this server, and the read side emits
 # values from that database directly — `get_units` prints what each builder can
 # build here, and `get_builder_tasks` can recommend IMPROVEMENT_OIL_WELL. An
@@ -302,8 +345,13 @@ def test_core_reads_are_present(tool_name):
 # values the server's own reads suggest. It gets typed when it is generated
 # from GameInfo.Improvements (the review's exit path), not before.
 CLOSED_SET_PARAMETERS = [
-    ("unit_action", "action"),
-    ("spy_action", "action"),
+    # Stage 4 split `unit_action` and `spy_action` by signature. Every
+    # discriminator that survived the split is here; the verbs that became
+    # tools of their own no longer have one to type.
+    ("unit_stance", "stance"),
+    ("builder_work", "work"),
+    ("disband_unit", "mode"),
+    ("spy_mission", "mission"),
     ("diplomacy_action", "action"),
     ("form_alliance", "alliance_type"),
     ("respond_to_diplomacy", "response"),

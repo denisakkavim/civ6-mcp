@@ -60,9 +60,7 @@ def test_corpus_exists():
             "No recordings yet. Run:\n"
             "  uv run python scripts/install_saves.py\n"
             "  # launch Civ 6 (EnableTuner=1), load 0A_GROUND_CONTROL\n"
-            "  uv run python scripts/record_game_traffic.py --scenario ground_control\n"
-            "Record the dispatcher recordings (--dispatchers-only) BEFORE Stage 4 "
-            "deletes unit_action / spy_action."
+            "  uv run python scripts/record_game_traffic.py --scenario ground_control"
         )
     assert CORPUS
 
@@ -100,10 +98,15 @@ SCENARIO_SAVES = {
     # Germany (Frederick Barbarossa) at turn 355, Atomic era. The first
     # scenario that is at war, and the first with a pillaged tile, a damaged
     # unit, an Encampment, an Aerodrome and a Military Engineer — the
-    # preconditions for `attack`, `repair`, `heal`, `build_route` and the two
-    # open questions in Stage 4.1 and §6b. Loaded by hand: the OCR navigation
+    # preconditions for `attack`, `repair`, `heal` and `build_route`.
+    # Loaded by hand: the OCR navigation
     # cannot reach it, which is a launcher problem and not a save problem.
     "barb355": "0T_BARB_T355.Civ6Save",
+    # Turn 361, and the save that holds the most: the Royal Society building,
+    # idle spies, a spy already inside an enemy city, five Great People and an
+    # idle trader. It is the only scenario that can record `spy_mission`,
+    # which acts where the spy stands and so needs one that has arrived.
+    "royalsociety": "0T_BARB_ROYALSOCIETY.Civ6Save",
     # Turn 352, at war, and the only save in the project that has ever held a
     # Spy — the tool that has been in the recording plan since the suite was
     # built and had never once been recorded.
@@ -113,6 +116,11 @@ SCENARIO_SAVES = {
     # what decides which tools they can record.
     "barbwar": "0T_BARB_WAR.Civ6Save",
     "barbwar2": "0T_BARB_WAR2.Civ6Save",
+    # Turn 126, played forward from barbwar2 until Methone had walls, a
+    # *completed* Encampment and enemies inside both districts' range. It is
+    # the only save that can record a city ranged attack at all, and the only
+    # one that shows the Encampment firing as a second, independent strike.
+    "barbencampment": "0T_BARB_ENCAMPMENT.Civ6Save",
     "barbunits": "0T_BARB_UNITS.Civ6Save",
     "barbcongress": "0T_BARB_CONGRESS.Civ6Save",
     "barbenvoy": "0T_BARB_ENVOY.Civ6Save",
@@ -122,8 +130,8 @@ SCENARIO_SAVES = {
     "turn37": "0T_TURN37_INCA.Civ6Save",
     # Turn 57 carries what turn 37 could not: a settler, a trader, a builder
     # with charges, walls, a met civ and a Holy Site. Those are the
-    # preconditions for the `unit_action` verbs turn 37 leaves unrecorded, and
-    # Stage 4 replaces every one of them.
+    # preconditions for the builder and settler verbs that turn 37 leaves
+    # unrecorded.
     "turn57": "0T_TURN57_INCA.Civ6Save",
     # Turn 63 is the first scenario with a religion founded, so it is the only
     # one where `religion_type` is non-empty and `get_religion_spread` prints
@@ -131,9 +139,14 @@ SCENARIO_SAVES = {
     # Georgia's cities, which Stage 3.4 needs for foreign-city ids.
     "turn63": "0T_TURN63_INCA.Civ6Save",
     # Turn 73 has a builder standing where it can build, an idle trader and a
-    # missionary — the preconditions for `improve` and `teleport`, which no
-    # earlier save could satisfy.
+    # missionary — the preconditions for `builder_work(improve)` and
+    # `send_unit_to_city`, which no earlier save could satisfy.
     "turn73": "0T_TURN73_INCA.Civ6Save",
+    # Turn 73 again, with the Missionary walked into Antawaylla instead of
+    # left standing two tiles outside it. `spread_religion` acts in place, so
+    # every other save refuses it with CANNOT_SPREAD and no recording was ever
+    # possible. This is the only scenario that can capture it.
+    "incamissionary": "0T_INCA_MISSIONARY.Civ6Save",
     "round_trip": None,  # written by a test, not recorded from a game
 }
 

@@ -192,19 +192,41 @@ def test_map_area_is_readable_around_a_city(live_client):
 # ---------------------------------------------------------------------------
 
 
+def _movable_unit(text: str) -> tuple[int, int, int] | None:
+    """A unit that can actually be ordered to move, with its own tile.
+
+    Two traps, both hit in practice. Taking the first unit in the roster picks
+    a trader locked to a route, which the game refuses with CANNOT_MOVE — the
+    tool is right and the test is wrong. And reading the first `(x,y)` in the
+    whole output pairs one unit's id with another unit's tile, so the move goes
+    somewhere unrelated to where that unit stands. Both are avoided by taking
+    the id and the position from the same line.
+    """
+    for line in text.splitlines():
+        if "[ON ROUTE:" in line:
+            continue
+        match = re.search(r"\((\d+),(\d+)\).*\bmoves (\d+(?:\.\d+)?)/", line)
+        identifier = re.search(r"\[id:(\d+)\]", line)
+        if not match or not identifier:
+            continue
+        if float(match.group(3)) <= 0:
+            continue
+        return int(identifier.group(1)), int(match.group(1)), int(match.group(2))
+    return None
+
+
 @pytest.mark.live
 def test_move_changes_the_units_position(live_client):
     """A move must be observable in the next read, not just reported."""
     units = live_client.call("get_units", {})
-    unit_id = _first_id(units)
-    position = re.search(r"\((\d+),\s*(\d+)\)", units)
-    if unit_id is None or position is None:
-        pytest.skip("no unit with a position to move")
+    movable = _movable_unit(units)
+    if movable is None:
+        pytest.skip("no unit with moves left and a free destination")
 
-    x, y = int(position.group(1)), int(position.group(2))
+    unit_id, x, y = movable
     result = live_client.call(
-        "unit_action",
-        {"unit_id": unit_id, "action": "move", "target_x": x + 1, "target_y": y},
+        "move_unit",
+        {"unit_id": unit_id, "target_x": x + 1, "target_y": y},
     )
     assert not result.startswith("Error"), result[:200]
 

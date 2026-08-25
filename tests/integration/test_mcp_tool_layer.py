@@ -180,7 +180,7 @@ def test_unknown_tool_is_an_error(civ_server):
 @pytest.mark.parametrize(
     "tool,arguments",
     [
-        ("unit_action", {"unit_id": 1, "action": "teleport_to_moon"}),
+        ("unit_stance", {"unit_id": 1, "stance": "teleport_to_moon"}),
         ("set_city_focus", {"city_id": 1, "focus": "happiness"}),
         ("run_lua", {"code": "print(1)", "context": "gamecore_but_wrong"}),
         (
@@ -188,7 +188,7 @@ def test_unknown_tool_is_an_error(civ_server):
             {"city_id": 1, "item_type": "UNIT_WARRIOR", "yield_type": "YIELD_CULTURE"},
         ),
     ],
-    ids=["unit_action", "set_city_focus", "run_lua", "purchase_item"],
+    ids=["unit_stance", "set_city_focus", "run_lua", "purchase_item"],
 )
 def test_a_value_outside_a_closed_set_is_rejected_at_the_schema(
     civ_server, tool, arguments

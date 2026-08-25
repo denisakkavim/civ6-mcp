@@ -225,7 +225,7 @@ class UnitInfo:
 
 @dataclass
 class SpyInfo:
-    unit_id: int  # composite ID (use with spy_action)
+    unit_id: int  # composite ID (use with send_unit_to_city, spy_mission)
     unit_index: int  # per-player index (unit_id % 65536)
     name: str  # e.g. "Artimpasa"
     x: int

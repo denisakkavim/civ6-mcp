@@ -592,12 +592,12 @@ async def get_units(ctx: Context) -> str:
 async def get_spies(ctx: Context) -> str:
     """List all your spy units with position, rank, city, and available missions.
 
-    Shows each spy's composite id (needed for spy_action), current location,
-    rank (Recruit/Agent/Special Agent/Senior Agent), XP, and which operations
-    are available at their current position.
+    Shows each spy's composite id (needed for send_unit_to_city and
+    spy_mission), current location, rank (Recruit/Agent/Special Agent/Senior
+    Agent), XP, and which operations are available at their current position.
 
     Note: offensive missions only become available once the spy has physically
-    arrived in the target city. Use spy_action with action='travel' first.
+    arrived in the target city. Use send_unit_to_city first.
     """
     gs = _get_game(ctx)
 
@@ -609,11 +609,10 @@ async def get_spies(ctx: Context) -> str:
 
 
 @mcp.tool()
-async def spy_action(
+async def spy_mission(
     ctx: Context,
     unit_id: int,
-    action: Literal[
-        "travel",
+    mission: Literal[
         "COUNTERSPY",
         "GAIN_SOURCES",
         "SIPHON_FUNDS",
@@ -624,55 +623,45 @@ async def spy_action(
         "NEUTRALIZE_GOVERNOR",
         "FABRICATE_SCANDAL",
     ],
-    city_id: int | None = None,
-    target_x: int | None = None,
-    target_y: int | None = None,
 ) -> str:
-    """Send a spy to a city or launch a spy mission.
+    """Launch a spy operation in the city the spy is already in.
 
     Args:
-        unit_id: The spy's composite ID (from get_spies output)
-        action: 'travel' to move the spy to a city, or a mission type to launch
-        city_id: Target city (from get_cities or get_city_states). Preferred.
-        target_x: Target city tile, if you have no city_id.
-        target_y: Target city tile, if you have no city_id.
+        unit_id: The spy (from get_spies output)
+        mission: The operation to run
 
-    Travel notes:
-        - Valid targets: your own cities and city-states only.
-        - Allied civ cities are NOT valid travel targets.
-        - Travel is queued end-of-turn; spy position updates after turn ends.
-
-    Mission notes:
-        - Spy must be physically IN the target city to launch any offensive mission.
-        - Use 'travel' first, then end the turn, then launch the mission.
-        - COUNTERSPY defends your own city (spy must be in your city).
-        - get_spies shows which ops are available at the spy's current location.
+    Takes no target: a mission runs where the spy stands, so the city is read
+    from the spy itself. Send the spy first with send_unit_to_city, end the
+    turn, then launch. COUNTERSPY defends one of your own cities; the rest are
+    offensive. get_spies lists which operations that city allows.
     """
     wrong_kind = ids.wrong_kind_error(unit_id, ids.UNIT, "unit_id")
     if wrong_kind:
         return wrong_kind
     gs = _get_game(ctx)
     unit_index = ids.local_of(unit_id)
-    params: dict[str, Any] = {"unit_id": unit_id, "action": action}
-    if city_id is not None:
-        params["city_id"] = city_id
-    else:
-        params["target_x"] = target_x
-        params["target_y"] = target_y
 
     async def _run():
-        target = await _city_target(gs, city_id, target_x, target_y)
-        if isinstance(target, str):
-            return target
-        x, y = target
-        if action == "travel":
-            return await gs.spy_travel(unit_index, x, y)
-        return await gs.spy_mission(unit_index, action, x, y)
+        kind = await gs.read_unit_kind(unit_index)
+        if kind is None:
+            return f"Error: UNIT_GONE|Unit {unit_id} no longer exists."
+        unit_type, _formation, x, y = kind
+        if unit_type != "UNIT_SPY":
+            return (
+                f"Error: NOT_A_SPY|Unit {unit_id} is a {unit_type}."
+                f" Spy ids come from get_spies."
+            )
+        if x < 0:
+            return (
+                f"Error: SPY_IN_TRANSIT|Spy {unit_id} is still travelling and"
+                f" is not in any city. End the turn until get_spies reports it"
+                f" arrived, then launch the mission."
+            )
+        return await gs.spy_mission(unit_index, mission, x, y)
 
-    result = await _logged(ctx, "spy_action", params, _run, mutating=True)
-    if target_x is not None and target_y is not None:
-        _get_camera(ctx).push(target_x, target_y, f"spy {action}")
-    return result
+    return await _logged(
+        ctx, "spy_mission", {"unit_id": unit_id, "mission": mission}, _run, mutating=True
+    )
 
 
 @mcp.tool(annotations={"readOnlyHint": True})
@@ -772,7 +761,7 @@ async def get_settle_sites_near_unit(ctx: Context, unit_id: int) -> str:
     """List best settle locations near a settler unit.
 
     Args:
-        unit_id: The settler's composite ID (from get_units output)
+        unit_id: The settler's composite ID (from get_units)
 
     Scores locations by yields, water, defense, and resource value.
     Returns top 5 candidates sorted by score.
@@ -797,7 +786,7 @@ async def get_pathing_estimate(
     """Estimate how many turns a unit needs to reach a destination.
 
     Args:
-        unit_id: The unit's composite ID (from get_units output)
+        unit_id: The unit's composite ID (from get_units)
         target_x: Destination X coordinate
         target_y: Destination Y coordinate
 
@@ -1103,7 +1092,7 @@ async def get_unit_promotions(ctx: Context, unit_id: int) -> str:
     """List available promotions for a unit.
 
     Args:
-        unit_id: The unit's composite ID (from get_units output)
+        unit_id: The unit's composite ID (from get_units)
 
     Shows promotions filtered by the unit's promotion class.
     Only units with enough XP will have promotions available.
@@ -1125,7 +1114,7 @@ async def promote_unit(ctx: Context, unit_id: int, promotion_type: str) -> str:
     """Apply a promotion to a unit.
 
     Args:
-        unit_id: The unit's composite ID (from get_units output)
+        unit_id: The unit's composite ID (from get_units)
         promotion_type: e.g. PROMOTION_BATTLECRY, PROMOTION_TORTOISE
 
     Use get_unit_promotions first to see available options.
@@ -1261,7 +1250,7 @@ async def upgrade_unit(ctx: Context, unit_id: int) -> str:
     """Upgrade a unit to its next type (e.g. Slinger -> Archer).
 
     Args:
-        unit_id: The unit's composite ID (from get_units output)
+        unit_id: The unit's composite ID (from get_units)
 
     Requires the right technology, enough gold, and the unit must have
     moves remaining. The unit's movement is consumed by upgrading.
@@ -1603,51 +1592,6 @@ async def form_alliance(
 
 
 @mcp.tool()
-async def city_attack(
-    ctx: Context,
-    city_id: int,
-    target_x: int | None = None,
-    target_y: int | None = None,
-    target_city_id: int | None = None,
-) -> str:
-    """Fire a city's ranged attack at a tile.
-
-    Args:
-        city_id: The attacking city (from get_cities output)
-        target_x: Target tile. Use this for a unit — you attack the tile it
-            stands on, so a stale tile fails loudly rather than hitting the
-            wrong thing.
-        target_y: Target tile.
-        target_city_id: Attack a city instead, by id (from get_diplomacy).
-
-    The city must have walls and must not have fired this turn.
-    Range is 2 tiles from the city centre.
-    """
-    wrong_kind = ids.wrong_kind_error(city_id, ids.CITY, "city_id")
-    if wrong_kind:
-        return wrong_kind
-
-    gs = _get_game(ctx)
-    params: dict[str, Any] = {"city_id": city_id}
-    if target_city_id is not None:
-        params["target_city_id"] = target_city_id
-    else:
-        params["target_x"] = target_x
-        params["target_y"] = target_y
-
-    async def _run():
-        target = await _city_target(gs, target_city_id, target_x, target_y)
-        if isinstance(target, str):
-            return target
-        return await gs.city_attack(city_id, target[0], target[1])
-
-    result = await _logged(ctx, "city_attack", params, _run, mutating=True)
-    if target_x is not None and target_y is not None:
-        _get_camera(ctx).push(target_x, target_y, "city attack")
-    return result
-
-
-@mcp.tool()
 async def resolve_city_capture(
     ctx: Context,
     action: Literal["keep", "reject", "raze", "liberate_founder", "liberate_previous"],
@@ -1725,168 +1669,300 @@ async def _entity_position(gs, entity_id: int) -> tuple[int, int] | str:
     )
 
 
-# Verbs that act on the tile the unit is standing on. Given a target tile they
-# move there first and then act (`gs.move_then_act`), so dispatching a builder
-# is one call instead of a move this turn and an improve the next.
-TILE_ACTING_VERBS = frozenset(
-    {
-        "improve",
-        "repair",
-        "remove_improvement",
-        "remove_feature",
-        "build_route",
-        "found_city",
-        "activate",
-    }
-)
-
-# Verbs that put the unit somewhere new, so the spectator camera should follow.
-CAMERA_FOLLOWED_VERBS = frozenset(
-    {"move", "attack", "trade_route", "teleport"} | TILE_ACTING_VERBS
-)
-
-# Verbs that accept a list of units. Each takes no target and returns nothing
-# the next order depends on, so ten of them can be issued blind. Everything
-# else stays one at a time: move and attack because the outcome shapes the next
-# move, delete because a list slip is irreversible.
-BATCHABLE_VERBS = frozenset({"fortify", "skip", "sleep", "alert", "heal"})
+# Stances: verbs that take no target and produce no result the next order
+# depends on. That is why this is the one place a list of units is accepted —
+# ten of them can be issued blind. move, attack and disband are excluded: each
+# result shapes the next order, and a list slip on disband would destroy an
+# army.
+STANCE_VERBS = ("fortify", "skip", "sleep", "alert", "heal", "automate")
 
 
-async def _run_batch(ctx, gs, unit_ids: list[int], action: str) -> str:
-    """Run a stance verb over several units, one line of result per unit."""
-    stance_methods = {
+async def _stance_method(gs, stance: str):
+    """The GameState call for one stance verb."""
+    methods = {
         "fortify": gs.fortify_unit,
         "skip": gs.skip_unit,
         "sleep": gs.sleep_unit,
         "alert": gs.alert_unit,
         "heal": gs.heal_unit,
+        "automate": gs.automate_explore,
     }
-    method = stance_methods[action]
-
-    lines = []
-    for unit_id in unit_ids:
-        wrong_kind = ids.wrong_kind_error(unit_id, ids.UNIT, "unit_id")
-        if wrong_kind:
-            lines.append(f"  {unit_id}: {wrong_kind}")
-            continue
-        unit_index = ids.local_of(unit_id)
-        result = await _logged(
-            ctx,
-            "unit_action",
-            {"unit_id": unit_id, "action": action},
-            lambda index=unit_index: method(index),
-            mutating=True,
-        )
-        lines.append(f"  {unit_id}: {result}")
-    return f"{action} on {len(unit_ids)} units:\n" + "\n".join(lines)
+    return methods[stance]
 
 
 @mcp.tool()
-async def unit_action(
+async def move_unit(ctx: Context, unit_id: int, target_x: int, target_y: int) -> str:
+    """Move a unit to a tile.
+
+    Args:
+        unit_id: The unit to move (from get_units)
+        target_x: Destination tile
+        target_y: Destination tile
+
+    Reports what the move uncovered. A unit that runs out of movement stops
+    short and keeps the rest of the path for next turn.
+    """
+    wrong_kind = ids.wrong_kind_error(unit_id, ids.UNIT, "unit_id")
+    if wrong_kind:
+        return wrong_kind
+    gs = _get_game(ctx)
+    unit_index = ids.local_of(unit_id)
+    result = await _logged(
+        ctx,
+        "move_unit",
+        {"unit_id": unit_id, "target_x": target_x, "target_y": target_y},
+        lambda: gs.move_unit(unit_index, target_x, target_y),
+        mutating=True,
+    )
+    _get_camera(ctx).push(target_x, target_y, f"move→({target_x},{target_y})")
+    return result
+
+
+@mcp.tool()
+async def attack(ctx: Context, attacker_id: int, target_x: int, target_y: int) -> str:
+    """Attack a tile with a unit or with a city's ranged strike.
+
+    Args:
+        attacker_id: A unit (from get_units) or a city (from get_cities). The
+            id says which it is, so one tool serves both.
+        target_x: The tile to attack
+        target_y: The tile to attack
+
+    You attack a tile, not a target: name the tile the enemy stands on, so a
+    stale position fails loudly instead of hitting something else.
+
+    A city shoots from each of its defended districts, once per turn each — the
+    City Center, and a completed Encampment once the city has walls. Both reach
+    2 tiles from their own tile, so an Encampment covers ground the centre
+    cannot. This picks one and says which fired and what is still loaded, so a
+    second call spends the other.
+
+    A unit standing on an enemy Encampment or City Center is shielded: those
+    districts absorb the strike into their own defences, and the unit's health
+    does not move until they are down.
+    """
+    gs = _get_game(ctx)
+    kind = ids.kind_of(attacker_id)
+
+    async def _run():
+        if kind == ids.UNIT:
+            return await gs.attack_unit(ids.local_of(attacker_id), target_x, target_y)
+        if kind == ids.CITY:
+            return await gs.attack_from_city(attacker_id, target_x, target_y)
+        return (
+            f"Error: UNKNOWN_ID_TYPE|{attacker_id} is neither a unit id nor a"
+            f" city id. Unit ids come from get_units, city ids from get_cities."
+        )
+
+    result = await _logged(
+        ctx,
+        "attack",
+        {"attacker_id": attacker_id, "target_x": target_x, "target_y": target_y},
+        _run,
+        mutating=True,
+    )
+    _get_camera(ctx).push(target_x, target_y, f"attack→({target_x},{target_y})")
+    return result
+
+
+@mcp.tool()
+async def send_unit_to_city(ctx: Context, unit_id: int, city_id: int) -> str:
+    """Send a spy, trader or Great Person to a city.
+
+    Args:
+        unit_id: The unit to send (from get_units or get_spies)
+        city_id: The destination (from get_cities or get_city_states)
+
+    A spy travels: it leaves the map and arrives some turns later, after a turn
+    ends. Everything else transfers instantly. The two are not interchangeable
+    — plan the next turn on which one you got, and read get_spies to learn when
+    a travelling spy has landed. Spies may travel only to your own cities and
+    to city-states. A trader must be idle.
+    """
+    wrong_kind = ids.wrong_kind_error(unit_id, ids.UNIT, "unit_id")
+    if wrong_kind:
+        return wrong_kind
+    wrong_kind = ids.wrong_kind_error(city_id, ids.CITY, "city_id")
+    if wrong_kind:
+        return wrong_kind
+    gs = _get_game(ctx)
+    unit_index = ids.local_of(unit_id)
+
+    async def _run():
+        target = await _city_target(gs, city_id, None, None)
+        if isinstance(target, str):
+            return target
+        x, y = target
+
+        kind = await gs.read_unit_kind(unit_index)
+        if kind is None:
+            return f"Error: UNIT_GONE|Unit {unit_id} no longer exists."
+        unit_type = kind[0]
+
+        if unit_type == "UNIT_SPY":
+            result = await gs.spy_travel(unit_index, x, y)
+            if result.startswith("Error:"):
+                return result
+            return (
+                f"{result}\n  Travelling: the spy is off the map until it lands."
+                f" get_spies reports when it has arrived."
+            )
+
+        result = await gs.teleport_to_city(unit_index, x, y)
+        if result.startswith("Error:"):
+            return result
+        return f"{result}\n  Transferred now: the unit is in the city this turn."
+
+    return await _logged(
+        ctx,
+        "send_unit_to_city",
+        {"unit_id": unit_id, "city_id": city_id},
+        _run,
+        mutating=True,
+    )
+
+
+@mcp.tool()
+async def unit_stance(
     ctx: Context,
     unit_id: int | list[int],
-    action: Literal[
-        "move",
-        "attack",
-        "fortify",
-        "skip",
-        "found_city",
+    stance: Literal["fortify", "skip", "sleep", "alert", "heal", "automate"],
+) -> str:
+    """Put a unit into a standing posture for the rest of its turn.
+
+    Args:
+        unit_id: One unit, or a list of them for the same stance (from
+            get_units). A list returns one result per unit.
+        stance: What the unit should do
+            - 'fortify': dig in for a defence bonus
+            - 'skip': end this unit's turn now
+            - 'sleep': hold until woken by hand
+            - 'alert': sleep, but wake when an enemy comes into sight
+            - 'heal': fortify until healed, then wake
+            - 'automate': explore on its own
+
+    None of these take a target, so a list is safe here. Use get_units to skip
+    every unit that still has moves.
+    """
+    gs = _get_game(ctx)
+
+    if isinstance(unit_id, int):
+        wrong_kind = ids.wrong_kind_error(unit_id, ids.UNIT, "unit_id")
+        if wrong_kind:
+            return wrong_kind
+        method = await _stance_method(gs, stance)
+        unit_index = ids.local_of(unit_id)
+        return await _logged(
+            ctx,
+            "unit_stance",
+            {"unit_id": unit_id, "stance": stance},
+            lambda: method(unit_index),
+            mutating=True,
+        )
+
+    if not unit_id:
+        return "Error: BATCH_EMPTY|unit_id list is empty."
+
+    method = await _stance_method(gs, stance)
+    lines = []
+    for one_id in unit_id:
+        wrong_kind = ids.wrong_kind_error(one_id, ids.UNIT, "unit_id")
+        if wrong_kind:
+            lines.append(f"  {one_id}: {wrong_kind}")
+            continue
+        unit_index = ids.local_of(one_id)
+        result = await _logged(
+            ctx,
+            "unit_stance",
+            {"unit_id": one_id, "stance": stance},
+            lambda index=unit_index: method(index),
+            mutating=True,
+        )
+        lines.append(f"  {one_id}: {result}")
+    return f"{stance} on {len(unit_id)} units:\n" + "\n".join(lines)
+
+
+@mcp.tool()
+async def skip_remaining_units(ctx: Context) -> str:
+    """Settle every unit that still has moves, ending your unit turn.
+
+    Takes no ids: it acts on whatever still has movement, which is exactly the
+    set you would otherwise have to read out of get_units first. Combat units
+    fortify, or heal if damaged; everything else has its turn ended.
+
+    Use this to clear the "units have moves remaining" blocker, or after a
+    diplomacy encounter cancels every standing order. Reach for unit_stance
+    when you want a *particular* posture for *particular* units — this one
+    trades that control for one call over the whole roster.
+    """
+    gs = _get_game(ctx)
+    return await _logged(
+        ctx,
+        "skip_remaining_units",
+        {},
+        lambda: gs.skip_remaining_units(),
+        mutating=True,
+    )
+
+
+@mcp.tool()
+async def builder_work(
+    ctx: Context,
+    unit_id: int,
+    work: Literal[
         "improve",
         "repair",
         "remove_improvement",
         "remove_feature",
         "build_route",
-        "automate",
-        "heal",
-        "alert",
-        "sleep",
-        "delete",
-        "trade_route",
-        "activate",
-        "sacrifice_charges",
-        "teleport",
-        "spread_religion",
     ],
-    target_x: Optional[int] = None,
-    target_y: Optional[int] = None,
-    improvement_type: Optional[str] = None,
-    city_id: Optional[int] = None,
+    improvement_type: str | None = None,
+    target_x: int | None = None,
+    target_y: int | None = None,
 ) -> str:
-    """Issue a command to a unit.
+    """Put a builder to work on a tile.
 
     Args:
-        unit_id: Composite unit ID (from get_units). A list is accepted for
-            fortify/skip/sleep/alert/heal only, and returns one result per unit.
-        action: The command to issue
-        target_x: Target tile. Required for move/attack/trade_route/teleport.
-        target_y: Target tile. Required for move/attack/trade_route/teleport.
-        improvement_type: Improvement for builders (required for improve), e.g.
-            IMPROVEMENT_FARM. get_units lists what each builder can build here.
-        city_id: Destination city for teleport/trade_route, instead of a tile.
+        unit_id: The builder (from get_units)
+        work: What to build or clear
+            - 'improve': build improvement_type here
+            - 'repair': restore a pillaged improvement (no name needed)
+            - 'remove_improvement': demolish an intact one. Costs a charge.
+            - 'remove_feature': clear a forest, marsh or rainforest
+            - 'build_route': road or railroad. Military Engineers only; a
+              railroad tile costs 1 Iron and 1 Coal.
+        improvement_type: Required for 'improve', ignored otherwise. e.g.
+            IMPROVEMENT_FARM. get_units lists what this builder can build here.
+        target_x: A tile to work on. Omit to work where the builder stands.
+        target_y: A tile to work on. Omit to work where the builder stands.
 
-    improve, repair, remove_improvement, remove_feature, build_route, activate
-    and found_city act where the unit stands. Give them a target and it walks
-    there first, then acts. It never reports acting when only the move
-    happened: MOVED_PARTIAL means it did not arrive, ARRIVED_WAITING that it
-    arrived with no movement left (these verbs need some). Both mean re-issue
-    next turn. found_city is irreversible — settling a tile the unit has not
-    seen up close commits you to it.
-
-    teleport: destination city tile. Idle traders only (not on a route).
-    repair: repairs a pillaged improvement. No improvement name needed.
-    remove_improvement: demolishes an intact improvement. Costs one charge.
-    activate: a Great Person, on their matching district.
-    sacrifice_charges: spends ALL builder charges to boost a district project
-        (2% each). Needs the Royal Society *building* (BUILDING_GOV_SCIENCE,
-        a tier-3 Government Plaza building — not a policy card), the builder
-        on that district's tile, and the city already producing a project.
-        Once per city per turn.
-    spread_religion: Missionaries/Apostles only. Acts in place.
-    build_route: road/railroad. Military Engineers only; a railroad tile costs
-        1 Iron + 1 Coal.
-    heal: fortify until healed (auto-wake at full HP).
-    alert: sleep but auto-wake when an enemy enters sight range.
-    delete: permanently disband the unit.
+    Given a target the builder walks there first, then works. It never reports
+    working when only the move happened: MOVED_PARTIAL means it did not arrive,
+    ARRIVED_WAITING that it arrived with no movement left, and these verbs need
+    some. Both mean re-issue next turn.
     """
-    gs = _get_game(ctx)
-
-    # A list is only legal for the stance verbs: they take no target and their
-    # result does not feed the next decision, so nothing can be chosen wrongly
-    # in bulk. move, attack and delete are excluded deliberately — each result
-    # informs the next order, and a list slip on delete would destroy an army.
-    if isinstance(unit_id, list):
-        if action not in BATCHABLE_VERBS:
-            return (
-                f"Error: BATCH_NOT_ALLOWED|'{action}' takes one unit at a time."
-                f" Only {', '.join(sorted(BATCHABLE_VERBS))} accept a list,"
-                f" because their results do not feed your next decision."
-            )
-        if not unit_id:
-            return "Error: BATCH_EMPTY|unit_id list is empty."
-        return await _run_batch(ctx, gs, unit_id, action)
-
     wrong_kind = ids.wrong_kind_error(unit_id, ids.UNIT, "unit_id")
     if wrong_kind:
         return wrong_kind
+    gs = _get_game(ctx)
     unit_index = ids.local_of(unit_id)
-    params: dict[str, Any] = {"unit_id": unit_id, "action": action}
+    params: dict[str, Any] = {"unit_id": unit_id, "work": work}
+    if improvement_type:
+        params["improvement_type"] = improvement_type
     if target_x is not None:
         params["target_x"] = target_x
     if target_y is not None:
         params["target_y"] = target_y
-    if improvement_type:
-        params["improvement_type"] = improvement_type
-    if city_id is not None:
-        params["city_id"] = city_id
 
     async def _act_here():
-        """The verb, run at whatever tile the unit is standing on."""
-        match action:
-            case "found_city":
-                return await gs.found_city(unit_index)
+        match work:
             case "improve":
                 if not improvement_type:
-                    return "Error: improve requires improvement_type (e.g. IMPROVEMENT_FARM). To repair a pillaged improvement, use action='repair' instead."
+                    return (
+                        "Error: NO_IMPROVEMENT_TYPE|work='improve' needs"
+                        " improvement_type (e.g. IMPROVEMENT_FARM). To restore"
+                        " a pillaged improvement use work='repair'."
+                    )
                 return await gs.improve_tile(unit_index, improvement_type)
             case "repair":
                 return await gs.repair_improvement(unit_index)
@@ -1896,86 +1972,174 @@ async def unit_action(
                 return await gs.remove_feature(unit_index)
             case "build_route":
                 return await gs.build_route(unit_index)
-            case "activate":
-                return await gs.activate_great_person(unit_index)
-            case _:
-                return f"Error: Unknown action '{action}'"
 
     async def _run():
-        # Verbs that act on the tile the unit occupies take an optional target:
-        # given one, the unit moves there first and then acts, which collapses
-        # the old two-turn "move now, improve next turn" chain into one call.
-        if action in TILE_ACTING_VERBS:
-            if target_x is None or target_y is None:
-                return await _act_here()
-            return await gs.move_then_act(
-                unit_index, action, target_x, target_y, _act_here
-            )
+        if target_x is None or target_y is None:
+            return await _act_here()
+        return await gs.move_then_act(unit_index, work, target_x, target_y, _act_here)
 
-        match action:
-            case "move":
-                if target_x is None or target_y is None:
-                    return "Error: move requires target_x and target_y"
-                return await gs.move_unit(unit_index, target_x, target_y)
-            case "attack":
-                if target_x is None or target_y is None:
-                    return "Error: attack requires target_x and target_y"
-                return await gs.attack_unit(unit_index, target_x, target_y)
-            case "fortify":
-                return await gs.fortify_unit(unit_index)
-            case "skip":
-                return await gs.skip_unit(unit_index)
-            case "automate":
-                return await gs.automate_explore(unit_index)
-            case "heal":
-                return await gs.heal_unit(unit_index)
-            case "alert":
-                return await gs.alert_unit(unit_index)
-            case "sleep":
-                return await gs.sleep_unit(unit_index)
-            case "delete":
-                return await gs.delete_unit(unit_index)
-            case "trade_route":
-                target = await _city_target(gs, city_id, target_x, target_y)
-                if isinstance(target, str):
-                    return target
-                return await gs.make_trade_route(unit_index, target[0], target[1])
-            case "sacrifice_charges":
-                return await gs.sacrifice_builder_charges(unit_index)
-            case "spread_religion":
-                return await gs.spread_religion(unit_index)
-            case "teleport":
-                target = await _city_target(gs, city_id, target_x, target_y)
-                if isinstance(target, str):
-                    return target
-                return await gs.teleport_to_city(unit_index, target[0], target[1])
-            case _:
-                return f"Error: Unknown action '{action}'"
-
-    result = await _logged(ctx, "unit_action", params, _run, mutating=True)
-    if (
-        action in CAMERA_FOLLOWED_VERBS
-        and target_x is not None
-        and target_y is not None
-    ):
-        _get_camera(ctx).push(target_x, target_y, f"{action}→({target_x},{target_y})")
+    result = await _logged(ctx, "builder_work", params, _run, mutating=True)
+    if target_x is not None and target_y is not None:
+        _get_camera(ctx).push(target_x, target_y, f"{work}→({target_x},{target_y})")
     return result
 
 
 @mcp.tool()
-async def skip_remaining_units(ctx: Context) -> str:
-    """Skip all units that still have moves remaining.
+async def found_city(
+    ctx: Context,
+    unit_id: int,
+    target_x: int | None = None,
+    target_y: int | None = None,
+) -> str:
+    """Found a city with a settler.
 
-    Useful after diplomacy encounters invalidate all standing orders.
-    Uses GameCore FinishMoves on each unit — fast, reliable, no async issues.
+    Args:
+        unit_id: The settler (from get_units)
+        target_x: The tile to settle. Omit to settle where the settler stands.
+        target_y: The tile to settle. Omit to settle where the settler stands.
+
+    Given a target the settler walks there first, then founds. MOVED_PARTIAL
+    means it did not arrive and ARRIVED_WAITING that it arrived with no
+    movement left; both mean re-issue next turn.
+
+    Irreversible. A tile the settler has not seen up close commits you to it —
+    get_settle_sites_near_unit scores the tiles it can reach.
     """
+    wrong_kind = ids.wrong_kind_error(unit_id, ids.UNIT, "unit_id")
+    if wrong_kind:
+        return wrong_kind
     gs = _get_game(ctx)
+    unit_index = ids.local_of(unit_id)
+    params: dict[str, Any] = {"unit_id": unit_id}
+    if target_x is not None:
+        params["target_x"] = target_x
+    if target_y is not None:
+        params["target_y"] = target_y
+
+    async def _found_here():
+        return await gs.found_city(unit_index)
+
+    async def _run():
+        if target_x is None or target_y is None:
+            return await _found_here()
+        return await gs.move_then_act(
+            unit_index, "found_city", target_x, target_y, _found_here
+        )
+
+    result = await _logged(ctx, "found_city", params, _run, mutating=True)
+    if target_x is not None and target_y is not None:
+        _get_camera(ctx).push(target_x, target_y, f"found_city→({target_x},{target_y})")
+    return result
+
+
+@mcp.tool()
+async def activate_great_person(
+    ctx: Context,
+    unit_id: int,
+    target_x: int | None = None,
+    target_y: int | None = None,
+) -> str:
+    """Use a Great Person's one-off ability.
+
+    Args:
+        unit_id: The Great Person (from get_units)
+        target_x: The district tile to act on. Omit to act where it stands.
+        target_y: The district tile to act on. Omit to act where it stands.
+
+    Most Great People act on their matching district, and they appear on the
+    city centre — so the tile is usually not where they are. get_great_person_sites
+    lists the tiles that accept this one. Given a target it walks there first,
+    then acts; MOVED_PARTIAL and ARRIVED_WAITING both mean re-issue next turn.
+
+    The unit is consumed.
+    """
+    wrong_kind = ids.wrong_kind_error(unit_id, ids.UNIT, "unit_id")
+    if wrong_kind:
+        return wrong_kind
+    gs = _get_game(ctx)
+    unit_index = ids.local_of(unit_id)
+    params: dict[str, Any] = {"unit_id": unit_id}
+    if target_x is not None:
+        params["target_x"] = target_x
+    if target_y is not None:
+        params["target_y"] = target_y
+
+    async def _activate_here():
+        return await gs.activate_great_person(unit_index)
+
+    async def _run():
+        if target_x is None or target_y is None:
+            return await _activate_here()
+        return await gs.move_then_act(
+            unit_index, "activate", target_x, target_y, _activate_here
+        )
+
+    result = await _logged(ctx, "activate_great_person", params, _run, mutating=True)
+    if target_x is not None and target_y is not None:
+        _get_camera(ctx).push(target_x, target_y, f"activate→({target_x},{target_y})")
+    return result
+
+
+@mcp.tool()
+async def spread_religion(ctx: Context, unit_id: int) -> str:
+    """Spread your religion into the city the unit is standing in.
+
+    Args:
+        unit_id: A Missionary or Apostle (from get_units)
+
+    Acts in place, so move the unit into the city first. Spends one charge;
+    the unit is consumed when its last charge goes.
+    """
+    wrong_kind = ids.wrong_kind_error(unit_id, ids.UNIT, "unit_id")
+    if wrong_kind:
+        return wrong_kind
+    gs = _get_game(ctx)
+    unit_index = ids.local_of(unit_id)
     return await _logged(
         ctx,
-        "skip_remaining_units",
-        {},
-        lambda: gs.skip_remaining_units(),
+        "spread_religion",
+        {"unit_id": unit_id},
+        lambda: gs.spread_religion(unit_index),
         mutating=True,
+    )
+
+
+@mcp.tool(annotations={"destructiveHint": True})
+async def disband_unit(
+    ctx: Context,
+    unit_id: int,
+    mode: Literal["delete", "sacrifice_charges"],
+) -> str:
+    """Spend a unit permanently.
+
+    Args:
+        unit_id: The unit to spend (from get_units)
+        mode: How to spend it
+            - 'delete': disband it for nothing
+            - 'sacrifice_charges': a builder spends ALL its charges to boost a
+              district project by 2% each, and is consumed
+
+    Irreversible either way, and one unit at a time on purpose.
+
+    sacrifice_charges needs four things at once: the Royal Society building
+    (BUILDING_GOV_SCIENCE, a tier-3 Government Plaza building, not a policy
+    card), a tier-3 government to unlock it, the builder standing on that
+    district's tile, and the city already producing a project. Once per city
+    per turn.
+    """
+    wrong_kind = ids.wrong_kind_error(unit_id, ids.UNIT, "unit_id")
+    if wrong_kind:
+        return wrong_kind
+    gs = _get_game(ctx)
+    unit_index = ids.local_of(unit_id)
+
+    async def _run():
+        if mode == "delete":
+            return await gs.delete_unit(unit_index)
+        return await gs.sacrifice_builder_charges(unit_index)
+
+    return await _logged(
+        ctx, "disband_unit", {"unit_id": unit_id, "mode": mode}, _run, mutating=True
     )
 
 
@@ -2406,10 +2570,10 @@ async def get_trade_destinations(ctx: Context, unit_id: int) -> str:
     """List valid trade route destinations for a trader unit.
 
     Args:
-        unit_id: The trader's composite ID (from get_units output)
+        unit_id: The trader's composite ID (from get_units)
 
-    Shows domestic and international destinations. Use unit_action
-    with action='trade_route' and target_x/target_y to start a route.
+    Shows domestic and international destinations, each with the city id
+    establish_trade_route takes.
     """
     wrong_kind = ids.wrong_kind_error(unit_id, ids.UNIT, "unit_id")
     if wrong_kind:
@@ -2422,6 +2586,41 @@ async def get_trade_destinations(ctx: Context, unit_id: int) -> str:
         return nr.narrate_trade_destinations(dests)
 
     return await _logged(ctx, "get_trade_destinations", {"unit_id": unit_id}, _run)
+
+
+@mcp.tool()
+async def establish_trade_route(ctx: Context, unit_id: int, city_id: int) -> str:
+    """Start a trade route from a trader to a city.
+
+    Args:
+        unit_id: An idle trader (from get_units)
+        city_id: The destination (from get_trade_destinations)
+
+    The trader must be idle. get_trade_destinations lists the cities this
+    trader can reach and what each route yields.
+    """
+    wrong_kind = ids.wrong_kind_error(unit_id, ids.UNIT, "unit_id")
+    if wrong_kind:
+        return wrong_kind
+    wrong_kind = ids.wrong_kind_error(city_id, ids.CITY, "city_id")
+    if wrong_kind:
+        return wrong_kind
+    gs = _get_game(ctx)
+    unit_index = ids.local_of(unit_id)
+
+    async def _run():
+        target = await _city_target(gs, city_id, None, None)
+        if isinstance(target, str):
+            return target
+        return await gs.make_trade_route(unit_index, target[0], target[1])
+
+    return await _logged(
+        ctx,
+        "establish_trade_route",
+        {"unit_id": unit_id, "city_id": city_id},
+        _run,
+        mutating=True,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -2608,7 +2807,7 @@ async def get_great_person_sites(ctx: Context, unit_id: int) -> str:
     """Show best cities to activate a Great Person, ranked by suitability.
 
     Args:
-        unit_id: The Great Person unit's composite ID (from get_units output)
+        unit_id: The Great Person unit's composite ID (from get_units)
 
     Lists all cities with the matching district (e.g., campuses for Great Scientists),
     showing which ones the GP can activate on, distance, city yield, and great work
