@@ -58,24 +58,56 @@ for i, c in Players[me]:GetCities():Members() do
             break
         end
     end
+    -- What this city can actually shoot, asked of the engine rather than
+    -- guessed from a radius. A hand-rolled scan reported targets 3 tiles out
+    -- that the attack then refused at 2, and it could not see the Encampment's
+    -- reach at all — that district shoots from its own tile, not the centre's.
+    -- Every district that is complete and has outer defenses is asked for its
+    -- own target plots; the union, intersected with tiles holding a hostile
+    -- unit, is what the agent can pass straight to attack().
     local cityTargets = {}
-    if wallMax > 0 then
-        local cx, cy = c:GetX(), c:GetY()
-        for dy = -3, 3 do for dx = -3, 3 do
-            local tx, ty = cx + dx, cy + dy
-            local d = Map.GetPlotDistance(cx, cy, tx, ty)
-            if d >= 1 and d <= 3 then
-                local pu = Map.GetUnitsAt(tx, ty)
-                if pu then for other in pu:Units() do
-                    if other:GetOwner() ~= me then
-                        local eInfo = GameInfo.Units[other:GetType()]
-                        local eName = eInfo and eInfo.UnitType or "UNKNOWN"
-                        local eHP = other:GetMaxDamage() - other:GetDamage()
-                        table.insert(cityTargets, eName .. "@" .. tx .. "," .. ty .. "(" .. eHP .. "hp)[" .. ((other:GetID() % 65536) + other:GetOwner() * 65536) .. "]")
+    local gridW = Map.GetGridSize()
+    local seenTarget = {}
+    for _, d in c:GetDistricts():Members() do
+        local dComplete = false
+        pcall(function() dComplete = d:IsComplete() end)
+        local dOuter = 0
+        pcall(function() dOuter = d:GetMaxDamage(DefenseTypes.DISTRICT_OUTER) or 0 end)
+        if dComplete and dOuter > 0 then
+            local okT, dTargets = pcall(function()
+                return CityManager.GetCommandTargets(d, CityCommandTypes.RANGE_ATTACK)
+            end)
+            if okT and dTargets then
+                for _, tbl in pairs(dTargets) do
+                    if type(tbl) == "table" then
+                        for _, idx in ipairs(tbl) do
+                            local tx, ty = idx % gridW, math.floor(idx / gridW)
+                            local pu = Map.GetUnitsAt(tx, ty)
+                            if pu then for other in pu:Units() do
+                                if other:GetOwner() ~= me then
+                                    local oid = (other:GetID() % 65536) + other:GetOwner() * 65536
+                                    if not seenTarget[oid] then
+                                        local ap = {}
+                                        ap[CityCommandTypes.PARAM_X] = tx
+                                        ap[CityCommandTypes.PARAM_Y] = ty
+                                        local okC, canFire = pcall(function()
+                                            return CityManager.CanStartCommand(d, CityCommandTypes.RANGE_ATTACK, true, ap, false)
+                                        end)
+                                        if okC and canFire then
+                                            seenTarget[oid] = true
+                                            local eInfo = GameInfo.Units[other:GetType()]
+                                            local eName = eInfo and eInfo.UnitType or "UNKNOWN"
+                                            local eHP = other:GetMaxDamage() - other:GetDamage()
+                                            table.insert(cityTargets, eName .. "@" .. tx .. "," .. ty .. "(" .. eHP .. "hp)[" .. oid .. "]")
+                                        end
+                                    end
+                                end
+                            end end
+                        end
                     end
-                end end
+                end
             end
-        end end
+        end
     end
     local pillDistricts = {}
     local distLocs = {}
@@ -168,12 +200,26 @@ print("{SENTINEL}")
 """.replace("{SENTINEL}", SENTINEL)
 
 
-def build_city_attack(city_id: int, target_x: int, target_y: int) -> str:
-    """InGame context: fire city ranged attack at a target tile."""
+def build_attack_from_city(city_id: int, target_x: int, target_y: int) -> str:
+    """InGame context: fire a city's ranged attack at a target tile.
+
+    A city can hold more than one thing that shoots. The City Center fires, and
+    so does a completed Encampment once the parent city has walls — each once
+    per turn, independently. So this asks the engine which of the city's
+    districts can reach the tile rather than assuming the City Center.
+
+    Districts are filtered to complete ones with outer defenses before asking,
+    which is what "the city has walls" means at district level, and leaves
+    Campuses and Harbors out without naming them. Uniques such as the Ikanda
+    come along for free, because nothing here matches on a district name.
+
+    The City Center is preferred when both can reach, so the Encampment's
+    strike is still available afterwards; the result says so, and a second call
+    picks it up.
+    """
     return f"""
 {_lua_get_city(city_id)}
 local cx, cy = pCity:GetX(), pCity:GetY()
-local dist = Map.GetPlotDistance(cx, cy, {target_x}, {target_y})
 local enemy = nil
 local pu = Map.GetUnitsAt({target_x}, {target_y})
 if pu then for other in pu:Units() do if other:GetOwner() ~= me then enemy = other end end end
@@ -184,56 +230,92 @@ local eHP = enemy:GetMaxDamage() - enemy:GetDamage()
 local params = {{}}
 params[CityCommandTypes.PARAM_X] = {target_x}
 params[CityCommandTypes.PARAM_Y] = {target_y}
--- Pre-checks for specific error messages
+local tx, ty = {target_x}, {target_y}
+local targetPlotIdx = ty * Map.GetGridSize() + tx
 local ccIdx = GameInfo.Districts["DISTRICT_CITY_CENTER"].Index
+
+-- Ask each district that is in a state to shoot whether it can reach the tile.
+local hitters = {{}}
+local anyArmed = false
 local hasWalls = false
 for _, d in pCity:GetDistricts():Members() do
-    if d:GetType() == ccIdx then
-        local wHP = d:GetMaxDamage(DefenseTypes.DISTRICT_OUTER)
-        if wHP and wHP > 0 then hasWalls = true end
-        break
-    end
-end
-if not hasWalls then
-    {_bail("ERR:NO_WALLS|City has no walls — build Ancient Walls first")}
-end
-if dist > 2 then
-    {_bail_lua('"ERR:OUT_OF_RANGE|Target is " .. dist .. " tiles away (city attack range is 2)"')}
-end
--- Check if target is in the valid target list (covers LOS + already-fired)
-local validTargets = CityManager.GetCommandTargets(pCity, CityCommandTypes.RANGE_ATTACK)
-local targetPlotIdx = {target_y} * Map.GetGridSize() + {target_x}
-local inTargets = false
-if validTargets then
-    for _, tbl in pairs(validTargets) do
-        if type(tbl) == "table" then
-            for _, idx in ipairs(tbl) do
-                if idx == targetPlotIdx then inTargets = true; break end
+    local complete = false
+    pcall(function() complete = d:IsComplete() end)
+    local outer = 0
+    pcall(function() outer = d:GetMaxDamage(DefenseTypes.DISTRICT_OUTER) or 0 end)
+    local isCC = (d:GetType() == ccIdx)
+    if isCC and outer > 0 then hasWalls = true end
+    if complete and outer > 0 then
+        local ok, targets = pcall(function()
+            return CityManager.GetCommandTargets(d, CityCommandTypes.RANGE_ATTACK)
+        end)
+        local reaches = false
+        local count = 0
+        if ok and targets then
+            for _, tbl in pairs(targets) do
+                if type(tbl) == "table" then
+                    for _, idx in ipairs(tbl) do
+                        count = count + 1
+                        if idx == targetPlotIdx then reaches = true end
+                    end
+                end
             end
         end
-        if inTargets then break end
-    end
-end
-if not inTargets then
-    -- Distinguish already-fired from LOS: if NO targets at all, city already fired
-    local totalTargets = 0
-    if validTargets then
-        for _, tbl in pairs(validTargets) do
-            if type(tbl) == "table" then totalTargets = totalTargets + #tbl end
+        if count > 0 then anyArmed = true end
+        if reaches then
+            local dInfo = GameInfo.Districts[d:GetType()]
+            table.insert(hitters, {{
+                district = d,
+                name = dInfo and dInfo.DistrictType or "DISTRICT",
+                isCC = isCC,
+            }})
         end
     end
-    if totalTargets == 0 then
-        {_bail("ERR:ALREADY_FIRED|City already attacked this turn")}
-    else
-        {_bail_lua('"ERR:NO_LOS|Line of sight to (" .. {target_x} .. "," .. {target_y} .. ") is blocked from (" .. cx .. "," .. cy .. ")"')}
+end
+
+local shooter = nil
+for _, h in ipairs(hitters) do
+    if h.isCC then shooter = h end
+end
+if shooter == nil then shooter = hitters[1] end
+
+if shooter == nil then
+    if not hasWalls then
+        {_bail("ERR:NO_WALLS|City has no walls — build Ancient Walls first. An Encampment needs them too.")}
     end
+    if not anyArmed then
+        {_bail("ERR:ALREADY_FIRED|Every district of this city has already attacked this turn")}
+    end
+    local dist = Map.GetPlotDistance(cx, cy, tx, ty)
+    {_bail_lua('"ERR:NO_TARGET_FROM_CITY|No district of this city can hit (" .. tx .. "," .. ty .. "). It is " .. dist .. " tiles from the centre; range is 2 from each district, and line of sight must be clear."')}
 end
-local canAttack = CityManager.CanStartCommand(pCity, CityCommandTypes.RANGE_ATTACK, true, params, false)
+
+local spareName = nil
+for _, h in ipairs(hitters) do
+    if h ~= shooter then spareName = h.name end
+end
+
+-- GetCommandTargets says the tile is in range; CanStartCommand says whether
+-- the strike can happen. Both are needed, and this one is load-bearing:
+-- removing it makes the tool print a hit that never landed. Measured — with
+-- the gate satisfied, an Encampment strike took an Archer from 100hp to 40hp;
+-- where it refuses, RequestCommand changes nothing in any later frame.
+--
+-- It refuses for a district that has already fired this turn, and for some
+-- target tiles it will still list as in range. get_cities runs this same check
+-- before printing a CAN ATTACK line, so a target read from there is one the
+-- engine has already agreed to; reaching this branch means the state moved
+-- between the read and the write.
+local canAttack = CityManager.CanStartCommand(shooter.district, CityCommandTypes.RANGE_ATTACK, true, params, false)
 if not canAttack then
-    {_bail("ERR:CANNOT_ATTACK|City cannot attack this target (unknown reason)")}
+    {_bail_lua('"ERR:CANNOT_ATTACK|" .. shooter.name .. " has (" .. tx .. "," .. ty .. ") in range but cannot strike it. It has usually fired already this turn. Re-read get_cities: its CAN ATTACK lines are the targets this city can hit right now."')}
 end
-CityManager.RequestCommand(pCity, CityCommandTypes.RANGE_ATTACK, params)
-print("OK:CITY_RANGE_ATTACK|" .. Locale.Lookup(pCity:GetName()) .. " -> " .. eName .. "@{target_x},{target_y}|pre_hp:" .. eHP .. "/" .. enemy:GetMaxDamage())
+CityManager.RequestCommand(shooter.district, CityCommandTypes.RANGE_ATTACK, params)
+local line = "OK:CITY_RANGE_ATTACK|" .. Locale.Lookup(pCity:GetName()) .. " (" .. shooter.name .. ") -> " .. eName .. "@{target_x},{target_y}|pre_hp:" .. eHP .. "/" .. enemy:GetMaxDamage()
+if spareName then
+    line = line .. "|spare:" .. spareName .. " can still fire this turn — attack again with the same city id"
+end
+print(line)
 print("{SENTINEL}")
 """
 
@@ -604,7 +686,7 @@ if "{itype}" == "UNIT" then
                 local uDef = GameInfo.Units[u:GetType()]
                 if uDef and uDef.FormationClass == targetClass then
                     local uid = ((u:GetID() % 65536) + u:GetOwner() * 65536)
-                    {_bail_lua(f'"ERR:STACKING_CONFLICT|Cannot purchase {item_name} — " .. uDef.UnitType .. " (unit_id=" .. uid .. ") is on the city tile. Move it with unit_action(unit_id=" .. uid .. ", action=\'move\', target_x, target_y) first, then retry the purchase."')}
+                    {_bail_lua(f'"ERR:STACKING_CONFLICT|Cannot purchase {item_name} — " .. uDef.UnitType .. " (unit_id=" .. uid .. ") is on the city tile. Move it with move_unit(unit_id=" .. uid .. ", target_x, target_y) first, then retry the purchase."')}
                 end
             end
         end
