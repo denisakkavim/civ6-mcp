@@ -1,7 +1,7 @@
 Trade Routes: 0/3 active
 
 Idle (2):
-  Trader (id:4) at (45,12) — needs trade_route or teleport
-  Trader (id:12) at (45,12) — needs trade_route or teleport
+  Trader (id:4) at (45,12) — needs establish_trade_route or send_unit_to_city
+  Trader (id:12) at (45,12) — needs establish_trade_route or send_unit_to_city
 
 3 free route slot(s) — build/buy a Trader to fill.

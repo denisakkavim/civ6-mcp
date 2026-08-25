@@ -1,7 +1,5 @@
-Best activation cities for Sergei Gorshkov (Admiral -> DISTRICT_HARBOR): [1 charge(s)]
-  1. Aachen (13,10) — needs move (dist 5), yield 91
-  2. Berlin (10,15) — needs move (dist 0), yield 69
-  3. Zanzibar (50,17) — needs move (dist 35), yield 35
-  4. Ulm (28,12) — needs move (dist 19), yield 34
-  5. Cologne (46,13) — needs move (dist 37), yield 29
-  6. Plymouth (4,22) — needs move (dist 10), yield 8
+Best activation cities for Dandara (General -> DISTRICT_ENCAMPMENT): [2 charge(s)]
+  1. Aachen (16,10) — CAN ACTIVATE, yield 59
+  2. Pella (18,16) — CAN ACTIVATE, yield 55
+  3. Methone (18,15) — CAN ACTIVATE, yield 37
+  4. Cologne (49,14) — needs move (dist 32), yield 27

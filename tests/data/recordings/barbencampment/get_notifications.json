@@ -1,0 +1,25 @@
+{
+  "tool": "get_notifications",
+  "arguments": {},
+  "scenario": "barbencampment",
+  "recorded_at": "2026-08-25T20:47:17+00:00",
+  "notes": null,
+  "result": "== Action Required (2) ==\n  * Choose Production  -> Use: set_city_production(city_id=..., item_type=...)\n  * Choose Production  -> Use: set_city_production(city_id=..., item_type=...)\n\n== Notifications (6) ==\n  - Wonder Completed\n  - Wonder Completed\n  - Wonder Completed\n  - City Ranged Attack\n  - Barbarians Approach at (15,7)\n  - Command Units  -> Units have moves remaining \u2014 move them or use skip_remaining_units()",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal nm = NotificationManager\nlocal list = nm.GetList(me)\nlocal total = 0\nlocal emitted = 0\nif list then\n    total = #list\n    for _, nID in ipairs(list) do\n        pcall(function()\n            local entry = nm.Find(me, nID)\n            if entry and not entry:IsDismissed() then\n                local typeName = entry:GetTypeName() or \"UNKNOWN\"\n                local msg = (entry:GetMessage() or \"\"):gsub(\"|\", \"/\")\n                if typeName:find(\"WONDER\") then\n                    pcall(function()\n                        local wx, wy = entry:GetLocation()\n                        if wx and wx >= 0 then\n                            local wPlot = Map.GetPlot(wx, wy)\n                            if wPlot then\n                                local wOwner = wPlot:GetOwner()\n                                if wOwner and wOwner >= 0 and PlayerConfigurations[wOwner] then\n                                    local civShort = Locale.Lookup(PlayerConfigurations[wOwner]:GetCivilizationShortDescription())\n                                    if civShort then msg = msg .. \" [\" .. civShort .. \"]\" end\n                                end\n                                local dt = wPlot:GetDistrictType()\n                                if dt and dt >= 0 and GameInfo.Districts[dt] then\n                                    local dName = Locale.Lookup(GameInfo.Districts[dt].Name)\n                                    if dName then msg = msg .. \" (\" .. dName .. \")\" end\n                                end\n                            end\n                        end\n                    end)\n                end\n                local turn = entry:GetAddedTurn() or -1\n                local x, y = -1, -1\n                pcall(function() x, y = entry:GetLocation() end)\n                if x == nil then x = -1 end\n                if y == nil then y = -1 end\n                print(\"NOTIF|\" .. typeName .. \"|\" .. msg .. \"|\" .. turn .. \"|\" .. x .. \",\" .. y)\n                emitted = emitted + 1\n            end\n        end)\n    end\nend\nprint(\"TOTAL|\" .. total .. \"|\" .. emitted)\nprint(\"---END---\")\n",
+      "lines": [
+        "NOTIF|NOTIFICATION_WONDER_COMPLETED|Wonder Completed|42|-9999,-9999",
+        "NOTIF|NOTIFICATION_WONDER_COMPLETED|Wonder Completed|93|-9999,-9999",
+        "NOTIF|NOTIFICATION_WONDER_COMPLETED|Wonder Completed|95|-9999,-9999",
+        "NOTIF|NOTIFICATION_CHOOSE_CITY_PRODUCTION|Choose Production|124|-9999,-9999",
+        "NOTIF|NOTIFICATION_CHOOSE_CITY_PRODUCTION|Choose Production|124|-9999,-9999",
+        "NOTIF|NOTIFICATION_CITY_RANGE_ATTACK|City Ranged Attack|124|-9999,-9999",
+        "NOTIF|NOTIFICATION_BARBARIANS_SIGHTED|Barbarians Approach|124|15,7",
+        "NOTIF|NOTIFICATION_COMMAND_UNITS|Command Units|126|-9999,-9999",
+        "TOTAL|8|8"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+4 units:
+  Builder (UNIT_BUILDER) at (14,12) — moves 2/2 charges:3 [id:3]
+  Spearman (UNIT_SPEARMAN) at (22,10) — CS:25 moves 2/2 [id:5]
+    >> CAN ATTACK: UNIT_SCOUT@21,9(100hp)
+  Archer (UNIT_ARCHER) at (17,14) — CS:15 RS:25 moves 2/2 [id:6]
+    >> CAN ATTACK: UNIT_WARRIOR@17,16(77hp)
+    >> CAN ATTACK: UNIT_BUILDER@18,16(100hp)
+  Archer (UNIT_ARCHER) at (19,11) — CS:15 RS:25 moves 2/2 [id:7]
+
+Nearby threats (7):
+  Barbarian (3 units):
+    UNIT_SCOUT at (21,9) — CS:10 HP:100/100 (1 tiles away) [id:4128779]
+    UNIT_BARBARIAN_HORSE_ARCHER at (23,9) — CS:10 RS:15 HP:100/100 (2 tiles away) [id:4128796]
+    UNIT_SWORDSMAN at (16,6) — CS:35 HP:64/100 (3 tiles away) [id:4128792]
+  Macedon (4 units):
+    UNIT_WARRIOR at (17,16) — CS:20 HP:77/100 (2 tiles away) [id:65539]
+    UNIT_ARCHER at (19,16) — CS:15 RS:25 HP:100/100 (3 tiles away) [id:65538]
+    UNIT_ARCHER at (19,15) — CS:15 RS:25 HP:40/100 (3 tiles away) [id:65542]
+    UNIT_ARCHER at (16,17) — CS:15 RS:25 HP:100/100 (3 tiles away) [id:65545]

@@ -1,4 +1,45 @@
 {
+  "activate_great_person": {
+    "annotations": null,
+    "description": "Use a Great Person's one-off ability.\n\n    Args:\n        unit_id: The Great Person (from get_units)\n        target_x: The district tile to act on. Omit to act where it stands.\n        target_y: The district tile to act on. Omit to act where it stands.\n\n    Most Great People act on their matching district, and they appear on the\n    city centre \u2014 so the tile is usually not where they are. get_great_person_sites\n    lists the tiles that accept this one. Given a target it walks there first,\n    then acts; MOVED_PARTIAL and ARRIVED_WAITING both mean re-issue next turn.\n\n    The unit is consumed.\n    ",
+    "inputSchema": {
+      "properties": {
+        "target_x": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target X"
+        },
+        "target_y": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Y"
+        },
+        "unit_id": {
+          "title": "Unit Id",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "unit_id"
+      ],
+      "title": "activate_great_personArguments",
+      "type": "object"
+    }
+  },
   "appoint_governor": {
     "annotations": null,
     "description": "Appoint a new governor, and optionally assign them to a city.\n\n    Args:\n        governor_type: e.g. GOVERNOR_THE_EDUCATOR (Pingala), GOVERNOR_THE_DEFENDER (Victor)\n        city_id: City to assign them to (from get_cities output). Omit to\n            appoint only and assign later with assign_governor.\n\n    Requires available governor points. Use get_governors to see options.\n    An appointed governor takes several turns to establish in their city.\n    ",
@@ -50,6 +91,98 @@
       "type": "object"
     }
   },
+  "attack": {
+    "annotations": null,
+    "description": "Attack a tile with a unit or with a city's ranged strike.\n\n    Args:\n        attacker_id: A unit (from get_units) or a city (from get_cities). The\n            id says which it is, so one tool serves both.\n        target_x: The tile to attack\n        target_y: The tile to attack\n\n    You attack a tile, not a target: name the tile the enemy stands on, so a\n    stale position fails loudly instead of hitting something else.\n\n    A city shoots from each of its defended districts, once per turn each \u2014 the\n    City Center, and a completed Encampment once the city has walls. Both reach\n    2 tiles from their own tile, so an Encampment covers ground the centre\n    cannot. This picks one and says which fired and what is still loaded, so a\n    second call spends the other.\n\n    A unit standing on an enemy Encampment or City Center is shielded: those\n    districts absorb the strike into their own defences, and the unit's health\n    does not move until they are down.\n    ",
+    "inputSchema": {
+      "properties": {
+        "attacker_id": {
+          "title": "Attacker Id",
+          "type": "integer"
+        },
+        "target_x": {
+          "title": "Target X",
+          "type": "integer"
+        },
+        "target_y": {
+          "title": "Target Y",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "attacker_id",
+        "target_x",
+        "target_y"
+      ],
+      "title": "attackArguments",
+      "type": "object"
+    }
+  },
+  "builder_work": {
+    "annotations": null,
+    "description": "Put a builder to work on a tile.\n\n    Args:\n        unit_id: The builder (from get_units)\n        work: What to build or clear\n            - 'improve': build improvement_type here\n            - 'repair': restore a pillaged improvement (no name needed)\n            - 'remove_improvement': demolish an intact one. Costs a charge.\n            - 'remove_feature': clear a forest, marsh or rainforest\n            - 'build_route': road or railroad. Military Engineers only; a\n              railroad tile costs 1 Iron and 1 Coal.\n        improvement_type: Required for 'improve', ignored otherwise. e.g.\n            IMPROVEMENT_FARM. get_units lists what this builder can build here.\n        target_x: A tile to work on. Omit to work where the builder stands.\n        target_y: A tile to work on. Omit to work where the builder stands.\n\n    Given a target the builder walks there first, then works. It never reports\n    working when only the move happened: MOVED_PARTIAL means it did not arrive,\n    ARRIVED_WAITING that it arrived with no movement left, and these verbs need\n    some. Both mean re-issue next turn.\n    ",
+    "inputSchema": {
+      "properties": {
+        "improvement_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Improvement Type"
+        },
+        "target_x": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target X"
+        },
+        "target_y": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Y"
+        },
+        "unit_id": {
+          "title": "Unit Id",
+          "type": "integer"
+        },
+        "work": {
+          "enum": [
+            "improve",
+            "repair",
+            "remove_improvement",
+            "remove_feature",
+            "build_route"
+          ],
+          "title": "Work",
+          "type": "string"
+        }
+      },
+      "required": [
+        "unit_id",
+        "work"
+      ],
+      "title": "builder_workArguments",
+      "type": "object"
+    }
+  },
   "choose_dedication": {
     "annotations": null,
     "description": "Choose a dedication/commemoration for the current era.\n\n    Args:\n        dedication_index: The index of the dedication (from get_dedications output)\n\n    Use get_dedications first to see available options and their bonuses.\n    ",
@@ -81,59 +214,6 @@
         "belief_type"
       ],
       "title": "choose_pantheonArguments",
-      "type": "object"
-    }
-  },
-  "city_attack": {
-    "annotations": null,
-    "description": "Fire a city's ranged attack at a tile.\n\n    Args:\n        city_id: The attacking city (from get_cities output)\n        target_x: Target tile. Use this for a unit \u2014 you attack the tile it\n            stands on, so a stale tile fails loudly rather than hitting the\n            wrong thing.\n        target_y: Target tile.\n        target_city_id: Attack a city instead, by id (from get_diplomacy).\n\n    The city must have walls and must not have fired this turn.\n    Range is 2 tiles from the city centre.\n    ",
-    "inputSchema": {
-      "properties": {
-        "city_id": {
-          "title": "City Id",
-          "type": "integer"
-        },
-        "target_city_id": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Target City Id"
-        },
-        "target_x": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Target X"
-        },
-        "target_y": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Target Y"
-        }
-      },
-      "required": [
-        "city_id"
-      ],
-      "title": "city_attackArguments",
       "type": "object"
     }
   },
@@ -174,6 +254,34 @@
       "type": "object"
     }
   },
+  "disband_unit": {
+    "annotations": {
+      "destructiveHint": true
+    },
+    "description": "Spend a unit permanently.\n\n    Args:\n        unit_id: The unit to spend (from get_units)\n        mode: How to spend it\n            - 'delete': disband it for nothing\n            - 'sacrifice_charges': a builder spends ALL its charges to boost a\n              district project by 2% each, and is consumed\n\n    Irreversible either way, and one unit at a time on purpose.\n\n    sacrifice_charges needs four things at once: the Royal Society building\n    (BUILDING_GOV_SCIENCE, a tier-3 Government Plaza building, not a policy\n    card), a tier-3 government to unlock it, the builder standing on that\n    district's tile, and the city already producing a project. Once per city\n    per turn.\n    ",
+    "inputSchema": {
+      "properties": {
+        "mode": {
+          "enum": [
+            "delete",
+            "sacrifice_charges"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "unit_id": {
+          "title": "Unit Id",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "unit_id",
+        "mode"
+      ],
+      "title": "disband_unitArguments",
+      "type": "object"
+    }
+  },
   "end_turn": {
     "annotations": {
       "destructiveHint": true
@@ -182,6 +290,28 @@
     "inputSchema": {
       "properties": {},
       "title": "end_turnArguments",
+      "type": "object"
+    }
+  },
+  "establish_trade_route": {
+    "annotations": null,
+    "description": "Start a trade route from a trader to a city.\n\n    Args:\n        unit_id: An idle trader (from get_units)\n        city_id: The destination (from get_trade_destinations)\n\n    The trader must be idle. get_trade_destinations lists the cities this\n    trader can reach and what each route yields.\n    ",
+    "inputSchema": {
+      "properties": {
+        "city_id": {
+          "title": "City Id",
+          "type": "integer"
+        },
+        "unit_id": {
+          "title": "Unit Id",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "unit_id",
+        "city_id"
+      ],
+      "title": "establish_trade_routeArguments",
       "type": "object"
     }
   },
@@ -211,6 +341,47 @@
         "player_id"
       ],
       "title": "form_allianceArguments",
+      "type": "object"
+    }
+  },
+  "found_city": {
+    "annotations": null,
+    "description": "Found a city with a settler.\n\n    Args:\n        unit_id: The settler (from get_units)\n        target_x: The tile to settle. Omit to settle where the settler stands.\n        target_y: The tile to settle. Omit to settle where the settler stands.\n\n    Given a target the settler walks there first, then founds. MOVED_PARTIAL\n    means it did not arrive and ARRIVED_WAITING that it arrived with no\n    movement left; both mean re-issue next turn.\n\n    Irreversible. A tile the settler has not seen up close commits you to it \u2014\n    get_settle_sites_near_unit scores the tiles it can reach.\n    ",
+    "inputSchema": {
+      "properties": {
+        "target_x": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target X"
+        },
+        "target_y": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Y"
+        },
+        "unit_id": {
+          "title": "Unit Id",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "unit_id"
+      ],
+      "title": "found_cityArguments",
       "type": "object"
     }
   },
@@ -409,7 +580,7 @@
     "annotations": {
       "readOnlyHint": true
     },
-    "description": "Show best cities to activate a Great Person, ranked by suitability.\n\n    Args:\n        unit_id: The Great Person unit's composite ID (from get_units output)\n\n    Lists all cities with the matching district (e.g., campuses for Great Scientists),\n    showing which ones the GP can activate on, distance, city yield, and great work\n    slot availability for cultural GPs.\n    ",
+    "description": "Show best cities to activate a Great Person, ranked by suitability.\n\n    Args:\n        unit_id: The Great Person unit's composite ID (from get_units)\n\n    Lists all cities with the matching district (e.g., campuses for Great Scientists),\n    showing which ones the GP can activate on, distance, city yield, and great work\n    slot availability for cultural GPs.\n    ",
     "inputSchema": {
       "properties": {
         "unit_id": {
@@ -492,7 +663,7 @@
     "annotations": {
       "readOnlyHint": true
     },
-    "description": "Estimate how many turns a unit needs to reach a destination.\n\n    Args:\n        unit_id: The unit's composite ID (from get_units output)\n        target_x: Destination X coordinate\n        target_y: Destination Y coordinate\n\n    Returns estimated turns, path length, and reachable tiles this turn.\n    ",
+    "description": "Estimate how many turns a unit needs to reach a destination.\n\n    Args:\n        unit_id: The unit's composite ID (from get_units)\n        target_x: Destination X coordinate\n        target_y: Destination Y coordinate\n\n    Returns estimated turns, path length, and reachable tiles this turn.\n    ",
     "inputSchema": {
       "properties": {
         "target_x": {
@@ -625,7 +796,7 @@
     "annotations": {
       "readOnlyHint": true
     },
-    "description": "List best settle locations near a settler unit.\n\n    Args:\n        unit_id: The settler's composite ID (from get_units output)\n\n    Scores locations by yields, water, defense, and resource value.\n    Returns top 5 candidates sorted by score.\n    ",
+    "description": "List best settle locations near a settler unit.\n\n    Args:\n        unit_id: The settler's composite ID (from get_units)\n\n    Scores locations by yields, water, defense, and resource value.\n    Returns top 5 candidates sorted by score.\n    ",
     "inputSchema": {
       "properties": {
         "unit_id": {
@@ -655,7 +826,7 @@
     "annotations": {
       "readOnlyHint": true
     },
-    "description": "List all your spy units with position, rank, city, and available missions.\n\n    Shows each spy's composite id (needed for spy_action), current location,\n    rank (Recruit/Agent/Special Agent/Senior Agent), XP, and which operations\n    are available at their current position.\n\n    Note: offensive missions only become available once the spy has physically\n    arrived in the target city. Use spy_action with action='travel' first.\n    ",
+    "description": "List all your spy units with position, rank, city, and available missions.\n\n    Shows each spy's composite id (needed for send_unit_to_city and\n    spy_mission), current location, rank (Recruit/Agent/Special Agent/Senior\n    Agent), XP, and which operations are available at their current position.\n\n    Note: offensive missions only become available once the spy has physically\n    arrived in the target city. Use send_unit_to_city first.\n    ",
     "inputSchema": {
       "properties": {},
       "title": "get_spiesArguments",
@@ -666,7 +837,7 @@
     "annotations": {
       "readOnlyHint": true
     },
-    "description": "List valid trade route destinations for a trader unit.\n\n    Args:\n        unit_id: The trader's composite ID (from get_units output)\n\n    Shows domestic and international destinations. Use unit_action\n    with action='trade_route' and target_x/target_y to start a route.\n    ",
+    "description": "List valid trade route destinations for a trader unit.\n\n    Args:\n        unit_id: The trader's composite ID (from get_units)\n\n    Shows domestic and international destinations, each with the city id\n    establish_trade_route takes.\n    ",
     "inputSchema": {
       "properties": {
         "unit_id": {
@@ -696,7 +867,7 @@
     "annotations": {
       "readOnlyHint": true
     },
-    "description": "List available promotions for a unit.\n\n    Args:\n        unit_id: The unit's composite ID (from get_units output)\n\n    Shows promotions filtered by the unit's promotion class.\n    Only units with enough XP will have promotions available.\n    ",
+    "description": "List available promotions for a unit.\n\n    Args:\n        unit_id: The unit's composite ID (from get_units)\n\n    Shows promotions filtered by the unit's promotion class.\n    Only units with enough XP will have promotions available.\n    ",
     "inputSchema": {
       "properties": {
         "unit_id": {
@@ -823,6 +994,33 @@
       "type": "object"
     }
   },
+  "move_unit": {
+    "annotations": null,
+    "description": "Move a unit to a tile.\n\n    Args:\n        unit_id: The unit to move (from get_units)\n        target_x: Destination tile\n        target_y: Destination tile\n\n    Reports what the move uncovered. A unit that runs out of movement stops\n    short and keeps the rest of the path for next turn.\n    ",
+    "inputSchema": {
+      "properties": {
+        "target_x": {
+          "title": "Target X",
+          "type": "integer"
+        },
+        "target_y": {
+          "title": "Target Y",
+          "type": "integer"
+        },
+        "unit_id": {
+          "title": "Unit Id",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "unit_id",
+        "target_x",
+        "target_y"
+      ],
+      "title": "move_unitArguments",
+      "type": "object"
+    }
+  },
   "promote_governor": {
     "annotations": null,
     "description": "Promote a governor with a new ability.\n\n    Args:\n        governor_type: The governor type (from get_governors output)\n        promotion_type: The promotion type (from get_governors output, shown under each governor)\n\n    Requires available governor points. Use get_governors to see available promotions.\n    ",
@@ -847,7 +1045,7 @@
   },
   "promote_unit": {
     "annotations": null,
-    "description": "Apply a promotion to a unit.\n\n    Args:\n        unit_id: The unit's composite ID (from get_units output)\n        promotion_type: e.g. PROMOTION_BATTLECRY, PROMOTION_TORTOISE\n\n    Use get_unit_promotions first to see available options.\n    ",
+    "description": "Apply a promotion to a unit.\n\n    Args:\n        unit_id: The unit's composite ID (from get_units)\n        promotion_type: e.g. PROMOTION_BATTLECRY, PROMOTION_TORTOISE\n\n    Use get_unit_promotions first to see available options.\n    ",
     "inputSchema": {
       "properties": {
         "promotion_type": {
@@ -1243,6 +1441,28 @@
       "type": "object"
     }
   },
+  "send_unit_to_city": {
+    "annotations": null,
+    "description": "Send a spy, trader or Great Person to a city.\n\n    Args:\n        unit_id: The unit to send (from get_units or get_spies)\n        city_id: The destination (from get_cities or get_city_states)\n\n    A spy travels: it leaves the map and arrives some turns later, after a turn\n    ends. Everything else transfers instantly. The two are not interchangeable\n    \u2014 plan the next turn on which one you got, and read get_spies to learn when\n    a travelling spy has landed. Spies may travel only to your own cities and\n    to city-states. A trader must be idle.\n    ",
+    "inputSchema": {
+      "properties": {
+        "city_id": {
+          "title": "City Id",
+          "type": "integer"
+        },
+        "unit_id": {
+          "title": "Unit Id",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "unit_id",
+        "city_id"
+      ],
+      "title": "send_unit_to_cityArguments",
+      "type": "object"
+    }
+  },
   "set_city_focus": {
     "annotations": null,
     "description": "Set a city's citizen yield priority.\n\n    Args:\n        city_id: City ID\n        focus: The yield to prioritise. 'default' clears all focus settings.\n\n    Cities automatically assign citizens to tiles. This biases the AI\n    toward the chosen yield type when assigning new citizens.\n    ",
@@ -1393,21 +1613,37 @@
   },
   "skip_remaining_units": {
     "annotations": null,
-    "description": "Skip all units that still have moves remaining.\n\n    Useful after diplomacy encounters invalidate all standing orders.\n    Uses GameCore FinishMoves on each unit \u2014 fast, reliable, no async issues.\n    ",
+    "description": "Settle every unit that still has moves, ending your unit turn.\n\n    Takes no ids: it acts on whatever still has movement, which is exactly the\n    set you would otherwise have to read out of get_units first. Combat units\n    fortify, or heal if damaged; everything else has its turn ended.\n\n    Use this to clear the \"units have moves remaining\" blocker, or after a\n    diplomacy encounter cancels every standing order. Reach for unit_stance\n    when you want a *particular* posture for *particular* units \u2014 this one\n    trades that control for one call over the whole roster.\n    ",
     "inputSchema": {
       "properties": {},
       "title": "skip_remaining_unitsArguments",
       "type": "object"
     }
   },
-  "spy_action": {
+  "spread_religion": {
     "annotations": null,
-    "description": "Send a spy to a city or launch a spy mission.\n\n    Args:\n        unit_id: The spy's composite ID (from get_spies output)\n        action: 'travel' to move the spy to a city, or a mission type to launch\n        city_id: Target city (from get_cities or get_city_states). Preferred.\n        target_x: Target city tile, if you have no city_id.\n        target_y: Target city tile, if you have no city_id.\n\n    Travel notes:\n        - Valid targets: your own cities and city-states only.\n        - Allied civ cities are NOT valid travel targets.\n        - Travel is queued end-of-turn; spy position updates after turn ends.\n\n    Mission notes:\n        - Spy must be physically IN the target city to launch any offensive mission.\n        - Use 'travel' first, then end the turn, then launch the mission.\n        - COUNTERSPY defends your own city (spy must be in your city).\n        - get_spies shows which ops are available at the spy's current location.\n    ",
+    "description": "Spread your religion into the city the unit is standing in.\n\n    Args:\n        unit_id: A Missionary or Apostle (from get_units)\n\n    Acts in place, so move the unit into the city first. Spends one charge;\n    the unit is consumed when its last charge goes.\n    ",
     "inputSchema": {
       "properties": {
-        "action": {
+        "unit_id": {
+          "title": "Unit Id",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "unit_id"
+      ],
+      "title": "spread_religionArguments",
+      "type": "object"
+    }
+  },
+  "spy_mission": {
+    "annotations": null,
+    "description": "Launch a spy operation in the city the spy is already in.\n\n    Args:\n        unit_id: The spy (from get_spies output)\n        mission: The operation to run\n\n    Takes no target: a mission runs where the spy stands, so the city is read\n    from the spy itself. Send the spy first with send_unit_to_city, end the\n    turn, then launch. COUNTERSPY defends one of your own cities; the rest are\n    offensive. get_spies lists which operations that city allows.\n    ",
+    "inputSchema": {
+      "properties": {
+        "mission": {
           "enum": [
-            "travel",
             "COUNTERSPY",
             "GAIN_SOURCES",
             "SIPHON_FUNDS",
@@ -1418,44 +1654,8 @@
             "NEUTRALIZE_GOVERNOR",
             "FABRICATE_SCANDAL"
           ],
-          "title": "Action",
+          "title": "Mission",
           "type": "string"
-        },
-        "city_id": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "City Id"
-        },
-        "target_x": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Target X"
-        },
-        "target_y": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Target Y"
         },
         "unit_id": {
           "title": "Unit Id",
@@ -1464,90 +1664,28 @@
       },
       "required": [
         "unit_id",
-        "action"
+        "mission"
       ],
-      "title": "spy_actionArguments",
+      "title": "spy_missionArguments",
       "type": "object"
     }
   },
-  "unit_action": {
+  "unit_stance": {
     "annotations": null,
-    "description": "Issue a command to a unit.\n\n    Args:\n        unit_id: Composite unit ID (from get_units). A list is accepted for\n            fortify/skip/sleep/alert/heal only, and returns one result per unit.\n        action: The command to issue\n        target_x: Target tile. Required for move/attack/trade_route/teleport.\n        target_y: Target tile. Required for move/attack/trade_route/teleport.\n        improvement_type: Improvement for builders (required for improve), e.g.\n            IMPROVEMENT_FARM. get_units lists what each builder can build here.\n        city_id: Destination city for teleport/trade_route, instead of a tile.\n\n    improve, repair, remove_improvement, remove_feature, build_route, activate\n    and found_city act where the unit stands. Give them a target and it walks\n    there first, then acts. It never reports acting when only the move\n    happened: MOVED_PARTIAL means it did not arrive, ARRIVED_WAITING that it\n    arrived with no movement left (these verbs need some). Both mean re-issue\n    next turn. found_city is irreversible \u2014 settling a tile the unit has not\n    seen up close commits you to it.\n\n    teleport: destination city tile. Idle traders only (not on a route).\n    repair: repairs a pillaged improvement. No improvement name needed.\n    remove_improvement: demolishes an intact improvement. Costs one charge.\n    activate: a Great Person, on their matching district.\n    sacrifice_charges: spends ALL builder charges to boost a district project\n        (2% each). Needs the Royal Society *building* (BUILDING_GOV_SCIENCE,\n        a tier-3 Government Plaza building \u2014 not a policy card), the builder\n        on that district's tile, and the city already producing a project.\n        Once per city per turn.\n    spread_religion: Missionaries/Apostles only. Acts in place.\n    build_route: road/railroad. Military Engineers only; a railroad tile costs\n        1 Iron + 1 Coal.\n    heal: fortify until healed (auto-wake at full HP).\n    alert: sleep but auto-wake when an enemy enters sight range.\n    delete: permanently disband the unit.\n    ",
+    "description": "Put a unit into a standing posture for the rest of its turn.\n\n    Args:\n        unit_id: One unit, or a list of them for the same stance (from\n            get_units). A list returns one result per unit.\n        stance: What the unit should do\n            - 'fortify': dig in for a defence bonus\n            - 'skip': end this unit's turn now\n            - 'sleep': hold until woken by hand\n            - 'alert': sleep, but wake when an enemy comes into sight\n            - 'heal': fortify until healed, then wake\n            - 'automate': explore on its own\n\n    None of these take a target, so a list is safe here. Use get_units to skip\n    every unit that still has moves.\n    ",
     "inputSchema": {
       "properties": {
-        "action": {
+        "stance": {
           "enum": [
-            "move",
-            "attack",
             "fortify",
             "skip",
-            "found_city",
-            "improve",
-            "repair",
-            "remove_improvement",
-            "remove_feature",
-            "build_route",
-            "automate",
-            "heal",
-            "alert",
             "sleep",
-            "delete",
-            "trade_route",
-            "activate",
-            "sacrifice_charges",
-            "teleport",
-            "spread_religion"
+            "alert",
+            "heal",
+            "automate"
           ],
-          "title": "Action",
+          "title": "Stance",
           "type": "string"
-        },
-        "city_id": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "City Id"
-        },
-        "improvement_type": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Improvement Type"
-        },
-        "target_x": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Target X"
-        },
-        "target_y": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Target Y"
         },
         "unit_id": {
           "anyOf": [
@@ -1566,15 +1704,15 @@
       },
       "required": [
         "unit_id",
-        "action"
+        "stance"
       ],
-      "title": "unit_actionArguments",
+      "title": "unit_stanceArguments",
       "type": "object"
     }
   },
   "upgrade_unit": {
     "annotations": null,
-    "description": "Upgrade a unit to its next type (e.g. Slinger -> Archer).\n\n    Args:\n        unit_id: The unit's composite ID (from get_units output)\n\n    Requires the right technology, enough gold, and the unit must have\n    moves remaining. The unit's movement is consumed by upgrading.\n    ",
+    "description": "Upgrade a unit to its next type (e.g. Slinger -> Archer).\n\n    Args:\n        unit_id: The unit's composite ID (from get_units)\n\n    Requires the right technology, enough gold, and the unit must have\n    moves remaining. The unit's movement is consumed by upgrading.\n    ",
     "inputSchema": {
       "properties": {
         "unit_id": {

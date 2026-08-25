@@ -1,0 +1,19 @@
+5 civilizations:
+  Macedon (Alexander) — WAR (+11) **AT WAR** [player 1]
+    Cities (1): Pella pop 4 (19,17) [city:16842752]
+    Military: 145 vs our 86 (1.7x) !! MILITARY THREAT
+    Access: grievances: 150
+    +5 Alexander is happy to see your civilization is at war with others.
+    +6 Unknown Reason
+    Agenda: Short Life of Glory — Likes civilizations at war with major powers other than Macedon. Has disdain for civilizations at peace.  Grievances against this leader decay at twice the usual rate.
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+  Unmet Civilization (Unknown Leader) — not met
+  Unmet Civilization (Unknown Leader) — not met
+  Unmet Civilization (Unknown Leader) — not met
+  Kongo (Mvemba a Nzinga) — UNFRIENDLY (+0) [player 5]
+    Cities (5): Mbanza Kongo pop 10 (24,29) [city:17104896]; Mbumbi pop 7 (21,28) [city:17104898]; Kwango pop 3 (26,25) [city:17104899]; Mbanza Nsundi pop 2 (19,23) [city:17104900] + 1 in fog
+    Military: 195 vs our 86 (2.3x) !! MILITARY THREAT
+    Access: they have delegation
+    Agenda: Enthusiastic Disciple — Likes civilizations that bring Religion to the Kongo. Dislikes civilizations that have founded a Religion but not brought it to a Kongolese city.
+    Agenda: [Hidden] — Requires Secret diplomatic visibility (spy or alliance)
+    Can: Diplomatic Delegation, Declare Friendship, Denounce, Open Borders (Via Propose Deal), Declare War

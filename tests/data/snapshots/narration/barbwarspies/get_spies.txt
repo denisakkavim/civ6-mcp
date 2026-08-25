@@ -2,6 +2,6 @@ Spies (1):
   id:19 [Special Agent] Wanda — at Zugdidi (54,20) | moves:1 | xp:45 | mission: FOMENT_UNREST | ops: none
 
 Actions:
-  Travel: spy_action(unit_id, action='travel', target_x, target_y) — send spy to own city or city-state
-  Mission: spy_action(unit_id, action=MISSION_TYPE, target_x, target_y) — spy must already be in target city
+  Travel: send_unit_to_city(unit_id, city_id) — send spy to own city or city-state
+  Mission: spy_mission(unit_id, mission=MISSION_TYPE) — spy must already be in target city
   Mission types: COUNTERSPY, GAIN_SOURCES, SIPHON_FUNDS, STEAL_TECH_BOOST, SABOTAGE_PRODUCTION, GREAT_WORK_HEIST, RECRUIT_PARTISANS, NEUTRALIZE_GOVERNOR, FABRICATE_SCANDAL

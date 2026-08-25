@@ -33,4 +33,4 @@ International (gold to origin):
 
 City-state quests (send trade route for envoy): Mexico City
 
-Use unit_action with action='trade_route', target_x=X, target_y=Y
+Use establish_trade_route(unit_id, city_id)

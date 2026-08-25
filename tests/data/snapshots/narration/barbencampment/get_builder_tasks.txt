@@ -1,0 +1,36 @@
+=== BUILDER TASKS (26 tasks, 1 idle builders) ===
+
+URGENT:
+  (14,13): RESOURCE_HORSES* — build IMPROVEMENT_PASTURE [city: Trier] — nearest builder id:3, 1 tile
+  (12,12): RESOURCE_HORSES* — build IMPROVEMENT_PASTURE [city: Trier] — nearest builder id:3, 2 tiles
+  (13,9): repair IMPROVEMENT_QUARRY [city: Aachen] — nearest builder id:3, 3 tiles
+  (16,13): RESOURCE_COAL* — build IMPROVEMENT_MINE [city: Frankfurt] — nearest builder id:3, 3 tiles
+  (14,7): repair IMPROVEMENT_MINE [city: Aachen] — nearest builder id:3, 5 tiles
+  (17,15): repair IMPROVEMENT_FARM [city: Trier] — nearest builder id:3, 5 tiles
+
+HIGH:
+  (14,9): RESOURCE_TOBACCO+ — build IMPROVEMENT_PLANTATION [city: Aachen] — nearest builder id:3, 3 tiles
+  (16,11): RESOURCE_RICE — build IMPROVEMENT_FARM [city: Aachen] — nearest builder id:3, 3 tiles
+  (15,15): RESOURCE_AMBER+ — build IMPROVEMENT_MINE [city: Trier] — nearest builder id:3, 3 tiles
+  (13,6): RESOURCE_DEER — build IMPROVEMENT_CAMP [city: Aachen] — nearest builder id:3, 6 tiles
+  (24,10): RESOURCE_WHEAT — build IMPROVEMENT_FARM [city: Heidelberg] — nearest builder id:3, 11 tiles
+
+NORMAL:
+  (15,12): build IMPROVEMENT_FARM [city: Frankfurt] — nearest builder id:3, 1 tile
+  (13,13): build IMPROVEMENT_FARM [city: Trier] — nearest builder id:3, 1 tile
+  (12,11): build IMPROVEMENT_FARM [city: Aachen] — nearest builder id:3, 2 tiles
+  (15,11): build IMPROVEMENT_LUMBER_MILL [city: Aachen] — nearest builder id:3, 2 tiles
+  (16,14): build IMPROVEMENT_FARM [city: Trier] — nearest builder id:3, 3 tiles
+  (13,8): build IMPROVEMENT_MINE [city: Aachen] — nearest builder id:3, 4 tiles
+  (16,8): build IMPROVEMENT_MINE [city: Aachen] — nearest builder id:3, 4 tiles
+  (16,15): build IMPROVEMENT_MINE [city: Trier] — nearest builder id:3, 4 tiles
+  (16,16): build IMPROVEMENT_FARM [city: Methone] — nearest builder id:3, 4 tiles
+  (12,7): build IMPROVEMENT_MINE [city: Aachen] — nearest builder id:3, 5 tiles
+  (18,14): build IMPROVEMENT_LUMBER_MILL [city: Methone] — nearest builder id:3, 5 tiles
+  (17,16): build IMPROVEMENT_FARM [city: Methone] — nearest builder id:3, 5 tiles
+  (14,6): build IMPROVEMENT_LUMBER_MILL [city: Aachen] — nearest builder id:3, 6 tiles
+  (22,9): build IMPROVEMENT_LUMBER_MILL [city: Heidelberg] — nearest builder id:3, 10 tiles
+  (23,10): build IMPROVEMENT_MINE [city: Heidelberg] — nearest builder id:3, 10 tiles
+
+IDLE BUILDERS (1):
+  id:3 at (14,12) — 3 charges, 2 moves

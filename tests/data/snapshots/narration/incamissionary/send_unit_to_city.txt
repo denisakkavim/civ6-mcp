@@ -1,0 +1,2 @@
+TELEPORTED|to Wanuku at (44,8)
+  Transferred now: the unit is in the city this turn.

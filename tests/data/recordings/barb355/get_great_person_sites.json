@@ -4,7 +4,7 @@
     "unit_id": 17
   },
   "scenario": "barb355",
-  "recorded_at": "2026-08-24T17:33:34+00:00",
+  "recorded_at": "2026-08-25T18:55:24+00:00",
   "notes": null,
   "result": "Best activation cities for Dandara (General -> DISTRICT_ENCAMPMENT): [2 charge(s)]\n  1. Aachen (16,10) \u2014 CAN ACTIVATE, yield 73\n  2. Pella (18,16) \u2014 CAN ACTIVATE, yield 68\n  3. Methone (18,15) \u2014 CAN ACTIVATE, yield 57\n  4. Cologne (49,14) \u2014 needs move (dist 32), yield 36",
   "exchanges": [

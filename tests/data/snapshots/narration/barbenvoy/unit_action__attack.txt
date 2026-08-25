@@ -1,6 +1,0 @@
-Combat Estimate (Melee):
-  UNIT_SPEARMAN (CS:28, HP:50) vs UNIT_ARCHER (CS:15, HP:100)
-  Modifiers: att THRUST_BONUS_VS_MELEE +5, river -2
-  Est damage to defender: ~65
-  Est damage to attacker: ~9
-Error: NO_MOVES|Unit has no movement points for melee attack. Melee requires movement to close distance. Wait until next turn.

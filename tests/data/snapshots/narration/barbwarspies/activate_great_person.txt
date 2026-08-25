@@ -1,0 +1,1 @@
+GP_ACTIVATED|Dandara (UNIT_GREAT_GENERAL) at 16,10 charges_remaining=1 — activate again to use next charge (moved to 16,10)

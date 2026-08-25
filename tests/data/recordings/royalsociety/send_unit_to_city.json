@@ -1,0 +1,41 @@
+{
+  "tool": "send_unit_to_city",
+  "arguments": {
+    "unit_id": 1,
+    "city_id": 16777217
+  },
+  "scenario": "royalsociety",
+  "recorded_at": "2026-08-25T18:49:06+00:00",
+  "notes": null,
+  "result": "SPY_TRAVEL|Spy en route to (18,10). Travel completes at end of turn.\n  Travelling: the spy is off the map until it lands. get_spies reports when it has arrived.",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CLEAR"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "\nlocal p = Players[0]\nif p == nil then print(\"ERR:NO_PLAYER|0\") print(\"---END---\") return end\nlocal c = p:GetCities():FindID(1)\nif c == nil then print(\"ERR:NO_CITY|player 0 has no city 1\") print(\"---END---\") return end\nprint(\"CITYPOS|\" .. c:GetX() .. \"|\" .. c:GetY() .. \"|\" .. Locale.Lookup(c:GetName()):gsub(\"|\",\"/\"))\nprint(\"---END---\")\n",
+      "lines": [
+        "CITYPOS|18|10|Frankfurt"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "\nlocal me = Game.GetLocalPlayer()\nlocal u = Players[me]:GetUnits():FindID(1)\nif u == nil then\n    print(\"KIND|GONE\")\nelse\n    local entry = GameInfo.Units[u:GetType()]\n    local unitType = entry and entry.UnitType or \"UNKNOWN\"\n    local formation = entry and entry.FormationClass or \"UNKNOWN\"\n    print(\"KIND|\" .. unitType .. \"|\" .. formation .. \"|\" .. u:GetX() .. \"|\" .. u:GetY())\nend\nprint(\"---END---\")\n",
+      "lines": [
+        "KIND|UNIT_SPY|FORMATION_CLASS_CIVILIAN|19|17"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "local me = Game.GetLocalPlayer() local unit = UnitManager.GetUnit(me, 1) if unit == nil then print(\"ERR:UNIT_NOT_FOUND\"); print(\"---END---\"); return end local entry = GameInfo.Units[unit:GetType()] if not entry or entry.UnitType ~= \"UNIT_SPY\" then print(\"ERR:NOT_A_SPY\"); print(\"---END---\"); return end local params = {[UnitOperationTypes.PARAM_X0]=18, [UnitOperationTypes.PARAM_Y0]=10} local ok, can = pcall(function() return UnitManager.CanStartOperation(unit, -1295211657, nil, params) end) if not ok or not can then   print(\"ERR:CANNOT_TRAVEL|Cannot send spy to (\" .. 18 .. ',' .. 10 .. \"). Allied civ cities are not valid; only own cities and city-states.\"); print(\"---END---\"); return end UnitManager.RequestOperation(unit, -1295211657, params) print(\"OK:SPY_TRAVEL|Spy en route to (18,10). Travel completes at end of turn.\") print(\"---END---\")",
+      "lines": [
+        "OK:SPY_TRAVEL|Spy en route to (18,10). Travel completes at end of turn."
+      ]
+    }
+  ]
+}

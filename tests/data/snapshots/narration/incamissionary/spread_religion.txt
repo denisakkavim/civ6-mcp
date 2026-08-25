@@ -1,0 +1,1 @@
+RELIGION_SPREAD|Missionary spread religion at 47,9 (charges remaining: 2)

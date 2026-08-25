@@ -1,0 +1,27 @@
+{
+  "tool": "unit_stance",
+  "arguments": {
+    "unit_id": 24,
+    "stance": "skip"
+  },
+  "scenario": "barb355",
+  "recorded_at": "2026-08-25T18:54:56+00:00",
+  "notes": null,
+  "result": "SKIPPED",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CLEAR"
+      ]
+    },
+    {
+      "context": "read",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local unit = Players[me]:GetUnits():FindID(24) if unit == nil then print(\"ERR:UNIT_NOT_FOUND\"); print(\"---END---\"); return end\nUnitManager.FinishMoves(unit)\nprint(\"OK:SKIPPED\")\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:SKIPPED"
+      ]
+    }
+  ]
+}

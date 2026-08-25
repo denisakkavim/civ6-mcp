@@ -1,0 +1,2 @@
+SPY_TRAVEL|Spy en route to (18,10). Travel completes at end of turn.
+  Travelling: the spy is off the map until it lands. get_spies reports when it has arrived.

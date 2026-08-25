@@ -1,0 +1,36 @@
+9 Great People:
+  Great General: Æthelflæd (Medieval Era) — Unclaimed — your points: 11/155
+    Ability: Grants +2 Loyalty per turn for this city.
+    Patronize: 2360g / 1590f
+    (individual_id: 59)
+  Great Admiral: Zheng He (Medieval Era) — Unclaimed — your points: 0/120
+    Ability: SINGLE_CITY_ADJUST_TRADE_ROUTE_YIELD_TO_OTHERS (amount=2), SINGLE_CITY_ADJUST_TRADE_ROUTE_YIELD_FROM_OTHERS (amount=2), free Trader, ADJUST_TRADE_ROUTE_CAPACITY (amount=1), PLAYER_UNITS_GRANT_ABILITY (passive), PLAYER_UNITS_GRANT_ABILITY (passive)
+    Patronize: 2000g / 1350f
+    (individual_id: 5)
+  Great Engineer: James of St. George (Medieval Era) — Unclaimed — your points: 0/120
+    Ability: Instantly builds Ancient and Medieval Walls in this city.
+    Patronize: 2000g / 1350f
+    (individual_id: 40)
+  Great Merchant: Marcus Licinius Crassus (Classical Era) — Unclaimed — your points: 0/60
+    Ability: UNIT_GRANT_PLOT, +60 GOLD
+    Patronize: 1100g / 750f
+    (individual_id: 76)
+  Great Prophet: Zoroaster (Classical Era) — Unclaimed — your points: 0/60
+    Patronize: 1100g / 750f
+    (individual_id: 114)
+  Great Scientist: Abu al-Qasim al-Zahrawi (Medieval Era) — Unclaimed — your points: 72/155
+    Ability: Wounded land units can heal +5 HP each turn.
+    Patronize: 1445g / 980f
+    (individual_id: 131)
+  Great Writer: Murasaki Shikibu (Medieval Era) — Unclaimed — your points: 0/120
+    Ability: creates 2 Great Works
+    Patronize: 2000g / 1350f
+    (individual_id: 155)
+  Great Artist: Hieronymus Bosch (Renaissance Era) — Unclaimed — your points: 0/240
+    Ability: creates 3 Great Works
+    Patronize: 3800g / 2550f
+    (individual_id: 19)
+  Great Musician: Yatsuhashi Kengyo (Industrial Era) — Unclaimed — your points: 0/420
+    Ability: creates 2 Great Works
+    Patronize: 6500g / 4350f
+    (individual_id: 100)

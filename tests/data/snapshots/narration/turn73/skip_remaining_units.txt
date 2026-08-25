@@ -1,2 +1,2 @@
 FORTIFIED|1 fortified, 0 healing
-SKIPPED|7 units
+SKIPPED|8 units

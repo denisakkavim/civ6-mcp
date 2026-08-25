@@ -1,0 +1,2 @@
+CITY_RANGE_ATTACK|Methone (DISTRICT_CITY_CENTER) -> UNIT_WARRIOR@17,16|pre_hp:77/100|spare:DISTRICT_ENCAMPMENT can still fire this turn — attack again with the same city id
+  Post-combat: UNIT_WARRIOR 77/100

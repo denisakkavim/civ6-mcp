@@ -1,0 +1,27 @@
+{
+  "tool": "set_city_focus",
+  "arguments": {
+    "city_id": 16777216,
+    "focus": "production"
+  },
+  "scenario": "barbencampment",
+  "recorded_at": "2026-08-25T20:48:13+00:00",
+  "notes": null,
+  "result": "FOCUS_SET|YIELD_PRODUCTION|favored",
+  "exchanges": [
+    {
+      "context": "write",
+      "lua": "local r='CLEAR' do local c=ContextPtr:LookUpControl('/InGame/DiplomacyActionView') if c and not c:IsHidden() then r='CRITICAL' end end do local c=ContextPtr:LookUpControl('/InGame/DiplomacyDealView') if c and not c:IsHidden() then r='CRITICAL' end end if r=='CLEAR' then do local c=ContextPtr:LookUpControl('/InGame/InGamePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GenericPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/PopupDialog') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/TechCivicCompletedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/BoostUnlockedPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/GreatWorkShowcase') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalWonderPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/WonderBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/EraCompletePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/HistoricMoments') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/MomentPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/ProjectBuiltPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandPopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/RockBandMoviePopup') if c and not c:IsHidden() then r='POPUP' end end do local c=ContextPtr:LookUpControl('/InGame/NaturalDisasterPopup') if c and not c:IsHidden() then r='POPUP' end end end print(r) print('---END---')",
+      "lines": [
+        "CLEAR"
+      ]
+    },
+    {
+      "context": "write",
+      "lua": "\nlocal me = Game.GetLocalPlayer() local pCity = CityManager.GetCity(me, 16777216 % 65536) if pCity == nil then print(\"ERR:CITY_NOT_FOUND\"); print(\"---END---\"); return end\nlocal yRow = GameInfo.Yields[\"YIELD_PRODUCTION\"]\nif yRow == nil then print(\"ERR:YIELD_NOT_FOUND|YIELD_PRODUCTION\"); print(\"---END---\"); return end\nlocal citz = pCity:GetCitizens()\n-- Clear existing favored focus first\nfor yr in GameInfo.Yields() do\n    if citz:IsFavoredYield(yr.Index) then\n        local tp = {}\n        tp[CityCommandTypes.PARAM_YIELD_TYPE] = yr.Index\n        tp[CityCommandTypes.PARAM_FLAGS] = 1\n        CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, tp)\n    end\nend\n-- Set new focus\nlocal tParams = {}\ntParams[CityCommandTypes.PARAM_YIELD_TYPE] = yRow.Index\ntParams[CityCommandTypes.PARAM_FLAGS] = 1\nCityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, tParams)\nprint(\"OK:FOCUS_SET|YIELD_PRODUCTION|favored\")\nprint(\"---END---\")\n",
+      "lines": [
+        "OK:FOCUS_SET|YIELD_PRODUCTION|favored"
+      ]
+    }
+  ]
+}
